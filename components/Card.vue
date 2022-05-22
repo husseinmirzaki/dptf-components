@@ -5,7 +5,9 @@
   <div v-else class="card" :class="{'draggable-start': mouseDown}" data-dragable="data-dragable" ref="cardRef"
        @mouseleave="mouseLeave">
     <slot name="card-header" :card-title="cardTitle" :card-description="cardDescription">
-      <div class="card-header align-items-center border-bottom-1 border-dark mt-0 px-2" @mousedown.stop="dragMouseDown"
+      <div class="card-header align-items-center border-bottom-1 border-dark mt-0 px-2"
+           :dragable="disableDrag ? 'no': 'dragable'"
+           @mousedown.stop="dragMouseDown"
            :class="[headerClasses, {'border-0': isCollapsed, 'border-bottom-1': !isCollapsed }]"
            v-if="$slots['card-header'] || cardTitle || cardDescription">
         <h3 class="card-title align-items-start flex-column my-0">
@@ -55,7 +57,7 @@
             </button>
             <slot name="dropDown"/>
             <slot name="toolbar1"/>
-            <button type="button" class="btn btn-icon btn-sm btn-active-color-primary" @mousedown.stop="collapseToggle"
+            <button type="button" class="btn btn-icon btn-sm btn-active-color-primary" v-if="!disableDrag" @mousedown.stop="collapseToggle"
                     @click.stop="collapseToggle">
                 <span class="svg-icon svg-icon-info">
                     <inline-svg style="width:23px;height: 23px"
@@ -83,7 +85,7 @@
   </div>
 </template>
 <style scoped lang="scss">
-.card-header {
+.card-header[dragable="dragable"] {
   cursor: move;
 }
 
@@ -124,6 +126,9 @@ export default {
     "disableCard": {
       default: false,
     },
+    "disableDrag": {
+      default: false,
+    },
     "icon": {
       default: "media/icons/duotune/maps/map008.svg",
     }
@@ -135,6 +140,7 @@ export default {
     const mouseDown = ref(false);
     const isCollapsed = ref(false);
     const disableCard = toRef(props, 'disableCard');
+    const disableDrag = toRef(props, 'disableDrag');
 
     let collapse;
     let clonedElement = null;
@@ -264,7 +270,7 @@ export default {
     })
 
     onMounted(() => {
-      if (!disableCard.value) {
+      if (!disableCard.value && !disableDrag.value) {
         document.addEventListener('mouseup', dragMouseUp);
         document.addEventListener('mousemove', mouseMove);
         MenuComponent.reinitialization();

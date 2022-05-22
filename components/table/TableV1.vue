@@ -4,6 +4,7 @@
       :card-description="description"
       :icon="icon"
       :disable-card="disableCard"
+      :disable-drag="disableDrag"
       body-padding-class="m-0"
       :nav-items="navItems"
       @selected-nav-item="$emit('selectedNavItem', $event)">
@@ -23,60 +24,60 @@
       <slot name="toolbar2"/>
     </template>
     <template v-slot:card-body>
-      <div class="card-body py-3 px-0">
-        <!--begin::Table container-->
-        <div class="table-responsive">
-          <!--begin::Table-->
-          <table class="table table-bordered align-middle gs-4 gy-4 table-hover table table-oneline">
-            <!--begin::Table head-->
-            <thead>
-            <tr class="fw-bolder text-muted bg-light text-center">
-              <template v-for="(header, index) in headers" :key="index">
-                <component
-                    :is="defaultConfig.onTHeadComponent(header, index)"
-                    v-bind="defaultConfig.onTHeadProps(header, index)"/>
-              </template>
-            </tr>
-            </thead>
-            <!--end::Table head-->
-
-            <!--begin::Table body-->
-            <tbody>
-            <template v-for="(item, index) in dList" :key="index">
-              <tr class="text-center" data-context-menu="true" @contextmenu="contextMenu(item)"
-                  @click="$emit('on-row-selected', item)">
+      <spinner :loading="defaultConfig.isLoading.value">
+        <div class="card-body m-0 p-0">
+          <!--begin::Table container-->
+          <div class="table-responsive">
+            <!--begin::Table-->
+            <table class="table table-bordered align-middle gs-4 gy-4 table-hover table">
+              <!--begin::Table head-->
+              <thead>
+              <tr class="fw-bolder text-muted bg-light text-center">
                 <template v-for="(header, index) in headers" :key="index">
-
                   <component
-                      class="pe-2"
-                      :is="defaultConfig.onTBodyComponent(item, header, index)"
-                      v-bind="defaultConfig.onTBodyProps(item, header, index)"
-                  />
+                      :is="defaultConfig.onTHeadComponent(header, index)"
+                      v-bind="defaultConfig.onTHeadProps(header, index)"/>
                 </template>
               </tr>
-            </template>
-            </tbody>
-            <!--end::Table body-->
-          </table>
-          <!--end::Table-->
+              </thead>
+              <!--end::Table head-->
+
+              <!--begin::Table body-->
+              <tbody>
+              <tr v-if="!dList || dList.length == 0">
+                <td :colspan="headers.length" class="text-center">
+                  داده ای برای نمایش موجود نمی‌باشد
+                </td>
+              </tr>
+              <template v-for="(item, index) in dList" :key="index" v-else>
+                <tr class="text-center" data-context-menu="true" @contextmenu="contextMenu(item)"
+                    @click="$emit('on-row-selected', item)">
+                  <template v-for="(header, index) in headers" :key="index">
+
+                    <component
+                        class="pe-2"
+                        :is="defaultConfig.onTBodyComponent(item, header, index)"
+                        v-bind="defaultConfig.onTBodyProps(item, header, index)"
+                    />
+                  </template>
+                </tr>
+              </template>
+              </tbody>
+              <!--end::Table body-->
+            </table>
+            <!--end::Table-->
+          </div>
+          <table-pagination
+              @page-selected="onPage"
+              :current-page="defaultConfig.currentPage"
+              :count="defaultConfig.count"/>
+          <!--end::Table container-->
         </div>
-        <table-pagination
-            @page-selected="onPage"
-            :current-page="defaultConfig.currentPage"
-            :count="defaultConfig.count"/>
-        <!--end::Table container-->
-      </div>
+      </spinner>
     </template>
   </Card>
 </template>
-<style lang="scss">
-.table-oneline {
-  td {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-}
-</style>
+
 <script lang="ts">
 import {computed, ComputedRef, defineComponent, onMounted, ref, toRef, watch} from "vue";
 import DropdownV1 from "@/custom/components/DropdownV1.vue";
@@ -85,9 +86,11 @@ import {Table} from "@/custom/components/table/Table";
 import TablePagination from "@/custom/components/table/TablePagination.vue";
 import Card from "@/custom/components/Card.vue";
 import {ContextMenuItem, ContextMenuService} from "@/custom/components/ContextMenuService";
+import Spinner from "@/custom/components/Spinner.vue";
 
 export default defineComponent({
   components: {
+    Spinner,
     Card,
     TablePagination,
     TableTD,
@@ -120,6 +123,9 @@ export default defineComponent({
       default: "توضیحاتی درمورد جدول که اطلاعات کلیی در مورد جدول به ما میدهد",
     },
     disableCard: {
+      default: false,
+    },
+    disableDrag: {
       default: false,
     },
     list: {

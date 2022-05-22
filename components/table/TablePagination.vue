@@ -1,6 +1,6 @@
 <template>
   <!--begin::Pagination-->
-  <div class="d-flex justify-content-center flex-wrap w-100" style="direction: ltr;">
+  <div class="d-flex justify-content-center flex-wrap w-100" style="direction: ltr;" v-if="pages.length  > 1">
     <div class="d-flex flex-wrap py-2 mr-3">
       <a @click.prevent="prevPage" class="btn btn-icon btn-sm border-0 btn-light mx-2 my-1">
         &lt;

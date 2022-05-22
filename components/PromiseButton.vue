@@ -52,7 +52,7 @@ export default defineComponent({
         stopLoading();
       }, () => {
         stopLoading();
-      });
+      }).catch(() => stopLoading());
     };
 
     return {

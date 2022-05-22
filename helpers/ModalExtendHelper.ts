@@ -17,7 +17,9 @@ export function modalExtend(options: Record<string, any> | null = null) {
         Object.assign(defaultOptions, options);
 
     const modal = ref<any>();
+    const assignSubmit = ref<any>();
     return {
+        assignSubmit,
         modal,
         onOpen: (e) => {
             defaultOptions.onOpen(e);

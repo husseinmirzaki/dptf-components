@@ -95,15 +95,6 @@ export default class RegisterForm extends CreateForm {
             {
                 show_errors: false,
                 defaultInputClasses: "",
-                name: "birth_date",
-                field_type: 'p-date-time',
-                placeholder: "تاریخ تولد",
-                col_class: 'birth_date',
-                required: false,
-            },
-            {
-                show_errors: false,
-                defaultInputClasses: "",
                 name: "gender",
                 field_type : "select",
                 select_data: this.optionToSelect2Option(genderOptions),

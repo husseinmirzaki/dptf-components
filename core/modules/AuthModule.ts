@@ -52,6 +52,7 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
         return this.user;
     }
 
+
     /**
      * Verify user authentication
      * @returns boolean

@@ -1,6 +1,7 @@
 <template>
   <a href="#" class="btn w-100 d-flex justify-content-start align-items-center the-nav-buttons" :class="{active}">
-    <i class="fas fa-envelope-open-text fs-4 me-2"></i>
+    <i v-if="iconClass" :class="iconClass" class="fs-4 me-2"></i>
+    <i v-else class="fas fa-envelope-open-text fs-4 me-2"></i>
     <slot/>
     <span
         class="badge position-absolute" :class="{
@@ -9,12 +10,16 @@
           'badge-danger': badgeNumber && (Number(badgeNumber) > 5),
         }"
         v-if="badgeNumber">{{ badgeNumber }}</span>
+
+    <span v-if="badgeText" class="badge position-absolute badge-danger">
+      {{ badgeText }}
+    </span>
   </a>
 
 </template>
 <script>
 export default {
-  props: ["active", "badgeNumber"]
+  props: ["active", "badgeNumber", "iconClass", "badgeText"]
 }
 </script>
 <style lang="scss">

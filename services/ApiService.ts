@@ -76,58 +76,73 @@ class ApiService {
         reqF().then((e) => {
             resolve(e)
         }, (result) => {
-            // try to find the error
-            if (result.response && (result.response.status == 401 || result.response.status == 403)) {
-                VueInstanceService.store
-                    .dispatch(Actions.ASK_NEW_TOKEN)
-                    .then(() => {
-                        this.handleTokenRefresh(reqF, resolve, reject);
-                    })
-                    .catch((e) => {
-                        console.log("asked for new token", e);
-                        if (e !== 1) {
-                            reject(e);
-                        }
-                    });
-            } else if (
-                result.response &&
-                result.response.data &&
-                result.response.data.errors &&
-                result.response.data.errors.length > 0
-            ) {
-                const errors = result.response.data.errors;
-
-                // search for invalid_access_token
-                // findIndex fails sometimes for some
-                // unknown reasons
-                const found = errors.findIndex((d) => {
-                    return d === "invalid_access_token" || d === "token_not_valid";
-                })
-
-                if (found > -1)
-                    // we will ask for new token
+            if (result.response) {
+                // try to find the error
+                if (result.response.data && result.response.data['code'] == "user_not_validated") {
+                    VueInstanceService.store.dispatch(Actions.LOGOUT);
+                    VueInstanceService.showErrorMessage("کاربر هنوز فعال نشده")
+                    reject(result);
+                } else if (result.response.data && result.response.data['code'] == "user_inactive") {
+                    VueInstanceService.store.dispatch(Actions.LOGOUT);
+                    VueInstanceService.showErrorMessage("کاربر هنوز فعال نشده")
+                    reject(result);
+                } else if (result.response.data && result.response.data['code'] == "user_not_found") {
+                    VueInstanceService.store.dispatch(Actions.LOGOUT);
+                    VueInstanceService.showErrorMessage("کاربر هنوز فعال نشده")
+                    reject(result);
+                } else if ((result.response.status == 401 || result.response.status == 403)) {
                     VueInstanceService.store
                         .dispatch(Actions.ASK_NEW_TOKEN)
                         .then(() => {
                             this.handleTokenRefresh(reqF, resolve, reject);
                         })
                         .catch((e) => {
+                            console.log("asked for new token", e);
                             if (e !== 1) {
                                 reject(e);
                             }
                         });
-                else
-                    // if we could not find invalid_access_token
-                    // we will pass the error to user
+                } else if (
+                    result.response.data &&
+                    result.response.data.errors &&
+                    result.response.data.errors.length > 0
+                ) {
+                    const errors = result.response.data.errors;
+
+                    // search for invalid_access_token
+                    // findIndex fails sometimes for some
+                    // unknown reasons
+                    const found = errors.findIndex((d) => {
+                        return d === "invalid_access_token" || d === "token_not_valid";
+                    })
+
+                    if (found > -1)
+                        // we will ask for new token
+                        VueInstanceService.store
+                            .dispatch(Actions.ASK_NEW_TOKEN)
+                            .then(() => {
+                                this.handleTokenRefresh(reqF, resolve, reject);
+                            })
+                            .catch((e) => {
+                                if (e !== 1) {
+                                    reject(e);
+                                }
+                            });
+                    else
+                        // if we could not find invalid_access_token
+                        // we will pass the error to user
+                        reject(result);
+
+                } else if (result.response.status >= 500 && result.response.status < 600) {
+                    // tell user its server error
+                    VueInstanceService.showErrorMessage(
+                        "مشکلی در اتصال به سرور رخ داد",
+                        "مشکل اتصال",
+                        0
+                    );
+                } else {
                     reject(result);
-            } else if (result.response && result.response.status >= 500 && result.response.status < 600) {
-                // tell user its server error
-                VueInstanceService.showErrorMessage(
-                    "مشکلی در اتصال به سرور رخ داد",
-                    "مشکل اتصال",
-                    0
-                );
-                reject(result);
+                }
             } else {
                 if (!result.response || !result.response.data) {
                     // internet issues
