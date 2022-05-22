@@ -3,7 +3,7 @@ import TableTH from "@/custom/components/table/thead/TableTH.vue";
 import TableTD from "@/custom/components/table/tbody/TableTD.vue";
 import {Ref, ref, toRefs, watch} from "vue";
 import {VueInstanceService} from "@/custom/helpers/VueInstanceService";
-import ApiService from "@/custom/services/ApiService";
+import {ApiService} from "@/custom/Defaults";
 import TableTDDate from "@/custom/components/table/tbody/TableTDDate.vue";
 import TableTDUser from "@/custom/components/table/tbody/TableTDUser.vue";
 import TableTDUserMulti from "@/custom/components/table/tbody/TableTDUserMulti.vue";

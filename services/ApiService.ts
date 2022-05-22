@@ -15,34 +15,33 @@ class ApiService {
      */
     public static vueInstance: App;
 
-    // https://needs.tadbirserver.ir/api/
     // http://127.0.0.1:8000/api/
 
-    public static base_url = "https://needs.tadbirserver.ir/api/";
+    public static base_url = "";
     public static baseUrl = "";
 
     public static get loginURL() {
-        return ApiService.base_url + "user/auth/login/";
+        return this.base_url + "user/auth/login/";
     }
 
     public static get loginFinalizeURL() {
-        return ApiService.base_url + "user/auth/token/";
+        return this.base_url + "user/auth/token/";
     }
 
     public static get refreshUrl() {
-        return ApiService.base_url + "user/auth/refresh/";
+        return this.base_url + "user/auth/refresh/";
     }
 
     public static get verifyTokenUrl() {
-        return ApiService.base_url + "user/auth/verify/";
+        return this.base_url + "user/auth/verify/";
     }
 
     public static get forgetPasswordUrl() {
-        return ApiService.base_url + "user/auth/forget/";
+        return this.base_url + "user/auth/forget/";
     }
 
     public static get forgetPasswordResetUrl() {
-        return ApiService.base_url + "user/auth/forget/reset/";
+        return this.base_url + "user/auth/forget/reset/";
     }
 
     public static get selectUrl() {
@@ -53,9 +52,9 @@ class ApiService {
      * @description initialize vue axios
      */
     public static init(app: App<Element>) {
-        ApiService.vueInstance = app;
-        ApiService.vueInstance.use(VueAxios, axios);
-        ApiService.vueInstance.axios.defaults.baseURL = this.base_url;
+        this.vueInstance = app;
+        this.vueInstance.use(VueAxios, axios);
+        this.vueInstance.axios.defaults.baseURL = this.base_url;
     }
 
     public static getAuthHeaders(): any {
@@ -250,8 +249,8 @@ class ApiService {
         resource: string,
         params = {}
     ): Promise<AxiosResponse> {
-        return ApiService.wrap(() => {
-            return ApiService.vueInstance.axios.get(resource, this.calcConf(params));
+        return this.wrap(() => {
+            return this.vueInstance.axios.get(resource, this.calcConf(params));
         });
     }
 
@@ -262,8 +261,8 @@ class ApiService {
      * @returns Promise<AxiosResponse>
      */
     public static post(resource: string, params: any | null = null): Promise<AxiosResponse> {
-        return ApiService.wrap(() => {
-            return ApiService.vueInstance.axios.post(
+        return this.wrap(() => {
+            return this.vueInstance.axios.post(
                 `${resource}`,
                 this.calcData(params),
                 this.calcConf(params)
@@ -278,8 +277,8 @@ class ApiService {
      * @returns Promise<AxiosResponse>
      */
     public static patch(resource: string, params: any): Promise<AxiosResponse> {
-        return ApiService.wrap(() => {
-            return ApiService.vueInstance.axios.patch(
+        return this.wrap(() => {
+            return this.vueInstance.axios.patch(
                 `${resource}`,
                 this.calcData(params),
                 this.calcConf(params)
@@ -294,27 +293,27 @@ class ApiService {
      * @returns Promise<AxiosResponse>
      */
     public static delete(resource: string, params = {}): Promise<AxiosResponse> {
-        return ApiService.wrap(() => {
-            return ApiService.vueInstance.axios.delete(resource, this.calcConf(params));
+        return this.wrap(() => {
+            return this.vueInstance.axios.delete(resource, this.calcConf(params));
         });
     }
 
     public static getOne(id) {
-        return ApiService.get(this.baseUrl + `${id}/`)
+        return this.get(this.baseUrl + `${id}/`)
     }
 
     public static deleteOne(id) {
-        return ApiService.delete(`${this.baseUrl}${id}/`);
+        return this.delete(`${this.baseUrl}${id}/`);
     }
 
     public static createOne(data) {
-        return ApiService.post(`${this.baseUrl}`, {
+        return this.post(`${this.baseUrl}`, {
             data: data
         });
     }
 
     public static updateOne(data, id) {
-        return ApiService.patch(`${this.baseUrl}${id}/`, {
+        return this.patch(`${this.baseUrl}${id}/`, {
             data: data
         });
     }

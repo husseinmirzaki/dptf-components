@@ -14,7 +14,7 @@
  */
 
 
-import ApiService from "@/custom/services/ApiService";
+import {ApiService} from "@/custom/Defaults";
 import JwtService from "@/custom/core/services/JwtService";
 import {Actions, Mutations} from "@/custom/store/enums/StoreEnums";
 import {Module, Action, Mutation, VuexModule} from "vuex-module-decorators";
