@@ -1,0 +1,491 @@
+<template>
+  <div class="fv-row" :class="[col_class_c, { row: one_line }]" ref="root">
+    <!--begin::Label-->
+    <label
+        class="fs-5 fw-bold mb-2 font-weight-bolder text-dark"
+        :class="[{ required: required }, one_line_label_classes_c, label_class]"
+        v-if="label != null && label !== ''"
+    >
+      {{ label }}
+    </label>
+    <!--end::Label-->
+    <!--begin::Input-->
+    <div :class="[one_line_field_classes_c]">
+      <template v-if="field_type === 'select'">
+        <Field
+            :class="[defaultInputClasses, input_class]"
+            :id="field_id"
+            :placeholder="placeholder"
+            :validateOnModelUpdate="true"
+            :multiple="select_multiple"
+            :as="field_type"
+            :name="name"
+            style="width: 100%"
+            :modelValue="this.$props.modelValue"
+            ref="fieldRef"
+        >
+          <template v-if="select_data">
+            <option
+                v-for="value in select_data"
+                :key="value[0]"
+                :value="value[0]"
+            >
+              {{ value[1] }}
+            </option>
+          </template>
+        </Field>
+      </template>
+      <template v-else-if="field_type === 'textarea'">
+        <Field
+            :class="[defaultInputClasses, input_class]"
+            :id="field_id"
+            :readonly="read_only"
+            :placeholder="placeholder"
+            :as="field_type"
+            :name="name"
+            :modelValue="this.$props.modelValue"
+            @change="$emit('update:modelValue', $event.target.value)"
+            ref="fieldRef"
+        >
+        </Field>
+      </template>
+      <template v-else-if="field_type === 'p-date-time'">
+        <Field
+            :class="[defaultInputClasses, input_class]"
+            :id="field_id"
+            :name="name"
+            :modelValue="this.$props.modelValue"
+            @update:modelValue="$emit('update:modelValue', fieldRef.outputValue[0])"
+        >
+          <DatePicker
+              :name="name"
+              :readonly="read_only"
+              :placeholder="placeholder"
+              :modelValue="this.$props.modelValue"
+              @update:modelValue="$emit('update:modelValue', fieldRef.outputValue[0])"
+              @change="$emit('update:modelValue', fieldRef.outputValue[0])"
+              ref="fieldRef"/>
+        </Field>
+      </template>
+      <template v-else-if="field_type === 'checkbox'">
+        <Field
+            :class="[defaultInputClasses, input_class]"
+            :id="field_id"
+            :name="name"
+            type="checkbox"
+            :value="this.$props.modelValue"
+        >
+
+          <div class="form-check m-3 me-4" style="padding-right: 0 !important ">
+
+            <input
+                class="form-check-input"
+                type="checkbox"
+                :checked="this.$props.modelValue"
+                @update:modelValue="$emit('update:modelValue', fieldRef.checked)"
+                @change="$emit('update:modelValue', fieldRef.checked)"
+                ref="fieldRef">
+            <label class="form-check-label">
+              {{ placeholder }}
+            </label>
+          </div>
+        </Field>
+      </template>
+      <template v-else-if="field_type === 'component'">
+        <component
+            :class="[defaultInputClasses, input_class]"
+            :is="selectedComponent"
+            :readonly="read_only"
+            :placeholder="placeholder"
+            :type="field_type"
+            :name="name"
+            :modelValue="this.$props.modelValue"
+            @change="$emit('update:modelValue', $event.target.value)"
+            ref="fieldRef"
+        />
+      </template>
+      <template v-else-if="field_type === 'file'">
+        <Field
+            :class="[defaultInputClasses, input_class]"
+            :readonly="read_only"
+            :placeholder="placeholder"
+            :type="field_type"
+            :name="name"
+            :modelValue="this.$props.modelValue"
+            :multiple="multiple"
+            @change="$emit('update:modelValue', getFile($event.target))"
+            ref="fieldRef"
+        />
+      </template>
+      <template v-else>
+        <Field
+            :class="[defaultInputClasses, input_class]"
+            :readonly="read_only"
+            :placeholder="placeholder"
+            :type="field_type"
+            :name="name"
+            :modelValue="this.$props.modelValue"
+            @change="$emit('update:modelValue', $event.target.value)"
+            ref="fieldRef"
+        />
+      </template>
+      <div class="fv-plugins-message-container" v-if="showError">
+        <div class="fv-help-block">
+          <ErrorMessage :name="name"/>
+        </div>
+      </div>
+    </div>
+    <!--end::Input-->
+  </div>
+</template>
+<script lang="ts">
+import {computed, defineComponent, nextTick, onMounted, ref, toRef, watch} from "vue";
+import {ErrorMessage, Field} from "vee-validate";
+import {$, select2} from "@/custom/helpers/select2_decelaration";
+import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
+import {Actions} from "@/custom/store/enums/StoreEnums";
+import Vue3PersianDatetimePicker from 'vue3-persian-datetime-picker'
+import {gregorianToJalali} from "@/custom/components/DateUtils";
+import {findClassInParent} from "@/custom/helpers/DomHelpers";
+import {VueInstanceService} from "@/custom/helpers/VueInstanceService";
+
+export default defineComponent({
+  name: "field-component",
+  inheritAttrs: false,
+  components: {
+    Field,
+    ErrorMessage,
+    DatePicker: Vue3PersianDatetimePicker,
+  },
+  props: {
+    defaultInputClasses: {
+      default: "form-control h-auto py-3 px-2 rounded-lg"
+    },
+    outerAccess: {
+      type: Function
+    },
+    selectedComponent: {
+      default: null,
+    },
+    select_filter_id: {
+      default: null,
+    },
+    select_filter_key: {
+      default: "filter-on",
+    },
+    input_class: {
+      default: "",
+      type: String,
+    },
+    label_class: {
+      default: "",
+      type: String,
+    },
+    col_class: {
+      default: "col-md-12",
+      type: String,
+    },
+    one_line_field_classes: {
+      default: "col-lg-8 fv-row",
+      type: String,
+    },
+    one_line_label_classes: {
+      default: "col-lg-4 col-form-label",
+      type: String,
+    },
+    modelValue: {
+      type: [String, Array, Boolean],
+    },
+    field_id: {
+      type: String,
+    },
+    show_errors: {
+      default: true,
+      type: Boolean,
+    },
+    one_line: {
+      type: Boolean,
+    },
+    name: {
+      type: String,
+    },
+    required: {
+      type: Boolean,
+      default: true,
+    },
+    multiple: {
+      type: Boolean,
+      default: false,
+    },
+    select_multiple: {
+      type: Boolean,
+      default: false,
+    },
+    select_tag: {
+      type: Boolean,
+      default: false,
+    },
+    read_only: {
+      type: Boolean,
+      default: false,
+    },
+    label: {
+      type: String,
+    },
+    field_type: {
+      type: String,
+    },
+    file_accept: {
+      type: String,
+    },
+    placeholder: {
+      type: String,
+    },
+    select_url: {
+      type: String,
+    },
+    modal_id: {
+      type: String,
+    },
+    select_options: {
+      type: Object,
+      default: () => {
+        return {};
+      },
+    },
+    select_data: {
+      type: Array,
+    },
+  },
+  setup(props, context) {
+    const field = ref<any>(null);
+    const root = ref<any>(null);
+    const showError = ref<boolean>(true);
+
+    const col_class = toRef(props, "col_class");
+    const one_line = toRef(props, "one_line");
+    const field_type = toRef(props, "field_type");
+    const one_line_field_classes = toRef(props, "one_line_field_classes");
+    const one_line_label_classes = toRef(props, "one_line_label_classes");
+    const show_errors = toRef(props, "show_errors");
+    const select_url = toRef(props, "select_url");
+    const multiple = toRef(props, "multiple");
+    const select_multiple = toRef(props, "select_multiple");
+    const read_only = toRef(props, "read_only");
+    const select_tag = toRef(props, "select_tag");
+    const select_options = toRef(props, "select_options");
+    const select_filter_key = toRef(props, "select_filter_key");
+    const select_filter_id = toRef(props, "select_filter_id");
+    const outerAccess = toRef(props, "outerAccess");
+    const modal_id = toRef(props, "modal_id");
+    const file_accept = toRef(props, "file_accept");
+    const placeholder = toRef(props, "placeholder");
+    const modelValue = toRef(props, "modelValue");
+
+    watch(modelValue, () => {
+      showError.value = true;
+    });
+
+    const select2Instance = ref<any>(null);
+
+    const one_line_field_classes_c = computed(() => {
+      if (one_line.value) {
+        return one_line_field_classes.value;
+      }
+      return "";
+    });
+
+    const one_line_label_classes_c = computed(() => {
+      if (one_line.value) {
+        return one_line_label_classes.value;
+      }
+      return "";
+    });
+
+    const col_class_c = computed(() => {
+      return col_class.value;
+    });
+
+    const testConsole = (e) => {
+      console.log(field);
+      console.log(e);
+    }
+
+    onMounted(() => {
+
+      if (field_type.value == 'hidden') {
+        root.value.style.display = 'none';
+      }
+
+      if (outerAccess.value) {
+        outerAccess.value(sendToUser);
+      }
+
+      if (field.value && context.attrs["id"]) {
+        field.value.$el.setAttribute("id", context.attrs["id"]);
+      }
+
+      if (field_type.value === "select") {
+        const modalParent = findClassInParent(root.value, 'modal');
+
+        if (modalParent != null) {
+          select_options.value["dropdownParent"] = modalParent;
+        }
+        if (select_filter_id.value) {
+          const v = select_filter_id.value as any;
+          select_options.value["onParams"] = (_data) => {
+            _data[select_filter_key.value] = $(v).val();
+          };
+        }
+
+        if (select_tag.value) {
+          select_options.value["tags"] = true;
+        }
+
+        if (read_only.value) {
+          select_options.value["disabled"] = "readonly";
+        }
+
+        if (placeholder.value != "") {
+          select_options.value["placeholder"] = placeholder.value;
+        }
+
+        if (modal_id.value) {
+          select_options.value["dropdownParent"] = document.querySelector(
+              `${modal_id.value}`
+          );
+        }
+
+        const urlFunc = () => {
+          return select_url.value;
+        };
+
+
+        let url;
+        if (select_url.value) url = urlFunc;
+        else url = null;
+
+        select2Instance.value = select2(
+            (field.value as { $el: HTMLSelectElement }).$el,
+            url,
+            select_options.value,
+            () => {
+              VueInstanceService.store.dispatch(Actions.ASK_NEW_TOKEN);
+            }
+        );
+
+        select2Instance.value?.change((e) => {
+          context.emit("update:modelValue", $(e.target).val());
+        });
+      } else if (field_type.value === "file") {
+        if (multiple.value) {
+          field.value.$el.setAttribute('multiple', 'multiple');
+        }
+        if (file_accept.value) {
+          field.value.$el.setAttribute('accept', file_accept.value);
+        }
+      }
+    });
+
+    const setValue = (data) => {
+      // if (field_type.value === 'select') {
+      //   nextTick(() => {
+      //     setOptions(data);
+      //   });
+
+      if (field_type.value === 'checkbox') {
+        field.value.checked = data;
+        context.emit("update:modelValue", data);
+      }
+
+      if (field_type.value === 'p-date-time') {
+        const date = new Date(data);
+        const persian = gregorianToJalali(date.getFullYear(), date.getMonth() + 1, date.getDate());
+        console.log(`${persian[0]}/${persian[1]}/${persian[2]}`)
+        context.emit("update:modelValue", `${persian[0]}/${persian[1]}/${persian[2]}`);
+      } else {
+        field.value.$el.value = data;
+        nextTick(() => {
+          field.value.$el.dispatchEvent(new Event('change'));
+        });
+      }
+    }
+
+    const setOptions = (
+        options: Array<{ value: number | string; text: string }>
+    ) => {
+      options.forEach(({value, text}) => {
+        if (text && value)
+          select2Instance.value?.append(
+              new Option(String(text), String(value), true, true)
+          );
+      });
+      select2Instance.value?.change();
+    };
+
+    const empty = () => {
+      if (select2Instance.value) {
+        select2Instance.value.val("").change();
+      }
+    };
+
+    const getFile = (e) => {
+      if (e.files.length > 0) {
+        return e.files;
+      }
+      return null;
+    }
+
+    const sendToUser = {
+      // methods
+      setValue,
+      setOptions,
+      getFile,
+      empty,
+      testConsole,
+      // ref
+      root,
+      showError,
+      fieldRef: field,
+      select2Instance,
+      show_errors,
+      // data
+      col_class_c,
+      one_line_field_classes_c,
+      one_line_label_classes_c,
+    };
+    return sendToUser;
+  },
+});
+
+export class FieldComponentProps {
+  options: FieldComponentPropsInterface;
+
+  get hasVModelKey(): boolean {
+    return !!this.options["v-model"] && !!this.options["v-model-key"];
+  }
+
+  get hasVModel(): boolean {
+    return !!this.options["v-model"];
+  }
+
+  get vBind(): FieldComponentPropsInterface {
+    const a = {
+      ...this.options,
+    };
+    delete a["v-model"];
+    delete a["v-model-key"];
+    return a;
+  }
+
+  constructor(options: FieldComponentPropsInterface) {
+    this.options = options;
+  }
+}
+
+export function fieldC(
+    options: FieldComponentPropsInterface
+): FieldComponentProps {
+  return new FieldComponentProps(options);
+}
+</script>

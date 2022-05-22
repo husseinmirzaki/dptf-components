@@ -1,0 +1,81 @@
+import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
+import {CreateForm} from "@/custom/helpers/BaseForm";
+import {UserApiService} from "@/custom/services/UserApiService";
+import * as Yup from "yup";
+
+export const genderOptions = {
+    "0": "مرد",
+    "1": "زن",
+}
+
+export const yesNoMobileVerification = {
+    "true": "بلی",
+    "false": "خیر",
+}
+
+export const activateOptions = {
+    "true": "فعال",
+    "false": "غیر فعال",
+}
+
+export default class UserUpdateForm extends CreateForm {
+    getService(): any {
+        return UserApiService;
+    }
+
+    update(event, id) {
+        return new Promise((resolve, reject) => {
+            const data = super.submit(event, true);
+            this.getService().update(data, id).then((e) => {
+                resolve(e)
+            }, (e) => reject(e));
+        });
+    }
+
+    concatFields(): Array<FieldComponentPropsInterface> {
+        return [
+            {
+                name: "first_name",
+                placeholder: "نام",
+                col_class: 'col-12 mt-2',
+            },
+            {
+                name: "last_name",
+                placeholder: "نام خانوادگی",
+                col_class: 'col-12 mt-2',
+            },
+            {
+                name: "id_number",
+                placeholder: "کد ملی",
+                col_class: 'col-12 mt-2',
+            },
+            {
+                col_class: 'col-12 mt-2',
+                name: "birth_date",
+                field_type: 'p-date-time',
+                placeholder: "تاریخ تولد",
+            },
+            {
+                name: "gender",
+                field_type: "select",
+                select_data: this.optionToSelect2Option(genderOptions),
+                placeholder: "جنسیت",
+                col_class: 'col-12 mt-2',
+            },
+            {
+                name: "is_mobile_validation",
+                field_type: "select",
+                select_data: this.optionToSelect2Option(yesNoMobileVerification),
+                placeholder: "اعتبار سنجی شماره موبایل",
+                col_class: 'col-12 mt-2',
+            },
+            {
+                name: "is_active",
+                field_type: "select",
+                select_data: this.optionToSelect2Option(activateOptions),
+                placeholder: "وضعیت کاربر",
+                col_class: 'col-12 mt-2',
+            },
+        ];
+    }
+}
