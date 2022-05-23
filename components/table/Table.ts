@@ -9,7 +9,6 @@ import TableTDUser from "@/custom/components/table/tbody/TableTDUser.vue";
 import TableTDUserMulti from "@/custom/components/table/tbody/TableTDUserMulti.vue";
 import TableTDEmpty from "@/custom/components/table/tbody/TableTDEmpty.vue";
 import {ContextMenuItem} from "@/custom/components/ContextMenuService";
-import {useRouter} from "vue-router";
 import TableTDBool from "@/custom/components/table/tbody/TableTDBool.vue";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import {random} from "@/custom/helpers/random";
@@ -87,6 +86,11 @@ export class Table {
      * Filters
      */
     filters: Ref<Record<string, any>> = ref({});
+
+    /**
+     * is table loading ?!
+     */
+    isLoading: Ref<boolean> = ref(false);
 
     basePushAddress = '';
 
@@ -325,7 +329,7 @@ export class Table {
     }
 
     onGetData() {
-
+        this.isLoading.value = true;
         let url = this.props.url.value;
         const filters = this.getFilters();
         if (this.method == 'get') {
@@ -343,9 +347,10 @@ export class Table {
             }
 
             return ApiService.get(url).then(({data}) => {
+                this.isLoading.value = false;
                 this.count.value = data.count;
                 return data.results;
-            });
+            }, () => this.isLoading.value = false);
 
         } else {
 
@@ -365,9 +370,10 @@ export class Table {
             return ApiService.post(url, {
                 data: tableData,
             }).then(({data}) => {
+                this.isLoading.value = false;
                 this.count.value = data.count;
                 return data.results;
-            })
+            }, () => this.isLoading.value = false);
         }
     }
 

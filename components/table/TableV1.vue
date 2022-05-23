@@ -85,7 +85,7 @@ import TableTD from "@/custom/components/table/tbody/TableTD.vue";
 import {Table} from "@/custom/components/table/Table";
 import TablePagination from "@/custom/components/table/TablePagination.vue";
 import Card from "@/custom/components/Card.vue";
-import {ContextMenuItem, ContextMenuService} from "@/custom/components/ContextMenuService";
+import {ContextMenuService} from "@/custom/components/ContextMenuService";
 import Spinner from "@/custom/components/Spinner.vue";
 
 export default defineComponent({
