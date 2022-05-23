@@ -2,6 +2,9 @@
 you must create a file called  `Defaults.ts` and provide
 following exports in it so the code will work properly
 
+You can copy the `Defaults.ts.ex`  and  use it swell for
+reference
+
 ## Exports
 ### ApiService
 This class is responsible to making api calls the class which
