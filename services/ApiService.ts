@@ -245,10 +245,10 @@ class ApiService {
      * @param params
      * @returns Promise<AxiosResponse>
      */
-    public static get(
+    public static get<T = any>(
         resource: string,
         params = {}
-    ): Promise<AxiosResponse> {
+    ): Promise<AxiosResponse<T>> {
         return this.wrap(() => {
             return this.vueInstance.axios.get(resource, this.calcConf(params));
         });
