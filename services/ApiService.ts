@@ -37,11 +37,11 @@ class ApiService {
     }
 
     public static get forgetPasswordUrl() {
-        return this.base_url + "user/auth/forget/";
+        return this.base_url + "user/auth/forgotten/";
     }
 
     public static get forgetPasswordResetUrl() {
-        return this.base_url + "user/auth/forget/reset/";
+        return this.base_url + "user/auth/reset_forgotten/";
     }
 
     public static get selectUrl() {
