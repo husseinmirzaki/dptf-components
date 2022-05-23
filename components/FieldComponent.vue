@@ -147,7 +147,7 @@ import {Actions} from "@/custom/store/enums/StoreEnums";
 import Vue3PersianDatetimePicker from 'vue3-persian-datetime-picker'
 import {gregorianToJalali} from "@/custom/components/DateUtils";
 import {findClassInParent} from "@/custom/helpers/DomHelpers";
-import {VueInstanceService} from "@/custom/helpers/VueInstanceService";
+import {VueInstanceService} from "@/custom/Defaults";
 
 export default defineComponent({
   name: "field-component",

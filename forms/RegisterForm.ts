@@ -1,7 +1,7 @@
 import {CreateForm} from "@/custom/helpers/BaseForm";
 import FieldComponentProps from "@/custom/components/FieldComponentPropsInterface";
 import {UserApiService} from "@/custom/services/UserApiService";
-import {VueInstanceService} from "@/custom/helpers/VueInstanceService";
+import {VueInstanceService} from "@/custom/Defaults";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import {Actions} from "@/custom/store/enums/StoreEnums";
 import * as Yup from 'yup';

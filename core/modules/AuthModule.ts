@@ -18,7 +18,7 @@ import {ApiService} from "@/custom/Defaults";
 import JwtService from "@/custom/core/services/JwtService";
 import {Actions, Mutations} from "@/custom/store/enums/StoreEnums";
 import {Module, Action, Mutation, VuexModule} from "vuex-module-decorators";
-import {VueInstanceService} from "@/custom/helpers/VueInstanceService";
+import {VueInstanceService} from "@/custom/Defaults";
 import {UserApiService} from "@/custom/services/UserApiService";
 
 export interface User {

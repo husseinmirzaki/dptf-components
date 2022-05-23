@@ -1,5 +1,5 @@
 import {ApiService} from "@/custom/Defaults";
-import {VueInstanceService} from "@/custom/helpers/VueInstanceService";
+import {VueInstanceService} from "@/custom/Defaults";
 
 export class UserApiService extends ApiService {
 

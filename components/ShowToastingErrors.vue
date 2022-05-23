@@ -4,7 +4,7 @@
 
 <script>
 import {toRef, watch} from "vue";
-import {VueInstanceService} from "@/custom/helpers/VueInstanceService";
+import {VueInstanceService} from "@/custom/Defaults";
 
 export default {
   props: ['submitCount', 'validate'],

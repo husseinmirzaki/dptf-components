@@ -3,7 +3,7 @@ import {CreateForm} from "@/custom/helpers/BaseForm";
 import * as Yup from "yup";
 import {TokenService} from "@/custom/services/TokenService";
 import {Actions} from "@/custom/store/enums/StoreEnums";
-import {VueInstanceService} from "@/custom/helpers/VueInstanceService";
+import {VueInstanceService} from "@/custom/Defaults";
 import {UserApiService} from "@/custom/services/UserApiService";
 
 export default class LoginTokenForm extends CreateForm {
