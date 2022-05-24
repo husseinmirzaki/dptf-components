@@ -12,6 +12,7 @@ import {ContextMenuItem} from "@/custom/components/ContextMenuService";
 import TableTDBool from "@/custom/components/table/tbody/TableTDBool.vue";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import {random} from "@/custom/helpers/random";
+import LoginForm from "@/custom/forms/LoginForm";
 
 export class Table {
     tableName = '';
@@ -94,20 +95,28 @@ export class Table {
 
     basePushAddress = '';
 
-    showContextMenuView = true;
-    showContextMenuUpdate = true;
-    showContextMenuDelete = true;
+    get showContextMenuView() {
+        return true;
+    }
+
+    get showContextMenuUpdate() {
+        return true;
+    }
+
+    get showContextMenuDelete() {
+        return true;
+    }
 
     get service(): any {
         return null;
     }
 
     viewPushAddress(data) {
-        return this.basePushAddress + 'view/' + data;
+        return this.basePushAddress + 'view/' + data.id;
     }
 
     updatePushAddress(data) {
-        return this.basePushAddress + 'update/' + data;
+        return this.basePushAddress + 'update/' + data.id;
     }
 
     onDeleteClicked(data) {

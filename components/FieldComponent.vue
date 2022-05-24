@@ -126,6 +126,7 @@
             :value="this.$props.modelValue"
         >
           <auto-complete
+              :placeholder="placeholder"
               :options="{
               url: select_url
             }"

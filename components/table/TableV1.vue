@@ -46,7 +46,9 @@
               <tbody>
               <tr v-if="!dList || dList.length == 0">
                 <td :colspan="headers.length" class="text-center">
-                  داده ای برای نمایش موجود نمی‌باشد
+                  <slot name="empty">
+                    داده ای برای نمایش موجود نمی‌باشد
+                  </slot>
                 </td>
               </tr>
               <template v-for="(item, index) in dList" :key="index" v-else>

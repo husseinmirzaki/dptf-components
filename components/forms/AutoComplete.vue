@@ -4,6 +4,7 @@
         class="form-control"
         type="text"
         :value="fieldText"
+        :placeholder="placeholder"
         @keyup="fieldData = $event.target.value"
         @keyup.down="oneDown"
         @keyup.up="oneUp"
@@ -90,7 +91,7 @@ interface AutoCompleteResults {
 }
 
 export default {
-  props: ['modeValue', 'options'],
+  props: ['modeValue', 'options', 'placeholder'],
   setup(props, context) {
     const options = toRef(props, 'options');
     const modeValue = toRef(props, 'modeValue');

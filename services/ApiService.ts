@@ -312,7 +312,7 @@ class ApiService {
         });
     }
 
-    public static updateOne(data, id) {
+    public static updateOne(id, data) {
         return this.patch(`${this.baseUrl}${id}/`, {
             data: data
         });
