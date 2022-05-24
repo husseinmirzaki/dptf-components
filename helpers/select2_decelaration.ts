@@ -27,6 +27,16 @@ export function select2(
 
     options = $.extend(true, defaultOptions, options);
 
+    if (options)
+        options['language'] = {
+            noResults: function () {
+                if (options!.tags) {
+                    return "متن + Enter"
+                }
+                return "موردی موجود نمی‌باشد";
+            }
+        };
+
     const _count = ref(0);
 
     if (typeof url === "function") {

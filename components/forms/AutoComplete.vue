@@ -207,6 +207,7 @@ export default {
     onBeforeUnmount(() => {
       document.removeEventListener('click', globalOnClick);
     })
+
     return {
       // data
       fieldText,
