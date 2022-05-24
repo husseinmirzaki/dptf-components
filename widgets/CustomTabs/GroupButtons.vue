@@ -37,6 +37,19 @@ export default {
     buttons: {
       default: () => [],
     },
+    selectedB: {
+      default: () => {
+        return {}
+      },
+    },
   },
+  mounted() {
+    this.selectedButton = this.selectedB;
+  },
+  watch: {
+    selected: function() {
+      this.selectedButton = this.selectedB;
+    }
+  }
 }
 </script>

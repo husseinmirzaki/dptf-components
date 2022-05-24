@@ -1,7 +1,7 @@
 <template>
 
   <div class="d-flex tabs justify-content-between w-100">
-    <group-buttons :buttons="tabs" @selected="selectedTab=$event"/>
+    <group-buttons :buttons="tabs" :selectedB="selected" @selected="selectedTab=$event"/>
     <div>
       <button
           type="button"
@@ -43,5 +43,13 @@ export default {
       },
     },
   },
+  mounted() {
+    this.selectedTab = this.selected;
+  },
+  watch: {
+    selected: function() {
+      this.selectedTab = this.selected;
+    }
+  }
 }
 </script>
