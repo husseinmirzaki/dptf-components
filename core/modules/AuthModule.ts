@@ -44,12 +44,18 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
     user = {} as User;
     isAuthenticated = !!JwtService.getToken();
 
+    forgottenUser = '';
+
     /**
      * Get current user object
      * @returns User
      */
     get currentUser(): User {
         return this.user;
+    }
+
+    get currentForgottenUser(): string {
+        return this.forgottenUser;
     }
 
 
@@ -76,6 +82,11 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
     @Mutation
     [Mutations.SET_ERROR](error) {
         this.errors = error;
+    }
+
+    @Mutation
+    [Mutations.SET_FORGOTTEN_USER](user: string) {
+        this.forgottenUser = user;
     }
 
     @Action
@@ -202,14 +213,11 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
     @Action
     [Actions.FORGOT_PASSWORD](payload) {
         return new Promise<void>((resolve, reject) => {
-            ApiService.post(ApiService.forgetPasswordUrl, payload)
-                .then(({data}) => {
-                    this.context.commit(Mutations.SET_AUTH, data);
+            ApiService.post(ApiService.forgetPasswordUrl, {data: payload})
+                .then(() => {
                     resolve();
                 })
-                .catch(({response}) => {
-                    console.log(response.data.errors);
-                    this.context.commit(Mutations.SET_ERROR, response.data.errors);
+                .catch(() => {
                     reject();
                 });
         });
@@ -222,13 +230,12 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
     @Action
     [Actions.SET_FORGOT_PASSWORD](payload) {
         return new Promise<void>((resolve, reject) => {
-            ApiService.post(ApiService.forgetPasswordResetUrl, payload)
-                .then(({data}) => {
-                    this.context.commit(Mutations.SET_AUTH, data);
+            ApiService.post(ApiService.forgetPasswordResetUrl, {data: payload})
+                .then(() => {
+                    this.context.commit(Mutations.SET_FORGOTTEN_USER, '');
                     resolve();
                 })
-                .catch(({response}) => {
-                    this.context.commit(Mutations.SET_ERROR, response.data.errors);
+                .catch(() => {
                     reject();
                 });
         });

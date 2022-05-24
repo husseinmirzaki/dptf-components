@@ -37,11 +37,11 @@ class ApiService {
     }
 
     public static get forgetPasswordUrl() {
-        return this.base_url + "user/auth/forget/";
+        return this.base_url + "user/auth/forgotten/";
     }
 
     public static get forgetPasswordResetUrl() {
-        return this.base_url + "user/auth/forget/reset/";
+        return this.base_url + "user/auth/reset_forgotten/";
     }
 
     public static get selectUrl() {
@@ -245,10 +245,10 @@ class ApiService {
      * @param params
      * @returns Promise<AxiosResponse>
      */
-    public static get(
+    public static get<T = any>(
         resource: string,
         params = {}
-    ): Promise<AxiosResponse> {
+    ): Promise<AxiosResponse<T>> {
         return this.wrap(() => {
             return this.vueInstance.axios.get(resource, this.calcConf(params));
         });

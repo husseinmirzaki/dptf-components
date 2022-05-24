@@ -117,6 +117,24 @@
             ref="fieldRef"
         />
       </template>
+      <template v-else-if="field_type === 'auto-complete'">
+        <Field
+            :class="[defaultInputClasses, input_class]"
+            :id="field_id"
+            :name="name"
+            type="checkbox"
+            :value="this.$props.modelValue"
+        >
+          <auto-complete
+              :options="{
+              url: select_url
+            }"
+              :modelValue="this.$props.modelValue"
+              @update:modelValue="$emit('update:modelValue', $event)"
+              ref="fieldRef"
+          />
+        </Field>
+      </template>
       <template v-else>
         <Field
             :class="[defaultInputClasses, input_class]"
@@ -148,11 +166,13 @@ import Vue3PersianDatetimePicker from 'vue3-persian-datetime-picker'
 import {gregorianToJalali} from "@/custom/components/DateUtils";
 import {findClassInParent} from "@/custom/helpers/DomHelpers";
 import {VueInstanceService} from "@/custom/Defaults";
+import AutoComplete from "@/custom/components/forms/AutoComplete.vue";
 
 export default defineComponent({
   name: "field-component",
   inheritAttrs: false,
   components: {
+    AutoComplete,
     Field,
     ErrorMessage,
     DatePicker: Vue3PersianDatetimePicker,
