@@ -119,6 +119,11 @@ export class Table {
         return this.basePushAddress + 'update/' + data.id;
     }
 
+    getDeleteItemId(data) {
+        console.log(data);
+        return data.id;
+    }
+
     onDeleteClicked(data) {
         Swal.fire({
             icon: 'warning',
@@ -132,9 +137,8 @@ export class Table {
             cancelButtonColor: '#0742c0',
         }).then((e) => {
             if (e.value) {
-                this.service.deleteOne(data.id).then(() => {
-                    console.log("calling refresh for table", this.tableName);
-                    VueInstanceService.emit(this.tableName, ['refresh']);
+                this.service.deleteOne(this.getDeleteItemId(data)).then(() => {
+                    this.refresh()
                 });
             }
         });
