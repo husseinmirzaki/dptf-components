@@ -90,6 +90,11 @@ class ApiService {
                     VueInstanceService.showErrorMessage("کاربر هنوز فعال نشده")
                     reject(result);
                 } else if ((result.response.status == 401 || result.response.status == 403)) {
+                    if (result.response.code == 'permission_denied') {
+                        VueInstanceService.router.push('/');
+                        VueInstanceService.showErrorMessage("شما دسترسی به بخش درخواستی را ندارید")
+                        return result;
+                    }
                     VueInstanceService.store
                         .dispatch(Actions.ASK_NEW_TOKEN)
                         .then(() => {
