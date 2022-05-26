@@ -531,7 +531,8 @@ export class CreateForm {
                             break;
                     }
                     nextTick(() => {
-                        this.elementRefs[dataKey].showError.value = false;
+                        if (this.elementRefs[dataKey])
+                            this.elementRefs[dataKey].showError.value = false;
                     });
                 });
             }
