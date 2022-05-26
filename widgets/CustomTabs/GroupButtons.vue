@@ -1,22 +1,52 @@
 <template>
-  <div class="d-flex gap-2 " :class="{
+  <div class="custom-tabs-container d-flex" :class="{
       'flex-column': !horizontal,
     }">
-    <button class="btn btn-primary" :class="{
+    <div class="custom-tab" :class="{
       'tabs': tabs,
       'horizontal': horizontal,
-      'btn-active-dark': !button !== selectedButton,
-      'btn-dark': button === selectedButton
+      'active': button === selectedButton
     }" v-for="button in buttons" :key="button.id" @click="selectedButton=button;$emit('selected', button)">
       {{ button.name }}
-    </button>
+    </div>
   </div>
 </template>
 <style lang="scss">
-.tabs.tabs {
-  button {
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
+.custom-tabs-container {
+  margin-bottom: 10px;
+  background-color: #bebebe;
+  border-radius: 5px;
+
+  .custom-tab:last-child {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+
+  .custom-tab:first-child {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+}
+
+.custom-tab {
+  margin: 0 0 0 0;
+  cursor: default;
+  position: relative;
+  font-size: 15px;
+  padding: 12px 7px;
+  &.active {
+    background-color: #fff;
+    color: #0b0e18;
+    overflow: hidden;
+    &:after {
+      position: absolute;
+      content: '';
+      width: 100%;
+      height: 3px;
+      background-color: #0b0e18;
+      top: 0;
+      left: 0;
+    }
   }
 }
 </style>
@@ -47,7 +77,7 @@ export default {
     this.selectedButton = this.selectedB;
   },
   watch: {
-    selected: function() {
+    selected: function () {
       this.selectedButton = this.selectedB;
     }
   }

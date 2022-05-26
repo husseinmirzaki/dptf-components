@@ -1,8 +1,11 @@
 <template>
 
   <div class="d-flex tabs justify-content-between w-100">
+    <div class="d-flex flex-row">
+    <slot name="before-group-button"/>
     <group-buttons :buttons="tabs" :selectedB="selected" @selected="selectedTab=$event"/>
-    <div>
+    </div>
+    <div v-if="showTooltip">
       <button
           type="button"
           class="btn btn-sm btn-icon btn-color-primary btn-active-light-primary"
@@ -17,10 +20,20 @@
       <DropdownV2/>
     </div>
   </div>
-  <div class="d-flex tab-content" v-if="tabs.length > 0">
+  <div
+      class="d-flex tab-content"
+      v-if="tabs.length > 0">
     <slot :name="'tab_' + selectedTab.id"/>
   </div>
 </template>
+<style lang="scss">
+.tab-content {
+  background-color: #ffffff;
+  padding: 0 5px 5px;
+  box-shadow: 0 0 1px rgb(0 0 0 / 13%), 0 1px 3px rgb(0 0 0 / 20%);
+  border-radius: 5px;
+}
+</style>
 <script>
 import {ref} from "vue";
 import DropdownV2 from "@/custom/components/DropdownV2";
@@ -36,6 +49,9 @@ export default {
   props: {
     tabs: {
       default: () => [],
+    },
+    showTooltip: {
+      default: false,
     },
     selected: {
       default: () => {
