@@ -2,6 +2,8 @@ import FieldComponentPropsInterface from "@/custom/components/FieldComponentProp
 import {CreateForm} from "@/custom/helpers/BaseForm";
 import {UserApiService} from "@/custom/services/UserApiService";
 import * as Yup from "yup";
+import {watch} from "vue";
+import {ExternalContactApiService} from "@/mail_box_custom/services/ExternalContactApiService";
 
 export const genderOptions = {
     "0": "مرد",
@@ -31,6 +33,14 @@ export default class UserUpdateForm extends CreateForm {
             }, (e) => reject(e));
         });
     }
+
+    // watchStuff(cb: any) {
+    //     watch(this.refs.basic, (data) => {
+    //         if (cb) {
+    //             cb(data);
+    //         }
+    //     }, {deep: true});
+    // }
 
     concatFields(): Array<FieldComponentPropsInterface> {
         return [
