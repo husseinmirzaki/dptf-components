@@ -65,7 +65,7 @@
 }
 </style>
 <script lang="ts">
-import {defineComponent, nextTick, onBeforeMount, ref, toRefs, watch} from "vue";
+import {defineComponent, nextTick, ref, toRefs, watch} from "vue";
 import {CreateFormExtend} from "@/custom/helpers/BaseForm";
 import FormContainer from "@/custom/components/FormContainer.vue";
 import FormBuilder from "@/custom/components/FormBuilder.vue";
