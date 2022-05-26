@@ -1,9 +1,14 @@
 <template>
 
-  <div class="d-flex tabs justify-content-between w-100">
-    <div class="d-flex flex-row">
-    <slot name="before-group-button"/>
-    <group-buttons :buttons="tabs" :selectedB="selected" @selected="selectedTab=$event"/>
+  <div class="d-flex tabs w-100">
+    <div class="d-flex flex-row w-100 justify-content-between">
+      <div class="d-flex flex-row">
+        <slot name="before-group-button"/>
+        <group-buttons :buttons="tabs" :selectedB="selected" @selected="selectedTab=$event"/>
+      </div>
+      <div class="d-flex">
+        <slot name="after-group-button"/>
+      </div>
     </div>
     <div v-if="showTooltip">
       <button
@@ -20,9 +25,7 @@
       <DropdownV2/>
     </div>
   </div>
-  <div
-      class="d-flex tab-content"
-      v-if="tabs.length > 0">
+  <div class="d-flex tab-content" v-if="tabs.length > 0">
     <slot :name="'tab_' + selectedTab.id"/>
   </div>
 </template>
@@ -63,7 +66,7 @@ export default {
     this.selectedTab = this.selected;
   },
   watch: {
-    selected: function() {
+    selected: function () {
       this.selectedTab = this.selected;
     }
   }

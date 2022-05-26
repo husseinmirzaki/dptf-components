@@ -136,20 +136,34 @@ export class Table {
             confirmButtonColor: '#F00',
             cancelButtonColor: '#0742c0',
         }).then((e) => {
-            if (e.value) {
-                this.service.deleteOne(this.getDeleteItemId(data)).then(() => {
-                    this.refresh()
-                });
+            if (this.props.url.value != "") {
+                if (e.value) {
+                    this.service.deleteOne(this.getDeleteItemId(data)).then(() => {
+                        this.refresh();
+                        this.context.emit('delete', data);
+                    });
+                }
+            } else {
+                this.context.emit('delete', data);
             }
+
         });
     }
 
     onViewClicked(data) {
-        VueInstanceService.router.push(this.viewPushAddress(data));
+        if (this.basePushAddress != "") {
+            VueInstanceService.router.push(this.viewPushAddress(data));
+        } else {
+            this.context.emit('update', data);
+        }
     }
 
     onEditClicked(data) {
-        VueInstanceService.router.push(this.updatePushAddress(data));
+        if (this.basePushAddress != "") {
+            VueInstanceService.router.push(this.updatePushAddress(data));
+        } else {
+            this.context.emit('update', data);
+        }
     }
 
 

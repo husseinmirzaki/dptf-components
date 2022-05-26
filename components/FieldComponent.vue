@@ -425,10 +425,12 @@ export default defineComponent({
         console.log(`${persian[0]}/${persian[1]}/${persian[2]}`)
         context.emit("update:modelValue", `${persian[0]}/${persian[1]}/${persian[2]}`);
       } else {
-        field.value.$el.value = data;
-        nextTick(() => {
-          field.value.$el.dispatchEvent(new Event('change'));
-        });
+        if (field.value && field.value.$el) {
+          field.value.$el.value = data;
+          nextTick(() => {
+            field.value.$el.dispatchEvent(new Event('change'));
+          });
+        }
       }
     }
 
