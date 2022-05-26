@@ -72,7 +72,7 @@ export default defineComponent({
   setup(props, context) {
     const {formClass} = toRefs(props);
     const forms = ref<any>([]);
-    const formInstances: Array<CreateFormExtend> = [];
+    const formInstances: Array<CreateFormExtend<any>> = [];
 
     const reset = () => {
       Object.values(formInstances).forEach((_formInstance) => {

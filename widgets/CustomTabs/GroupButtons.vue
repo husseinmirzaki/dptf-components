@@ -13,7 +13,7 @@
 </template>
 <style lang="scss">
 .custom-tabs-container {
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   background-color: #bebebe;
   border-radius: 5px;
 
@@ -32,8 +32,8 @@
   margin: 0 0 0 0;
   cursor: default;
   position: relative;
-  font-size: 15px;
-  padding: 12px 7px;
+  font-size: 16px;
+  padding: 14px 7px;
   &.active {
     background-color: #fff;
     color: #0b0e18;

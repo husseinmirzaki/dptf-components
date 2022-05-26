@@ -69,6 +69,7 @@ import {defineComponent, nextTick, onBeforeMount, ref, toRefs, watch} from "vue"
 import {CreateFormExtend} from "@/custom/helpers/BaseForm";
 import FormContainer from "@/custom/components/FormContainer.vue";
 import FormBuilder from "@/custom/components/FormBuilder.vue";
+import LetterReceiverForm from "@/mail_box_custom/forms/LetterReceiverForm";
 
 export default defineComponent({
   components: {FormBuilder, FormContainer},
@@ -76,7 +77,7 @@ export default defineComponent({
   setup(props, context) {
     const {formClass} = toRefs(props);
     const forms = ref<any>([]);
-    const formInstances: Array<CreateFormExtend> = [];
+    const formInstances: Array<CreateFormExtend<LetterReceiverForm>> = [];
 
     const reset = () => {
       Object.values(formInstances).forEach((_formInstance) => {
