@@ -3,12 +3,12 @@ import FieldComponentPropsInterface from "@/custom/components/FieldComponentProp
 import {onkeys} from "@/custom/helpers/CustomFunctions";
 import * as Yup from 'yup';
 
-export interface CreateFormExtend {
+export interface CreateFormExtend<T extends CreateForm> {
     update: any;
     formButtonsInstance: any;
     formContainer: any;
     obj: any;
-    formInstance: any;
+    formInstance: T;
 }
 
 /**
@@ -476,7 +476,7 @@ export class CreateForm {
     /**
      * prepares a form to be used by its component
      */
-    extend(): CreateFormExtend {
+    extend(): CreateFormExtend<CreateForm & this> {
         // prepare the basic data holder
         const obj = ref<any>({});
         this.addR(obj);
