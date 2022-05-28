@@ -15,7 +15,9 @@ import {random} from "@/custom/helpers/random";
 import LoginForm from "@/custom/forms/LoginForm";
 
 export class Table {
-    tableName = '';
+    get tableName () {
+        return '';
+    }
     /**
      * Default header component which is used
      * anywhere we don't know the data type or
@@ -172,7 +174,6 @@ export class Table {
         this.context = context;
         this.extra = extra;
         this.contextMenuItems = this.buildContextMenu();
-        this.tableName = random(5);
         VueInstanceService.on(this.tableName, (e) => {
             console.log("called an event for table", this.tableName, e);
             if (e[0] == 'refresh') {
