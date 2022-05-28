@@ -11,8 +11,10 @@
     <template v-if="$slots.dropDown" v-slot:dropDown>
       <slot name="dropDown"/>
     </template>
-    <template v-if="$slots.toolbar" v-slot:toolbar>
-      <slot name="toolbar"/>
+    <template v-slot:toolbar>
+            <button @click="filterShow = !filterShow" v-if="defaultConfig.filterForm" class="btn btn-sm btn-primary btn-icon">
+        <i class="fas fa-filter"></i>
+      </button>
     </template>
     <template v-if="$slots.toolbar0" v-slot:toolbar0>
       <slot name="toolbar0"/>
@@ -44,6 +46,7 @@
 
               <!--begin::Table body-->
               <tbody>
+
               <tr v-if="!dList || dList.length == 0">
                 <td :colspan="headers.length" class="text-center">
                   <slot name="empty">
@@ -51,18 +54,25 @@
                   </slot>
                 </td>
               </tr>
-              <template v-for="(item, index) in dList" :key="index" v-else>
-                <tr class="text-center" data-context-menu="true" @contextmenu="contextMenu(item)"
-                    @click="$emit('on-row-selected', item)">
-                  <template v-for="(header, index) in headers" :key="index">
-
-                    <component
-                        class="pe-2"
-                        :is="defaultConfig.onTBodyComponent(item, header, index)"
-                        v-bind="defaultConfig.onTBodyProps(item, header, index)"
-                    />
-                  </template>
+              <template v-else>
+                <tr v-if="defaultConfig.filterForm && filterShow">
+                  <td v-for="header in headers" :key="header">
+                   <field-builder v-if="defaultConfig.getFieldByName(header)" :field="defaultConfig.getFieldByName(header)"/>
+                  </td>
                 </tr>
+                <template v-for="(item, index) in dList" :key="index">
+                  <tr class="text-center" data-context-menu="true" @contextmenu="contextMenu(item)"
+                      @click="$emit('on-row-selected', item)">
+                    <template v-for="(header, index) in headers" :key="index">
+
+                      <component
+                          class="pe-2"
+                          :is="defaultConfig.onTBodyComponent(item, header, index)"
+                          v-bind="defaultConfig.onTBodyProps(item, header, index)"
+                      />
+                    </template>
+                </tr>
+                </template>
               </template>
               </tbody>
               <!--end::Table body-->
@@ -89,9 +99,13 @@ import TablePagination from "@/custom/components/table/TablePagination.vue";
 import Card from "@/custom/components/Card.vue";
 import {ContextMenuService} from "@/custom/components/ContextMenuService";
 import Spinner from "@/custom/components/Spinner.vue";
+import FieldComponent from "@/custom/components/FieldComponent.vue";
+import FieldBuilder from "@/custom/components/FieldBuilder.vue";
 
 export default defineComponent({
   components: {
+    FieldBuilder,
+    FieldComponent,
     Spinner,
     Card,
     TablePagination,
@@ -136,6 +150,11 @@ export default defineComponent({
       },
     },
     widgetClasses: String,
+  },
+  data() {
+    return {
+      filterShow: false,
+    }
   },
   setup(props, context) {
     const conf = toRef(props, 'conf');

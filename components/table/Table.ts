@@ -13,11 +13,31 @@ import TableTDBool from "@/custom/components/table/tbody/TableTDBool.vue";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import {random} from "@/custom/helpers/random";
 import LoginForm from "@/custom/forms/LoginForm";
+import {CreateForm} from "@/custom/helpers/BaseForm";
+import {fieldC} from "@/custom/components/FieldComponent.vue";
 
 export class Table {
-    get tableName () {
+
+
+    get tableName() {
         return '';
     }
+
+
+    getFilterForm(): any {
+        return null;
+    }
+
+    _fieldsCache: any = {};
+
+    getFieldByName(name: string) {
+        if (this._fieldsCache[name])
+            return this._fieldsCache[name];
+        const field = this.filterForm.formInstance.fields.find((e) => e.name === name);
+        this._fieldsCache[name] = fieldC(field);
+        return this._fieldsCache[name];
+    }
+
     /**
      * Default header component which is used
      * anywhere we don't know the data type or
@@ -67,6 +87,11 @@ export class Table {
      * you can define new headers or limit headers
      */
     defaultHeaders: Array<string> = [];
+
+    /**
+     * you can define new headers or limit headers
+     */
+    filterForm: any = {};
 
     /**
      * define context menu items to be shown to users
@@ -174,17 +199,21 @@ export class Table {
         this.context = context;
         this.extra = extra;
         this.contextMenuItems = this.buildContextMenu();
+        this.filterForm = this.getFilterForm();
+        console.log(VueInstanceService)
         VueInstanceService.on(this.tableName, (e) => {
             console.log("called an event for table", this.tableName, e);
             if (e[0] == 'refresh') {
                 this.refresh();
             }
         });
-        watch(this.filters, () => {
-            this.refresh();
-        }, {
-            deep: true,
-        })
+        if (this.filterForm) {
+            watch(this.filterForm.obj, () => {
+                this.refresh();
+            }, {
+                deep: true,
+            })
+        }
     }
 
     buildContextMenu(): Array<ContextMenuItem> {
@@ -353,7 +382,10 @@ export class Table {
     count = ref(0)
 
     getFilters(): Record<string, any> {
-        return this.filters.value;
+        if (this.filterForm) {
+            return this.filterForm.obj.value ?? [];
+        }
+        return [];
     }
 
     onGetData() {
@@ -386,7 +418,7 @@ export class Table {
 
             tableData.append('page', String(this.currentPage.value));
 
-            filters.keys().forEach((key) => {
+            Object.keys(filters).forEach((key) => {
                 tableData.append(key, filters[key]);
             });
             // if (url.indexOf('?') > -1 && !url.endsWith('?')) {
