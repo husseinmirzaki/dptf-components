@@ -1,27 +1,7 @@
 <template>
   <div class="row">
     <template v-for="(field, index) in fieldsC" :key="index">
-      <template v-if="field.hasVModelKey">
-        <field-component
-          v-bind="field.vBind"
-          :model-value="
-            field.options['v-model'].value[field.options['v-model-key']]
-          "
-          @update:modelValue="
-            field.options['v-model'].value[field.options['v-model-key']] =
-              $event
-          "
-        />
-      </template>
-      <template v-else-if="field.hasVModel">
-        <field-component
-          v-bind="field.vBind"
-          v-model="field.options['v-model'].value"
-        />
-      </template>
-      <template v-else>
-        <field-component v-bind="field.vBind" />
-      </template>
+      <field-builder :field="field"/>
     </template>
     <slot name="more-fields"/>
   </div>
@@ -29,9 +9,10 @@
 <script type="ts">
 import { computed, defineComponent, toRef } from "vue";
 import FieldComponent, { fieldC } from "@/custom/components/FieldComponent";
+import FieldBuilder from "@/custom/components/FieldBuilder.vue";
 
 export default defineComponent({
-  components: { FieldComponent },
+  components: {FieldBuilder, },
   name: "form-builder",
   props: {
     fields: {
