@@ -3,12 +3,16 @@ import FieldComponentPropsInterface from "@/custom/components/FieldComponentProp
 import {onkeys} from "@/custom/helpers/CustomFunctions";
 import * as Yup from 'yup';
 
-export interface CreateFormExtend<T extends CreateForm> {
+export interface CreateFormExtend<T extends CreateForm, E = any> {
     update: any;
     formButtonsInstance: any;
     formContainer: any;
-    obj: any;
+    obj: Ref<E>;
     formInstance: T;
+}
+
+export interface FieldsInterface {
+    id?: string|undefined|null
 }
 
 /**
@@ -24,7 +28,7 @@ export interface CreateFormExtend<T extends CreateForm> {
  * which username is required and another mode in which
  * username is required. (todo)
  */
-export class CreateForm {
+export class CreateForm<T extends FieldsInterface = any> {
     /**
      * hold id which points to some data on database of server. it is used for
      * updating current form data on database
@@ -56,7 +60,7 @@ export class CreateForm {
      *     username: Ref('any possible data')
      * }
      */
-    refs: Record<string, Ref> = {};
+    refs: Record<string, Ref<T>> = {};
 
     /**
      * holds a reference to all fields in current form
@@ -64,7 +68,7 @@ export class CreateForm {
      * custom component which user may have injected
      * to form through `concatFields` method
      */
-    elementRefs: Record<string, any> = {};
+    elementRefs: Record<keyof T, any> = {} as Record<keyof T, any>;
 
     /**
      * whether submit function must be treated as an
@@ -93,7 +97,7 @@ export class CreateForm {
      * returns a vee `Field` instance
      * @param name
      */
-    getDByField(name) {
+    getDByField(name: keyof T) {
         return this.elementRefs[name].fieldRef.value;
     }
 
@@ -101,7 +105,7 @@ export class CreateForm {
      * sets id of basic mode
      * @param id
      */
-    getSetDataById(id, mode='basic') {
+    getSetDataById(id, mode = 'basic') {
         this.refs[mode].value['id'] = id;
     }
 
@@ -386,7 +390,7 @@ export class CreateForm {
      * @param event is not required
      * @param isCustom will return data
      */
-    submit(event, isCustom = false, onDone=null) {
+    submit(event, isCustom = false, onDone = null) {
         let promise;
 
         // to determine whether we should return a FormData
@@ -436,7 +440,7 @@ export class CreateForm {
             }
             if (this.isUpdate.value)
                 promise = this.service.updateOne(
-                    this.refs["basic"].value.id,
+                    this.refs["basic"].value['id'],
                     formData
                 );
             else
@@ -448,7 +452,7 @@ export class CreateForm {
             }
             if (this.isUpdate.value)
                 promise = this.service.updateOne(
-                    this.refs["basic"].value.id,
+                    this.refs["basic"].value['id'],
                     this.refs["basic"].value
                 );
             else
@@ -467,7 +471,7 @@ export class CreateForm {
             this.refs[mode],
             () => {
                 if (this.refs[mode] && this.refs[mode].value && this.refs[mode].value['id'])
-                    this.id = this.refs[mode].value['id'];
+                    this.id = this.refs[mode].value['id']!;
             },
             {deep: true}
         );
@@ -476,7 +480,7 @@ export class CreateForm {
     /**
      * prepares a form to be used by its component
      */
-    extend(): CreateFormExtend<CreateForm & this> {
+    extend(): CreateFormExtend<CreateForm & this, T> {
         // prepare the basic data holder
         const obj = ref<any>({});
         this.addR(obj);
@@ -543,11 +547,11 @@ export class CreateForm {
     setValues(data: Record<string, any>) {
 
         if (data.id) {
-            this.refs.basic.value.id = data.id;
+            this.refs.basic.value['id'] = data.id;
         }
 
         Object.keys(data).forEach((e) => {
-            if(this.elementRefs[e])
+            if (this.elementRefs[e])
                 (this.elementRefs[e] as any).setValue(data[e]);
         });
     }
