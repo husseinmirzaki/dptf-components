@@ -68,28 +68,26 @@
         </Field>
       </template>
       <template v-else-if="field_type === 'checkbox'">
-        <Field
-            :class="[defaultInputClasses, input_class]"
-            :id="field_id"
-            :name="name"
-            type="checkbox"
-            :value="this.$props.modelValue"
-        >
-
-          <div class="form-check m-3 me-4" style="padding-right: 0 !important ">
-
+        <div class="form-check m-3 me-4" style="padding-right: 0 !important ">
+          <Field
+              :class="['form-check-input',defaultInputClasses, input_class]"
+              :id="field_id"
+              :name="name"
+              type="checkbox"
+              :value="this.$props.modelValue"
+              :modelValue="this.$props.modelValue"
+          >
             <input
                 class="form-check-input"
                 type="checkbox"
                 :checked="this.$props.modelValue"
-                @update:modelValue="$emit('update:modelValue', fieldRef.checked)"
                 @change="$emit('update:modelValue', fieldRef.checked)"
                 ref="fieldRef">
-            <label class="form-check-label">
-              {{ placeholder }}
-            </label>
-          </div>
-        </Field>
+          </Field>
+          <label class="form-check-label">
+            {{ placeholder }}
+          </label>
+        </div>
       </template>
       <template v-else-if="field_type === 'component'">
         <component
