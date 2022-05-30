@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <template v-for="(field, index) in fieldsC" :key="index">
+    <template v-for="(field) in fieldsC" :key="field.options.name">
       <field-builder :field="field"/>
     </template>
     <slot name="more-fields"/>

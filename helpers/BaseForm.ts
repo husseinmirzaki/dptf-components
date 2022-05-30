@@ -12,7 +12,7 @@ export interface CreateFormExtend<T extends CreateForm, E = any> {
 }
 
 export interface FieldsInterface {
-    id?: string|undefined|null
+    id?: string | undefined | null
 }
 
 /**
@@ -36,14 +36,55 @@ export class CreateForm<T extends FieldsInterface = any> {
     id: string | number | null = null;
 
     /**
+     * this specific form class modes
+     * this option will specify which modes should be generated
+     * and then which fields should be excluded from that specific
+     * mode
+     *
+     * users can still use validation property to override this
+     * rule for one or more field
+     */
+    get modes(): Array<string> {
+        return this.getModes();
+    }
+
+    getModes(): Array<string> {
+        return ['basic'];
+    }
+
+    activeMode: Ref<string> = ref('basic');
+
+    get theActiveMode() {
+        return this.activeMode.value;
+    }
+
+    set theActiveMode(mode) {
+
+        if (mode == '') {
+            this.theActiveMode = 'basic';
+            return;
+        }
+
+        if (this.activeMode.value != mode)
+            this.activeMode.value = mode;
+    }
+
+    /**
      * an instance or a class which extends ApiService
      */
     service: any = null;
 
     /**
      * current fields of the form
+     * @deprecated try to use `modeFields` from now on
      */
     fields: Array<FieldComponentPropsInterface> = [];
+
+    /**
+     * these are generated fields base on the modes, user
+     * provides to this class
+     */
+    modeFields: Record<string, Array<FieldComponentPropsInterface>> = {};
 
     /**
      * holds all validation schemas which are used by
@@ -125,10 +166,21 @@ export class CreateForm<T extends FieldsInterface = any> {
         return extracted;
     }
 
+    private filterMode(searchMode: string) {
+
+        return (eMode: string) => {
+            const eModeContainsSearchMode = eMode.startsWith(searchMode) && eMode.split('-').length <= searchMode.split('-').length;
+            const searchModeContainsEMode = searchMode.startsWith(eMode) && searchMode.split('-').length >= eMode.split('-').length;
+            return eModeContainsSearchMode || searchModeContainsEMode;
+        }
+    }
+
 
     constructor() {
         // first get current service instance or class
         this.service = this.getService();
+
+        console.log("current form modes", this.modes);
         // prepare fields and create an object which will
         // be used to access FieldComponent component dome
         // from with in form class
@@ -136,7 +188,20 @@ export class CreateForm<T extends FieldsInterface = any> {
             e.outerAccess = (e1) => {
                 this.elementRefs[e.name] = e1;
             }
+
+            // TODO: remove this one
             this.fields.push(e);
+
+            this.modes.forEach((mode) => {
+
+                if (e.onlyOnModes && e.onlyOnModes.findIndex(this.filterMode(mode)) == -1) return;
+                if (e.excludeOnModes && e.excludeOnModes.findIndex(this.filterMode(mode)) > -1) return;
+
+                if (!this.modeFields[mode]) this.modeFields[mode] = [];
+
+                this.modeFields[mode].push(e);
+
+            });
         });
         // create required validation schemas
         const validationSchemas = this.concatValidationSchemas();
@@ -256,6 +321,11 @@ export class CreateForm<T extends FieldsInterface = any> {
             }
         }
 
+        addBase();
+        this.modes.forEach((mode) => {
+            addBase(mode);
+        });
+
         // here we are trying to create a validation
         // schema for each field
         // to do so we should loop over fields and check
@@ -276,47 +346,61 @@ export class CreateForm<T extends FieldsInterface = any> {
             const d = e['validation'];
             if (d) {
                 // console.log("custom validations", d);
-                d.forEach((validation) => {
-                    addBase();
-                    fieldsValidations['basic'][e.name] = validation;
-                });
+                if (Array.isArray(d)) {
+                    d.forEach((validation) => {
+                        fieldsValidations['basic'][e.name] = validation;
+                    });
+                } else {
+                    Object.keys(d).forEach((modeName) => {
+                        fieldsValidations[modeName][e.name] = d[modeName];
+                    })
+                }
             } else {
-                // by `addBase' we make sure required
-                // index in `fieldsValidations` object
-                // exists
-                addBase();
+                // which modes will be excluded when using validation
+                // schema
+                const excludeModes = e.excludeOnModes;
+                const addValidationToModes = (field, validation) => {
+                    this.modes.forEach((mode) => {
+                        if (e.onlyOnModes && e.onlyOnModes.findIndex(this.filterMode(mode)) == -1) return;
+                        if (excludeModes && excludeModes
+                            .findIndex(this.filterMode(mode)) > -1) return;
+                        fieldsValidations[mode][field] = validation;
+                    })
+                }
+
                 const fieldType = e['field_type'];
                 const label = e['label'];
                 const placeholder = e['placeholder'];
                 // this text is shown in errors
                 const text = label || placeholder;
                 const required = e['required'] === undefined || e['required'];
+
                 if (text) {
                     if (fieldType == "select") {
                         const multipleSelected = e['select_multiple'];
                         if (multipleSelected && required) {
                             // selects with multiple attribute return array
                             // so, we should use an array validation schema
-                            fieldsValidations['basic'][e.name] = Yup.array().nullable()['checkSelect']('حداقل یکی از موارد را انتخاب کنید').label(text);
+                            addValidationToModes(e.name, Yup.array().nullable()['checkSelect']('حداقل یکی از موارد را انتخاب کنید').label(text));
                         } else if (required) {
                             // if select doesn't have a multiple attribute
-                            fieldsValidations['basic'][e.name] = Yup.string().nullable()['checkSingleSelect']('حداقل یکی از موارد را انتخاب کنید').label(text);
+                            addValidationToModes(e.name, Yup.string().nullable()['checkSingleSelect']('حداقل یکی از موارد را انتخاب کنید').label(text));
                         }
                     } else if (fieldType == "file" && required) {
                         // file filedType returns an Object
                         // as output, so we should use mixed
                         // validation schema for it
-                        fieldsValidations['basic'][e.name] = Yup.mixed().required().label(text);
+                        addValidationToModes(e.name, Yup.mixed().required().label(text));
                     } else if (fieldType == "number" && required) {
                         // we expect number fieldType to return
                         // a number so number validation schema
                         // is used
-                        fieldsValidations['basic'][e.name] = Yup.number().required().label(text);
+                        addValidationToModes(e.name, Yup.number().required().label(text));
                     } else {
                         // strings can be anything so, we will only check
                         // for any condition only if field is required
                         if (required) {
-                            fieldsValidations['basic'][e.name] = Yup.string().required().label(text);
+                            addValidationToModes(e.name, Yup.string().required().label(text));
                         }
                     }
                 }
@@ -348,17 +432,28 @@ export class CreateForm<T extends FieldsInterface = any> {
                 e["v-model-key"] = key;
             }
         });
+        Object.keys(this.modeFields).forEach((fieldsKey) => {
+            this.modeFields[fieldsKey].forEach((fieldComponent) => {
+                if ((!name && key == fieldComponent.name) || fieldComponent.name == name) {
+                    fieldComponent["v-model"] = this.refs[ref];
+                    fieldComponent["v-model-key"] = key;
+                }
+            });
+        })
     }
 
     /**
      * automatically will connect fields to a ref
-     * @param key_ref the ref we want all fields to connect to
      */
-    autoAddRef(key_ref = "basic") {
-        // this is not using currently generated
-        // fields
-        this.concatFields().forEach((e) => {
-            this.setKeyRef(e.name, key_ref);
+    autoAddRef() {
+        this.modes.forEach((mode) => {
+            // this is not using currently generated
+            // fields
+            this.concatFields().forEach((e) => {
+                if (e.onlyOnModes && e.onlyOnModes.findIndex(this.filterMode(mode)) == -1) return;
+                if (e.excludeOnModes && e.excludeOnModes.findIndex(this.filterMode(mode)) > -1) return;
+                this.setKeyRef(e.name, mode);
+            });
         });
     }
 
@@ -483,7 +578,9 @@ export class CreateForm<T extends FieldsInterface = any> {
     extend(): CreateFormExtend<CreateForm & this, T> {
         // prepare the basic data holder
         const obj = ref<any>({});
-        this.addR(obj);
+        this.modes.forEach((mode) => {
+            this.addR(obj, mode);
+        });
         this.autoAddRef();
         return {
             // this update can be used on component
@@ -498,6 +595,7 @@ export class CreateForm<T extends FieldsInterface = any> {
     }
 
     resetForm() {
+        this.activeMode.value = 'basic';
         this.isUpdate.value = false;
         Object.keys(this.refs).forEach((refKey) => {
             // console.log("this.refs[refKey].value", this.refs[refKey].value);

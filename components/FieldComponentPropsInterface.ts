@@ -30,6 +30,8 @@ export default interface FieldComponentPropsInterface {
     "v-model-key"?: string;
     "update:modelValue"?: (event) => void;
     outerAccess?: (elementRef) => void;
+    excludeOnModes?: Array<string>,
+    onlyOnModes?: Array<string>,
 }
 export default class FieldComponentProps implements FieldComponentPropsInterface {
 }

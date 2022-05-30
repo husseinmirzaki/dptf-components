@@ -4,7 +4,7 @@
     <div class="d-flex flex-row w-100 justify-content-between">
       <div class="d-flex flex-row">
         <slot name="before-group-button"/>
-        <group-buttons :buttons="tabs" :selectedB="selected" @selected="selectedTab=$event"/>
+        <group-buttons :buttons="tabs" :selectedB="selected" @selected="$emit('changed', $event);selectedTab=$event"/>
       </div>
       <div class="d-flex">
         <slot name="after-group-button"/>
