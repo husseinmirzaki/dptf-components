@@ -239,6 +239,12 @@ class ApiService {
      */
     private static calcData(params: any) {
         if (params && params["data"]) {
+            if(params instanceof FormData) {
+                if (!params['headers']) {
+                    params['headers'] = {}
+                }
+                params['headers']['Content-Type'] = 'multipart/form-data'
+            }
             return params["data"];
         }
         return undefined;
