@@ -528,7 +528,7 @@ export class CreateForm<T extends FieldsInterface = any> {
                             _set(0);
                             break;
                         case "object":
-                            _set({});
+                            _set(null);
                             break;
                         case "string":
                             _set("");

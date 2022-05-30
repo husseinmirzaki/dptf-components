@@ -15,6 +15,9 @@
             <button @click="filterShow = !filterShow" v-if="defaultConfig.filterForm" class="btn btn-sm btn-primary btn-icon">
         <i class="fas fa-filter"></i>
       </button>
+                  <button @click="defaultConfig.filterForm.formInstance.resetForm()" v-if="defaultConfig.filterForm" class="btn btn-sm btn-primary btn-icon">
+        <i class="fas fa-undo"></i>
+      </button>
     </template>
     <template v-if="$slots.toolbar0" v-slot:toolbar0>
       <slot name="toolbar0"/>
@@ -46,7 +49,11 @@
 
               <!--begin::Table body-->
               <tbody>
-
+                <tr v-if="defaultConfig.filterForm && filterShow">
+                  <td v-for="header in headers" :key="header">
+                   <field-builder v-if="defaultConfig.getFieldByName(header)" :field="defaultConfig.getFieldByName(header)"/>
+                  </td>
+                </tr>
               <tr v-if="!dList || dList.length == 0">
                 <td :colspan="headers.length" class="text-center">
                   <slot name="empty">
@@ -55,11 +62,6 @@
                 </td>
               </tr>
               <template v-else>
-                <tr v-if="defaultConfig.filterForm && filterShow">
-                  <td v-for="header in headers" :key="header">
-                   <field-builder v-if="defaultConfig.getFieldByName(header)" :field="defaultConfig.getFieldByName(header)"/>
-                  </td>
-                </tr>
                 <template v-for="(item, index) in dList" :key="index">
                   <tr class="text-center" data-context-menu="true" @contextmenu="contextMenu(item)"
                       @click="$emit('on-row-selected', item)">

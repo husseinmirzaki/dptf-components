@@ -200,7 +200,6 @@ export class Table {
         this.extra = extra;
         this.contextMenuItems = this.buildContextMenu();
         this.filterForm = this.getFilterForm();
-        console.log(VueInstanceService)
         VueInstanceService.on(this.tableName, (e) => {
             console.log("called an event for table", this.tableName, e);
             if (e[0] == 'refresh') {
@@ -383,9 +382,9 @@ export class Table {
 
     getFilters(): Record<string, any> {
         if (this.filterForm) {
-            return this.filterForm.obj.value ?? [];
+            return this.filterForm.obj.value ?? {};
         }
-        return [];
+        return {};
     }
 
     onGetData() {
@@ -414,12 +413,13 @@ export class Table {
 
         } else {
 
-            const tableData = new FormData();
-
-            tableData.append('page', String(this.currentPage.value));
+            const tableData: any = {};
+            tableData['page'] = String(this.currentPage.value);
 
             Object.keys(filters).forEach((key) => {
-                tableData.append(key, filters[key]);
+                // if (filters[key])
+                    tableData[key] = filters[key];
+                    // tableData.append(key, filters[key]);
             });
             // if (url.indexOf('?') > -1 && !url.endsWith('?')) {
             //     url += `&page=${this.currentPage.value}`;
