@@ -239,12 +239,6 @@ class ApiService {
      */
     private static calcData(params: any) {
         if (params && params["data"]) {
-            if(params instanceof FormData) {
-                if (!params['headers']) {
-                    params['headers'] = {}
-                }
-                params['headers']['Content-Type'] = 'multipart/form-data'
-            }
             return params["data"];
         }
         return undefined;
@@ -272,11 +266,23 @@ class ApiService {
      * @returns Promise<AxiosResponse>
      */
     public static post(resource: string, params: any | null = null): Promise<AxiosResponse> {
+
+        if (params['data'] && params['data'] instanceof FormData) {
+            if (!params['headers']) {
+                params['headers'] = {}
+            }
+            params['headers']['content-type'] = 'multipart/form-data'
+        }
+
+        const config = this.calcConf(params);
+        console.log(config);
+
+
         return this.wrap(() => {
             return this.vueInstance.axios.post(
                 `${resource}`,
                 this.calcData(params),
-                this.calcConf(params)
+                config
             );
         });
     }
