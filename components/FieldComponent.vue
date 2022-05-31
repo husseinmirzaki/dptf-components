@@ -394,6 +394,7 @@ export default defineComponent({
         );
 
         select2Instance.value?.change((e) => {
+          console.log("select 2 value", e.target, $(e.target).val());
           context.emit("update:modelValue", $(e.target).val());
         });
       } else if (field_type.value === "file") {

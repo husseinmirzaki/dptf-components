@@ -450,8 +450,8 @@ export class CreateForm<T extends FieldsInterface = any> {
             // this is not using currently generated
             // fields
             this.concatFields().forEach((e) => {
-                if (e.onlyOnModes && e.onlyOnModes.findIndex(this.filterMode(mode)) == -1) return;
-                if (e.excludeOnModes && e.excludeOnModes.findIndex(this.filterMode(mode)) > -1) return;
+                // if (e.onlyOnModes && e.onlyOnModes.findIndex(this.filterMode(mode)) == -1) return;
+                // if (e.excludeOnModes && e.excludeOnModes.findIndex(this.filterMode(mode)) > -1) return;
                 this.setKeyRef(e.name, mode);
             });
         });
