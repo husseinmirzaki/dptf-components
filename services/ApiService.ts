@@ -267,7 +267,7 @@ class ApiService {
      */
     public static post(resource: string, params: any | null = null): Promise<AxiosResponse> {
 
-        if (params['data'] && params['data'] instanceof FormData) {
+        if (params && params['data'] && params['data'] instanceof FormData) {
             if (!params['headers']) {
                 params['headers'] = {}
             }
