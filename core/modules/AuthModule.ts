@@ -20,6 +20,7 @@ import {Actions, Mutations} from "@/custom/store/enums/StoreEnums";
 import {Module, Action, Mutation, VuexModule} from "vuex-module-decorators";
 import {VueInstanceService} from "@/custom/Defaults";
 import {UserApiService} from "@/custom/services/UserApiService";
+import {fullNameGenerator} from "@/custom/helpers/UserHelpers";
 
 export interface User {
     avatar?: string
@@ -52,6 +53,10 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
      */
     get currentUser(): User {
         return this.user;
+    }
+
+    get userFullName(): string {
+        return fullNameGenerator(this.user);
     }
 
     get currentForgottenUser(): string {
