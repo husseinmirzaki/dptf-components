@@ -1,7 +1,7 @@
 <template>
   <td>
     <slot :computedValue="computedValue">
-      {{ computedValue ? computedValue : "بدون داده" }}
+      {{ computedValue ? computedValue : emptyCell ? emptyCell : 'بدون داده' }}
     </slot>
   </td>
 </template>
@@ -11,7 +11,7 @@ import TableTDMixin from "@/custom/mixins/TableTDMixin";
 
 export default defineComponent({
   mixins: [TableTDMixin],
-  props: ['data'],
+  props: ['data', 'emptyCell'],
   computed: {
     computedValue: function () {
       if (this.data) {

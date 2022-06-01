@@ -63,7 +63,7 @@
               </tr>
               <template v-else>
                 <template v-for="(item, index) in dList" :key="index">
-                  <tr class="text-center" data-context-menu="true" @contextmenu="contextMenu(item)"
+                  <tr class="text-center" data-context-menu="true" @contextmenu="contextMenu(item)" @drop.prevent="defaultConfig.context.emit('trDrop', [$event, item, index])" @dragenter.prevent @dragover.prevent
                       @click="$emit('on-row-selected', item)">
                     <template v-for="(header, index) in headers" :key="index">
 
