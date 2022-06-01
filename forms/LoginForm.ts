@@ -21,6 +21,7 @@ export default class LoginForm extends CreateForm {
                     html:
                         '<input id="swal-input-code" class="swal2-input">',
                     focusConfirm: true,
+                    confirmButtonText: 'ارسال',
                     preConfirm: () => {
                         const element: any = document.getElementById('swal-input-code');
                         if (element)
