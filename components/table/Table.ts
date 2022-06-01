@@ -193,6 +193,9 @@ export class Table {
         }
     }
 
+    onTableEvent(e){
+        //
+    }
 
     constructor(props, context, extra) {
         this.props = toRefs(props);
@@ -204,6 +207,9 @@ export class Table {
             console.log("called an event for table", this.tableName, e);
             if (e[0] == 'refresh') {
                 this.refresh();
+            }
+            else {
+                this.onTableEvent(e)
             }
         });
         if (this.filterForm) {

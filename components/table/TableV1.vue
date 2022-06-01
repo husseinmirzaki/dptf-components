@@ -12,12 +12,16 @@
       <slot name="dropDown"/>
     </template>
     <template v-slot:toolbar>
-            <button @click="filterShow = !filterShow" v-if="defaultConfig.filterForm" class="btn btn-sm btn-primary btn-icon">
+      <div v-if="defaultConfig.filterForm">
+      <div v-if="!(defaultConfig.filterForm.labelForm)">
+            <button @click="filterShow = !filterShow" class="btn btn-sm btn-primary btn-icon">
         <i class="fas fa-filter"></i>
       </button>
-                  <button @click="defaultConfig.filterForm.formInstance.resetForm()" v-if="defaultConfig.filterForm" class="btn btn-sm btn-primary btn-icon">
+                  <button @click="defaultConfig.filterForm.formInstance.resetForm()" class="btn btn-sm btn-primary btn-icon">
         <i class="fas fa-undo"></i>
       </button>
+      </div>
+      </div>
     </template>
     <template v-if="$slots.toolbar0" v-slot:toolbar0>
       <slot name="toolbar0"/>
