@@ -139,7 +139,7 @@ export class Table {
     }
 
     viewPushAddress(data) {
-        return this.basePushAddress + 'view/' + data.id;
+        return this.basePushAddress + data.id;
     }
 
     updatePushAddress(data) {
