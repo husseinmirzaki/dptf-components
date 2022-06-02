@@ -4,7 +4,8 @@ export class SimpleDrag {
     lastTargetDrag: HTMLElement | null = null;
     lastDraggingElement: HTMLElement | null = null;
     removeOnMouseUp: Array<HTMLElement> = [];
-    itemDropped: (element) => void = (element) => {
+
+    itemDropped(element) {
         //
     }
 
@@ -86,9 +87,10 @@ export class SimpleDrag {
     }
 
     onMouseUp(e) {
+        console.log("console.log", e);
         this.mouseIsDown = false;
 
-        if (this.lastDraggingElement) {
+        if (this.lastDraggingElement && this.lastTargetDrag) {
             this.itemDropped(this.lastTargetDrag);
             this.lastDraggingElement.remove();
         }

@@ -18,9 +18,10 @@ import {fieldC} from "@/custom/components/FieldComponent.vue";
 
 export class Table {
 
+    defaultTableName = '';
 
     get tableName() {
-        return '';
+        return this.defaultTableName;
     }
 
 
@@ -51,6 +52,8 @@ export class Table {
      * show data in table <th> tags
      */
     tHeadComponent = TableTH;
+
+    headerVisibility = {};
 
     /**
      * Default table data component for each
@@ -201,6 +204,7 @@ export class Table {
         this.props = toRefs(props);
         this.context = context;
         this.extra = extra;
+        this.defaultTableName = this.constructor.name;
         this.contextMenuItems = this.buildContextMenu();
         this.filterForm = this.getFilterForm();
         VueInstanceService.on(this.tableName, (e) => {

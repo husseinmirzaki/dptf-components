@@ -8,8 +8,16 @@
       body-padding-class="m-0"
       :nav-items="navItems"
       @selected-nav-item="$emit('selectedNavItem', $event)">
-    <template v-if="$slots.dropDown" v-slot:dropDown>
-      <slot name="dropDown"/>
+    <template v-slot:dropDown>
+      <DropdownV2>
+        <template v-for="header in Object.keys(headerVisibility)" :key="header">
+          <FieldComponent
+              v-model="headerVisibility[header]"
+              :name="header"
+              :placeholder="defaultConfig.onTHeadProps(header).header"
+              field_type="checkbox"/>
+        </template>
+      </DropdownV2>
     </template>
     <template v-slot:toolbar>
       <div v-if="defaultConfig.filterForm">
@@ -45,6 +53,7 @@
                 <template v-if="changedHeaders.length > 0">
                   <template v-for="(header, index) in changedHeaders" :key="header">
                     <component
+                        v-if="headerVisibility[header]"
                         moveable="moveable"
                         :header-name="header"
                         :group="defaultConfig.tableName"
@@ -54,6 +63,7 @@
                 </template>
                 <template v-else v-for="(header, index) in headers" :key="header">
                   <component
+                      v-if="headerVisibility[header]"
                       moveable="moveable"
                       :header-name="header"
                       :group="defaultConfig.tableName"
@@ -68,7 +78,7 @@
               <tbody>
               <tr v-if="defaultConfig.filterForm && filterShow">
                 <td v-for="header in headers" :key="header">
-                  <field-builder v-if="defaultConfig.getFieldByName(header)"
+                  <field-builder v-if="defaultConfig.getFieldByName(header) && headerVisibility[header]"
                                  :field="defaultConfig.getFieldByName(header)"/>
                 </td>
               </tr>
@@ -88,6 +98,7 @@
                     <template v-for="(header, index) in headers" :key="index">
 
                       <component
+                          v-if="headerVisibility[header]"
                           class="pe-2"
                           :is="defaultConfig.onTBodyComponent(item, header, index)"
                           v-bind="defaultConfig.onTBodyProps(item, header, index)"
@@ -140,9 +151,13 @@ import Spinner from "@/custom/components/Spinner.vue";
 import FieldComponent from "@/custom/components/FieldComponent.vue";
 import FieldBuilder from "@/custom/components/FieldBuilder.vue";
 import {SimpleDrag} from "@/custom/components/table/TableDrag";
+import {UserPreferencesTableApi} from "@/custom/services/UserPreferencesTableApi";
+import DropdownV2 from "@/custom/components/DropdownV2.vue";
+import {MenuComponent, ToggleComponent} from "@/assets/ts/components";
 
 export default defineComponent({
   components: {
+    DropdownV2,
     FieldBuilder,
     FieldComponent,
     Spinner,
@@ -202,19 +217,26 @@ export default defineComponent({
     const url = toRef(props, 'url');
     const dList = ref(list.value);
     const changedHeaders = ref<Array<any>>([]);
-
+    const headerVisibility = ref<Record<string, any>>({});
     let drag: SimpleDrag | null = null;
 
     watch(list, () => {
       dList.value = list.value;
     })
 
+    watch(url, () => {
+      onGetData();
+    });
+
     const onGetData = () => {
-      if (defaultConfig.canUseUrl) {
-        defaultConfig.onGetData().then((e) => {
-          dList.value = e;
-        });
-      }
+      return new Promise<void>((resolve) => {
+        if (defaultConfig.canUseUrl) {
+          defaultConfig.onGetData().then((e) => {
+            dList.value = e;
+            resolve();
+          }, () => resolve());
+        }
+      });
     }
 
     let defaultConfig: Table = (() => {
@@ -233,7 +255,6 @@ export default defineComponent({
       return defaultConfig.headers(dList.value);
     });
 
-
     const onPage = (e) => {
       defaultConfig.currentPage.value = Number(e);
       onGetData();
@@ -244,13 +265,23 @@ export default defineComponent({
       ContextMenuService.set(defaultConfig.getContextMenuItems());
     }
 
+    const getTableSettings = () => {
+      return UserPreferencesTableApi.getTableSettings(defaultConfig.tableName);
+    }
+
+    const saveTableSettings = () => {
+      UserPreferencesTableApi.setTableSettings(defaultConfig.tableName, {
+        headers: headers.value,
+        headerVisibility: headerVisibility.value,
+      }).then((data) => {
+        console.log("getTableSettings", data);
+      });
+    }
+
     onMounted(() => {
-      onGetData();
+      MenuComponent.reinitialization();
       drag = new SimpleDrag();
-
-      drag.addMouseEvents();
-
-      drag.itemDropped = (element) => {
+      drag!.itemDropped = (element) => {
         const l: Array<string> = [];
         console.log(headersRef.value.children.length);
         for (let i = 0; i < headersRef.value.children.length; i++) {
@@ -259,7 +290,6 @@ export default defineComponent({
         changedHeaders.value.splice(0);
         changedHeaders.value.push(...l);
         defaultConfig.defaultHeaders = l;
-
         setTimeout(() => {
           if (drag) {
             drag.findElements();
@@ -267,12 +297,41 @@ export default defineComponent({
           }
         }, 350)
 
-        onGetData();
+        onGetData().then(() => saveTableSettings());
       }
-    });
 
-    watch(url, () => {
-      onGetData();
+      getTableSettings().then(({data}) => {
+
+        if (data.value) {
+          const value = JSON.parse(data.value);
+          if (value.headers) {
+            changedHeaders.value.splice(0)
+            changedHeaders.value.push(...value.headers)
+          }
+          if (value.headerVisibility) {
+            headerVisibility.value = value.headerVisibility;
+          }
+        }
+
+        onGetData().then(() => {
+          nextTick(() => {
+            drag!.findElements();
+            drag!.addMouseEvents();
+            if (Object.keys(headerVisibility.value).length == 0) {
+              headers.value.forEach((header) => {
+                headerVisibility.value[header] = true;
+              })
+            }
+            watch(headerVisibility, () => {
+              saveTableSettings();
+            }, {
+              deep: true,
+            });
+          });
+        });
+
+
+      });
     });
 
     return {
@@ -281,6 +340,7 @@ export default defineComponent({
       headers,
       headersRef,
       changedHeaders,
+      headerVisibility,
       onPage,
       contextMenu,
       refresh: onGetData,
