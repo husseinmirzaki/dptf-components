@@ -8,6 +8,9 @@
       body-padding-class="m-0"
       :nav-items="navItems"
       @selected-nav-item="$emit('selectedNavItem', $event)">
+    <template #card-title-content>
+      <slot name="card-title-content"/>
+    </template>
     <template v-slot:dropDown>
       <DropdownV2>
         <template v-for="header in Object.keys(headerVisibility)" :key="header">
