@@ -89,7 +89,7 @@
                   </slot>
                 </td>
               </tr>
-              <template v-else-if="dList.length > 0 && !noHeaderSelected">
+              <template v-else-if="dList.length > 0">
                 <template v-for="(item, index) in dList" :key="index">
                   <tr class="text-center" data-context-menu="true" @contextmenu="contextMenu(item)"
                       @drop.prevent="defaultConfig.context.emit('trDrop', [$event, item, index])" @dragenter.prevent
@@ -107,11 +107,11 @@
                   </tr>
                 </template>
               </template>
-              <tr v-else-if="noHeaderSelected">
-                <td :colspan="headers.length" class="text-center">
-                    حداقل یک ستون را برای نمایش انتخاب کنید
-                </td>
-              </tr>
+<!--              <tr v-else-if="noHeaderSelected">-->
+<!--                <td :colspan="headers.length" class="text-center">-->
+<!--                    حداقل یک ستون را برای نمایش انتخاب کنید-->
+<!--                </td>-->
+<!--              </tr>-->
               </tbody>
               <!--end::Table body-->
             </table>
