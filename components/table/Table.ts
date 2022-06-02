@@ -397,13 +397,14 @@ export class Table {
         this.isLoading.value = true;
         let url = this.props.url.value;
         const filters = this.getFilters();
-        if (this.method == 'get') {
 
-            if (url.indexOf('?') > -1 && !url.endsWith('?')) {
-                url += `&page=${this.currentPage.value}`;
-            } else if (!url.endsWith('?')) {
-                url += `?page=${this.currentPage.value}`;
-            }
+        if (url.indexOf('?') > -1 && !url.endsWith('?')) {
+            url += `&page=${this.currentPage.value}`;
+        } else if (!url.endsWith('?')) {
+            url += `?page=${this.currentPage.value}`;
+        }
+
+        if (this.method == 'get') {
 
             const qf = new URLSearchParams(filters);
 
@@ -420,7 +421,6 @@ export class Table {
         } else {
 
             const tableData: any = {};
-            tableData['page'] = String(this.currentPage.value);
 
             Object.keys(filters).forEach((key) => {
                 // if (filters[key])
