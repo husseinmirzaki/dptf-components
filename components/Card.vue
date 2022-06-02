@@ -10,21 +10,24 @@
            @mousedown.stop="dragMouseDown"
            :class="[headerClasses, {'border-0': isCollapsed, 'border-bottom-1': !isCollapsed }]"
            v-if="$slots['card-header'] || cardTitle || cardDescription">
-        <h3 class="card-title align-items-start flex-column my-0">
-          <slot name="card-title">
+        <slot name="card-title-content">
+          <h3 class="card-title align-items-start flex-column my-0">
+            <slot name="card-title">
             <span class="fw-bolder mb-2 text-dark">
               <inline-svg :src="$props.icon"/>
               {{ cardTitle }}
             </span>
-          </slot>
+            </slot>
 
-          <slot name="card-description">
+            <slot name="card-description">
             <span class="text-muted fw-bold fs-7 my-0">
               {{ cardDescription }}
             </span>
-          </slot>
+            </slot>
 
-        </h3>
+          </h3>
+        </slot>
+
         <slot name="card-toolbar">
           <div class="card-toolbar my-0">
             <slot name="toolbar"/>
@@ -57,7 +60,8 @@
             </button>
             <slot name="dropDown"/>
             <slot name="toolbar1"/>
-            <button type="button" class="btn btn-icon btn-sm btn-active-color-primary" v-if="!disableDrag" @mousedown.stop="collapseToggle"
+            <button type="button" class="btn btn-icon btn-sm btn-active-color-primary" v-if="!disableDrag"
+                    @mousedown.stop="collapseToggle"
                     @click.stop="collapseToggle">
                 <span class="svg-icon svg-icon-info">
                     <inline-svg style="width:23px;height: 23px"
