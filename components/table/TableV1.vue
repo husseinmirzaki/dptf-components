@@ -53,12 +53,20 @@
               <!--begin::Table head-->
               <thead>
               <tr class="fw-bolder text-muted bg-light text-center" ref="headersRef">
+                <th style="width: 70px">
+                  <FieldComponent
+                      v-model="checkAll"
+                      col_class="ms-4"
+                      default-input-classes=""
+                      field_type="checkbox"/>
+                </th>
                 <template v-if="changedHeaders.length > 0">
                   <template v-for="(header, index) in changedHeaders" :key="header">
                     <component
                         v-if="headerVisibility[header]"
                         moveable="moveable"
                         :header-name="header"
+                        class="align-middle pe-2 text-nowrap"
                         :group="defaultConfig.tableName"
                         :is="defaultConfig.onTHeadComponent(header, index)"
                         v-bind="defaultConfig.onTHeadProps(header, index)"/>
@@ -69,6 +77,7 @@
                       v-if="headerVisibility[header]"
                       moveable="moveable"
                       :header-name="header"
+                      class="pe-2 text-nowrap"
                       :group="defaultConfig.tableName"
                       :is="defaultConfig.onTHeadComponent(header, index)"
                       v-bind="defaultConfig.onTHeadProps(header, index)"/>
@@ -86,7 +95,7 @@
                 </td>
               </tr>
               <tr v-else-if="!dList || dList.length == 0">
-                <td :colspan="headers.length" class="text-center">
+                <td :colspan="headers.length + 1" class="text-center">
                   <slot name="empty">
                     داده ای برای نمایش موجود نمی‌باشد
                   </slot>
@@ -98,11 +107,17 @@
                       @drop.prevent="defaultConfig.context.emit('trDrop', [$event, item, index])" @dragenter.prevent
                       @dragover.prevent
                       @click="$emit('on-row-selected', item)">
+                    <td style="width: 70px">
+                      <FieldComponent
+                          v-model="checkedDataList[`check_${item.id}`]"
+                          col_class="ms-4"
+                          field_type="checkbox"/>
+                    </td>
                     <template v-for="(header, index) in headers" :key="index">
 
                       <component
                           v-if="headerVisibility[header]"
-                          class="pe-2"
+                          class="pe-2 text-nowrap"
                           :is="defaultConfig.onTBodyComponent(item, header, index)"
                           v-bind="defaultConfig.onTBodyProps(item, header, index)"
                       />
@@ -110,11 +125,11 @@
                   </tr>
                 </template>
               </template>
-<!--              <tr v-else-if="noHeaderSelected">-->
-<!--                <td :colspan="headers.length" class="text-center">-->
-<!--                    حداقل یک ستون را برای نمایش انتخاب کنید-->
-<!--                </td>-->
-<!--              </tr>-->
+              <!--              <tr v-else-if="noHeaderSelected">-->
+              <!--                <td :colspan="headers.length" class="text-center">-->
+              <!--                    حداقل یک ستون را برای نمایش انتخاب کنید-->
+              <!--                </td>-->
+              <!--              </tr>-->
               </tbody>
               <!--end::Table body-->
             </table>
@@ -130,6 +145,34 @@
     </template>
   </Card>
 </template>
+<style lang="scss" scoped>
+table {
+  th {
+    border-left: 1px solid #dddee3;
+
+    &:last-child {
+      border-left: none;
+    }
+  }
+
+  td {
+    border-left: 1px solid #dddee3;
+
+    &:last-child {
+      border-left: none;
+    }
+  }
+
+  tbody tr {
+    //text-shadow: 0 0 0 1px #000;
+
+    &:hover {
+      box-shadow: 0 3px 4px -4px #000;
+    }
+
+  }
+}
+</style>
 <style lang="scss">
 
 .is-replace-able {
@@ -219,18 +262,43 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const headersRef = ref();
     const conf = toRef(props, 'conf');
     const list = toRef(props, 'list');
     const url = toRef(props, 'url');
+
+    const headersRef = ref();
+
     const dList = ref(list.value);
+
+    const checkAll = ref(false);
     const changedHeaders = ref<Array<any>>([]);
     const headerVisibility = ref<Record<string, any>>({});
+
+    const checkedDataList = ref<Record<string, boolean>>({});
+
     let drag: SimpleDrag | null = null;
 
     watch(list, () => {
       dList.value = list.value;
     })
+    watch(dList, () => {
+      if (dList.value) {
+        dList.value.forEach((data: any) => {
+          if (checkedDataList.value[`check_${data.id}`] == undefined || checkedDataList.value[`check_${data.id}`] == null)
+            checkedDataList.value[`check_${data.id}`] = checkAll.value;
+        });
+      }
+    }, {
+      deep: true,
+    })
+
+    watch(checkAll, (e) => {
+      console.log("checkall", checkedDataList.value)
+      Object.keys(checkedDataList.value).forEach((e) => {
+        console.log("checkall", e)
+        checkedDataList.value[e] = checkAll.value;
+      });
+    });
 
     watch(url, () => {
       onGetData();
@@ -361,6 +429,8 @@ export default defineComponent({
 
     return {
       dList,
+      checkAll,
+      checkedDataList,
       defaultConfig,
       headers,
       headersRef,
