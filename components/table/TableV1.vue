@@ -82,14 +82,14 @@
                                  :field="defaultConfig.getFieldByName(header)"/>
                 </td>
               </tr>
-              <tr v-if="!dList || dList.length == 0">
+              <tr v-else-if="!dList || dList.length == 0">
                 <td :colspan="headers.length" class="text-center">
                   <slot name="empty">
                     داده ای برای نمایش موجود نمی‌باشد
                   </slot>
                 </td>
               </tr>
-              <template v-else>
+              <template v-else-if="dList.length > 0 && !noHeaderSelected">
                 <template v-for="(item, index) in dList" :key="index">
                   <tr class="text-center" data-context-menu="true" @contextmenu="contextMenu(item)"
                       @drop.prevent="defaultConfig.context.emit('trDrop', [$event, item, index])" @dragenter.prevent
@@ -107,6 +107,11 @@
                   </tr>
                 </template>
               </template>
+              <tr v-else-if="noHeaderSelected">
+                <td :colspan="headers.length" class="text-center">
+                    حداقل یک ستون را برای نمایش انتخاب کنید
+                </td>
+              </tr>
               </tbody>
               <!--end::Table body-->
             </table>
@@ -314,25 +319,42 @@ export default defineComponent({
         }
 
         onGetData().then(() => {
+          if (Object.keys(headerVisibility.value).length == 0) {
+            headers.value.forEach((header) => {
+              headerVisibility.value[header] = true;
+            })
+          }
           nextTick(() => {
-            drag!.findElements();
-            drag!.addMouseEvents();
-            if (Object.keys(headerVisibility.value).length == 0) {
-              headers.value.forEach((header) => {
-                headerVisibility.value[header] = true;
-              })
-            }
-            watch(headerVisibility, () => {
-              saveTableSettings();
-            }, {
-              deep: true,
-            });
+            setTimeout(() => {
+              drag!.findElements();
+              drag!.addMouseEvents();
+              watch(headerVisibility, () => {
+                nextTick(() => {
+                  drag!.findElements();
+                  drag!.addMouseEvents();
+                  saveTableSettings();
+                })
+              }, {
+                deep: true,
+              });
+            }, 100)
           });
         });
 
 
       });
     });
+
+    const noHeaderSelected = computed(() => {
+      const keys = Object.keys(headerVisibility.value);
+      for (let i = 0; i < keys.length; i++) {
+        if (headerVisibility.value[i]) {
+          return false;
+        }
+      }
+      return true;
+    })
+
 
     return {
       dList,
@@ -341,6 +363,7 @@ export default defineComponent({
       headersRef,
       changedHeaders,
       headerVisibility,
+      noHeaderSelected,
       onPage,
       contextMenu,
       refresh: onGetData,

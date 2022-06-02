@@ -24,6 +24,7 @@ export class SimpleDrag {
     findElements() {
         this.elements = {};
         document.querySelectorAll('[moveable]').forEach((element, index) => {
+            console.log("test on some tables", element);
             if (element.hasAttribute('group')) {
                 const group = this.getElementGroup(element)
                 if (!this.elements[group])

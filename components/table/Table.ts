@@ -258,7 +258,6 @@ export class Table {
     }
 
     headers(list) {
-        console.log("drag-drop-test 1", this.defaultHeaders);
         if (this.defaultHeaders.length > 0)
             return this.defaultHeaders;
 
