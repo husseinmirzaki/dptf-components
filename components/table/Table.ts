@@ -193,7 +193,7 @@ export class Table {
         }
     }
 
-    onTableEvent(e){
+    onTableEvent(e) {
         //
     }
 
@@ -207,8 +207,7 @@ export class Table {
             console.log("called an event for table", this.tableName, e);
             if (e[0] == 'refresh') {
                 this.refresh();
-            }
-            else {
+            } else {
                 this.onTableEvent(e)
             }
         });
@@ -255,11 +254,13 @@ export class Table {
     }
 
     headers(list) {
+        console.log("drag-drop-test 1", this.defaultHeaders);
         if (this.defaultHeaders.length > 0)
             return this.defaultHeaders;
 
         if (list && list.length > 0) {
-            return Object.keys(list[0]);
+            this.defaultHeaders = Object.keys(list[0]);
+            return this.defaultHeaders;
         }
 
         return [];
@@ -424,8 +425,8 @@ export class Table {
 
             Object.keys(filters).forEach((key) => {
                 // if (filters[key])
-                    tableData[key] = filters[key];
-                    // tableData.append(key, filters[key]);
+                tableData[key] = filters[key];
+                // tableData.append(key, filters[key]);
             });
             // if (url.indexOf('?') > -1 && !url.endsWith('?')) {
             //     url += `&page=${this.currentPage.value}`;
