@@ -48,11 +48,7 @@ export default defineComponent({
 
     const loading = (promise: Promise<any>) => {
       startLoading();
-      promise.then(() => {
-        stopLoading();
-      }, () => {
-        stopLoading();
-      }).catch(() => stopLoading());
+      promise.then(() => stopLoading(), () => stopLoading()).finally(() => stopLoading());
     };
 
     return {
