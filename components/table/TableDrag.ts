@@ -1,3 +1,24 @@
+import {ref} from "vue";
+
+export class DragHandler {
+    isMouseDown = ref(false);
+
+    mouseDownEvent: MouseEvent | null = null;
+
+    constructor() {
+        document.addEventListener('mouseup', () => {
+            this.mouseDownEvent = null;
+            this.isMouseDown.value = false;
+        })
+    }
+
+
+    onMouseDown(e) {
+        this.mouseDownEvent = e;
+    }
+}
+
+
 export class SimpleDrag {
     mouseIsDown = false;
     lastMouseDownEvent: MouseEvent | null = null;

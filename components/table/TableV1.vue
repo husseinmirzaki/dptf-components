@@ -53,7 +53,7 @@
               <!--begin::Table head-->
               <thead>
               <tr class="fw-bolder text-muted bg-light text-center" ref="headersRef">
-                <th style="width: 70px">
+                <th style="width: 70px" v-if="defaultConfig.checkAble">
                   <FieldComponent
                       v-model="checkAll"
                       col_class="ms-4"
@@ -106,8 +106,11 @@
                   <tr class="text-center" data-context-menu="true" @contextmenu="contextMenu(item)"
                       @drop.prevent="defaultConfig.context.emit('trDrop', [$event, item, index])" @dragenter.prevent
                       @dragover.prevent
+                      @mousedown.prevent="checksDragHandler.isMouseDown.value = true"
+                      @mouseup="checksDragHandler.isMouseDown.value = false"
+                      @mouseenter="checkCheckFieldData(`check_${item.id}`)"
                       @click="$emit('on-row-selected', item)">
-                    <td style="width: 70px">
+                    <td style="width: 70px" v-if="defaultConfig.checkAble">
                       <FieldComponent
                           v-model="checkedDataList[`check_${item.id}`]"
                           col_class="ms-4"
@@ -161,6 +164,9 @@ table {
     &:last-child {
       border-left: none;
     }
+
+    padding-bottom: 0 !important;
+    padding-top: 0 !important;
   }
 
   tbody tr {
@@ -201,7 +207,7 @@ import {ContextMenuService} from "@/custom/components/ContextMenuService";
 import Spinner from "@/custom/components/Spinner.vue";
 import FieldComponent from "@/custom/components/FieldComponent.vue";
 import FieldBuilder from "@/custom/components/FieldBuilder.vue";
-import {SimpleDrag} from "@/custom/components/table/TableDrag";
+import {DragHandler, SimpleDrag} from "@/custom/components/table/TableDrag";
 import {UserPreferencesTableApi} from "@/custom/services/UserPreferencesTableApi";
 import DropdownV2 from "@/custom/components/DropdownV2.vue";
 import {MenuComponent, ToggleComponent} from "@/assets/ts/components";
@@ -277,10 +283,9 @@ export default defineComponent({
     const checkedDataList = ref<Record<string, boolean>>({});
 
     let drag: SimpleDrag | null = null;
+    const checksDragHandler = new DragHandler();
 
-    watch(list, () => {
-      dList.value = list.value;
-    })
+
     watch(dList, () => {
       if (dList.value) {
         dList.value.forEach((data: any) => {
@@ -290,6 +295,10 @@ export default defineComponent({
       }
     }, {
       deep: true,
+    })
+
+    watch(list, () => {
+      dList.value = list.value;
     })
 
     watch(checkAll, (e) => {
@@ -426,19 +435,29 @@ export default defineComponent({
       return true;
     })
 
+    const checkCheckFieldData = (key) => {
+      if (checksDragHandler.isMouseDown.value) {
+        checkedDataList.value[key] = true;
+      }
+    }
+
 
     return {
       dList,
       checkAll,
-      checkedDataList,
+      checkedDataList: computed(() => {
+        return checkedDataList.value
+      }),
       defaultConfig,
       headers,
       headersRef,
       changedHeaders,
       headerVisibility,
       noHeaderSelected,
+      checksDragHandler,
       onPage,
       contextMenu,
+      checkCheckFieldData,
       refresh: onGetData,
     };
   },
