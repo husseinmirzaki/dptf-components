@@ -315,6 +315,10 @@ class ApiService {
         });
     }
 
+    public static list() {
+        return this.get(this.url);
+    }
+
     public static getOne(id) {
         return this.get(this.baseUrl + `${id}/`)
     }

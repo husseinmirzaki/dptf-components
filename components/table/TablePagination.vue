@@ -36,6 +36,7 @@ export default defineComponent({
       default: 0
     }
   },
+  emits: ['pageSelected'],
   setup(props, context) {
     const {count, perPage, currentPage} = toRefs(props);
     const pages = computed(() => {
