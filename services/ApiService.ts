@@ -323,6 +323,10 @@ class ApiService {
         return this.delete(`${this.baseUrl}${id}/`);
     }
 
+    public static deleteAll() {
+        return this.delete(`${this.baseUrl}/all/`);
+    }
+
     public static createOne(data) {
         return this.post(`${this.baseUrl}`, {
             data: data
@@ -334,7 +338,6 @@ class ApiService {
             data: data
         });
     }
-
 
     public static get url() {
         return this.base_url + this.baseUrl;

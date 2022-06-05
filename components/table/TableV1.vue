@@ -320,6 +320,20 @@ export default defineComponent({
       onGetData();
     });
 
+    const checkedAnyItems = computed(() => {
+      let oneIsChecked = false;
+      const keys = Object.keys(checkedDataList.value);
+      for (let i = 0; i < keys.length; i++) {
+        if (!oneIsChecked && checkedDataList.value[keys[i]]) {
+          oneIsChecked = true;
+          break;
+        }
+      }
+
+      return oneIsChecked || checkAll.value
+    });
+
+
     const onGetData = () => {
       return new Promise<void>((resolve) => {
         if (defaultConfig.canUseUrl) {
@@ -469,6 +483,7 @@ export default defineComponent({
       headerVisibility,
       noHeaderSelected,
       checksDragHandler,
+      checkedAnyItems,
       onPage,
       contextMenu,
       checkCheckFieldData,
