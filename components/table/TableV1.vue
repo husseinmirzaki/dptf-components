@@ -258,6 +258,9 @@ export default defineComponent({
     disableDrag: {
       default: false,
     },
+    userPreferences: {
+      default: true,
+    },
     list: {
       default: () => {
         return [];
@@ -274,6 +277,7 @@ export default defineComponent({
     const conf = toRef(props, 'conf');
     const list = toRef(props, 'list');
     const url = toRef(props, 'url');
+    const userPreferences = toRef(props, 'userPreferences');
 
     const headersRef = ref();
 
@@ -385,22 +389,13 @@ export default defineComponent({
           }
         }, 350)
 
-        onGetData().then(() => saveTableSettings());
+        onGetData().then(() => {
+          if (userPreferences.value)
+            saveTableSettings();
+        });
       }
 
-      getTableSettings().then(({data}) => {
-
-        if (data.value) {
-          const value = JSON.parse(data.value);
-          if (value.headers) {
-            changedHeaders.value.splice(0)
-            changedHeaders.value.push(...value.headers)
-          }
-          if (value.headerVisibility) {
-            headerVisibility.value = value.headerVisibility;
-          }
-        }
-
+      const tableSetup = () => {
         onGetData().then(() => {
           if (Object.keys(headerVisibility.value).length == 0) {
             headers.value.forEach((header) => {
@@ -415,7 +410,8 @@ export default defineComponent({
                 nextTick(() => {
                   drag!.findElements();
                   drag!.addMouseEvents();
-                  saveTableSettings();
+                  if (userPreferences.value)
+                    saveTableSettings();
                 })
               }, {
                 deep: true,
@@ -423,9 +419,24 @@ export default defineComponent({
             }, 100)
           });
         });
+      }
 
-
-      });
+      if (userPreferences.value)
+        getTableSettings().then(({data}) => {
+          if (data.value) {
+            const value = JSON.parse(data.value);
+            if (value.headers) {
+              changedHeaders.value.splice(0)
+              changedHeaders.value.push(...value.headers)
+            }
+            if (value.headerVisibility) {
+              headerVisibility.value = value.headerVisibility;
+            }
+          }
+          tableSetup();
+        });
+      else
+        tableSetup();
     });
 
     const noHeaderSelected = computed(() => {
