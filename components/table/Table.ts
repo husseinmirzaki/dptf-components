@@ -18,10 +18,15 @@ import {fieldC} from "@/custom/components/FieldComponent.vue";
 
 export class Table {
 
+
     defaultTableName = '';
 
     get tableName() {
         return this.defaultTableName;
+    }
+
+    get checkAble() {
+        return false;
     }
 
 
