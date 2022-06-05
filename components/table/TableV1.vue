@@ -103,7 +103,8 @@
               </tr>
               <template v-else-if="dList.length > 0">
                 <template v-for="(item, index) in dList" :key="index">
-                  <tr class="text-center" data-context-menu="true" @contextmenu="contextMenu(item)"
+                  <tr class="text-center"
+                      data-context-menu="true" @contextmenu="contextMenu(item)"
                       @drop.prevent="defaultConfig.context.emit('trDrop', [$event, item, index])" @dragenter.prevent
                       @dragover.prevent
                       @mousedown.prevent="checksDragHandler.isMouseDown.value = true"
@@ -159,7 +160,9 @@ table {
   }
 
   td {
-    border-left: 1px solid #dddee3;
+    height: 35px;
+    //border-left: 1px solid #dddee3;
+    border-bottom: 1px solid #dddee3;
 
     &:last-child {
       border-left: none;
