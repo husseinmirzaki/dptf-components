@@ -60,7 +60,8 @@
             </button>
             <slot name="dropDown"/>
             <slot name="toolbar1"/>
-            <button type="button" class="btn btn-icon btn-sm btn-active-color-primary" v-if="!disableDrag || enableCollapse"
+            <button type="button" class="btn btn-icon btn-sm btn-active-color-primary"
+                    v-if="!disableDrag || enableCollapse"
                     @mousedown.stop="collapseToggle"
                     @click.stop="collapseToggle">
                 <span class="svg-icon svg-icon-info">
@@ -179,8 +180,13 @@ export default {
     }
 
     const dragMouseDown = (e) => {
+
+      if (disableDrag.value)
+        return;
+
       if (!e.target.classList.contains('card-header'))
         return;
+
       mouseDown.value = true;
 
       const clone = cardRef.value.cloneNode(true);
