@@ -292,9 +292,12 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
                             resolve(response.data);
                         }
                     })
-                    .catch((response) => {
-                        this.context.commit(Mutations.SET_ERROR, response.data.errors);
-                        console.log(response);
+                    .catch(({response}) => {
+                        if (response && response.auth && response.auth.search('invalid')) {
+                            this.context.commit(Mutations.PURGE_AUTH);
+                            VueInstanceService.router.push('/sign-in');
+                            reject();
+                        }
                         reject();
                     });
             } else {
