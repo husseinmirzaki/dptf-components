@@ -9,6 +9,7 @@
     لغو
   </button>
   <!--end::CancelButton-->
+  <slot name="extra-buttons"/>
   <!--begin::LoadingButton-->
   <PromiseButton
       class="btn btn-primary mt-4 text-left"

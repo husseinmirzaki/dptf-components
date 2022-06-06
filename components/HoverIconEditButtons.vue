@@ -1,24 +1,14 @@
 <template>
-  <div class="btn w-100 d-flex justify-content-between align-items-center the-nav-buttons pl-1" :class="{active}">
-    <div>
+  <div href="#" class="btn w-100 d-flex justify-content-between align-items-center the-nav-buttons" :class="{active}">
+    <div class="col-8">
     <i v-if="iconClass" :class="iconClass" class="fs-4 me-2"></i>
     <i v-else class="fas fa-envelope-open-text fs-4 me-2"></i>
     <slot/>
-    <span
-        class="badge position-absolute" :class="{
-          'badge-primary': badgeNumber && (Number(badgeNumber) > 0 && Number(badgeNumber) < 3),
-          'badge-warning': badgeNumber && (Number(badgeNumber) > 2 && Number(badgeNumber) < 6),
-          'badge-danger': badgeNumber && (Number(badgeNumber) > 5),
-        }"
-        v-if="badgeNumber">{{ badgeNumber }}</span>
-
-    <span v-if="badgeText" class="badge position-absolute badge-danger">
-      {{ badgeText }}
-    </span>
+</div>
+    <div class="col-4">
+    <button class="btn btn-icon btn-secondary " @click="$emit('update', $event)"><i class="fa fa-edit"></i></button>
+    <button class="btn btn-icon btn-secondary ml-2" @click="$emit('delete', $event)"><i class="fa fa-trash"></i></button>
       </div>
-    <div>
-    <button class="btn btn-secondary btn-icon btn-sm" @click="$emit('delete', $event)"><i class="fa fa-trash"></i></button>
-    <button class="btn btn-secondary btn-icon btn-sm" @click="$emit('update', $event)"><i class="fa fa-edit"></i></button></div>
   </div>
 
 </template>

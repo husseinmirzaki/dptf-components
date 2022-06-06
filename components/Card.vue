@@ -60,7 +60,7 @@
             </button>
             <slot name="dropDown"/>
             <slot name="toolbar1"/>
-            <button type="button" class="btn btn-icon btn-sm btn-active-color-primary" v-if="!disableDrag"
+            <button type="button" class="btn btn-icon btn-sm btn-active-color-primary" v-if="!disableDrag || enableCollapse"
                     @mousedown.stop="collapseToggle"
                     @click.stop="collapseToggle">
                 <span class="svg-icon svg-icon-info">
@@ -133,6 +133,9 @@ export default {
     "disableDrag": {
       default: false,
     },
+    "enableCollapse": {
+      default: false,
+    },
     "icon": {
       default: "media/icons/duotune/maps/map008.svg",
     }
@@ -145,6 +148,7 @@ export default {
     const isCollapsed = ref(false);
     const disableCard = toRef(props, 'disableCard');
     const disableDrag = toRef(props, 'disableDrag');
+    const enableCollapse = toRef(props, 'enableCollapse');
 
     let collapse;
     let clonedElement = null;
@@ -274,6 +278,8 @@ export default {
     })
 
     onMounted(() => {
+      if ((!disableCard.value && !disableDrag.value) || enableCollapse.value)
+        collapse = new Collapse(cardRef.value.querySelector('.card-body'));
       if (!disableCard.value && !disableDrag.value) {
         document.addEventListener('mouseup', dragMouseUp);
         document.addEventListener('mousemove', mouseMove);
@@ -281,8 +287,6 @@ export default {
         if (context.slots['card-body']) {
           // console.log("context.slots['card-body']", context)
         }
-
-        collapse = new Collapse(cardRef.value.querySelector('.card-body'));
 
         let contains = false;
         cardRef.value.parentElement.classList.forEach((e) => {

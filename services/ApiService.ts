@@ -315,12 +315,20 @@ class ApiService {
         });
     }
 
+    public static list() {
+        return this.get(this.url);
+    }
+
     public static getOne(id) {
         return this.get(this.baseUrl + `${id}/`)
     }
 
     public static deleteOne(id) {
         return this.delete(`${this.baseUrl}${id}/`);
+    }
+
+    public static deleteAll() {
+        return this.delete(`${this.baseUrl}/all/`);
     }
 
     public static createOne(data) {
@@ -334,7 +342,6 @@ class ApiService {
             data: data
         });
     }
-
 
     public static get url() {
         return this.base_url + this.baseUrl;

@@ -53,12 +53,20 @@
               <!--begin::Table head-->
               <thead>
               <tr class="fw-bolder text-muted bg-light text-center" ref="headersRef">
+                <th style="width: 70px" v-if="defaultConfig.checkAble">
+                  <FieldComponent
+                      v-model="checkAll"
+                      col_class="ms-4"
+                      default-input-classes=""
+                      field_type="checkbox"/>
+                </th>
                 <template v-if="changedHeaders.length > 0">
                   <template v-for="(header, index) in changedHeaders" :key="header">
                     <component
                         v-if="headerVisibility[header]"
                         moveable="moveable"
                         :header-name="header"
+                        class="align-middle pe-2 text-nowrap"
                         :group="defaultConfig.tableName"
                         :is="defaultConfig.onTHeadComponent(header, index)"
                         v-bind="defaultConfig.onTHeadProps(header, index)"/>
@@ -69,6 +77,7 @@
                       v-if="headerVisibility[header]"
                       moveable="moveable"
                       :header-name="header"
+                      class="pe-2 text-nowrap"
                       :group="defaultConfig.tableName"
                       :is="defaultConfig.onTHeadComponent(header, index)"
                       v-bind="defaultConfig.onTHeadProps(header, index)"/>
@@ -86,7 +95,7 @@
                 </td>
               </tr>
               <tr v-else-if="!dList || dList.length == 0">
-                <td :colspan="headers.length" class="text-center">
+                <td :colspan="headers.length + 1" class="text-center">
                   <slot name="empty">
                     داده ای برای نمایش موجود نمی‌باشد
                   </slot>
@@ -94,15 +103,25 @@
               </tr>
               <template v-else-if="dList.length > 0">
                 <template v-for="(item, index) in dList" :key="index">
-                  <tr class="text-center" data-context-menu="true" @contextmenu="contextMenu(item)"
+                  <tr class="text-center"
+                      data-context-menu="true" @contextmenu="contextMenu(item)"
                       @drop.prevent="defaultConfig.context.emit('trDrop', [$event, item, index])" @dragenter.prevent
                       @dragover.prevent
+                      @mousedown.prevent="checksDragHandler.isMouseDown.value = true"
+                      @mouseup="checksDragHandler.isMouseDown.value = false"
+                      @mouseenter="checkCheckFieldData(`check_${item.id}`)"
                       @click="$emit('on-row-selected', item)">
+                    <td style="width: 70px" v-if="defaultConfig.checkAble">
+                      <FieldComponent
+                          v-model="checkedDataList[`check_${item.id}`]"
+                          col_class="ms-4"
+                          field_type="checkbox"/>
+                    </td>
                     <template v-for="(header, index) in headers" :key="index">
 
                       <component
                           v-if="headerVisibility[header]"
-                          class="pe-2"
+                          class="pe-2 text-nowrap"
                           :is="defaultConfig.onTBodyComponent(item, header, index)"
                           v-bind="defaultConfig.onTBodyProps(item, header, index)"
                       />
@@ -110,11 +129,11 @@
                   </tr>
                 </template>
               </template>
-<!--              <tr v-else-if="noHeaderSelected">-->
-<!--                <td :colspan="headers.length" class="text-center">-->
-<!--                    حداقل یک ستون را برای نمایش انتخاب کنید-->
-<!--                </td>-->
-<!--              </tr>-->
+              <!--              <tr v-else-if="noHeaderSelected">-->
+              <!--                <td :colspan="headers.length" class="text-center">-->
+              <!--                    حداقل یک ستون را برای نمایش انتخاب کنید-->
+              <!--                </td>-->
+              <!--              </tr>-->
               </tbody>
               <!--end::Table body-->
             </table>
@@ -130,6 +149,39 @@
     </template>
   </Card>
 </template>
+<style lang="scss" scoped>
+table {
+  th {
+    border-left: 1px solid #dddee3;
+
+    &:last-child {
+      border-left: none;
+    }
+  }
+
+  td {
+    height: 35px;
+    //border-left: 1px solid #dddee3;
+    border-bottom: 1px solid #dddee3;
+
+    &:last-child {
+      border-left: none;
+    }
+
+    padding-bottom: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  tbody tr {
+    //text-shadow: 0 0 0 1px #000;
+
+    &:hover {
+      box-shadow: 0 3px 4px -4px #000;
+    }
+
+  }
+}
+</style>
 <style lang="scss">
 
 .is-replace-able {
@@ -158,7 +210,7 @@ import {ContextMenuService} from "@/custom/components/ContextMenuService";
 import Spinner from "@/custom/components/Spinner.vue";
 import FieldComponent from "@/custom/components/FieldComponent.vue";
 import FieldBuilder from "@/custom/components/FieldBuilder.vue";
-import {SimpleDrag} from "@/custom/components/table/TableDrag";
+import {DragHandler, SimpleDrag} from "@/custom/components/table/TableDrag";
 import {UserPreferencesTableApi} from "@/custom/services/UserPreferencesTableApi";
 import DropdownV2 from "@/custom/components/DropdownV2.vue";
 import {MenuComponent, ToggleComponent} from "@/assets/ts/components";
@@ -206,6 +258,9 @@ export default defineComponent({
     disableDrag: {
       default: false,
     },
+    userPreferences: {
+      default: true,
+    },
     list: {
       default: () => {
         return [];
@@ -219,22 +274,65 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const headersRef = ref();
     const conf = toRef(props, 'conf');
     const list = toRef(props, 'list');
     const url = toRef(props, 'url');
+    const userPreferences = toRef(props, 'userPreferences');
+
+    const headersRef = ref();
+
     const dList = ref(list.value);
+
+    const checkAll = ref(false);
     const changedHeaders = ref<Array<any>>([]);
     const headerVisibility = ref<Record<string, any>>({});
+
+    const checkedDataList = ref<Record<string, boolean>>({});
+
     let drag: SimpleDrag | null = null;
+    const checksDragHandler = new DragHandler();
+
+
+    watch(dList, () => {
+      if (dList.value) {
+        dList.value.forEach((data: any) => {
+          if (checkedDataList.value[`check_${data.id}`] == undefined || checkedDataList.value[`check_${data.id}`] == null)
+            checkedDataList.value[`check_${data.id}`] = checkAll.value;
+        });
+      }
+    }, {
+      deep: true,
+    })
 
     watch(list, () => {
       dList.value = list.value;
     })
 
+    watch(checkAll, (e) => {
+      console.log("checkall", checkedDataList.value)
+      Object.keys(checkedDataList.value).forEach((e) => {
+        console.log("checkall", e)
+        checkedDataList.value[e] = checkAll.value;
+      });
+    });
+
     watch(url, () => {
       onGetData();
     });
+
+    const checkedAnyItems = computed(() => {
+      let oneIsChecked = false;
+      const keys = Object.keys(checkedDataList.value);
+      for (let i = 0; i < keys.length; i++) {
+        if (!oneIsChecked && checkedDataList.value[keys[i]]) {
+          oneIsChecked = true;
+          break;
+        }
+      }
+
+      return oneIsChecked || checkAll.value
+    });
+
 
     const onGetData = () => {
       return new Promise<void>((resolve) => {
@@ -305,22 +403,13 @@ export default defineComponent({
           }
         }, 350)
 
-        onGetData().then(() => saveTableSettings());
+        onGetData().then(() => {
+          if (userPreferences.value)
+            saveTableSettings();
+        });
       }
 
-      getTableSettings().then(({data}) => {
-
-        if (data.value) {
-          const value = JSON.parse(data.value);
-          if (value.headers) {
-            changedHeaders.value.splice(0)
-            changedHeaders.value.push(...value.headers)
-          }
-          if (value.headerVisibility) {
-            headerVisibility.value = value.headerVisibility;
-          }
-        }
-
+      const tableSetup = () => {
         onGetData().then(() => {
           if (Object.keys(headerVisibility.value).length == 0) {
             headers.value.forEach((header) => {
@@ -335,7 +424,8 @@ export default defineComponent({
                 nextTick(() => {
                   drag!.findElements();
                   drag!.addMouseEvents();
-                  saveTableSettings();
+                  if (userPreferences.value)
+                    saveTableSettings();
                 })
               }, {
                 deep: true,
@@ -343,9 +433,24 @@ export default defineComponent({
             }, 100)
           });
         });
+      }
 
-
-      });
+      if (userPreferences.value)
+        getTableSettings().then(({data}) => {
+          if (data.value) {
+            const value = JSON.parse(data.value);
+            if (value.headers) {
+              changedHeaders.value.splice(0)
+              changedHeaders.value.push(...value.headers)
+            }
+            if (value.headerVisibility) {
+              headerVisibility.value = value.headerVisibility;
+            }
+          }
+          tableSetup();
+        });
+      else
+        tableSetup();
     });
 
     const noHeaderSelected = computed(() => {
@@ -358,17 +463,30 @@ export default defineComponent({
       return true;
     })
 
+    const checkCheckFieldData = (key) => {
+      if (checksDragHandler.isMouseDown.value) {
+        checkedDataList.value[key] = true;
+      }
+    }
+
 
     return {
       dList,
+      checkAll,
+      checkedDataList: computed(() => {
+        return checkedDataList.value
+      }),
       defaultConfig,
       headers,
       headersRef,
       changedHeaders,
       headerVisibility,
       noHeaderSelected,
+      checksDragHandler,
+      checkedAnyItems,
       onPage,
       contextMenu,
+      checkCheckFieldData,
       refresh: onGetData,
     };
   },

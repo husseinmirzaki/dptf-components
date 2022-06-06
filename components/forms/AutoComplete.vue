@@ -116,7 +116,7 @@ export default {
     const itemContainer = ref();
     const data: Ref<Array<AutoCompleteData>> = ref([]);
 
-    let changeTriggerTimeout: undefined | number;
+    let changeTriggerTimeout: any;
 
     Object.assign(defaultOptions.value, options.value)
 
