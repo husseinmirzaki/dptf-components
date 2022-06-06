@@ -35,6 +35,7 @@ export default class RegisterForm extends CreateForm {
                 Swal.fire({
                     icon: 'question',
                     title: 'کد تایید را وارد کنید',
+                    confirmButtonText: 'ارسال',
                     html:
                         '<input id="swal-input-code" class="swal2-input">',
                     focusConfirm: true,
