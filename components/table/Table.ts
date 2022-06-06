@@ -229,12 +229,24 @@ export class Table {
         }
     }
 
+    get deleteContextMenuText() {
+        return "حذف";
+    }
+
+    get updateContextMenuText() {
+        return "ویرایش";
+    }
+
+    get viewContextMenuText() {
+        return "نمایش";
+    }
+
     buildContextMenu(): Array<ContextMenuItem> {
         const items: Array<ContextMenuItem> = [];
 
         if (this.showContextMenuView) {
             items.push({
-                text: 'نمایش',
+                text: this.viewContextMenuText,
                 onClick: (data) => {
                     this.onViewClicked(data);
                 }
@@ -243,7 +255,7 @@ export class Table {
 
         if (this.showContextMenuUpdate) {
             items.push({
-                text: 'ویرایش',
+                text: this.updateContextMenuText,
                 onClick: (data) => {
                     this.onEditClicked(data);
                 }
@@ -252,7 +264,7 @@ export class Table {
 
         if (this.showContextMenuDelete) {
             items.push({
-                text: 'حذف',
+                text: this.deleteContextMenuText,
                 onClick: (data) => {
                     this.onDeleteClicked(data);
                 }

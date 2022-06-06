@@ -17,7 +17,7 @@ export default {
   props: ["active", "badgeNumber", "iconClass", "badgeText"]
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .the-nav-buttons {
 
   font-size: 12px;
