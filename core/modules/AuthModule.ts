@@ -193,7 +193,7 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
                         this.context.commit(Mutations.PURGE_AUTH);
                         reject(response);
                     });
-                }, ({response}) => {
+                }, (response) => {
                     reject(response);
                 });
         });
@@ -291,14 +291,22 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
                             this.context.commit(Mutations.SET_NEW_TOKEN, response.data);
                             resolve(response.data);
                         }
-                    })
-                    .catch(({response}) => {
-                        if (response && response.auth && response.auth.search('invalid')) {
+                    }, (e) => {
+                        console.log("e.response", e && e.response && e.response.auth && e.response.data);
+                        if (
+                            e &&
+                            e.response
+                            && e.response.data && !Array.isArray(e.response.data) &&
+                            (e.response.data.auth && e.response.data.auth == 'invalid_refresh_token')
+                        ) {
                             this.context.commit(Mutations.PURGE_AUTH);
-                            VueInstanceService.router.push('/sign-in');
-                            reject();
+                            VueInstanceService.showSuccessMessage("شما با موفقیت خارج شدید");
+                            VueInstanceService.router.push({
+                                name: 'sign-in',
+                            });
+                        } else {
+                            reject(e);
                         }
-                        reject();
                     });
             } else {
                 this.context.commit(Mutations.PURGE_AUTH);

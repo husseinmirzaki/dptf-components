@@ -172,14 +172,16 @@ class ApiService {
      */
     private static hre(promise) {
         promise.catch((e: any) => {
-            if (e) {
+            if (e && e.response) {
                 if (e.response.status === 400) {
-                    Object.keys(e.response.data).forEach((objectKey) => {
-                        e.response.data[objectKey].forEach((message) => {
-                            message = VueInstanceService.vue.config.globalProperties["$t"](message);
-                            VueInstanceService.showErrorMessage(message);
-                        })
-                    });
+                    if (Array.isArray(e.response.data)) {
+                        Object.keys(e.response.data).forEach((objectKey) => {
+                            e.response.data[objectKey].forEach((message) => {
+                                message = VueInstanceService.vue.config.globalProperties["$t"](message);
+                                VueInstanceService.showErrorMessage(message);
+                            })
+                        });
+                    }
                 }
             }
             return e;
