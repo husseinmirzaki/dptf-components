@@ -259,7 +259,7 @@ export default defineComponent({
       default: false,
     },
     userPreferences: {
-      default: true,
+      default: false,
     },
     list: {
       default: () => {
