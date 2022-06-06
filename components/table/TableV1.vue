@@ -259,7 +259,7 @@ export default defineComponent({
       default: false,
     },
     userPreferences: {
-      default: true,
+      default: false,
     },
     list: {
       default: () => {
@@ -383,6 +383,24 @@ export default defineComponent({
         console.log("getTableSettings", data);
       });
     }
+    const dragStuff = () => {
+      nextTick(() => {
+        setTimeout(() => {
+          drag!.findElements();
+          drag!.addMouseEvents();
+          watch(headerVisibility, () => {
+            nextTick(() => {
+              drag!.findElements();
+              drag!.addMouseEvents();
+              if (userPreferences.value)
+                saveTableSettings();
+            })
+          }, {
+            deep: true,
+          });
+        }, 100)
+      })
+    }
 
     onMounted(() => {
       MenuComponent.reinitialization();
@@ -410,29 +428,18 @@ export default defineComponent({
       }
 
       const tableSetup = () => {
-        onGetData().then(() => {
-          if (Object.keys(headerVisibility.value).length == 0) {
-            headers.value.forEach((header) => {
-              headerVisibility.value[header] = true;
-            })
-          }
-          nextTick(() => {
-            setTimeout(() => {
-              drag!.findElements();
-              drag!.addMouseEvents();
-              watch(headerVisibility, () => {
-                nextTick(() => {
-                  drag!.findElements();
-                  drag!.addMouseEvents();
-                  if (userPreferences.value)
-                    saveTableSettings();
-                })
-              }, {
-                deep: true,
-              });
-            }, 100)
+        if (Object.keys(headerVisibility.value).length == 0) {
+          headers.value.forEach((header) => {
+            headerVisibility.value[header] = true;
+          })
+        }
+        if (!url.value || url.value == '') {
+          dragStuff();
+        } else {
+          onGetData().then(() => {
+            dragStuff();
           });
-        });
+        }
       }
 
       if (userPreferences.value)
@@ -449,8 +456,9 @@ export default defineComponent({
           }
           tableSetup();
         });
-      else
+      else {
         tableSetup();
+      }
     });
 
     const noHeaderSelected = computed(() => {
