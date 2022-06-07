@@ -104,6 +104,7 @@
               <template v-else-if="dList.length > 0">
                 <template v-for="(item, index) in dList" :key="index">
                   <tr class="text-center"
+                      v-bind="defaultConfig.onTBodyRowBinds(item, index)"
                       data-context-menu="true" @contextmenu="contextMenu(item)"
                       @drop.prevent="defaultConfig.context.emit('trDrop', [$event, item, index])" @dragenter.prevent
                       @dragover.prevent
@@ -217,6 +218,7 @@ import {DragHandler, SimpleDrag} from "@/custom/components/table/TableDrag";
 import {UserPreferencesTableApi} from "@/custom/services/UserPreferencesTableApi";
 import DropdownV2 from "@/custom/components/DropdownV2.vue";
 import {MenuComponent, ToggleComponent} from "@/assets/ts/components";
+import {del} from "object-path";
 
 export default defineComponent({
   components: {
@@ -291,6 +293,22 @@ export default defineComponent({
     const headerVisibility = ref<Record<string, any>>({});
 
     const checkedDataList = ref<Record<string, boolean>>({});
+    const cacheSelected = {};
+
+    watch(checkedDataList, () => {
+      Object.keys(checkedDataList.value).forEach((key) => {
+        if (checkedDataList.value[key] && !cacheSelected[key]) {
+          const currentKeyId = key.split('_')[1];
+          const dataIndex = dList.value.findIndex((item) => item['id'] == Number(currentKeyId));
+          cacheSelected[key] = dList.value[dataIndex];
+        } else if (!checkedDataList.value[key] && cacheSelected[key]) {
+          delete cacheSelected[key];
+        }
+      });
+      console.log("new cache selecteds", cacheSelected);
+    }, {
+      deep: true,
+    });
 
     let drag: SimpleDrag | null = null;
     const checksDragHandler = new DragHandler();
@@ -480,13 +498,20 @@ export default defineComponent({
       }
     }
 
+    const checkedItems = computed(() => {
+      const keys: Array<string> = [];
+      Object.keys(checkedDataList.value).forEach((key) => {
+        if (checkedDataList.value[key])
+          keys.push(key);
+      });
+      return keys;
+    });
+
 
     return {
       dList,
       checkAll,
-      checkedDataList: computed(() => {
-        return checkedDataList.value
-      }),
+      checkedDataList,
       defaultConfig,
       headers,
       headersRef,
@@ -498,6 +523,8 @@ export default defineComponent({
       onPage,
       contextMenu,
       checkCheckFieldData,
+      checkedItems,
+      cacheSelected,
       refresh: onGetData,
     };
   },
