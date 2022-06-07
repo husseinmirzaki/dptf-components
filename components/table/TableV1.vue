@@ -107,11 +107,14 @@
                       data-context-menu="true" @contextmenu="contextMenu(item)"
                       @drop.prevent="defaultConfig.context.emit('trDrop', [$event, item, index])" @dragenter.prevent
                       @dragover.prevent
-                      @mousedown.prevent="checksDragHandler.isMouseDown.value = true"
-                      @mouseup="checksDragHandler.isMouseDown.value = false"
                       @mouseenter="checkCheckFieldData(`check_${item.id}`)"
                       @click="$emit('on-row-selected', item)">
-                    <td style="width: 70px" v-if="defaultConfig.checkAble">
+                    <td style="width: 70px" v-if="defaultConfig.checkAble"
+                        @mousedown.prevent="checksDragHandler.isMouseDown.value = true"
+                        @mouseup.prevent="checksDragHandler.isMouseDown.value = false"
+                        @mousemove="checkCheckFieldData(`check_${item.id}`)"
+                        @mouseenter="checkCheckFieldData(`check_${item.id}`)"
+                        @click="checkedDataList[`check_${item.id}`] = !checkedDataList[`check_${item.id}`]">
                       <FieldComponent
                           v-model="checkedDataList[`check_${item.id}`]"
                           col_class="ms-4"
