@@ -31,7 +31,9 @@ export class Table {
 
 
     getFilterForm(): any {
-        return null;
+        return {
+            obj: ref({}),
+        };
     }
 
     _fieldsCache: any = {};

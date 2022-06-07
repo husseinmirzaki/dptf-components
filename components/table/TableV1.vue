@@ -25,7 +25,7 @@
     <template v-slot:toolbar>
       <div v-if="defaultConfig.filterForm">
         <div v-if="!(defaultConfig.filterForm.labelForm)">
-          <button @click="filterShow = !filterShow" class="btn btn-sm btn-primary btn-icon">
+          <button @click="filterShow = !filterShow" class="btn btn-sm btn-primary btn-icon mx-1">
             <i class="fas fa-filter"></i>
           </button>
           <button @click="defaultConfig.filterForm.formInstance.resetForm()" class="btn btn-sm btn-primary btn-icon">
