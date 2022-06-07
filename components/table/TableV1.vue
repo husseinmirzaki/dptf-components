@@ -94,7 +94,7 @@
                                  :field="defaultConfig.getFieldByName(header)"/>
                 </td>
               </tr>
-              <tr v-else-if="!dList || dList.length == 0">
+              <tr v-if="!dList || dList.length == 0">
                 <td :colspan="headers.length + 1" class="text-center">
                   <slot name="empty">
                     داده ای برای نمایش موجود نمی‌باشد
