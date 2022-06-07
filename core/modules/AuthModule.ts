@@ -149,6 +149,7 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
         this.user = {} as User;
         this.errors = [];
         JwtService.destroyToken();
+        localStorage.removeItem('activePostId');
     }
 
     /**
