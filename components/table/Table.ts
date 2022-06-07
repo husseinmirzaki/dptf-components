@@ -341,6 +341,10 @@ export class Table {
         return this.tHeadComponent;
     }
 
+    onTBodyRowBinds(item, index): any {
+        return {};
+    }
+
     onTBodyProps(item, header, index): any {
         let itemElement = Object.assign(item);
         if (header.search('.') > -1) {
