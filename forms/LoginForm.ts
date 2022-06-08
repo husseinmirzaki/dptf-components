@@ -50,7 +50,7 @@ export default class LoginForm extends CreateForm {
             resolve(null);
             VueInstanceService.router.push('/dashboard');
         }, (e) => {
-            console.log("finalize login failed", e);
+            // console.log("finalize login failed", e);
             reject(null)
         })
     }

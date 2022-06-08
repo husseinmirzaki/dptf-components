@@ -14,7 +14,7 @@ export class ResetPasswordForm extends CreateForm {
         return new Promise((resolve, reject) => {
             const data = this.refs['basic'].value;
             data['username'] = VueInstanceService.store.getters.currentForgottenUser;
-            console.log(data);
+            // console.log(data);
             const dispatch = VueInstanceService.store.dispatch(Actions.SET_FORGOT_PASSWORD, data);
             dispatch.then((data) => {
                 VueInstanceService.router.push({name: 'sign-in'});

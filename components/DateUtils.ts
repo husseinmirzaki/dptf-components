@@ -81,6 +81,6 @@ export function persianStringDateToGregorian(dateString: string) {
     const [gYear, gMonth, gDay] = jalaliToGregorian(Number(year), Number(month), Number(day));
 
     const date = new Date(Number(gYear), Number(gMonth) - 1, Number(gDay));
-    console.log(date);
+    // console.log(date);
     return date;
 }

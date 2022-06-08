@@ -96,7 +96,7 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
 
     @Action
     [Actions.SET_USER_ACTION](data) {
-        console.log('ac', data)
+        // console.log('ac', data)
         this.context.commit(Mutations.SET_USER, data);
     }
 
@@ -270,7 +270,7 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
      */
     @Action
     [Actions.ASK_NEW_TOKEN]() {
-        console.log("asking for new token")
+        // console.log("asking for new token")
         return new Promise((resolve, reject) => {
             const token = JwtService.getRefresh();
             if (token) {
@@ -287,13 +287,13 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
                             reject();
                             return;
                         }
-                        console.log("setting new token")
+                        // console.log("setting new token")
                         if (response.data) {
                             this.context.commit(Mutations.SET_NEW_TOKEN, response.data);
                             resolve(response.data);
                         }
                     }, (e) => {
-                        console.log("e.response", e && e.response && e.response.auth && e.response.data);
+                        // console.log("e.response", e && e.response && e.response.auth && e.response.data);
                         if (
                             e &&
                             e.response

@@ -75,7 +75,7 @@ export default defineComponent({
       let x = _x, y = _y;
       // const b = (contextMenu.value as HTMLElement).getBoundingClientRect();
 
-      console.log(x, y);
+      // console.log(x, y);
 
       contextMenu.value.style.left = `${x}px`
       contextMenu.value.style.top = `${y}px`

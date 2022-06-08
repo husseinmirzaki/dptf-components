@@ -12,7 +12,7 @@ export default class LoginTokenForm extends CreateForm {
   }
 
   submit(v): any {
-    console.log(this.refs.basic.value);
+    // console.log(this.refs.basic.value);
     VueInstanceService.store.dispatch(Actions.FINALIZE_LOGIN, this.refs.basic.value).then((data) => {
       VueInstanceService.router.push('/dashboard')
     });

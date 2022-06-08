@@ -157,7 +157,7 @@ export class Table {
     }
 
     getDeleteItemId(data) {
-        console.log(data);
+        // console.log(data);
         return data.id;
     }
 
@@ -215,7 +215,7 @@ export class Table {
         this.contextMenuItems = this.buildContextMenu();
         this.filterForm = this.getFilterForm();
         VueInstanceService.on(this.tableName, (e) => {
-            console.log("called an event for table", this.tableName, e);
+            // console.log("called an event for table", this.tableName, e);
             if (e[0] == 'refresh') {
                 this.refresh();
             } else {

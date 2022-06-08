@@ -101,7 +101,7 @@ class ApiService {
                             this.handleTokenRefresh(reqF, resolve, reject);
                         })
                         .catch((e) => {
-                            console.log("asked for new token", e);
+                            // console.log("asked for new token", e);
                             if (e !== 1) {
                                 reject(e);
                             }
@@ -277,7 +277,7 @@ class ApiService {
         }
 
         const config = this.calcConf(params);
-        console.log(config);
+        // console.log(config);
 
 
         return this.wrap(() => {

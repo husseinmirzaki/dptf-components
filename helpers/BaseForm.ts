@@ -180,7 +180,7 @@ export class CreateForm<T extends FieldsInterface = any> {
         // first get current service instance or class
         this.service = this.getService();
 
-        console.log("current form modes", this.modes);
+        // console.log("current form modes", this.modes);
         // prepare fields and create an object which will
         // be used to access FieldComponent component dome
         // from with in form class
