@@ -1,7 +1,14 @@
 <template>
   <td>
     <slot :computedValue="computedValue">
-      {{ computedValue ? computedValue : emptyCell ? emptyCell : 'بدون داده' }}
+      <el-tooltip :content="computedValue ? computedValue : emptyCell ? emptyCell : 'بدون داده'" v-if="len(data) > 80">
+        <span>
+            {{ truncate(computedValue ? computedValue : emptyCell ? emptyCell : 'بدون داده') }}
+        </span>
+      </el-tooltip>
+      <span v-else>
+          {{ computedValue ? computedValue : emptyCell ? emptyCell : 'بدون داده' }}
+      </span>
     </slot>
   </td>
 </template>
@@ -23,6 +30,20 @@ export default defineComponent({
       }
       return null
     }
+  },
+  methods: {
+    truncate(data) {
+      if (data && data.length > 80) {
+        return data.substr(0, 80) + '...';
+      }
+      return data;
+    },
+    len(data) {
+      if (data && data.length) {
+        return data.length;
+      }
+      return 0;
+    },
   }
 });
 </script>
