@@ -28,9 +28,30 @@
     <!--end::Menu separator-->
     <slot/>
   </div>
+  <div class="overlay"></div>
   <!--end::Menu 2-->
 </template>
+<style scoped>
+.show {
+  z-index: 150 !important;
+  box-shadow: 0 0 18px 0 #dad3d3;
+}
 
+.overlay {
+  display: none;
+  top: 0;
+  left: 0;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.show + .overlay {
+  display: block;
+  z-index: 149;
+}
+</style>
 <script lang="ts">
 import {defineComponent} from "vue";
 import {randomId} from "@/custom/helpers/random";
