@@ -4,7 +4,6 @@ import {TokenService} from "@/custom/services/TokenService";
 import {Actions} from "@/custom/store/enums/StoreEnums";
 import {VueInstanceService} from "@/custom/Defaults";
 import Swal from "sweetalert2/dist/sweetalert2.js";
-import {CActions} from "@/mail_box_custom/store/enums/CStoreEnums";
 
 export default class LoginForm extends CreateForm {
     getService(): any {
