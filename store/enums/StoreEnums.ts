@@ -27,6 +27,7 @@ enum Mutations {
   SET_USER = "setUser",
   SET_PASSWORD = "setPassword",
   SET_ERROR = "setError",
+  ADD_ERROR = "addError",
   SET_FORGOTTEN_USER = "setForgottenUserMutation",
   SET_BREADCRUMB_MUTATION = "setBreadcrumbMutation",
   SET_LAYOUT_CONFIG = "setLayoutConfig",

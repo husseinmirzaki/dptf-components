@@ -17,7 +17,7 @@ export default class RegisterForm extends CreateForm {
         return UserApiService;
     }
 
-    finalize_login(token: string, resolve) {
+    finalize_login(token: string, resolve, reject) {
         VueInstanceService.store.dispatch(Actions.FINALIZE_LOGIN, {
             "username": this.refs.basic.value.phone_number,
             "code": token
@@ -27,33 +27,36 @@ export default class RegisterForm extends CreateForm {
         }).catch((e) => resolve(null));
     }
 
+    showConfirmSwal(resolve, reject) {
+        VueInstanceService.showSuccessMessage('کد تایید برای شما ارسال شد');
+        Swal.fire({
+            icon: 'question',
+            title: 'کد تایید را وارد کنید',
+            confirmButtonText: 'ارسال',
+            html:
+                '<input id="swal-input-code" class="swal2-input">',
+            focusConfirm: true,
+            preConfirm: () => {
+                const element: any = document.getElementById('swal-input-code');
+                if (element)
+                    return element.value;
+                return null;
+            }
+        }).then((e) => {
+            if (e.isConfirmed && e.value != null) {
+                this.finalize_login(e.value, resolve, reject)
+            } else {
+                resolve(e);
+            }
+        }, (e) => reject(e));
+    }
+
     submit(event) {
         return new Promise((resolve, reject) => {
             const data = super.submit(event, true);
             this.getService().register(data).then(() => {
-                VueInstanceService.showSuccessMessage('کد تایید برای شما ارسال شد');
-                Swal.fire({
-                    icon: 'question',
-                    title: 'کد تایید را وارد کنید',
-                    confirmButtonText: 'ارسال',
-                    html:
-                        '<input id="swal-input-code" class="swal2-input">',
-                    focusConfirm: true,
-                    preConfirm: () => {
-                        const element: any = document.getElementById('swal-input-code');
-                        if (element)
-                            return element.value;
-                        return null;
-                    }
-                }).then((e) => {
-                    if (e.isConfirmed && e.value != null) {
-                        this.finalize_login(e.value, resolve)
-                    } else {
-                        resolve(e);
-                    }
-                },(e) => resolve(e));
-
-            }, (e) => resolve(e));
+                this.showConfirmSwal(resolve, reject);
+            }, (e) => reject(e));
         });
     }
 
@@ -80,12 +83,6 @@ export default class RegisterForm extends CreateForm {
                 placeholder: "شماره ملی",
                 col_class: '',
             },
-            // {
-            //     defaultInputClasses: "",
-            //     name: "email",
-            //     placeholder: "ایمیل",
-            //     col_class: '',
-            // },
             {
                 show_errors: false,
                 defaultInputClasses: "",
@@ -97,7 +94,7 @@ export default class RegisterForm extends CreateForm {
                 show_errors: false,
                 defaultInputClasses: "",
                 name: "gender",
-                field_type : "select",
+                field_type: "select",
                 select_data: this.optionToSelect2Option(genderOptions),
                 placeholder: "جنسیت",
                 col_class: '',
@@ -106,7 +103,7 @@ export default class RegisterForm extends CreateForm {
                 show_errors: false,
                 defaultInputClasses: "",
                 name: "password",
-                field_type : "password",
+                field_type: "password",
                 placeholder: "رمز عبور",
                 col_class: '',
             },
@@ -114,7 +111,7 @@ export default class RegisterForm extends CreateForm {
                 show_errors: false,
                 defaultInputClasses: "",
                 name: "repeat_password",
-                field_type : "password",
+                field_type: "password",
                 placeholder: "تکرار رمز عبور",
                 col_class: '',
                 validation: [

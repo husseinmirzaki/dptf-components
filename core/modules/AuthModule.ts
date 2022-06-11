@@ -41,7 +41,7 @@ export interface UserAuthInfo {
 
 @Module
 export default class AuthModule extends VuexModule implements UserAuthInfo {
-    errors = [];
+    errors: Array<any> = [];
     user = {} as User;
     isAuthenticated = !!JwtService.getToken();
 
@@ -87,6 +87,11 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
     @Mutation
     [Mutations.SET_ERROR](error) {
         this.errors = error;
+    }
+
+    @Mutation
+    [Mutations.ADD_ERROR](error) {
+        this.errors.push(error);
     }
 
     @Mutation
@@ -196,7 +201,7 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
                     });
                 }, (response) => {
                     reject(response);
-                });
+                }).catch((e) => reject(e));
         });
     }
 

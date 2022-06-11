@@ -3,7 +3,7 @@ import axios from "axios";
 import VueAxios from "vue-axios";
 import JwtService from "@/custom/core/services/JwtService";
 import {AxiosResponse} from "axios";
-import {Actions} from "@/custom/store/enums/StoreEnums";
+import {Actions, Mutations} from "@/custom/store/enums/StoreEnums";
 import {VueInstanceService} from "@/custom/Defaults";
 
 /**
@@ -75,9 +75,29 @@ class ApiService {
         reqF().then((e) => {
             resolve(e)
         }, (result) => {
+            VueInstanceService.store.commit(Mutations.SET_ERROR, []);
             if (result.response) {
                 // try to find the error
-                if (result.response.data && result.response.data['code'] == "user_not_validated") {
+                if (result.response.status == 400) {
+                    Object.keys(result.response.data).forEach((key) => {
+                        if (key == 'exception') {
+                            VueInstanceService.store.commit(Mutations.ADD_ERROR, result.response.data[key][0])
+                            return;
+                        } else if (key == 'exceptions') {
+                            result.response.data[key].forEach((exception) => {
+                                VueInstanceService.store.commit(Mutations.ADD_ERROR, exception);
+                            });
+                            return;
+                        }
+
+                        if (Array.isArray(result.response.data[key])) {
+                            result.response.data[key].forEach((message) => {
+                                VueInstanceService.showErrorMessage(message);
+                            })
+                        }
+                    })
+                    reject(result);
+                } else if (result.response.data && result.response.data['code'] == "user_not_validated") {
                     VueInstanceService.store.dispatch(Actions.LOGOUT);
                     VueInstanceService.showErrorMessage("کاربر هنوز فعال نشده")
                     reject(result);

@@ -68,7 +68,7 @@
         </Field>
       </template>
       <template v-else-if="field_type === 'checkbox'">
-        <div class="form-check m-3 me-4" style="padding-right: 0 !important ">
+        <div :class="[input_container_class ? input_container_class : 'form-check m-3 me-4']" style="padding-right: 0 !important ">
           <Field
               :class="['form-check-input',defaultInputClasses, input_class]"
               :id="field_id"
@@ -196,6 +196,10 @@ export default defineComponent({
       default: "",
       type: String,
     },
+    input_container_class: {
+      default: null,
+      type: String,
+    },
     label_class: {
       default: "",
       type: String,
@@ -277,9 +281,6 @@ export default defineComponent({
     },
   },
   setup(props, context) {
-    const field = ref<any>(null);
-    const root = ref<any>(null);
-    const showError = ref<boolean>(true);
 
     const col_class = toRef(props, "col_class");
     const one_line = toRef(props, "one_line");
@@ -300,6 +301,10 @@ export default defineComponent({
     const file_accept = toRef(props, "file_accept");
     const placeholder = toRef(props, "placeholder");
     const modelValue = toRef(props, "modelValue");
+
+    const field = ref<any>(null);
+    const root = ref<any>(null);
+    const showError = ref<boolean>(show_errors.value)
 
     watch(modelValue, () => {
       showError.value = true;

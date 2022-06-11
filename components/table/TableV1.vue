@@ -56,8 +56,10 @@
                 <th style="width: 70px" v-if="defaultConfig.checkAble">
                   <FieldComponent
                       v-model="checkAll"
-                      col_class="ms-4"
+                      col_class=""
+                      input_container_class="test"
                       default-input-classes=""
+                      :show_errors="false"
                       field_type="checkbox"/>
                 </th>
                 <template v-if="changedHeaders.length > 0">
@@ -118,7 +120,10 @@
                         @click="checkedDataList[`check_${item.id}`] = !checkedDataList[`check_${item.id}`]">
                       <FieldComponent
                           v-model="checkedDataList[`check_${item.id}`]"
-                          col_class="ms-4"
+                          col_class=""
+                          input_container_class="test"
+                          default-input-classes=""
+                          :show_errors="false"
                           field_type="checkbox"/>
                     </td>
                     <template v-for="(header, index) in headers" :key="index">
@@ -156,8 +161,11 @@
 <style lang="scss" scoped>
 table {
   th {
-    border-left: 1px solid #dddee3;
-
+    color: black;
+    border-left: 1px solid #e9ebf1;
+    &:first-child {
+      min-width: 50px;
+    }
     &:last-child {
       border-left: none;
     }
@@ -167,6 +175,7 @@ table {
     height: 35px;
     //border-left: 1px solid #dddee3;
     border-bottom: 1px solid #dddee3;
+    color: #5e5e5e;
 
     &:last-child {
       border-left: none;
@@ -185,8 +194,6 @@ table {
 
   }
 }
-</style>
-<style lang="scss">
 
 .is-replace-able {
   transition: box-shadow 0.5s ease;

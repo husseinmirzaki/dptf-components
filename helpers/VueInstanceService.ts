@@ -59,7 +59,7 @@ export class VueInstanceService {
     public static showErrorMessage(
         text,
         title: string | null = null,
-        duration = 2000
+        duration = 4000
     ) {
         this.vue.config.globalProperties["$notify"]({
             title: title,
