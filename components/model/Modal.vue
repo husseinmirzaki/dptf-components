@@ -20,7 +20,7 @@
           <slot name="modal-content" :modalId="modalId"/>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-light-primary font-weight-bold" @click="close()">بستن</button>
+          <button type="button" class="btn btn-light-primary font-weight-bold mt-4" @click="close()">بستن</button>
           <slot name="modal-footer"/>
         </div>
       </div>
