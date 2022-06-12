@@ -4,6 +4,8 @@ import {UserApiService} from "@/custom/services/UserApiService";
 import * as Yup from "yup";
 import {watch} from "vue";
 import {ExternalContactApiService} from "@/mail_box_custom/services/ExternalContactApiService";
+import {Actions} from "@/custom/store/enums/StoreEnums";
+import {VueInstanceService} from "@/Defaults";
 
 export const genderOptions = {
     "0": "مرد",
@@ -29,7 +31,8 @@ export default class UserUpdateForm extends CreateForm {
         return new Promise((resolve, reject) => {
             const data = super.submit(event, true);
             this.getService().update(data, id).then((e) => {
-                resolve(e)
+                resolve(e);
+                VueInstanceService.store.dispatch(Actions.GET_ME);
             }, (e) => reject(e));
         });
     }

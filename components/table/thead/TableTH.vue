@@ -1,8 +1,6 @@
 <template>
   <th>
-    <div class="position-relative float-start" style="height: 20px;width:20px;">
-      <slot name="extra-part-0"/>
-    </div>
+    <slot name="extra-part-0"/>
     <p class="p-0 m-0 text-hover-dark">{{ $props.header }}</p>
     <!--    <field-component input_class="table-filter-smaller text-center" placeholder="فیلتر" :required="false" />-->
   </th>

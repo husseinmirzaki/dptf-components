@@ -192,16 +192,26 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
                     const data = e.data;
                     const loginData = data;
                     this.context.commit(Mutations.SET_AUTH, data);
-                    UserApiService.getMe().then(({data}) => {
-                        this.context.commit(Mutations.SET_USER, data)
+                    this.context.dispatch(Actions.GET_ME).then(() => {
                         resolve(loginData);
                     }, ({response}) => {
                         this.context.commit(Mutations.PURGE_AUTH);
                         reject(response);
-                    });
+                    })
                 }, (response) => {
                     reject(response);
                 }).catch((e) => reject(e));
+        });
+    }
+    @Action
+    [Actions.GET_ME]() {
+        return new Promise<void>((resolve, reject) => {
+            UserApiService.getMe().then(({data}) => {
+                this.context.commit(Mutations.SET_USER, data)
+                resolve(data);
+            }, ({response}) => {
+                reject(response);
+            });
         });
     }
 

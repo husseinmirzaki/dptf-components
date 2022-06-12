@@ -15,6 +15,7 @@ import {random} from "@/custom/helpers/random";
 import LoginForm from "@/custom/forms/LoginForm";
 import {CreateForm} from "@/custom/helpers/BaseForm";
 import {fieldC} from "@/custom/components/FieldComponent.vue";
+import TableTDDateTime from "@/custom/components/table/tbody/TableTDDateTime.vue";
 
 export class Table {
 
@@ -387,8 +388,8 @@ export class Table {
             } else if (typeof data === 'string') {
                 if (data === "true" || data == "false")
                     return TableTDBool;
-                else if (data.endsWith('Z') && data.search(/[:\-T]/) > -1) {
-                    return TableTDDate;
+                else if ((data.endsWith('Z') && data.search(/[:\-T]/) > -1) || data.search(/[:\-T]/) > -1) {
+                    return TableTDDateTime;
                 }
             } else if (typeof data === 'object') {
                 if (data.length) {

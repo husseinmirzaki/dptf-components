@@ -8,6 +8,7 @@ enum Actions {
   VERIFY_AUTH = "verifyAuth",
   LOGIN = "login",
   FINALIZE_LOGIN = "finalize",
+  GET_ME = "getMe",
   LOGOUT = "logout",
   REGISTER = "register",
   UPDATE_USER = "updateUser",

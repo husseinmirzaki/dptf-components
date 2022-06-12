@@ -76,9 +76,6 @@ export class SimpleDrag {
     }
 
     addMouseEvents() {
-        document.addEventListener('mouseup', (e) => this.onMouseUp(e));
-        document.addEventListener('mousemove', (e) => this.onGlobalMouseMove(e));
-
         this.iterateOn((element) => {
             element.addEventListener('mousedown', (e) => this.onMouseDown(e));
             element.addEventListener('mousemove', (e) => this.onElementMouseMove(e));
@@ -108,7 +105,12 @@ export class SimpleDrag {
     }
 
     onMouseUp(e) {
+
+        document.removeEventListener('mouseup', this.lastGlobalMouseUpListener);
+        document.removeEventListener('mousemove', this.lastGlobalMoveListener);
+
         console.log("console.log", e);
+
         this.mouseIsDown = false;
 
         if (this.lastDraggingElement && this.lastTargetDrag) {
@@ -127,7 +129,18 @@ export class SimpleDrag {
         e.stopPropagation();
         this.mouseIsDown = true;
         this.lastMouseDownEvent = e;
+        this.lastGlobalMoveListener = (e) =>{
+            this.onGlobalMouseMove(e);
+        }
+        this.lastGlobalMouseUpListener = (e) =>{
+            this.onMouseUp(e);
+        }
+        document.addEventListener('mouseup', this.lastGlobalMouseUpListener);
+        document.addEventListener('mousemove', this.lastGlobalMoveListener);
     }
+
+    lastGlobalMoveListener: any = null;
+    lastGlobalMouseUpListener: any = null;
 
     onGlobalMouseMove(e) {
         if (this.mouseIsDown && this.lastDraggingElement != null) {
@@ -154,6 +167,8 @@ export class SimpleDrag {
     }
 
     onElementMouseMove(e) {
+        if (!this.mouseIsDown) return;
+        if (this.lastDraggingElement) return;
         e.preventDefault();
         if (this.mouseIsDown && this.lastDraggingElement == null) {
 

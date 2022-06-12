@@ -1,22 +1,24 @@
 <template>
-  <div class="filter-place-holder d-flex align-items-center justify-content-start ps-1"
-       :class="{show: show, active: show || !valueIsEmpty}" ref="root">
-    <i class="fas fa-filter" @click="toggle()"></i>
-    <div class="fixed-filter-container"
-         ref="filterContainer"
-         @move.prevent.stop @drag.prevent.stop
-         @mousedown.stop :class="{'d-none':!show}" :id="parentId">
-      <div class="d-flex flex-column justify-content-between align-items-center">
-        <field-builder :field="$attrs.field"/>
-        <button class="btn btn-success btn-sm" @click="clearField($attrs.field)">پاک شود</button>
-<!--        <div class="condition"  @click="condition+=1;condition > 5 ? condition=0:null;">-->
-<!--          <img src="/media/table/e.png" v-if="condition==0"/>-->
-<!--          <img src="/media/table/not.png" v-if="condition==1"/>-->
-<!--          <img src="/media/table/g.png" v-if="condition==2"/>-->
-<!--          <img src="/media/table/l.png" v-if="condition==3"/>-->
-<!--          <img src="/media/table/el.png" v-if="condition==4"/>-->
-<!--          <img src="/media/table/eg.png" v-if="condition==5"/>-->
-<!--        </div>-->
+  <div class="position-relative float-start" style="height: 20px;width:20px;margin-left: -20px">
+    <div class="filter-place-holder d-flex align-items-center justify-content-start ps-1"
+         :class="{show: show, active: show || !valueIsEmpty}" ref="root">
+      <i class="fas fa-filter" @click="toggle()"></i>
+      <div class="fixed-filter-container"
+           ref="filterContainer"
+           @move.prevent.stop @drag.prevent.stop
+           @mousedown.stop :class="{'d-none':!show}" :id="parentId">
+        <div class="d-flex flex-column justify-content-between align-items-center">
+          <field-builder :field="$attrs.field"/>
+          <button class="btn btn-success btn-sm" @click="clearField($attrs.field)">پاک شود</button>
+          <!--        <div class="condition"  @click="condition+=1;condition > 5 ? condition=0:null;">-->
+          <!--          <img src="/media/table/e.png" v-if="condition==0"/>-->
+          <!--          <img src="/media/table/not.png" v-if="condition==1"/>-->
+          <!--          <img src="/media/table/g.png" v-if="condition==2"/>-->
+          <!--          <img src="/media/table/l.png" v-if="condition==3"/>-->
+          <!--          <img src="/media/table/el.png" v-if="condition==4"/>-->
+          <!--          <img src="/media/table/eg.png" v-if="condition==5"/>-->
+          <!--        </div>-->
+        </div>
       </div>
     </div>
   </div>
@@ -39,13 +41,15 @@
     background-color: #ffffff;
     border: 1px solid #e7e7e7;
     transform: translateX(-50%);
-    .field  {
+
+    .field {
       flex-shrink: 1 !important;
     }
   }
 
   .condition {
     padding: 2px 6px;
+
     img {
       width: 16px;
       height: 16px;
@@ -96,7 +100,7 @@ export default {
       show.value = !show.value;
       const boundingClientRect = root.value.getBoundingClientRect();
       filterContainer.value.style.left = boundingClientRect.left + 'px';
-      filterContainer.value.style.top = (boundingClientRect.height + boundingClientRect.top)  + 'px';
+      filterContainer.value.style.top = (boundingClientRect.height + boundingClientRect.top) + 'px';
     }
 
     const clearField = (field) => {
