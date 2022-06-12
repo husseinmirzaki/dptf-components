@@ -24,9 +24,9 @@ export default defineComponent({
         date = new Date(data.value);
         const persian = gregorianToJalali(date.getFullYear(), date.getMonth() + 1, date.getDate());
         if (date_time){
-          return `${persian[0]} \\ ${persian[1]} \\ ${persian[2]} ${date.getHours()}:${date.getMinutes()}`;
+          return `${persian[0]} / ${persian[1]} / ${persian[2]} ${date.getHours()}:${date.getMinutes()}`;
         }
-        return `${persian[0]} \\ ${persian[1]} \\ ${persian[2]}`;
+        return `${persian[0]} / ${persian[1]} / ${persian[2]}`;
       }
       return '';
     });

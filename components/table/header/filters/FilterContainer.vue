@@ -1,18 +1,22 @@
 <template>
-  <div class="filter-place-holder d-flex align-items-center justify-content-start ps-1" :id="parentId"
-       :class="{show: show, active: show || !valueIsEmpty}">
-    <i class="fas fa-filter" @click="show=!show"></i>
-    <div class="fixed-filter-container" @move.prevent.stop @drag.prevent.stop @mousedown.stop v-if="show">
-      <div class="d-flex justify-content-between align-items-center">
+  <div class="filter-place-holder d-flex align-items-center justify-content-start ps-1"
+       :class="{show: show, active: show || !valueIsEmpty}" ref="root">
+    <i class="fas fa-filter" @click="toggle()"></i>
+    <div class="fixed-filter-container"
+         ref="filterContainer"
+         @move.prevent.stop @drag.prevent.stop
+         @mousedown.stop :class="{'d-none':!show}" :id="parentId">
+      <div class="d-flex flex-column justify-content-between align-items-center">
         <field-builder :field="$attrs.field"/>
-        <div class="condition"  @click="condition+=1;condition > 5 ? condition=0:null;">
-          <img src="/media/table/e.png" v-if="condition==0"/>
-          <img src="/media/table/not.png" v-if="condition==1"/>
-          <img src="/media/table/g.png" v-if="condition==2"/>
-          <img src="/media/table/l.png" v-if="condition==3"/>
-          <img src="/media/table/el.png" v-if="condition==4"/>
-          <img src="/media/table/eg.png" v-if="condition==5"/>
-        </div>
+        <button class="btn btn-success btn-sm" @click="clearField($attrs.field)">پاک شود</button>
+<!--        <div class="condition"  @click="condition+=1;condition > 5 ? condition=0:null;">-->
+<!--          <img src="/media/table/e.png" v-if="condition==0"/>-->
+<!--          <img src="/media/table/not.png" v-if="condition==1"/>-->
+<!--          <img src="/media/table/g.png" v-if="condition==2"/>-->
+<!--          <img src="/media/table/l.png" v-if="condition==3"/>-->
+<!--          <img src="/media/table/el.png" v-if="condition==4"/>-->
+<!--          <img src="/media/table/eg.png" v-if="condition==5"/>-->
+<!--        </div>-->
       </div>
     </div>
   </div>
@@ -30,12 +34,10 @@
   .fixed-filter-container {
     display: none;
     min-width: 250px;
-    position: absolute;
-    padding: 5px 5px 0 0;
+    position: fixed;
+    padding: 5px 5px;
     background-color: #ffffff;
     border: 1px solid #e7e7e7;
-    top: 100%;
-    left: 50%;
     transform: translateX(-50%);
     .field  {
       flex-shrink: 1 !important;
@@ -69,30 +71,47 @@
 </style>
 <script>
 import FieldBuilder from "@/custom/components/FieldBuilder";
-import {computed, ref, watch} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import {randomId} from "@/custom/helpers/random";
 
 export default {
   components: {FieldBuilder},
   setup(props, context) {
+    const root = ref();
+    const filterContainer = ref();
     const show = ref(false);
-    const valueIsEmpty = ref(true);
+    const key = context.attrs.field.options['v-model-key'];
+    console.log(!!context.attrs.field.options['v-model'][key])
+    const valueIsEmpty = ref(!context.attrs.field.options['v-model'][key]);
     const parentId = `id_${randomId(2)}`;
     const condition = ref(0);
     context.attrs.field.options.modal_id = `#${parentId}`;
-
-    const key = context.attrs.field.options['v-model-key'];
     watch(context.attrs.field.options['v-model'], (newValue, oldValue) => {
       valueIsEmpty.value = newValue[key] === undefined || !newValue[key].length || newValue[key].length <= 0;
     }, {
       deep: true
     })
 
+    const toggle = () => {
+      show.value = !show.value;
+      const boundingClientRect = root.value.getBoundingClientRect();
+      filterContainer.value.style.left = boundingClientRect.left + 'px';
+      filterContainer.value.style.top = (boundingClientRect.height + boundingClientRect.top)  + 'px';
+    }
+
+    const clearField = (field) => {
+      console.log("field", field);
+    }
+
     return {
+      clearField,
+      toggle,
       condition,
       valueIsEmpty,
       parentId,
       show,
+      root,
+      filterContainer,
     }
   }
 }

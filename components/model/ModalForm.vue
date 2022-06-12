@@ -2,7 +2,7 @@
   <FormContainer
       :validation-schema="form.formInstance.validationSchemas.basic"
       @submit-form="$emit('formSubmit', form)">
-    <Modal ref="modal"  @close="$emit('close', $event)" @open="$emit('open', $event)" @opened="$emit('opened', $event)">
+    <Modal ref="modal"  @close="$emit('close', $event)" @open="$emit('open', $event)" :modal-title="$attrs['title']" @opened="$emit('opened', $event)">
       <template v-slot:modal-content>
         <FormBuilder :fields="form.formInstance.fields"/>
       </template>
