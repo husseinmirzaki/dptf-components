@@ -1,5 +1,5 @@
 <template>
-  <div class="fv-row" :class="[col_class_c, { row: one_line }]" ref="root">
+  <div class="field fv-row" :class="[col_class_c, { row: one_line }]" ref="root">
     <!--begin::Label-->
     <label
         class="fs-5 fw-bold mb-2 font-weight-bolder text-dark"
@@ -257,6 +257,7 @@ export default defineComponent({
     },
     field_type: {
       type: String,
+      default: "text",
     },
     file_accept: {
       type: String,

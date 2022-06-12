@@ -41,6 +41,8 @@ export class Table {
     getFieldByName(name: string) {
         if (this._fieldsCache[name])
             return this._fieldsCache[name];
+        if (!this.filterForm || !this.filterForm.formInstance)
+            return;
         const field = this.filterForm.formInstance.fields.find((e) => e.name === name);
         this._fieldsCache[name] = fieldC(field);
         return this._fieldsCache[name];

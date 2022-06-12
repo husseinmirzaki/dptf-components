@@ -33,7 +33,7 @@
 </template>
 <style scoped>
 .show {
-  z-index: 150 !important;
+  z-index: 1052 !important;
   box-shadow: 0 0 18px 0 #dad3d3;
 }
 
@@ -45,11 +45,20 @@
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.8);
+  animation: 0.5s linear show-animation;
 }
 
 .show + .overlay {
   display: block;
-  z-index: 149;
+  z-index:  1051;
+}
+@keyframes show-animation {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 </style>
 <script lang="ts">

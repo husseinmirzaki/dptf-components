@@ -138,7 +138,7 @@ export class SimpleDrag {
         }
     }
 
-    cloneWithStyle(target, exclude = '(animation)|(opacity)|(transition)') {
+    cloneWithStyle(target, exclude = '(animation)|(opacity)|(transition)|(position)') {
         const clone = target.cloneNode(true);
         const styles = getComputedStyle(target) as any;
         for (const i of styles) {

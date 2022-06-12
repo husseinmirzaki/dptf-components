@@ -13,6 +13,18 @@
     </template>
     <template v-slot:dropDown>
       <DropdownV2>
+        <div class="pb-1">
+          <button @click="filterShow = !filterShow" class="btn btn-sm btn-primary btn-icon ms-2">
+            <i class="fas fa-filter"></i>
+          </button>
+          <button @click="defaultConfig.filterForm.formInstance.resetForm()"
+                  class="btn btn-sm btn-primary btn-icon ms-2">
+            <i class="fas fa-undo"></i>
+          </button>
+        </div>
+        <!--begin::Menu separator-->
+        <div class="separator mt-2 opacity-75"></div>
+        <!--end::Menu separator-->
         <template v-for="header in Object.keys(headerVisibility)" :key="header">
           <FieldComponent
               v-model="headerVisibility[header]"
@@ -21,18 +33,6 @@
               field_type="checkbox"/>
         </template>
       </DropdownV2>
-    </template>
-    <template v-slot:toolbar>
-      <div v-if="defaultConfig.filterForm && defaultConfig.filterForm.obj && defaultConfig.filterForm.formInstance">
-        <div v-if="!(defaultConfig.filterForm.labelForm)">
-          <button @click="filterShow = !filterShow" class="btn btn-sm btn-primary btn-icon mx-1">
-            <i class="fas fa-filter"></i>
-          </button>
-          <button @click="defaultConfig.filterForm.formInstance.resetForm()" class="btn btn-sm btn-primary btn-icon">
-            <i class="fas fa-undo"></i>
-          </button>
-        </div>
-      </div>
     </template>
     <template v-if="$slots.toolbar0" v-slot:toolbar0>
       <slot name="toolbar0"/>
@@ -49,11 +49,11 @@
           <!--begin::Table container-->
           <div class="table-responsive">
             <!--begin::Table-->
-            <table class="table table-bordered align-middle gs-4 gy-4 table-hover table">
+            <table class="table table-bordered align-middle gs-4 gy-4 table-hover table table-v2-custom">
               <!--begin::Table head-->
               <thead>
               <tr class="fw-bolder text-muted bg-light text-center" ref="headersRef">
-                <th style="width: 70px" v-if="defaultConfig.checkAble">
+                <th style="width: 70px" v-if="defaultConfig.checkAble" class="check-stuff">
                   <FieldComponent
                       v-model="checkAll"
                       col_class=""
@@ -71,7 +71,16 @@
                         class="align-middle pe-2 text-nowrap"
                         :group="defaultConfig.tableName"
                         :is="defaultConfig.onTHeadComponent(header, index)"
-                        v-bind="defaultConfig.onTHeadProps(header, index)"/>
+                        v-bind="defaultConfig.onTHeadProps(header, index)">
+                      <template #extra-part-0>
+
+                        <filter-container
+                            @move.prevent.stop @drag.prevent.stop @mousedown.stop
+                            v-if="defaultConfig.getFieldByName(header) && headerVisibility[header]"
+                            :field="defaultConfig.getFieldByName(header)"/>
+
+                      </template>
+                    </component>
                   </template>
                 </template>
                 <template v-else v-for="(header, index) in headers" :key="header">
@@ -82,7 +91,12 @@
                       class="pe-2 text-nowrap"
                       :group="defaultConfig.tableName"
                       :is="defaultConfig.onTHeadComponent(header, index)"
-                      v-bind="defaultConfig.onTHeadProps(header, index)"/>
+                      v-bind="defaultConfig.onTHeadProps(header, index)">
+                    <template #extra-part-0>
+                      <filter-container v-if="defaultConfig.getFieldByName(header) && headerVisibility[header]"
+                                        :field="defaultConfig.getFieldByName(header)"/>
+                    </template>
+                  </component>
                 </template>
               </tr>
               </thead>
@@ -90,10 +104,8 @@
 
               <!--begin::Table body-->
               <tbody>
-              <tr v-if="defaultConfig.filterForm && filterShow">
-                <td v-for="header in headers" :key="header">
-                  <field-builder v-if="defaultConfig.getFieldByName(header) && headerVisibility[header]"
-                                 :field="defaultConfig.getFieldByName(header)"/>
+              <tr v-if="defaultConfig.filterForm && filterShow" class="filters-container">
+                <td v-for="header in headers" :key="header" class="p-0">
                 </td>
               </tr>
               <tr v-if="!dList || dList.length == 0">
@@ -158,14 +170,71 @@
     </template>
   </Card>
 </template>
+<style lang="scss">
+th:first-child {
+  .filter-place-holder .fixed-filter-container {
+    left: 0 !important;
+    right: auto !important;
+    transform: translateX(-90%) !important;
+  }
+}
+th:last-child {
+  .filter-place-holder .fixed-filter-container {
+    transform: translateX(-10%) !important;
+  }
+}
+
+// //these part is used to make filters look better
+//$height: 42px;
+//.table-v2-custom {
+//  .filters-container {
+//    td {
+//      min-width: 50px;
+//      padding: 1px !important;
+//      font-size: 13px !important;
+//        font-weight: 400 !important;
+//
+//      input {
+//        border-radius: 0;
+//        font-size: 13px !important;
+//        font-weight: 400 !important;
+//        box-shadow: none !important;
+//      }
+//
+//      input[type="text"]  {
+//        height: $height !important;
+//      }
+//      .fv-plugins-message-container {
+//        display: none !important;
+//      }
+//      .select2-container, .select2-selection {
+//        border-radius: 0 !important;
+//        min-height: $height !important;
+//        box-shadow: none !important;
+//      }
+//      .select2-selection--multiple {
+//        min-height: $height !important;
+//        box-shadow: none !important;
+//      }
+//      .fv-row {
+//        padding: 0 !important;
+//        margin: 0 !important;
+//      }
+//    }
+//  }
+//}
+</style>
 <style lang="scss" scoped>
 table {
   th {
     color: black;
     border-left: 1px solid #e9ebf1;
-    &:first-child {
+    min-width: 130px;
+
+    &.check-stuff:first-child {
       min-width: 50px;
     }
+
     &:last-child {
       border-left: none;
     }
@@ -220,17 +289,17 @@ import Card from "@/custom/components/Card.vue";
 import {ContextMenuService} from "@/custom/components/ContextMenuService";
 import Spinner from "@/custom/components/Spinner.vue";
 import FieldComponent from "@/custom/components/FieldComponent.vue";
-import FieldBuilder from "@/custom/components/FieldBuilder.vue";
 import {DragHandler, SimpleDrag} from "@/custom/components/table/TableDrag";
 import {UserPreferencesTableApi} from "@/custom/services/UserPreferencesTableApi";
 import DropdownV2 from "@/custom/components/DropdownV2.vue";
 import {MenuComponent, ToggleComponent} from "@/assets/ts/components";
 import {del} from "object-path";
+import FilterContainer from "@/custom/components/table/header/filters/FilterContainer.vue";
 
 export default defineComponent({
   components: {
+    FilterContainer,
     DropdownV2,
-    FieldBuilder,
     FieldComponent,
     Spinner,
     Card,
