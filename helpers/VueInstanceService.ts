@@ -3,6 +3,8 @@ import {setLocale, addMethod} from "yup";
 import * as Yup from "yup";
 
 export class VueInstanceService {
+    public static simpleSharedData: any = null;
+
     public static vue: App;
 
     public static init(instance: App) {

@@ -19,10 +19,10 @@ export class TaskManager {
         console.log("this.tasksAreRunning", this.tasksAreRunning);
         if (this.tasksAreRunning) return;
         this.tasksAreRunning = true;
-        let lastTask = this.tasks.pop();
+        let lastTask = this.tasks.shift();
         while (lastTask) {
             await lastTask()
-            lastTask = this.tasks.pop();
+            lastTask = this.tasks.shift();
         }
         this.tasksAreRunning = false;
     }
