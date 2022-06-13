@@ -50,20 +50,20 @@ export default class UserUpdateForm extends CreateForm {
             {
                 name: "first_name",
                 label: "نام",
-                col_class: 'col-12 mt-2',
+                col_class: 'col-lg-12 col-xl-6 mt-2',
             },
             {
                 name: "last_name",
                 label: "نام خانوادگی",
-                col_class: 'col-12 mt-2',
+                col_class: 'col-lg-12 col-xl-6 mt-2',
             },
             {
                 name: "id_number",
                 label: "کد ملی",
-                col_class: 'col-12 mt-2',
+                col_class: 'col-lg-12 col-xl-6 mt-2',
             },
             {
-                col_class: 'col-12 mt-2',
+                col_class: 'col-lg-12 col-xl-6 mt-2',
                 name: "birth_date",
                 field_type: 'p-date-time',
                 label: "تاریخ تولد",
@@ -73,21 +73,21 @@ export default class UserUpdateForm extends CreateForm {
                 field_type: "select",
                 select_data: this.optionToSelect2Option(genderOptions),
                 label: "جنسیت",
-                col_class: 'col-12 mt-2',
+                col_class: 'col-lg-12 col-xl-6 mt-2',
             },
             {
                 name: "is_mobile_validation",
                 field_type: "select",
                 select_data: this.optionToSelect2Option(yesNoMobileVerification),
                 label: "اعتبار سنجی شماره موبایل",
-                col_class: 'col-12 mt-2',
+                col_class: 'col-lg-12 col-xl-6 mt-2',
             },
             {
                 name: "is_active",
                 field_type: "select",
                 select_data: this.optionToSelect2Option(activateOptions),
                 label: "وضعیت کاربر",
-                col_class: 'col-12 mt-2',
+                col_class: 'col-lg-12 col-xl-6 mt-2',
             },
         ];
     }

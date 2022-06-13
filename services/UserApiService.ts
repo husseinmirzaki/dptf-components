@@ -75,6 +75,18 @@ export class UserApiService extends ApiService {
         });
     }
 
+    public static updateAvatar(id, data) {
+        return ApiService.patch(`${this.baseUrl}update_avatar/`, {
+            data: {
+                user_id: id,
+                avatar: data,
+            }
+        }).then((e) => {
+            VueInstanceService.showSuccessMessage("تصویر پروفایل کاربر با موفقیت بروزرسانی شد");
+            return e;
+        });
+    }
+
     public static userToText(ids) {
         return ApiService.post(this.baseUrl + "user_to_text/", {
             data: {

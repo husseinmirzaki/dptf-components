@@ -33,21 +33,21 @@ export class ResetPasswordForm extends CreateForm {
                 defaultInputClasses: "w-100",
                 name: "code",
                 placeholder: "کد تایید",
-                col_class: 'w-100',
+                col_class: 'col-lg-12 col-xl-6 mt-2',
             },
             {
                 show_errors: false,
                 defaultInputClasses: "w-100",
                 name: "password",
                 placeholder: "رمز عبور",
-                col_class: 'w-100',
+                col_class: 'col-lg-12 col-xl-6 mt-2',
             },
             {
                 show_errors: false,
                 defaultInputClasses: "w-100",
                 name: "passwordRepeat",
                 placeholder: "تکرار رمز عبور",
-                col_class: 'w-100',
+                col_class: 'col-lg-12 col-xl-6 mt-2',
                 validation: [
                     Yup.string().required().oneOf([Yup.ref("password")], "رمزعبور و تکرار آن باید یکی باشد").label('تکرار رمز عبور'),
                 ]

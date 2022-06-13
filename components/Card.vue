@@ -2,7 +2,7 @@
   <slot name="card-body" v-if="disableCard">
     <slot name="card-content"/>
   </slot>
-  <div v-else class="card" :class="{'draggable-start': mouseDown}" data-dragable="data-dragable" ref="cardRef"
+  <div v-else class="card d-flex h-100" :class="{'draggable-start': mouseDown}" data-dragable="data-dragable" ref="cardRef"
        @mouseleave="mouseLeave">
     <slot name="card-header" :card-title="cardTitle" :card-description="cardDescription">
       <div class="card-header align-items-center border-bottom-1 border-dark mt-0 px-2"
