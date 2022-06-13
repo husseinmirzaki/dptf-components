@@ -388,7 +388,8 @@ export class Table {
             } else if (typeof data === 'string') {
                 if (data === "true" || data == "false")
                     return TableTDBool;
-                else if ((data.endsWith('Z') && data.search(/[:\-T]/) > -1) || data.search(/[:\-T]/) > -1) {
+                // matches the json iso formatted datetime
+                else if ((data.endsWith('Z') && data.search(/[:\-T]{2,}/) > -1) || data.search(/[:\-T]{2,}/) > -1) {
                     return TableTDDateTime;
                 }
             } else if (typeof data === 'object') {
