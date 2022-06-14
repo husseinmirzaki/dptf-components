@@ -607,12 +607,16 @@ export class CreateForm<T extends FieldsInterface = any> {
 
                     if (field && field.field_type === 'select') {
 
-                        if (field.select_multiple)
-                            this.elementRefs[dataKey].select2Instance.value.val([]);
-                        else
-                            this.elementRefs[dataKey].select2Instance.value.val(null);
+                        try{
+                            if (field.select_multiple)
+                                this.elementRefs[dataKey].select2Instance.value.val([]);
+                            else
+                                this.elementRefs[dataKey].select2Instance.value.val(null);
 
-                        this.elementRefs[dataKey].select2Instance.value.change();
+                            this.elementRefs[dataKey].select2Instance.value.change();
+                        } catch (e) {
+                            console.error(e);
+                        }
                     }
 
                     const data = this.refs[refKey].value[dataKey];
