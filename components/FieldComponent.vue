@@ -164,7 +164,7 @@ import {Actions} from "@/custom/store/enums/StoreEnums";
 import Vue3PersianDatetimePicker from 'vue3-persian-datetime-picker'
 import {gregorianToJalali} from "@/custom/components/DateUtils";
 import {findClassInParent} from "@/custom/helpers/DomHelpers";
-import {VueInstanceService} from "@/custom/Defaults";
+import {VueInstanceService} from "@/Defaults";
 import AutoComplete from "@/custom/components/forms/AutoComplete.vue";
 
 export default defineComponent({

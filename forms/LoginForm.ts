@@ -2,7 +2,7 @@ import FieldComponentPropsInterface from "@/custom/components/FieldComponentProp
 import {CreateForm} from "@/custom/helpers/BaseForm";
 import {TokenService} from "@/custom/services/TokenService";
 import {Actions} from "@/custom/store/enums/StoreEnums";
-import {VueInstanceService} from "@/custom/Defaults";
+import {VueInstanceService} from "@/Defaults";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 
 export default class LoginForm extends CreateForm {

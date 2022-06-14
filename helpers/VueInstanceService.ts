@@ -2,7 +2,7 @@ import {App} from "vue";
 import {setLocale, addMethod} from "yup";
 import * as Yup from "yup";
 
-export class VueInstanceService {
+export default class VueInstanceService {
     public static simpleSharedData: any = null;
 
     public static vue: App;

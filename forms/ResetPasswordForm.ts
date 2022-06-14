@@ -2,7 +2,7 @@ import FieldComponentPropsInterface from "@/custom/components/FieldComponentProp
 import {CreateForm} from "@/custom/helpers/BaseForm";
 import {TokenService} from "@/custom/services/TokenService";
 import {Actions} from "@/custom/store/enums/StoreEnums";
-import {VueInstanceService} from "@/custom/Defaults";
+import {VueInstanceService} from "@/Defaults";
 import * as Yup from 'yup';
 
 export class ResetPasswordForm extends CreateForm {

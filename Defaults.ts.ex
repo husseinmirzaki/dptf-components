@@ -1,5 +1,3 @@
-import {ApiService} from "@/Defaults";
-import {VueInstanceService} from "@/custom/helpers/VueInstanceService";
+import {ApiService, VueInstanceService, Configs} from "@/custom/Defaults";
 
-
-export {ApiService, VueInstanceService};
+export {ApiService, VueInstanceService, Configs};

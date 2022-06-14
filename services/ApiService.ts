@@ -4,7 +4,7 @@ import VueAxios from "vue-axios";
 import JwtService from "@/custom/core/services/JwtService";
 import {AxiosResponse} from "axios";
 import {Actions, Mutations} from "@/custom/store/enums/StoreEnums";
-import {VueInstanceService} from "@/custom/Defaults";
+import {VueInstanceService} from "@/Defaults";
 
 /**
  * @description service to call HTTP request via Axios

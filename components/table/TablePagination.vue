@@ -23,6 +23,7 @@
 </template>
 <script>
 import {computed, defineComponent, toRefs} from "vue";
+import {Configs} from "@/Defaults";
 
 export default defineComponent({
   props: {
@@ -30,7 +31,7 @@ export default defineComponent({
       default: 1000,
     },
     'perPage': {
-      default: 10,
+      default: Configs.tablePerPage,
     },
     'currentPage': {
       default: 0

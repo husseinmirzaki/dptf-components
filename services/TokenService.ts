@@ -1,4 +1,4 @@
-import {ApiService} from "@/custom/Defaults";
+import {ApiService} from "@/Defaults";
 
 export class TokenService {
 

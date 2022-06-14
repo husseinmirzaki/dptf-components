@@ -13,7 +13,7 @@
     </template>
     <template v-slot:dropDown>
       <DropdownV2>
-        <div class="pb-1">
+        <div class="pb-1" v-if="defaultConfig.filterForm.formInstance">
           <button @click="filterShow = !filterShow" class="btn btn-sm btn-primary btn-icon ms-2">
             <i class="fas fa-filter"></i>
           </button>
@@ -23,7 +23,7 @@
           </button>
         </div>
         <!--begin::Menu separator-->
-        <div class="separator mt-2 opacity-75"></div>
+        <div class="separator mt-2 opacity-75" v-if="defaultConfig.filterForm.formInstance"></div>
         <!--end::Menu separator-->
         <template v-for="header in Object.keys(headerVisibility)" :key="header">
           <FieldComponent
@@ -230,6 +230,7 @@ table {
     color: black;
     border-left: 1px solid #e9ebf1;
     min-width: 130px;
+    padding: 6px !important;
 
     &.check-stuff:first-child {
       min-width: 50px;

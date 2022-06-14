@@ -1,4 +1,4 @@
-import {ApiService} from "@/custom/Defaults";
+import {ApiService} from "@/Defaults";
 import _$ from "jquery";
 import "select2/dist/js/select2.full";
 import "@/custom/css/select2.css";
