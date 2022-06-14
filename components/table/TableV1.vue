@@ -242,9 +242,11 @@ table {
   }
 
   td {
+    z-index: 1;
     height: 35px;
     //border-left: 1px solid #dddee3;
     border-bottom: 1px solid #dddee3;
+    box-shadow: none;
     color: #5e5e5e;
 
     &:last-child {
@@ -256,10 +258,11 @@ table {
   }
 
   tbody tr {
-    //text-shadow: 0 0 0 1px #000;
+    z-index: 1;
 
     &:hover {
-      box-shadow: 0 3px 4px -4px #000;
+      z-index: 2;
+      outline: 3px solid rgba(0,0,0,.5);
     }
 
   }
