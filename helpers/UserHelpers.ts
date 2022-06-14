@@ -9,5 +9,5 @@ export function fullNameGenerator(obj?: UserInfoInterface) {
             return obj.first_name + ' ' + obj.last_name;
         }
     }
-    return 'نام و نام خانوادگی';
+    return 'بدون نام و نام خانوادگی';
 }
