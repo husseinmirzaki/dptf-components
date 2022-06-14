@@ -1,13 +1,13 @@
 <template>
   <td>
     <slot :computedValue="computedValue">
-      <el-tooltip :content="computedValue ? computedValue : emptyCell ? emptyCell : 'بدون داده'" v-if="len(data) > 80">
+      <el-tooltip :content="computedValue ? computedValue : emptyCell ? emptyCell : '-'" v-if="len(data) > 80">
         <span>
-            {{ truncate(computedValue ? computedValue : emptyCell ? emptyCell : 'ثبت نشده') }}
+            {{ truncate(computedValue ? computedValue : emptyCell ? emptyCell : '-') }}
         </span>
       </el-tooltip>
       <span v-else>
-          {{ computedValue ? computedValue : emptyCell ? emptyCell : 'ثبت نشده' }}
+          {{ computedValue ? computedValue : emptyCell ? emptyCell : '-' }}
       </span>
     </slot>
   </td>

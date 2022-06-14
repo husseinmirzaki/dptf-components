@@ -138,7 +138,7 @@ export default {
       default: false,
     },
     "fillHeight": {
-      default: true,
+      default: false,
     },
     "icon": {
       default: "media/icons/duotune/maps/map008.svg",

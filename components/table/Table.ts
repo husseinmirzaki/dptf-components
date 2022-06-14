@@ -377,6 +377,8 @@ export class Table {
     }
 
     onTBodyComponent(item, header, index) {
+
+
         if (this.tBodyComponents[header]) {
             return this.tBodyComponents[header];
         }
@@ -389,7 +391,7 @@ export class Table {
                 if (data === "true" || data == "false")
                     return TableTDBool;
                 // matches the json iso formatted datetime
-                else if ((data.endsWith('Z') && data.search(/[:\-T]{2,}/) > -1) || data.search(/[:\-T]{2,}/) > -1) {
+                else if ((data.endsWith('Z') && data.search(/[:\-T]{2,}/) > -1) || data.split(/[:\-T]/).length > 2) {
                     return TableTDDateTime;
                 }
             } else if (typeof data === 'object') {
