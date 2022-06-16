@@ -15,6 +15,9 @@ export default defineComponent({
     const data = toRef(props, 'data');
 
     const converted = computed(() => {
+      if (/\d+:\d+:\d+/.test(data.value)) {
+        return data.value;
+      }
       let date = new Date();
       if (data.value) {
         date = new Date(data.value);
