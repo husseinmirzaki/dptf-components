@@ -57,6 +57,15 @@ export class UserApiService extends ApiService {
         });
     }
 
+    public static superuserChangePassword(id,data) {
+        return ApiService.patch(`${this.baseUrl}superuser_change_password/`, {
+            data: {
+                user_id: id,
+                ...data
+            }
+        });
+    }
+
     public static update(data, id) {
         return ApiService.patch(`${this.baseUrl}${id}/`, {
             data: data
