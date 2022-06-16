@@ -171,6 +171,14 @@
   </Card>
 </template>
 <style lang="scss">
+@media (max-width: 972px) {
+  .table-v2-custom {
+    td, th {
+      user-select: none;
+    }
+  }
+}
+
 th:first-child {
   .filter-place-holder .fixed-filter-container {
     left: 0 !important;
@@ -178,6 +186,7 @@ th:first-child {
     transform: translateX(-90%) !important;
   }
 }
+
 th:last-child {
   .filter-place-holder .fixed-filter-container {
     transform: translateX(-10%) !important;
@@ -262,7 +271,7 @@ table {
 
     &:hover {
       z-index: 2;
-      outline: 3px solid rgba(0,0,0,.5);
+      outline: 3px solid rgba(0, 0, 0, .5);
     }
 
   }
