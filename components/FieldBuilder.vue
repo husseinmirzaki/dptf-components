@@ -1,6 +1,7 @@
 <template>
   <template v-if="cField.hasVModelKey">
     <field-component
+        ref="fieldComponent"
         v-bind="cField.vBind"
         :model-value="
           cField.options['v-model'].value[cField.options['v-model-key']]
@@ -13,12 +14,13 @@
   </template>
   <template v-else-if="cField.hasVModel">
     <field-component
+        ref="fieldComponent"
         v-bind="cField.vBind"
         v-model="cField.options['v-model'].value"
     />
   </template>
   <template v-else>
-    <field-component v-bind="cField.vBind"/>
+    <field-component ref="fieldComponent" v-bind="cField.vBind"/>
   </template>
 </template>
 <script type="ts">
@@ -32,9 +34,9 @@ export default defineComponent({
   setup(props) {
     const field = toRef(props, 'field');
     const cField = computed(() => field.value)
-     return {
+    return {
       cField
-     }
+    }
   }
 });
 </script>

@@ -418,6 +418,17 @@ export default defineComponent({
       //   nextTick(() => {
       //     setOptions(data);
       //   });
+      if (!data) {
+        switch (field_type.value) {
+          case 'checkbox':
+            context.emit("update:modelValue", false);
+            return;
+          case 'p-date-time':
+            field.value.$el.value = "";
+            context.emit("update:modelValue", '');
+            return;
+        }
+      }
 
       if (field_type.value === 'checkbox') {
         field.value.checked = data;

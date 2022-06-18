@@ -181,7 +181,6 @@
 
 th:first-child {
   .filter-place-holder .fixed-filter-container {
-    left: 0 !important;
     right: auto !important;
     transform: translateX(-90%) !important;
   }

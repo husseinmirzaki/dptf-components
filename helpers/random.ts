@@ -23,7 +23,7 @@ export function randomId(times = 2) {
 export function findClassInParent(element, _class) {
     let parent = element.parentElement;
     let parentClass;
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 50; i++) {
         if (parent == null)
             return null;
 
