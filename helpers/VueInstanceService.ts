@@ -68,6 +68,7 @@ export default class VueInstanceService {
             message: text,
             type: "warning",
             duration: duration,
+            position: "bottom-left"
         });
     }
 
@@ -76,6 +77,7 @@ export default class VueInstanceService {
             // title: 'Warning',
             message: text,
             type: "success",
+            position: "bottom-left"
         });
     }
 }
