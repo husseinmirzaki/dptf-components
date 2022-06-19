@@ -101,6 +101,7 @@ export default {
     const floatingFilter = ref();
     const show = ref(false);
     const key = context.attrs.field.options['v-model-key'];
+    let setPositionInterval = null;
     const windowClickListener = (e) => {
       const htmlElement = findClassInParent(e.target, 'floating-filter');
       if (!htmlElement || htmlElement != floatingFilter.value) {
@@ -121,18 +122,29 @@ export default {
     })
 
     watch(show, () => {
+      if (setPositionInterval) {
+        clearInterval(setPositionInterval);
+      }
       if (show.value) {
-        document.addEventListener('click', windowClickListener);
+        setPositionInterval = setInterval(() => {
+          console.log("test");
+          calcPosition();
+        }, 200);
+        document.addEventListener('click', windowClickListener, {passive: true,});
       } else {
-        document.removeEventListener('click', windowClickListener);
+        document.removeEventListener('click', windowClickListener, {passive: true,});
       }
     });
 
-    const toggle = () => {
-      show.value = !show.value;
+    const calcPosition = () => {
       const boundingClientRect = root.value.getBoundingClientRect();
       filterContainer.value.style.left = boundingClientRect.left + 'px';
       filterContainer.value.style.top = (boundingClientRect.height + boundingClientRect.top) + 'px';
+    }
+
+    const toggle = () => {
+      show.value = !show.value;
+      calcPosition();
     }
 
     const clearField = (field) => {
