@@ -13,17 +13,17 @@
     </template>
     <template v-slot:dropDown>
       <DropdownV2>
-        <div class="pb-1" v-if="defaultConfig.filterForm.formInstance">
-          <button @click="filterShow = !filterShow" class="btn btn-sm btn-primary btn-icon ms-2">
-            <i class="fas fa-filter"></i>
-          </button>
-          <button @click="defaultConfig.filterForm.formInstance.resetForm()"
-                  class="btn btn-sm btn-primary btn-icon ms-2">
-            <i class="fas fa-undo"></i>
-          </button>
-        </div>
+<!--        <div class="pb-1" v-if="defaultConfig.filterForm.formInstance">-->
+<!--          <button @click="filterShow = !filterShow" class="btn btn-sm btn-primary btn-icon ms-2">-->
+<!--            <i class="fas fa-filter"></i>-->
+<!--          </button>-->
+<!--          <button @click="defaultConfig.filterForm.formInstance.resetForm()"-->
+<!--                  class="btn btn-sm btn-primary btn-icon ms-2">-->
+<!--            <i class="fas fa-undo"></i>-->
+<!--          </button>-->
+<!--        </div>-->
         <!--begin::Menu separator-->
-        <div class="separator mt-2 opacity-75" v-if="defaultConfig.filterForm.formInstance"></div>
+<!--        <div class="separator mt-2 opacity-75" v-if="defaultConfig.filterForm.formInstance"></div>-->
         <!--end::Menu separator-->
         <template v-for="header in Object.keys(headerVisibility)" :key="header">
           <FieldComponent
