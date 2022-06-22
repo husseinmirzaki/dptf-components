@@ -36,7 +36,7 @@ function jalaliToGregorian(jy, jm, jd) {
     gd = days + 1;
     const sal_a = [0, 31, ((gy % 4 === 0 && gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     for (gm = 0; gm < 13 && gd > sal_a[gm]; gm++) gd -= sal_a[gm];
-    return [gy , gm, gd];
+    return [gy, gm, gd];
 }
 
 export function gregorianToPersianDate(value) {
