@@ -1,7 +1,7 @@
 <template>
 
   <div class="d-flex tabs w-100">
-    <div class="d-flex flex-row w-100 justify-content-between">
+    <div class="d-flex flex-row w-100 justify-content-between the-tabs-container">
       <div class="d-flex flex-row">
         <slot name="before-group-button"/>
         <group-buttons :buttons="tabs" :selectedB="selected" @selected="$emit('changed', $event);selectedTab=$event"/>

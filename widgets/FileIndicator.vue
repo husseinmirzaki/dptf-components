@@ -11,10 +11,14 @@
     <span class="align-self-center">{{ file.name }}</span>
   </div>
 </template>
-<style lang="scss">
+<style lang="scss" scoped>
 .file-indicator {
   box-shadow: 0 0 10px -2px #000;
   border-radius: 10px;
+}
+span {
+      text-overflow: ellipsis;
+    overflow: hidden;
 }
 </style>
 <script lang="ts">
