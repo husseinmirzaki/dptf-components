@@ -1,6 +1,7 @@
 import {App} from "vue";
 import {setLocale, addMethod} from "yup";
 import * as Yup from "yup";
+import {Router} from "vue-router";
 
 export default class VueInstanceService {
     public static simpleSharedData: any = null;
@@ -54,7 +55,7 @@ export default class VueInstanceService {
         return VueInstanceService.vue.config.globalProperties['$store'];
     }
 
-    public static get router() {
+    public static get router(): Router {
         return VueInstanceService.vue.config.globalProperties['$router'];
     }
 
