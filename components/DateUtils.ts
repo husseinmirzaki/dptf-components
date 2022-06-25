@@ -39,41 +39,33 @@ function jalaliToGregorian(jy, jm, jd) {
     return [gy, gm, gd];
 }
 
+export function textPadding(data: any, maxLength = 2) {
+    const stringData = String(data);
+    return stringData.padStart(maxLength, '0')
+}
+
+export function gregorianDateToJalali(date: Date, withTime = false) {
+    const persian = gregorianToJalali(date.getFullYear(), date.getMonth() + 1, date.getDate());
+    const datePart = `${textPadding(persian[0], 4)}/${textPadding(persian[1])}/${textPadding(persian[2])}`;
+    if (withTime) {
+        return `${datePart} ${textPadding(date.getHours())}:${textPadding(date.getMinutes())}`;
+    }
+    return datePart;
+}
+
 export function gregorianToPersianDate(value) {
-    let date_time = false
-    if (value.split("-").length > 3) {
-        date_time = true
-    }
-    const date = new Date(value);
-    const persian = gregorianToJalali(date.getFullYear(), date.getMonth() + 1, date.getDate());
-    if (date_time) {
-        return `${persian[0]}/${persian[1]}/${persian[2]} ${date.getHours()}:${date.getMinutes()}`;
-    }
-    return `${persian[0]}/${persian[1]}/${persian[2]}`;
+    return gregorianDateToJalali(
+        new Date(value),
+        value.split("-").length > 3
+    );
 }
 
-export function gregorianIOSToPersianDate(value, date_time = false) {
-    const date = new Date(value);
-    const persian = gregorianToJalali(date.getFullYear(), date.getMonth() + 1, date.getDate());
-    if (date_time) {
-        return `${persian[0]}/${persian[1]}/${persian[2]} ${date.getHours()}:${date.getMinutes()}`;
-    }
-    return `${persian[0]}/${persian[1]}/${persian[2]}`;
-}
-
-export function gregorianDateToPersianDate(value: Date, date_time = false) {
-    const date = value;
-    const persian = gregorianToJalali(date.getFullYear(), date.getMonth() + 1, date.getDate());
-    if (date_time) {
-        return `${persian[0]}/${persian[1]}/${persian[2]} ${date.getHours()}:${date.getMinutes()}`;
-    }
-    return `${persian[0]}/${persian[1]}/${persian[2]}`;
+export function gregorianIOSToPersianDate(value, withTime = false) {
+    return gregorianDateToJalali(new Date(value), withTime);
 }
 
 export function currentPersianDate() {
-    const date = new Date();
-    const persian = gregorianToJalali(date.getFullYear(), date.getMonth() + 1, date.getDate());
-    return `${persian[0]}/${persian[1]}/${persian[2]}`;
+    return gregorianDateToJalali(new Date());
 }
 
 export function persianStringDateToGregorian(dateString: string) {

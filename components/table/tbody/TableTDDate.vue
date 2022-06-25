@@ -6,7 +6,7 @@
 <script lang="ts">
 import {computed, defineComponent, toRef} from "vue";
 import TableTD from "@/custom/components/table/tbody/TableTD.vue";
-import {gregorianToJalali} from "@/custom/components/DateUtils";
+import {gregorianIOSToPersianDate, gregorianToJalali} from "@/custom/components/DateUtils";
 
 export default defineComponent({
   components: {TableTD},
@@ -15,18 +15,12 @@ export default defineComponent({
     const data = toRef(props, 'data');
 
     const converted = computed(() => {
-      let date = new Date();
       if (data.value) {
-        let date_time = false
+        let withTime = false
         if (data.value.split("-").length > 3) {
-          date_time = true
+          withTime = true
         }
-        date = new Date(data.value);
-        const persian = gregorianToJalali(date.getFullYear(), date.getMonth() + 1, date.getDate());
-        if (date_time){
-          return `${persian[0]} / ${persian[1]} / ${persian[2]} ${date.getHours()}:${date.getMinutes()}`;
-        }
-        return `${persian[0]} / ${persian[1]} / ${persian[2]}`;
+        return gregorianIOSToPersianDate(data.value, withTime)
       }
       return '';
     });
