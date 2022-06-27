@@ -112,9 +112,15 @@ export function select2(
 
 
 export function userToSelect2(user) {
-    return {
-        text: user.first_name + ' ' + user.last_name,
-        value: user.id
+    if (user)
+        return {
+            text: user.first_name + ' ' + user.last_name,
+            value: user.id
+        }
+
+    return  {
+        text: '',
+        value: 0
     }
 }
 
