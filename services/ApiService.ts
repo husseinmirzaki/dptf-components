@@ -218,8 +218,19 @@ class ApiService {
     }
 
     /**
-     * Parses and completes parameters
-     * adds headers or remove them
+     * This method is called before every other
+     * request and it tries to prepare required
+     * request configurations from developer's
+     * passed configurations
+     *
+     * `data` is a config which tells this method to send
+     *        data to server when request is post
+     * `headers` is a config which tells this method to send
+     *        specific headers to server which could include
+     *        authentication stuff
+     * `dont_set_header` is a config which tells this method to
+     *        avoid using authentication headers
+     *
      * @param params
      * @private
      */
