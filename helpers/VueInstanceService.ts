@@ -1,9 +1,11 @@
-import {App} from "vue";
+import {App, ref} from "vue";
 import {setLocale, addMethod} from "yup";
 import * as Yup from "yup";
 import {Router} from "vue-router";
 
 export default class VueInstanceService {
+    public static pageIsLoading = ref(false);
+
     public static simpleSharedData: any = null;
 
     public static vue: App;
@@ -40,6 +42,12 @@ export default class VueInstanceService {
                 }
             });
         });
+
+        window.onbeforeunload = () => {
+            if (this.pageIsLoading.value) {
+                return "Page is Loading Sth right now";
+            }
+        }
     }
 
     public static emit(event: string, e?: unknown) {
