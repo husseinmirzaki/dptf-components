@@ -5,6 +5,7 @@ import JwtService from "@/custom/core/services/JwtService";
 import {AxiosResponse} from "axios";
 import {Actions, Mutations} from "@/custom/store/enums/StoreEnums";
 import {VueInstanceService} from "@/Defaults";
+import {initMockAdapter} from "@/custom/mock/mock_server";
 
 /**
  * @description service to call HTTP request via Axios
@@ -17,31 +18,31 @@ class ApiService {
 
     // http://127.0.0.1:8000/api/
 
-    public static base_url = "";
+    public static base_url = process.env.VUE_BASE_URL;
     public static baseUrl = "";
 
     public static get loginURL() {
-        return this.base_url + "user/auth/login/";
+        return "user/auth/login/";
     }
 
     public static get loginFinalizeURL() {
-        return this.base_url + "user/auth/token/";
+        return "user/auth/token/";
     }
 
     public static get refreshUrl() {
-        return this.base_url + "user/auth/refresh/";
+        return "user/auth/refresh/";
     }
 
     public static get verifyTokenUrl() {
-        return this.base_url + "user/auth/verify/";
+        return "user/auth/verify/";
     }
 
     public static get forgetPasswordUrl() {
-        return this.base_url + "user/auth/forgotten/";
+        return "user/auth/forgotten/";
     }
 
     public static get forgetPasswordResetUrl() {
-        return this.base_url + "user/auth/reset_forgotten/";
+        return "user/auth/reset_forgotten/";
     }
 
     public static get selectUrl() {
@@ -55,6 +56,12 @@ class ApiService {
         this.vueInstance = app;
         this.vueInstance.use(VueAxios, axios);
         this.vueInstance.axios.defaults.baseURL = this.base_url;
+
+        console.log(process.env)
+
+        if (process.env.VUE_APP_FAKE_AXIOS == "1") {
+            initMockAdapter(axios);
+        }
     }
 
     public static getAuthHeaders(): any {
@@ -377,7 +384,7 @@ class ApiService {
     }
 
     public static get url() {
-        return this.base_url + this.baseUrl;
+        return this.baseUrl;
     }
 }
 

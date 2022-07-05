@@ -10,7 +10,7 @@
            @mousedown.stop="dragMouseDown"
            :class="[headerClasses, {'border-0': isCollapsed, 'border-bottom-1': !isCollapsed }]"
            v-if="$slots['card-header'] || cardTitle || cardDescription">
-        <slot name="card-title-content">
+        <slot name="card-title-content" :cardTitle="cardTitle" :cardDescription="cardDescription">
           <h3 class="card-title align-items-start flex-column my-0">
             <slot name="card-title">
             <span class="fw-bolder mb-2 text-dark">
