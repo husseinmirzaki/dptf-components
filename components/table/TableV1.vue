@@ -49,7 +49,7 @@
           <!--begin::Table container-->
           <div class="table-responsive">
             <!--begin::Table-->
-            <table class="table table-bordered align-middle gs-4 gy-4 table-hover table table-v2-custom">
+            <table ref="tableRef" class="table table-bordered align-middle gs-4 gy-4 table-hover table table-v2-custom">
               <!--begin::Table head-->
               <thead>
               <tr class="fw-bolder text-muted bg-light text-center" ref="headersRef">
@@ -373,6 +373,7 @@ export default defineComponent({
     const userPreferences = toRef(props, 'userPreferences');
 
     const headersRef = ref();
+    const tableRef = ref();
 
     const dList = ref(list.value);
 
@@ -399,8 +400,8 @@ export default defineComponent({
     });
 
     let drag: SimpleDrag | null = null;
-    const checksDragHandler = new DragHandler();
 
+    const checksDragHandler = new DragHandler();
 
     watch(dList, () => {
       if (dList.value) {
@@ -492,6 +493,7 @@ export default defineComponent({
         console.log("getTableSettings", data);
       });
     }
+
     const dragStuff = () => {
       nextTick(() => {
         setTimeout(() => {
@@ -513,7 +515,9 @@ export default defineComponent({
 
     onMounted(() => {
       MenuComponent.reinitialization();
-      drag = new SimpleDrag();
+      drag = new SimpleDrag(tableRef.value);
+      drag!.exclude_all_clone = '(animation)|(opacity)|(transition)|(position)';
+      drag!.exclude_one_clone = '(animation)|(opacity)|(transition)|(position)';
       drag!.itemDropped = (element) => {
         const l: Array<string> = [];
         console.log(headersRef.value.children.length);
@@ -597,22 +601,31 @@ export default defineComponent({
 
 
     return {
+      checksDragHandler,
+
+      // data
       dList,
       checkAll,
       checkedDataList,
       defaultConfig,
-      headers,
-      headersRef,
       changedHeaders,
       headerVisibility,
-      noHeaderSelected,
-      checksDragHandler,
+      cacheSelected,
+
+      // computed
+      headers,
       checkedAnyItems,
+      noHeaderSelected,
+      checkedItems,
+
+      // ref
+      headersRef,
+      tableRef,
+
+      // function
       onPage,
       contextMenu,
       checkCheckFieldData,
-      checkedItems,
-      cacheSelected,
       refresh: onGetData,
     };
   },

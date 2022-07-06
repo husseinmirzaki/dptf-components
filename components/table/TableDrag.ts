@@ -18,7 +18,9 @@ export class DragHandler {
     }
 }
 
-
+/**
+ * to use this class you should first create an instance of it
+ */
 export class SimpleDrag {
     mouseIsDown = false;
     lastMouseDownEvent: MouseEvent | null = null;
@@ -30,21 +32,28 @@ export class SimpleDrag {
         //
     }
 
+    onClone(clone, target, exclude) {
+        //
+    }
+
     currentX = 0;
     currentY = 0;
     offsetX = 0;
     offsetY = 0;
     elements = {};
+    selectedElement: HTMLElement | null = null;
 
-    constructor() {
+    exclude_one_clone = '';
+    exclude_all_clone = '';
 
+    constructor(selectedElement) {
+        this.selectedElement = selectedElement;
         this.findElements();
-        console.log(Object.keys(this.elements));
     }
 
     findElements() {
         this.elements = {};
-        document.querySelectorAll('[moveable]').forEach((element, index) => {
+        this.selectedElement!.querySelectorAll('[moveable]').forEach((element, index) => {
             if (element.hasAttribute('group')) {
                 const group = this.getElementGroup(element)
                 if (!this.elements[group])
@@ -109,8 +118,6 @@ export class SimpleDrag {
         document.removeEventListener('mouseup', this.lastGlobalMouseUpListener);
         document.removeEventListener('mousemove', this.lastGlobalMoveListener);
 
-        console.log("console.log", e);
-
         this.mouseIsDown = false;
 
         if (this.lastDraggingElement && this.lastTargetDrag) {
@@ -129,10 +136,10 @@ export class SimpleDrag {
         e.stopPropagation();
         this.mouseIsDown = true;
         this.lastMouseDownEvent = e;
-        this.lastGlobalMoveListener = (e) =>{
+        this.lastGlobalMoveListener = (e) => {
             this.onGlobalMouseMove(e);
         }
-        this.lastGlobalMouseUpListener = (e) =>{
+        this.lastGlobalMouseUpListener = (e) => {
             this.onMouseUp(e);
         }
         document.addEventListener('mouseup', this.lastGlobalMouseUpListener);
@@ -151,7 +158,7 @@ export class SimpleDrag {
         }
     }
 
-    cloneWithStyle(target, exclude = '(animation)|(opacity)|(transition)|(position)') {
+    cloneWithStyle(target, exclude = '') {
         const clone = target.cloneNode(true);
         const styles = getComputedStyle(target) as any;
         for (const i of styles) {
@@ -181,7 +188,7 @@ export class SimpleDrag {
             const target = currentTarget;
             this.lastTargetDrag = currentTarget;
 
-            const clone = this.cloneWithStyle(target);
+            const clone = this.cloneWithStyle(target, this.exclude_one_clone);
             clone.style.position = 'absolute';
             this.lastDraggingElement = clone;
 
@@ -193,11 +200,15 @@ export class SimpleDrag {
 
             document.body.append(clone);
 
+            if (this.onClone)
+                this.onClone(clone, target, this.exclude_one_clone);
+
+
             this.itemIsMoving(this.lastTargetDrag);
 
             this.iterateOn((element) => {
                 if (element !== this.lastTargetDrag) {
-                    const cloned = this.cloneWithStyle(element);
+                    const cloned = this.cloneWithStyle(element, this.exclude_all_clone);
                     const clonedBB = this.getBB(element);
 
                     cloned.style.position = 'absolute';
@@ -231,6 +242,9 @@ export class SimpleDrag {
                         marker2.remove();
 
                     })
+
+                    if (this.onClone)
+                        this.onClone(cloned, target, this.exclude_all_clone);
 
                 }
             }, this.getElementGroup(target))
