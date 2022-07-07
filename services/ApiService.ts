@@ -18,7 +18,7 @@ class ApiService {
 
     // http://127.0.0.1:8000/api/
 
-    public static base_url = process.env.VUE_BASE_URL;
+    public static base_url = process.env.VUE_APP_BASE_URL;
     public static baseUrl = "";
 
     public static get loginURL() {

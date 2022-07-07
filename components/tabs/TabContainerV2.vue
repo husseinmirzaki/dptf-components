@@ -76,7 +76,7 @@ export default {
       const current = childCounter;
 
       if (tabName) {
-        tabNames.value.push(tabName);
+        tabNames.value.push(props.routerPrefix + "_" + tabName);
       } else {
         tabNames.value.push(`${props.routerPrefix}_tab_${current}`);
       }
