@@ -6,7 +6,7 @@ export class UserApiService extends ApiService {
     static baseUrl = 'user/';
 
     public static getMe() {
-        return ApiService.get(this.baseUrl + 'me')
+        return ApiService.get(this.baseUrl + 'me/')
     }
 
     public static getUser(id) {

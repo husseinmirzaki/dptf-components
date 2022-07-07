@@ -207,6 +207,7 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
                 }).catch((e) => reject(e));
         });
     }
+
     @Action
     [Actions.GET_ME]() {
         return new Promise<void>((resolve, reject) => {
@@ -271,17 +272,24 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
      */
     @Action
     [Actions.VERIFY_AUTH]() {
-        // if (JwtService.getToken()) {
-        //     ApiService.get(ApiService.verifyTokenUrl)
-        //         .then(({data}) => {
-        //             this.context.commit(Mutations.SET_AUTH, data);
-        //         })
-        //         .catch(({response}) => {
-        //             this.context.commit(Mutations.SET_ERROR, response.data.errors);
-        //         });
-        // } else {
-        //     this.context.commit(Mutations.PURGE_AUTH);
-        // }
+        const token = JwtService.getToken();
+        if (token) {
+            try {
+                const data = JSON.parse(atob(token.split('.')[1]));
+                const expireDate = new Date(data.exp * 1000);
+
+                expireDate.setTime(expireDate.getTime()  - (5 * 60 * 1000))
+
+                if (expireDate < new Date()) {
+                    this.context.dispatch(Actions.ASK_NEW_TOKEN)
+                }
+            } catch (e) {
+                this.context.commit(Mutations.PURGE_AUTH);
+            }
+        } else {
+            console.error("no token");
+            this.context.commit(Mutations.PURGE_AUTH);
+        }
     }
 
     /**
