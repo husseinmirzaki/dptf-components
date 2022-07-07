@@ -28,7 +28,15 @@ export class SimpleDrag {
     lastDraggingElement: HTMLElement | null = null;
     removeOnMouseUp: Array<HTMLElement> = [];
 
+    /**
+     * @deprecated use `onItemDropped`
+     * @param element
+     */
     itemDropped(element) {
+        this.onItemDropped(element)
+    }
+
+    onItemDropped(element) {
         //
     }
 

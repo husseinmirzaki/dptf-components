@@ -518,7 +518,7 @@ export default defineComponent({
       drag = new SimpleDrag(tableRef.value);
       drag!.exclude_all_clone = '(animation)|(opacity)|(transition)|(position)';
       drag!.exclude_one_clone = '(animation)|(opacity)|(transition)|(position)';
-      drag!.itemDropped = (element) => {
+      drag!.onItemDropped = (element) => {
         const l: Array<string> = [];
         console.log(headersRef.value.children.length);
         for (let i = 0; i < headersRef.value.children.length; i++) {

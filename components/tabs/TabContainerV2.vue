@@ -54,12 +54,14 @@ export default {
       }
     }
 
+    const selectItems = () => container.value.querySelectorAll('.tab-item-v2');
+
     const initDragger = () => {
       const items = container.value.querySelectorAll('.tab-item-v2');
 
       for (let i = 0; i < items.length; i++) {
         items[i].setAttribute("moveable", "moveable");
-        items[i].setAttribute("group", "container");
+        items[i].setAttribute("group", "tabs-container");
       }
 
       dragInstance.findElements();
@@ -86,13 +88,25 @@ export default {
       }
 
       childCounter++;
-      return current;
+      return {
+        current,
+        tabName: tabNames.value[current]
+      };
     }
 
     onMounted(() => {
       tabNames.value = [];
       show.value = true;
       dragInstance = new SimpleDrag(container.value);
+      dragInstance.onItemDropped = (element) => {
+        const items = selectItems();
+        const newOrder = {};
+        for (let i = 0; i < items.length; i++) {
+          console.log(items[i])
+          // newOrder[i] = items[i].getAttribute('data-item-name');
+        }
+        console.log(newOrder);
+      }
     })
 
     return {

@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-item-v2" :class="{active: parent && index == parent.activeItem}" data-kt-stepper-element="nav"
+  <div class="tab-item-v2" :data-item-name="indexUniqueName" :class="{active: parent && index == parent.activeItem}" data-kt-stepper-element="nav"
        @click="$emit('change', log(index))">
     <slot>
       <span class="stepper-title">
@@ -15,6 +15,7 @@ export default {
   props: ['title', 'active', 'parent', 'name'],
   setup(props) {
     const index = ref(0);
+    const indexUniqueName = ref('');
     const parent = toRef(props, 'parent');
 
     const log = (_index) => {
@@ -22,10 +23,14 @@ export default {
     }
 
     onMounted(() => {
-      index.value = parent.value.introduce(props.name);
+      const introduced = parent.value.introduce(props.name);
+      console.log(introduced);
+      index.value = introduced.current;
+      indexUniqueName.value = introduced.tabName;
     });
 
     return {
+      indexUniqueName,
       index,
       log
     }
@@ -50,7 +55,11 @@ $active-color: #0d8ddc;
   font-weight: bold;
   background-position: 0 0;
 
+  &.show-animation {
+    z-index: 4;
+  }
   &.is-replace-able {
+    z-index: 4;
     background-repeat: no-repeat;
     background-size: 500px 500px;
     animation-name: backgroundPosition;
