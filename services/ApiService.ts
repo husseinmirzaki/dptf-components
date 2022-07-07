@@ -57,8 +57,6 @@ class ApiService {
         this.vueInstance.use(VueAxios, axios);
         this.vueInstance.axios.defaults.baseURL = this.base_url;
 
-        console.log(process.env)
-
         if (process.env.VUE_APP_FAKE_AXIOS == "1") {
             initMockAdapter(axios);
         }
