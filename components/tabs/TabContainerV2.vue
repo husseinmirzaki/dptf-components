@@ -8,9 +8,10 @@
   </div>
 </template>
 <script>
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import {VueInstanceService} from "@/Defaults";
 import {SimpleDrag} from "@/custom/components/table/TableDrag";
+import {UserPreferencesManager, UserPreferencesV2Api} from "@/custom/services/UserPreferencesV2Api";
 
 export default {
   props: {
@@ -30,10 +31,15 @@ export default {
     const activeItem = ref(props.activeIndex);
     const container = ref();
 
+    const preferencesManager = new UserPreferencesManager(`tab_container_${props.routerPrefix}`);
+    watch(preferencesManager.value, () => preFormReordering(), {deep: true});
+    preferencesManager.get();
+
 
     let lastIntroduceActivity = null;
     let childCounter = 0;
-    let tabNames = ref([]);
+    const tabNames = ref([]);
+    const tabsOrder = ref({});
 
     /**
      *
@@ -73,6 +79,7 @@ export default {
       clearTimeout(lastIntroduceActivity);
       lastIntroduceActivity = setTimeout(() => {
         initDragger();
+        preFormReordering();
       }, 500);
 
       const current = childCounter;
@@ -94,6 +101,25 @@ export default {
       };
     }
 
+    const preFormReordering = () => {
+      const tabsList = Object.values(preferencesManager.value.value);
+      if (tabsList.length > 0 && container.value) {
+        const tabs = selectItems();
+        if (tabs.length > 0) {
+          const sharedParents = tabs[0].parentElement;
+          for (let i = 0; i < tabsList.length; i++) {
+            const dataItemName = tabsList[i]
+            console.log(dataItemName);
+            for (let j = 0; j < tabs.length; j++) {
+              const tabElement = tabs[j];
+              if (tabElement.getAttribute('data-item-name') === dataItemName)
+                sharedParents.append(tabElement);
+            }
+          }
+        }
+      }
+    }
+
     onMounted(() => {
       tabNames.value = [];
       show.value = true;
@@ -102,10 +128,9 @@ export default {
         const items = selectItems();
         const newOrder = {};
         for (let i = 0; i < items.length; i++) {
-          console.log(items[i])
-          // newOrder[i] = items[i].getAttribute('data-item-name');
+          newOrder[i] = items[i].getAttribute('data-item-name');
         }
-        console.log(newOrder);
+        preferencesManager.set(newOrder);
       }
     })
 

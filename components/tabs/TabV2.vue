@@ -24,7 +24,6 @@ export default {
 
     onMounted(() => {
       const introduced = parent.value.introduce(props.name);
-      console.log(introduced);
       index.value = introduced.current;
       indexUniqueName.value = introduced.tabName;
     });
