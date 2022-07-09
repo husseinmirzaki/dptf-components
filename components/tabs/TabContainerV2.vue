@@ -2,16 +2,20 @@
   <div class="d-flex justify-content-center align-items-center" ref="container">
     <slot name="tabs" v-if="show" :setActiveItem="setActiveItem"/>
   </div>
-  <div class="d-flex justify-content-center align-items-center w-100 h-100 pb-7">
-    <router-view v-if="routerMode"/>
-    <slot v-else :name="tabNames[activeItem]"/>
+  <div class="d-flex justify-content-center align-items-center w-100 h-100 pb-7" ref="tabContainerBody">
+    <slot name="tab-container" :tabNames="tabNames" :activeItem="activeItem" :routerMode="routerMode"
+          :bodyHeight="bodyHeight">
+      <router-view v-if="routerMode"/>
+      <slot v-else :name="tabNames[activeItem]"/>
+    </slot>
   </div>
 </template>
 <script>
-import {onMounted, ref, watch} from "vue";
+import {nextTick, onMounted, ref, watch} from "vue";
 import {VueInstanceService} from "@/Defaults";
 import {SimpleDrag} from "@/custom/components/table/TableDrag";
-import {UserPreferencesManager, UserPreferencesV2Api} from "@/custom/services/UserPreferencesV2Api";
+import {UserPreferencesManager} from "@/custom/services/UserPreferencesV2Api";
+import {findClassInParent} from "@/custom/helpers/DomHelpers";
 
 export default {
   props: {
@@ -30,6 +34,8 @@ export default {
     const activeContent = ref('')
     const activeItem = ref(props.activeIndex);
     const container = ref();
+    const tabContainerBody = ref();
+    const bodyHeight = ref(0);
 
     const preferencesManager = new UserPreferencesManager(`tab_container_${props.routerPrefix}`);
     watch(preferencesManager.value, () => preFormReordering(), {deep: true});
@@ -80,6 +86,7 @@ export default {
       lastIntroduceActivity = setTimeout(() => {
         initDragger();
         preFormReordering();
+        updateBodyHeight();
       }, 500);
 
       const current = childCounter;
@@ -95,6 +102,11 @@ export default {
       }
 
       childCounter++;
+
+      nextTick(() => {
+        updateBodyHeight();
+      })
+
       return {
         current,
         tabName: tabNames.value[current]
@@ -120,7 +132,14 @@ export default {
       }
     }
 
+    const updateBodyHeight = () => {
+      const cardBodyParent = findClassInParent(tabContainerBody.value, 'card-body');
+      const style = getComputedStyle(cardBodyParent);
+      bodyHeight.value = Number(style.height.replace('px', ''));
+    }
+
     onMounted(() => {
+      updateBodyHeight();
       tabNames.value = [];
       show.value = true;
       dragInstance = new SimpleDrag(container.value);
@@ -137,10 +156,12 @@ export default {
     return {
       // ref
       container,
+      tabContainerBody,
 
       // data
       activeContent,
       activeItem,
+      bodyHeight,
       tabNames,
       show,
 
