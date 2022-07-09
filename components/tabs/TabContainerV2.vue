@@ -86,7 +86,9 @@ export default {
       lastIntroduceActivity = setTimeout(() => {
         initDragger();
         preFormReordering();
-        updateBodyHeight();
+        setTimeout(() => {
+          updateBodyHeight();
+        }, 500);
       }, 500);
 
       const current = childCounter;
