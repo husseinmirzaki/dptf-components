@@ -10,11 +10,10 @@
 @font-face {
     font-family: "IRANSans";
     font-weight: bold;
-    src: url("fonts/IRANSansWeb_Bold.eot");
-    src: url("fonts/IRANSansWeb_Bold.eot?#iefix") format("embedded-opentype"),
-    url("fonts/IRANSansWeb_Bold.woff2") format("woff2"),
-    url("fonts/IRANSansWeb_Bold.woff") format("woff"),
-    url("fonts/IRANSansWeb_Bold.ttf") format("truetype");
+    src: url("fonts/IRANSans_Black.eot");
+    src: url("fonts/IRANSans_Black.eot?#iefix") format("embedded-opentype"),
+    url("fonts/IRANSans_Black.woff") format("woff"),
+    url("fonts/IRANSans_Black.ttf") format("truetype");
 }
 
 @font-face {
@@ -25,9 +24,9 @@
     url("fonts/BNazanin.woff") format("woff"),
     url("fonts/BNazanin.ttf") format("truetype");
 }
-strong, b {
-    text-shadow:  0 0 1px #000;
-}
+/*strong, b {*/
+/*    text-shadow:  0 0 1px #000;*/
+/*}*/
 
 @font-face {
     font-family: "BTitr";
