@@ -16,6 +16,7 @@ import {VueInstanceService} from "@/Defaults";
 import {SimpleDrag} from "@/custom/components/table/TableDrag";
 import {UserPreferencesManager} from "@/custom/services/UserPreferencesV2Api";
 import {findClassInParent} from "@/custom/helpers/DomHelpers";
+import {useRoute} from "vue-router";
 
 export default {
   props: {
@@ -45,7 +46,7 @@ export default {
     let lastIntroduceActivity = null;
     let childCounter = 0;
     const tabNames = ref([]);
-    const tabsOrder = ref({});
+    const route = useRoute();
 
     /**
      *
@@ -54,6 +55,7 @@ export default {
     let dragInstance = null;
 
     const goToRoute = (index) => {
+      console.log("goToRoute(");
       VueInstanceService.router.push({
         name: tabNames.value[index],
       })
@@ -99,8 +101,8 @@ export default {
         tabNames.value.push(`${props.routerPrefix}_tab_${current}`);
       }
 
-      if (props.routerMode && current === 0) {
-        goToRoute(current);
+      if (props.routerMode && route.name === tabNames.value[current]) {
+        activeItem.value = current;
       }
 
       childCounter++;
