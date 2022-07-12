@@ -138,8 +138,15 @@ export default {
 
     const updateBodyHeight = () => {
       const cardBodyParent = findClassInParent(tabContainerBody.value, 'card-body');
+      const myStyle = getComputedStyle(tabContainerBody.value);
       const style = getComputedStyle(cardBodyParent);
-      bodyHeight.value = Number(style.height.replace('px', ''));
+      console.log(myStyle.height, style.height);
+      const cardBodyHeight = Number(style.height.replace('px', ''));
+      const myHeight = Number(myStyle.height.replace('px', ''));
+      const extraHeight =
+          cardBodyHeight -
+          myHeight;
+      bodyHeight.value = cardBodyHeight - extraHeight - 80;
     }
 
     onMounted(() => {
