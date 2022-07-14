@@ -343,7 +343,7 @@ export class CreateForm<T extends FieldsInterface = any> {
         // we should use a different kind of validation
         // schema
         this.fields.forEach((e) => {
-            if (e.field_type == "seprator")
+            if (e.field_type == "separator")
                 return;
 
             const d = e['validation'];
@@ -430,8 +430,6 @@ export class CreateForm<T extends FieldsInterface = any> {
      */
     setKeyRef(key: string, ref = "basic", name: string | null = null) {
         this.fields.forEach((e) => {
-            if (e.field_type == "separator")
-                return;
             if ((!name && key == e.name) || e.name == name) {
                 e["v-model"] = this.refs[ref];
                 e["v-model-key"] = key;
@@ -455,8 +453,6 @@ export class CreateForm<T extends FieldsInterface = any> {
             // this is not using currently generated
             // fields
             this.concatFields().forEach((e) => {
-                if (e.field_type == "separator")
-                    return;
                 // if (e.onlyOnModes && e.onlyOnModes.findIndex(this.filterMode(mode)) == -1) return;
                 // if (e.excludeOnModes && e.excludeOnModes.findIndex(this.filterMode(mode)) > -1) return;
                 this.setKeyRef(e.name, mode);
@@ -511,9 +507,6 @@ export class CreateForm<T extends FieldsInterface = any> {
             // I don't know why its happening but
             // it sims like it's not required
             this.modeFields[this.activeMode.value].forEach((e) => {
-
-                if (e.field_type == "separator")
-                    return;
 
                 if (e.multiple) {
                     isArray.push(e.name);

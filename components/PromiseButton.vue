@@ -53,7 +53,11 @@ export default defineComponent({
       promise.then(() => stopLoading(), () => stopLoading()).finally(() => stopLoading());
     };
 
+    /**
+     * this will return a function as event and it that
+     */
     const onClickDelegation = () => {
+
       const delegation = (formContainsRef, formExtend) => {
         loading((async () => {
           await formContainsRef.submitForm();

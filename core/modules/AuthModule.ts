@@ -100,12 +100,11 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
     @Action
     [Actions.REQUEST_ERROR_TOAST]() {
         const errors = this.context.getters.getErrors;
-        console.log(this);
         for (let i = 0; i < errors.length; i++) {
             try {
                 VueInstanceService.showErrorMessage(VueInstanceService.vue.config.globalProperties['$t'](errors[i].toLowerCase()));
             } catch (e) {
-                console.log(e);
+                console.error(e);
             }
         }
     }
