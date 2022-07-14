@@ -21,6 +21,7 @@ import {Module, Action, Mutation, VuexModule} from "vuex-module-decorators";
 import {VueInstanceService} from "@/Defaults";
 import {UserApiService} from "@/custom/services/UserApiService";
 import {fullNameGenerator} from "@/custom/helpers/UserHelpers";
+import {useI18n} from "vue-i18n";
 
 export interface User {
     avatar?: string
@@ -94,6 +95,19 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
     @Mutation
     [Mutations.ADD_ERROR](error) {
         this.errors.push(error);
+    }
+
+    @Action
+    [Actions.REQUEST_ERROR_TOAST]() {
+        const errors = this.context.getters.getErrors;
+        console.log(this);
+        for (let i = 0; i < errors.length; i++) {
+            try {
+                VueInstanceService.showErrorMessage(VueInstanceService.vue.config.globalProperties['$t'](errors[i].toLowerCase()));
+            } catch (e) {
+                console.log(e);
+            }
+        }
     }
 
     @Mutation
@@ -278,7 +292,7 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
                 const data = JSON.parse(atob(token.split('.')[1]));
                 const expireDate = new Date(data.exp * 1000);
 
-                expireDate.setTime(expireDate.getTime()  - (5 * 60 * 1000))
+                expireDate.setTime(expireDate.getTime() - (5 * 60 * 1000))
 
                 if (expireDate < new Date()) {
                     this.context.dispatch(Actions.ASK_NEW_TOKEN)

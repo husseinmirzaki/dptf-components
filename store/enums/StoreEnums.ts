@@ -17,6 +17,7 @@ enum Actions {
   SET_FORGOT_PASSWORD = "setForgotPassword",
   SET_BREADCRUMB_ACTION = "setBreadcrumbAction",
   SET_USER_ACTION = "setUserAction",
+  REQUEST_ERROR_TOAST = "requestErrorToast",
 }
 
 enum Mutations {

@@ -343,6 +343,9 @@ export class CreateForm<T extends FieldsInterface = any> {
         // we should use a different kind of validation
         // schema
         this.fields.forEach((e) => {
+            if (e.field_type == "seprator")
+                return;
+
             const d = e['validation'];
             if (d) {
                 // console.log("custom validations", d);
@@ -427,6 +430,8 @@ export class CreateForm<T extends FieldsInterface = any> {
      */
     setKeyRef(key: string, ref = "basic", name: string | null = null) {
         this.fields.forEach((e) => {
+            if (e.field_type == "separator")
+                return;
             if ((!name && key == e.name) || e.name == name) {
                 e["v-model"] = this.refs[ref];
                 e["v-model-key"] = key;
@@ -450,6 +455,8 @@ export class CreateForm<T extends FieldsInterface = any> {
             // this is not using currently generated
             // fields
             this.concatFields().forEach((e) => {
+                if (e.field_type == "separator")
+                    return;
                 // if (e.onlyOnModes && e.onlyOnModes.findIndex(this.filterMode(mode)) == -1) return;
                 // if (e.excludeOnModes && e.excludeOnModes.findIndex(this.filterMode(mode)) > -1) return;
                 this.setKeyRef(e.name, mode);
@@ -487,7 +494,6 @@ export class CreateForm<T extends FieldsInterface = any> {
      */
     submit(event, isCustom = false, onDone = null) {
         let promise;
-
         // to determine whether we should return a FormData
         // or JsonObject we should first know if user selected
         // any files
@@ -504,7 +510,11 @@ export class CreateForm<T extends FieldsInterface = any> {
             // we are extracting files two time
             // I don't know why its happening but
             // it sims like it's not required
-            this.fields.forEach((e) => {
+            this.modeFields[this.activeMode.value].forEach((e) => {
+
+                if (e.field_type == "separator")
+                    return;
+
                 if (e.multiple) {
                     isArray.push(e.name);
                 }
@@ -535,7 +545,7 @@ export class CreateForm<T extends FieldsInterface = any> {
             }
             if (this.isUpdate.value)
                 promise = this.service.updateOne(
-                    this.refs["basic"].value['id'],
+                    this.refs[this.activeMode.value].value['id'],
                     formData
                 );
             else
@@ -543,12 +553,12 @@ export class CreateForm<T extends FieldsInterface = any> {
         } else {
             // a JsonObject is returned if `isCustom` is set to `true`
             if (isCustom) {
-                return this.refs["basic"].value;
+                return this.refs[this.activeMode.value].value;
             }
             if (this.isUpdate.value)
                 promise = this.service.updateOne(
-                    this.refs["basic"].value['id'],
-                    this.refs["basic"].value
+                    this.refs[this.activeMode.value].value['id'],
+                    this.refs[this.activeMode.value].value
                 );
             else
                 promise = this.service.createOne(this.refs["basic"].value);
@@ -603,11 +613,11 @@ export class CreateForm<T extends FieldsInterface = any> {
                 this.refs[refKey].value['id'] = null;
                 Object.keys(this.refs[refKey].value).forEach((dataKey) => {
 
-                    const field = this.fields.find((e) => e.name == dataKey);
+                    const field = this.modeFields[this.activeMode.value].find((e) => e.name == dataKey);
 
                     if (field && field.field_type === 'select') {
 
-                        try{
+                        try {
                             if (field.select_multiple)
                                 this.elementRefs[dataKey].select2Instance.value.val([]);
                             else

@@ -4,7 +4,7 @@
     <label
         class="fs-5 fw-bold mb-2 font-weight-bolder text-dark"
         :class="[{ required: required }, one_line_label_classes_c, label_class]"
-        v-if="label != null && label !== ''"
+        v-if="label != null && label !== '' && field_type != 'separator'"
     >
       {{ label }}
     </label>
@@ -115,6 +115,11 @@
             ref="fieldRef"
         />
       </template>
+      <template v-else-if="field_type === 'separator'">
+        <div class="w-100 border-top-0 border-left-0 border-right-0 border-bottom-3 border-dark border mt-9 mb-3">
+          <h3 class="pb-0 mb-2"> {{ label }} </h3>
+        </div>
+      </template>
       <template v-else-if="field_type === 'auto-complete'">
         <Field
             :class="[defaultInputClasses, input_class]"
@@ -146,7 +151,7 @@
             ref="fieldRef"
         />
       </template>
-      <div class="fv-plugins-message-container" v-if="showError">
+      <div class="fv-plugins-message-container" v-if="showError && field_type != 'separator'">
         <div class="fv-help-block">
           <ErrorMessage :name="name"/>
         </div>

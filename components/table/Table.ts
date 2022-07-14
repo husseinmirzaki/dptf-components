@@ -11,15 +11,10 @@ import TableTDEmpty from "@/custom/components/table/tbody/TableTDEmpty.vue";
 import {ContextMenuItem} from "@/custom/components/ContextMenuService";
 import TableTDBool from "@/custom/components/table/tbody/TableTDBool.vue";
 import Swal from "sweetalert2/dist/sweetalert2.js";
-import {random} from "@/custom/helpers/random";
-import LoginForm from "@/custom/forms/LoginForm";
-import {CreateForm} from "@/custom/helpers/BaseForm";
 import {fieldC} from "@/custom/components/FieldComponent.vue";
 import TableTDDateTime from "@/custom/components/table/tbody/TableTDDateTime.vue";
 
 export class Table {
-
-
     defaultTableName = '';
 
     get tableName() {

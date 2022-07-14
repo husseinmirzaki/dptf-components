@@ -1,5 +1,5 @@
 <template>
-  <button ref="submitButton" class="btn btn-primary">
+  <button ref="submitButton" class="btn btn-primary" @click="onClickDelegation()">
     <span class="indicator-label"> {{ text }} </span>
     <span class="indicator-progress">
       {{ loadingText }}
@@ -11,6 +11,8 @@
 </template>
 <script lang="ts">
 import {defineComponent, ref} from "vue";
+import {VueInstanceService} from "@/Defaults";
+import {Actions} from "@/custom/store/enums/StoreEnums";
 
 export default defineComponent({
   name: "promise-button",
@@ -27,7 +29,7 @@ export default defineComponent({
       type: Promise,
     },
   },
-  setup() {
+  setup(props, context) {
     const submitButton = ref<any>();
 
     const startLoading = () => {
@@ -51,7 +53,28 @@ export default defineComponent({
       promise.then(() => stopLoading(), () => stopLoading()).finally(() => stopLoading());
     };
 
+    const onClickDelegation = () => {
+      const delegation = (formContainsRef, formExtend) => {
+        loading((async () => {
+          await formContainsRef.submitForm();
+          if (Object.keys(formContainsRef.errors).length > 0) {
+            return 0;
+          }
+          try {
+            const response = await formExtend.formInstance.submit();
+            context.emit('submitDone', response);
+          } catch (e) {
+            VueInstanceService.store.dispatch(Actions.REQUEST_ERROR_TOAST);
+          }
+          return 0;
+        })())
+      }
+      context.emit('clicked', delegation);
+
+    }
+
     return {
+      onClickDelegation,
       startLoading,
       stopLoading,
       loading,

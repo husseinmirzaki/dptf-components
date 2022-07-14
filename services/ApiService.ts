@@ -86,7 +86,10 @@ class ApiService {
                 if (result.response.status == 400) {
                     Object.keys(result.response.data).forEach((key) => {
                         if (key == 'exception') {
-                            VueInstanceService.store.commit(Mutations.ADD_ERROR, result.response.data[key][0])
+                            VueInstanceService.store.commit(
+                                Mutations.ADD_ERROR,
+                                Array.isArray(result.response.data[key]) ? result.response.data[key][0]:result.response.data[key]
+                            )
                             return;
                         } else if (key == 'exceptions') {
                             result.response.data[key].forEach((exception) => {
@@ -169,6 +172,7 @@ class ApiService {
                         "مشکل اتصال",
                         0
                     );
+                    reject(result);
                 } else {
                     reject(result);
                 }
@@ -369,14 +373,22 @@ class ApiService {
         return this.delete(`${this.baseUrl}/all/`);
     }
 
+    public static buildCreateOneUrl() {
+        return this.baseUrl;
+    }
+
     public static createOne(data) {
-        return this.post(`${this.baseUrl}`, {
+        return this.post(`${this.buildCreateOneUrl()}`, {
             data: data
         });
     }
 
+    public static buildUpdateOneUrl(id) {
+        return `${this.baseUrl}${id}/`
+    }
+
     public static updateOne(id, data) {
-        return this.patch(`${this.baseUrl}${id}/`, {
+        return this.patch(`${this.buildUpdateOneUrl(id)}`, {
             data: data
         });
     }
