@@ -10,7 +10,7 @@
     </label>
     <!--end::Label-->
     <!--begin::Input-->
-    <div :class="[one_line_field_classes_c]">
+    <div :class="[one_line_field_classes_c, field_container_classes]">
       <template v-if="field_type === 'select'">
         <Field
             :class="[defaultInputClasses, input_class]"
@@ -215,6 +215,10 @@ export default defineComponent({
     },
     one_line_field_classes: {
       default: "col-lg-8 fv-row",
+      type: String,
+    },
+    field_container_classes: {
+      default: "",
       type: String,
     },
     one_line_label_classes: {

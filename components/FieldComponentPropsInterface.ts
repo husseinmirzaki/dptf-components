@@ -19,10 +19,12 @@ export default interface FieldComponentPropsInterface {
     read_only?: boolean;
     label?: string;
     field_type?: string;
+    field_container_classes?: string;
     file_accept?: string;
     placeholder?: string;
     select_url?: string;
     modal_id?: string;
+    // eslint-disable-next-line @typescript-eslint/ban-types
     select_options?: object;
     validation?: Record<string, any>;
     select_data?: Array<Record<string, any>>;
