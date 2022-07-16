@@ -143,12 +143,11 @@
             :type="field_type"
             :name="name"
             :modelValue="this.$props.modelValue"
-            @change="$emit('update:modelValue', $event.target.value)"
-            ref="fieldRef"
         >
           <input type="text"
-            :class="[defaultInputClasses, input_class]"
-            v-model="currency"
+                 @keyup="formatCurrency($refs.fieldRef)"
+                 :class="[defaultInputClasses, input_class]"
+                 v-model="currency" ref="fieldRef"
           >
         </Field>
       </template>
@@ -184,6 +183,7 @@ import {gregorianToJalali} from "@/custom/components/DateUtils";
 import {findClassInParent} from "@/custom/helpers/DomHelpers";
 import {VueInstanceService} from "@/Defaults";
 import AutoComplete from "@/custom/components/forms/AutoComplete.vue";
+import {deformatNumber, formatCurrency} from "@/custom/components/FieldComponentCurrency.js"
 
 export default defineComponent({
   name: "field-component",
@@ -325,7 +325,13 @@ export default defineComponent({
     const root = ref<any>(null);
     const showError = ref<boolean>(show_errors.value);
 
-    const currency = ref('')
+    const currency = ref(modelValue.value);
+
+    if (field_type.value == 'currency') {
+      watch(currency, () => {
+        context.emit("update:modelValue", deformatNumber(currency.value))
+      })
+    }
 
     watch(modelValue, () => {
       showError.value = true;
@@ -357,6 +363,11 @@ export default defineComponent({
     }
 
     onMounted(() => {
+
+      if (field_type.value == 'currency') {
+        console.log(field.value);
+        formatCurrency(field.value);
+      }
 
       if (field_type.value == 'hidden') {
         root.value.style.display = 'none';
@@ -502,6 +513,7 @@ export default defineComponent({
       getFile,
       empty,
       testConsole,
+      formatCurrency,
       // ref
       root,
       showError,
