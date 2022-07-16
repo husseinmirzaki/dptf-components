@@ -68,7 +68,8 @@
         </Field>
       </template>
       <template v-else-if="field_type === 'checkbox'">
-        <div :class="[input_container_class ? input_container_class : 'form-check m-3 me-4']" style="padding-right: 0 !important ">
+        <div :class="[input_container_class ? input_container_class : 'form-check m-3 me-4']"
+             style="padding-right: 0 !important ">
           <Field
               :class="['form-check-input',defaultInputClasses, input_class]"
               :id="field_id"
@@ -132,6 +133,23 @@
               @update:modelValue="$emit('update:modelValue', $event)"
               ref="fieldRef"
           />
+        </Field>
+      </template>
+      <template v-else-if="field_type === 'currency'">
+        <Field
+            :class="[defaultInputClasses, input_class]"
+            :readonly="read_only"
+            :placeholder="placeholder"
+            :type="field_type"
+            :name="name"
+            :modelValue="this.$props.modelValue"
+            @change="$emit('update:modelValue', $event.target.value)"
+            ref="fieldRef"
+        >
+          <input type="text"
+            :class="[defaultInputClasses, input_class]"
+            v-model="currency"
+          >
         </Field>
       </template>
       <template v-else>
@@ -305,7 +323,9 @@ export default defineComponent({
 
     const field = ref<any>(null);
     const root = ref<any>(null);
-    const showError = ref<boolean>(show_errors.value)
+    const showError = ref<boolean>(show_errors.value);
+
+    const currency = ref('')
 
     watch(modelValue, () => {
       showError.value = true;
@@ -489,6 +509,7 @@ export default defineComponent({
       select2Instance,
       show_errors,
       // data
+      currency,
       col_class_c,
       one_line_field_classes_c,
       one_line_label_classes_c,
