@@ -13,17 +13,17 @@
     </template>
     <template v-slot:dropDown>
       <DropdownV2>
-<!--        <div class="pb-1" v-if="defaultConfig.filterForm.formInstance">-->
-<!--          <button @click="filterShow = !filterShow" class="btn btn-sm btn-primary btn-icon ms-2">-->
-<!--            <i class="fas fa-filter"></i>-->
-<!--          </button>-->
-<!--          <button @click="defaultConfig.filterForm.formInstance.resetForm()"-->
-<!--                  class="btn btn-sm btn-primary btn-icon ms-2">-->
-<!--            <i class="fas fa-undo"></i>-->
-<!--          </button>-->
-<!--        </div>-->
+        <!--        <div class="pb-1" v-if="defaultConfig.filterForm.formInstance">-->
+        <!--          <button @click="filterShow = !filterShow" class="btn btn-sm btn-primary btn-icon ms-2">-->
+        <!--            <i class="fas fa-filter"></i>-->
+        <!--          </button>-->
+        <!--          <button @click="defaultConfig.filterForm.formInstance.resetForm()"-->
+        <!--                  class="btn btn-sm btn-primary btn-icon ms-2">-->
+        <!--            <i class="fas fa-undo"></i>-->
+        <!--          </button>-->
+        <!--        </div>-->
         <!--begin::Menu separator-->
-<!--        <div class="separator mt-2 opacity-75" v-if="defaultConfig.filterForm.formInstance"></div>-->
+        <!--        <div class="separator mt-2 opacity-75" v-if="defaultConfig.filterForm.formInstance"></div>-->
         <!--end::Menu separator-->
         <template v-for="header in Object.keys(headerVisibility)" :key="header">
           <FieldComponent
@@ -403,6 +403,31 @@ export default defineComponent({
 
     const checksDragHandler = new DragHandler();
 
+    const initializeConfig = (() => {
+      if (!conf.value)
+        return new Table(props, context, {
+          "onGetData": onGetData
+        });
+      return new conf.value(props, context, {
+        "onGetData": onGetData
+      });
+    });
+    watch(conf, () => {
+      defaultConfig = initializeConfig();
+
+      checkAll.value = false;
+      changedHeaders.value = [];
+      headerVisibility.value = {};
+      checkedDataList.value = {};
+      Object.keys(Object.assign(cacheSelected)).forEach((e) => {
+        delete cacheSelected[e];
+      })
+
+      mount();
+    }, {
+      deep: true
+    })
+
     watch(dList, () => {
       if (dList.value) {
         dList.value.forEach((data: any) => {
@@ -443,7 +468,6 @@ export default defineComponent({
       return oneIsChecked || checkAll.value
     });
 
-
     const onGetData = () => {
       return new Promise<void>((resolve) => {
         if (defaultConfig.canUseUrl) {
@@ -455,15 +479,7 @@ export default defineComponent({
       });
     }
 
-    let defaultConfig: Table = (() => {
-      if (!conf.value)
-        return new Table(props, context, {
-          "onGetData": onGetData
-        });
-      return new conf.value(props, context, {
-        "onGetData": onGetData
-      });
-    })();
+    let defaultConfig: Table = initializeConfig();
 
     const headers = computed(() => {
       if (changedHeaders.value.length > 0)
@@ -513,7 +529,7 @@ export default defineComponent({
       })
     }
 
-    onMounted(() => {
+    const mount = () => {
       MenuComponent.reinitialization();
       drag = new SimpleDrag(tableRef.value);
       drag!.exclude_all_clone = '(animation)|(opacity)|(transition)|(position)';
@@ -572,7 +588,9 @@ export default defineComponent({
       else {
         tableSetup();
       }
-    });
+    };
+
+    onMounted(mount);
 
     const noHeaderSelected = computed(() => {
       const keys = Object.keys(headerVisibility.value);

@@ -81,6 +81,11 @@ export class CreateForm<T extends FieldsInterface = any> {
     fields: Array<FieldComponentPropsInterface> = [];
 
     /**
+     * raw fields
+     */
+    rawFields: string = JSON.stringify([]);
+
+    /**
      * these are generated fields base on the modes, user
      * provides to this class
      */
@@ -176,14 +181,24 @@ export class CreateForm<T extends FieldsInterface = any> {
     }
 
 
-    constructor() {
+    constructor(rawFields: null | Array<FieldComponentPropsInterface> = null) {
+
+        if (rawFields) {
+            this.rawFields = JSON.stringify(rawFields);
+        }
+
         // first get current service instance or class
         this.service = this.getService();
 
+        this.processFields();
         // console.log("current form modes", this.modes);
         // prepare fields and create an object which will
         // be used to access FieldComponent component dome
         // from with in form class
+
+    }
+
+    processFields() {
         this.concatFields().forEach((e) => {
             e.outerAccess = (e1) => {
                 this.elementRefs[e.name] = e1;
@@ -296,7 +311,7 @@ export class CreateForm<T extends FieldsInterface = any> {
      * validation schemas
      */
     concatFields(): Array<FieldComponentPropsInterface> {
-        return [];
+        return JSON.parse(this.rawFields);
     }
 
     /**
