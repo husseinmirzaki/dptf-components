@@ -272,6 +272,10 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
      */
     @Action
     [Actions.VERIFY_AUTH]() {
+        if (process.env.NODE_ENV == 'development' && process.env.VUE_APP_IS_LOGGED_IN == 1) {
+            return
+        }
+
         const token = JwtService.getToken();
         if (token) {
             try {
