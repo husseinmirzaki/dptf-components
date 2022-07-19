@@ -91,17 +91,24 @@
         </div>
       </template>
       <template v-else-if="field_type === 'component'">
-        <component
+        <Field
             :class="[defaultInputClasses, input_class]"
-            :is="selectedComponent"
-            :readonly="read_only"
-            :placeholder="placeholder"
-            :type="field_type"
             :name="name"
+            :value="this.$props.modelValue"
             :modelValue="this.$props.modelValue"
-            @change="$emit('update:modelValue', $event.target.value)"
-            ref="fieldRef"
-        />
+        >
+          <component
+              :id="field_id"
+              :class="[defaultInputClasses, input_class]"
+              :is="selected_component"
+              :readonly="read_only"
+              :placeholder="placeholder"
+              :name="name"
+              :modelValue="this.$props.modelValue"
+              @update:modelValue="$emit('update:modelValue', $event)"
+              ref="fieldRef"
+          />
+        </Field>
       </template>
       <template v-else-if="field_type === 'file'">
         <Field
@@ -206,7 +213,7 @@ export default defineComponent({
     outerAccess: {
       type: Function
     },
-    selectedComponent: {
+    selected_component: {
       default: null,
     },
     select_filter_id: {

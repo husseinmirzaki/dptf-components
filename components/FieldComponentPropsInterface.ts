@@ -26,6 +26,7 @@ export default interface FieldComponentPropsInterface {
     modal_id?: string;
     // eslint-disable-next-line @typescript-eslint/ban-types
     select_options?: object;
+    selected_component?: any;
     validation?: Record<string, any>;
     select_data?: Array<Record<string, any>>;
     "v-model"?: Ref;

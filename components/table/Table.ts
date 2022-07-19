@@ -320,8 +320,6 @@ export class Table {
 
     onTHeadProps(header, index) {
 
-        console.log("this.headerTranslate", this.headerTranslate);
-
         let translate = '';
         if (this.headerTranslate[header]) {
             translate = this.headerTranslate[header];
