@@ -16,6 +16,10 @@ class ApiService {
      */
     public static vueInstance: App;
 
+    public static get extraParams(): Record<string, any> {
+        return {};
+    }
+
     // http://127.0.0.1:8000/api/
 
     public static base_url = process.env.VUE_APP_BASE_URL;
@@ -88,7 +92,7 @@ class ApiService {
                         if (key == 'exception') {
                             VueInstanceService.store.commit(
                                 Mutations.ADD_ERROR,
-                                Array.isArray(result.response.data[key]) ? result.response.data[key][0]:result.response.data[key]
+                                Array.isArray(result.response.data[key]) ? result.response.data[key][0] : result.response.data[key]
                             )
                             return;
                         } else if (key == 'exceptions') {
@@ -273,6 +277,26 @@ class ApiService {
     }
 
 
+    public static fixUrlParams(resource) {
+        const extraParams = Object.keys(this.extraParams);
+        const urlEncode = new URLSearchParams();
+        if (extraParams.length > 0) {
+            extraParams.forEach((extraParam) => {
+                urlEncode.append(extraParam, this.extraParams[extraParam]);
+            })
+            if (resource.search(/\?/) > -1) {
+                if (resource.endsWith("&")) {
+                    resource += urlEncode.toString();
+                } else {
+                    resource += `&${urlEncode.toString()}`;
+                }
+            } else {
+                resource += `?${urlEncode.toString()}`
+            }
+        }
+        return resource;
+    }
+
     /**
      * To avoid request data from sending
      * nonsense and easier way to pass data
@@ -280,9 +304,26 @@ class ApiService {
      * @private
      */
     private static calcData(params: any) {
+        if (Object.keys(this.extraParams).length > 0) {
+            if (!params) {
+                params = {};
+            }
+
+            if (!params["data"]) {
+                params['data'] = {};
+            }
+
+            params['data'] = {
+                ...params['data'],
+                ...this.extraParams
+            }
+
+        }
+
         if (params && params["data"]) {
             return params["data"];
         }
+
         return undefined;
     }
 
@@ -296,6 +337,7 @@ class ApiService {
         resource: string,
         params = {}
     ): Promise<AxiosResponse<T>> {
+        resource = this.fixUrlParams(resource);
         return this.wrap(() => {
             return this.vueInstance.axios.get(resource, this.calcConf(params));
         });
@@ -352,6 +394,7 @@ class ApiService {
      * @returns Promise<AxiosResponse>
      */
     public static delete(resource: string, params = {}): Promise<AxiosResponse> {
+        resource = this.fixUrlParams(resource);
         return this.wrap(() => {
             return this.vueInstance.axios.delete(resource, this.calcConf(params));
         });
