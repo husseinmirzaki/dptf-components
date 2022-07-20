@@ -93,6 +93,7 @@ export default {
         key.value = "";
         value.value = ""
       }
+      context.emit('update:modelValue', list.value);
     }
 
     const convertedList = computed(() => {

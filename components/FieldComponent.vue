@@ -96,6 +96,7 @@
             :name="name"
             :value="this.$props.modelValue"
             :modelValue="this.$props.modelValue"
+            @update:modelValue="$emit('update:modelValue', $event)"
         >
           <component
               :id="field_id"

@@ -569,7 +569,7 @@ export class CreateForm<T extends FieldsInterface = any> {
                     this.refs[this.activeMode.value].value
                 );
             else
-                promise = this.service.createOne(this.refs["basic"].value);
+                promise = this.service.createOne(this.refs[this.activeMode.value].value);
         }
         return promise;
     }
@@ -612,7 +612,7 @@ export class CreateForm<T extends FieldsInterface = any> {
         }
     }
 
-    resetForm() {
+    resetForm(newDefaults: null | Record<string, any> = null) {
         this.activeMode.value = 'basic';
         this.isUpdate.value = false;
         Object.keys(this.refs).forEach((refKey) => {
@@ -662,6 +662,11 @@ export class CreateForm<T extends FieldsInterface = any> {
             }
         })
         this.refs.basic.value['id'] = null;
+
+        if (newDefaults)
+            Object.keys(newDefaults).forEach((key) => {
+                this.refs.basic.value[key] = newDefaults[key];
+            });
     }
 
     setValues(data: Record<string, any>) {
