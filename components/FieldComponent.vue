@@ -29,6 +29,7 @@
                 v-for="value in select_data"
                 :key="value[0]"
                 :value="value[0]"
+                :selected="value[2]"
             >
               {{ value[1] }}
             </option>
