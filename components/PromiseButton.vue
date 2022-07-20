@@ -66,7 +66,9 @@ export default defineComponent({
           }
           try {
             const response = await formExtend.formInstance.submit();
-            context.emit('submitDone', response);
+            setTimeout(() => {
+              context.emit('submitDone', response);
+            }, 500)
           } catch (e) {
             VueInstanceService.store.dispatch(Actions.REQUEST_ERROR_TOAST);
           }
