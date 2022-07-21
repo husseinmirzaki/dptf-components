@@ -394,7 +394,6 @@ export default defineComponent({
           delete cacheSelected[key];
         }
       });
-      console.log("new cache selecteds", cacheSelected);
     }, {
       deep: true,
     });

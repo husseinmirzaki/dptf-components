@@ -304,7 +304,6 @@ class ApiService {
      * @private
      */
     private static calcData(params: any) {
-        console.log("this.extraParams", this.extraParams);
         if (Object.keys(this.extraParams).length > 0) {
             if (!params) {
                 params = {};

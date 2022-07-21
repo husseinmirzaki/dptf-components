@@ -38,7 +38,6 @@ export default defineComponent({
     });
 
     watch(localLoading, (e) => {
-      console.log("changed", e);
       if (e) addLoader();
       else removeLoader();
     });
@@ -59,7 +58,6 @@ export default defineComponent({
 
           const child = spinnerContainer.value.children[0];
           const computedStyleMap = child.computedStyleMap();
-          console.log(computedStyleMap);
 
           child.classList.add('position-relative');
           (loader.children[0] as HTMLElement).style.borderRadius = computedStyleMap.get('border-radius').toString();
@@ -70,7 +68,6 @@ export default defineComponent({
 
     const removeLoader = () => {
       if (spinnerContainer.value) {
-        console.log("removing spinner containers")
         nextTick(() => {
           nextTick(() => {
             setTimeout(() => {
