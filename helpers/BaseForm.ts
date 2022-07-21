@@ -163,10 +163,12 @@ export class CreateForm<T extends FieldsInterface = any> {
      * [key, value].
      * @param option
      */
-    optionToSelect2Option(option: Record<string, any>) {
+    optionToSelect2Option(option: Record<string, any>, selectedValue: null | string = null) {
         const extracted: Array<Array<any>> = [];
         Object.keys(option).forEach((key) => {
-            extracted.push([key, option[key]]);
+
+            extracted.push([key, option[key], selectedValue && option[key] == selectedValue]);
+
         });
         return extracted;
     }
