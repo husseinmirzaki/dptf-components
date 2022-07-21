@@ -67,6 +67,10 @@ export default class VueInstanceService {
         return VueInstanceService.vue.config.globalProperties['$router'];
     }
 
+    public static get route(): any {
+        return VueInstanceService.vue.config.globalProperties['$route'];
+    }
+
     public static showErrorMessage(
         text,
         title: string | null = null,
