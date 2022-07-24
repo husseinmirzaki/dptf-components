@@ -2,7 +2,7 @@
   <!--begin::Modal - New Address-->
   <div class="modal fade" :id="modalId" tabindex="-1" aria-hidden="true" ref="modalEl">
     <!--begin::Modal dialog-->
-    <div class="modal-dialog modal-dialog-centered mw-700px">
+    <div class="modal-dialog modal-dialog-centered" :class="modalSizeClass">
       <!--begin::Modal content-->
       <div class="modal-content">
         <div class="modal-header">
@@ -69,6 +69,9 @@ export default defineComponent({
     },
     modalTitle: {
       default: "موضوع مدال",
+    },
+    modalSizeClass: {
+      default: "mw-700px",
     },
   },
   methods: {
