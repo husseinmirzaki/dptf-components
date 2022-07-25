@@ -40,7 +40,6 @@ export default defineComponent({
   emits: ['pageSelected'],
   setup(props, context) {
     const {count, perPage, currentPage} = toRefs(props);
-    console.log("pagination", perPage.value)
     const pages = computed(() => {
       if (count.value <= perPage.value) {
         return [1];

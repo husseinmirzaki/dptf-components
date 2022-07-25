@@ -42,14 +42,18 @@ export default defineComponent({
       event: null,
     };
   },
-  mounted() {
-    this.modal = new Modal("#" + this.modalId);
-    (this.$refs.modalEl as any).addEventListener('show.bs.modal', this.emitEvent('open'));
-    (this.$refs.modalEl as any).addEventListener('shown.bs.modal', this.emitEvent('opened'));
-    (this.$refs.modalEl as any).addEventListener('hide.bs.modal', this.emitEvent('close'));
-    (this.$refs.modalEl as any).addEventListener('hidden.bs.modal', this.emitEvent('closed'));
+  activated() {
+    (async () => {
+      if (document.querySelector("#" + this.modalId)) {
+        this.modal = new Modal("#" + this.modalId);
+        (this.$refs.modalEl as any).addEventListener('show.bs.modal', this.emitEvent('open'));
+        (this.$refs.modalEl as any).addEventListener('shown.bs.modal', this.emitEvent('opened'));
+        (this.$refs.modalEl as any).addEventListener('hide.bs.modal', this.emitEvent('close'));
+        (this.$refs.modalEl as any).addEventListener('hidden.bs.modal', this.emitEvent('closed'));
+      }
+    })()
   },
-  unmounted() {
+  deactivated() {
     if (this.modal) {
       try {
         (this.modal as any).dispose();
@@ -57,6 +61,8 @@ export default defineComponent({
         //
       }
     }
+    const modalE = document.querySelector("#" + this.modalId);
+    if (modalE) modalE.remove();
   },
   props: {
     modalBodyClassExtra: {

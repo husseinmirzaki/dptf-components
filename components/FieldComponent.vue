@@ -383,7 +383,6 @@ export default defineComponent({
     onMounted(() => {
 
       if (field_type.value == 'currency') {
-        console.log(field.value);
         formatCurrency(field.value);
       }
 

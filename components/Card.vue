@@ -2,7 +2,8 @@
   <slot name="card-body" v-if="disableCard">
     <slot name="card-content"/>
   </slot>
-  <div v-else class="card d-flex" :class="{'draggable-start': mouseDown, 'h-100': fillHeight}" data-dragable="data-dragable" ref="cardRef"
+  <div v-else class="card d-flex" :class="{'draggable-start': mouseDown, 'h-100': fillHeight}"
+       data-dragable="data-dragable" ref="cardRef"
        @mouseleave="mouseLeave">
     <slot name="card-header" :card-title="cardTitle" :card-description="cardDescription">
       <div class="card-header align-items-center border-bottom-1 border-dark mt-0 px-2"
@@ -178,7 +179,7 @@ export default {
     }
 
     const mouseLeave = () => {
-      if (!mouseDown.value)
+      if (!mouseDown.value && cardRef.value)
         cardRef.value.classList.remove("draggable-start");
     }
 
@@ -227,7 +228,8 @@ export default {
       });
       clonedElement = null;
       mouseDown.value = false;
-      cardRef.value.classList.remove("draggable-start");
+      if (cardRef.value)
+        cardRef.value.classList.remove("draggable-start");
       // console.log(e);
     }
 
