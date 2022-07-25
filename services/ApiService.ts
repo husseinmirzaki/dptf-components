@@ -317,6 +317,7 @@ class ApiService {
                 ...params['data'],
                 ...this.extraParams
             }
+            console.log(this.extraParams, params);
 
         }
 

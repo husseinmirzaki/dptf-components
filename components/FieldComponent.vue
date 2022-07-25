@@ -462,10 +462,12 @@ export default defineComponent({
     });
 
     const setValue = (data) => {
-      // if (field_type.value === 'select') {
-      //   nextTick(() => {
-      //     setOptions(data);
-      //   });
+      if (field_type.value === 'select') {
+        nextTick(() => {
+          setOptions(data);
+        });
+        return;
+      }
       if (!data) {
         switch (field_type.value) {
           case 'checkbox':
@@ -499,14 +501,19 @@ export default defineComponent({
     }
 
     const setOptions = (
-        options: Array<{ value: number | string; text: string }>
+        options: Array<{ value: number | string; text: string }> | Array<string> | Array<number>
     ) => {
-      options.forEach(({value, text}) => {
-        if (text && value)
-          select2Instance.value?.append(
-              new Option(String(text), String(value), true, true)
-          );
-      });
+      console.log(options);
+      if (options.length > 0 && options[0] && !options[0]['text']) {
+        select2Instance.value?.val(options);
+      } else
+        options.forEach((data) => {
+          if (!data) return;
+          if (data['text'] && data['value'])
+            select2Instance.value?.append(
+                new Option(String(data['text']), String(data['value']), true, true)
+            );
+        });
       select2Instance.value?.change();
     };
 
