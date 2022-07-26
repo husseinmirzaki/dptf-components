@@ -42,7 +42,8 @@ export default defineComponent({
       event: null,
     };
   },
-  activated() {
+  mounted() {
+    console.log(this.$refs.modalEl);
     (async () => {
       if (document.querySelector("#" + this.modalId)) {
         this.modal = new Modal("#" + this.modalId);
@@ -53,7 +54,7 @@ export default defineComponent({
       }
     })()
   },
-  deactivated() {
+  unmounted() {
     if (this.modal) {
       try {
         (this.modal as any).dispose();
