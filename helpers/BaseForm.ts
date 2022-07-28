@@ -1,4 +1,4 @@
-import {nextTick, ref, Ref, UnwrapRef, watch} from "vue";
+import {computed, ComputedRef, nextTick, ref, Ref, UnwrapRef, watch} from "vue";
 import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
 import {onkeys} from "@/custom/helpers/CustomFunctions";
 import * as Yup from 'yup';
@@ -7,6 +7,8 @@ export interface CreateFormExtend<T extends CreateForm, E = any> {
     update: any;
     formButtonsInstance: any;
     formContainer: any;
+    activeSchema: any;
+    activeFields: any;
     obj: Ref<E>;
     formInstance: T;
 }
@@ -609,6 +611,8 @@ export class CreateForm<T extends FieldsInterface = any> {
             update: this.isUpdate,
             formButtonsInstance: ref<any>({}),
             formContainer: ref<any>({}),
+            activeSchema: computed(() => this.validationSchemas[this.activeMode.value]),
+            activeFields: computed(() => this.modeFields[this.activeMode.value]),
             obj,
             formInstance: this,
         }

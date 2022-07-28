@@ -4,6 +4,7 @@
 
 span, p, h1,h2,h3,h4,h5,h6, div {
     font-family: "IRANSans";
+    font-variant-ligatures: discretionary-ligatures;
 }
 
 .breadcrumb .breadcrumb-item:last-child {
