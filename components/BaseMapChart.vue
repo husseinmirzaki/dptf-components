@@ -156,7 +156,7 @@ svg {
   border-radius: 5px;
   text-align: center;
   color: white;
-  transition-property: top, left, opacity;
+  transition-property: opacity;
   box-shadow: 0 0 5px #fff;
   transition-duration: 100ms;
   transition-timing-function: ease-in;
@@ -166,7 +166,7 @@ svg {
 @for $i from 1 through length($colors) {
   .local-color-#{$i} {
     background: nth($colors, $i);
-    fill: nth($colors, $i);
+    fill: nth($colors, $i) !important;
   }
 }
 
@@ -225,11 +225,18 @@ export default {
 
     let setCityValue = (city, value, max) => {
       console.log(map.value.querySelector('.' + city));
+      let classList = map.value.querySelector('.' + city).classList;
       if (value > 0) {
         const a = 11 - Math.round((value * 10) / max);
-        map.value.querySelector('.' + city).classList.add(`local-color-${a}`);
+        for (const i of classList) {
+          classList.remove(i);
+        }
+        classList.add(city, `local-color-${a}`);
       } else {
-        map.value.querySelector('.' + city).classList.add(`local-color-10`);
+        for (const i of classList) {
+          classList.remove(i);
+        }
+        classList.add(city, `local-color-10`);
       }
       map.value.querySelector('.' + city).setAttribute('data-value', String(value))
     }
