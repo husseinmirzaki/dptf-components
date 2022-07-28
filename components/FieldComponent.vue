@@ -61,6 +61,7 @@
           <DatePicker
               :name="name"
               :readonly="read_only"
+              :disabled="read_only"
               :placeholder="placeholder"
               :modelValue="this.$props.modelValue"
               @update:modelValue="$emit('update:modelValue', fieldRef.outputValue[0])"
