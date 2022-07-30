@@ -247,7 +247,7 @@ export class CreateForm<T extends FieldsInterface = any> {
         Object.keys(this.refs[mode].value).forEach((e1) => {
             const field = this.fields.find((e) => e.name == e1);
             if (field && field.field_type === 'file')
-                if (this.refs[mode].value[e1].length) {
+                if (this.refs[mode].value[e1] && this.refs[mode].value[e1].length) {
                     for (let i = 0; i < this.refs[mode].value[e1].length; i++) {
                         files.push({
                             file: this.refs[mode].value[e1][i] as any,
@@ -682,8 +682,12 @@ export class CreateForm<T extends FieldsInterface = any> {
         }
 
         Object.keys(data).forEach((e) => {
-            if (this.elementRefs[e])
+            try {
+                if (this.elementRefs[e])
                 (this.elementRefs[e] as any).setValue(data[e]);
+            } catch (e) {
+                console.log(e);
+            }
         });
     }
 }

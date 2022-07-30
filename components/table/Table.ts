@@ -13,6 +13,7 @@ import TableTDBool from "@/custom/components/table/tbody/TableTDBool.vue";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import {fieldC} from "@/custom/components/FieldComponent.vue";
 import TableTDDateTime from "@/custom/components/table/tbody/TableTDDateTime.vue";
+import TableTDColor from "@/custom/components/table/tbody/TableTDColor.vue";
 
 export class Table {
     defaultTableName = '';
@@ -383,6 +384,8 @@ export class Table {
             if (typeof data === 'boolean') {
                 return TableTDBool;
             } else if (typeof data === 'string') {
+                if (data.startsWith("#") && data.length === 7)
+                    return TableTDColor;
                 if (data === "true" || data == "false")
                     return TableTDBool;
                 // matches the json iso formatted datetime

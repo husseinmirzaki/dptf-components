@@ -512,7 +512,6 @@ export default defineComponent({
     const setOptions = (
         options: Array<{ value: number | string; text: string }> | Array<string> | Array<number>
     ) => {
-      console.log(options);
       if (options.length > 0 && options[0] && !options[0]['text']) {
         select2Instance.value?.val(options);
       } else
@@ -594,3 +593,8 @@ export function fieldC(
   return new FieldComponentProps(options);
 }
 </script>
+<style scoped>
+input[type="color"] {
+	height: 40px !important;
+}
+</style>

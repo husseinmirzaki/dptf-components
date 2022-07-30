@@ -224,7 +224,9 @@ export default {
     }
 
     let setCityValue = (city, value, max) => {
-      let classList = map.value.querySelector(`[data-name="${city}"]`).classList;
+      const element = map.value.querySelector(`[data-name="${city}"]`);
+      element.style.removeProperty('fill');
+      let classList = element.classList;
       if (value > 0) {
         const a = 11 - Math.round((value * 10) / max);
         for (const i of classList) {
@@ -237,7 +239,19 @@ export default {
         }
         classList.add(city, `local-color-10`);
       }
-      map.value.querySelector(`[data-name="${city}"]`).setAttribute('data-value', String(value))
+      element.setAttribute('data-value', String(value))
+    }
+
+    let setCityColor = (city, value) => {
+      const element = map.value.querySelector(`[data-name="${city}"]`);
+      element.style.removeProperty('fill');
+      let classList = element.classList;
+      for (const i of classList) {
+        classList.remove(i);
+      }
+      classList.add(city);
+      if (value)
+        element.style.setProperty('fill', 'value');
     }
 
     const persianName = computed(() => {
@@ -269,6 +283,7 @@ export default {
     return {
       mapToolTip,
       persianName,
+      setCityColor,
       setCityValue,
       mapData,
       map
