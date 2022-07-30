@@ -224,8 +224,7 @@ export default {
     }
 
     let setCityValue = (city, value, max) => {
-      console.log(map.value.querySelector('.' + city));
-      let classList = map.value.querySelector('.' + city).classList;
+      let classList = map.value.querySelector(`[data-name="${city}"]`).classList;
       if (value > 0) {
         const a = 11 - Math.round((value * 10) / max);
         for (const i of classList) {
@@ -238,7 +237,7 @@ export default {
         }
         classList.add(city, `local-color-10`);
       }
-      map.value.querySelector('.' + city).setAttribute('data-value', String(value))
+      map.value.querySelector(`[data-name="${city}"]`).setAttribute('data-value', String(value))
     }
 
     const persianName = computed(() => {
@@ -247,6 +246,7 @@ export default {
 
     onMounted(() => {
       let data = document.querySelector('.province');
+
       data.addEventListener('mousemove', (event) => {
         mapToolTip.value.style.left = event.layerX + 10 + 'px';
         mapToolTip.value.style.top = event.layerY + 10 + 'px';
@@ -254,13 +254,16 @@ export default {
         clearTimeout(lastTimeout);
         lastTimeout = setTimeout(() => {
           mapToolTip.value.style.opacity = 0;
-        }, 2000);
+        }, 5000);
       });
+
       for (let i = 0; i < data.children.length; i++) {
+        data.children[i].setAttribute("data-name", data.children[i].classList[0]);
         data.children[i].addEventListener('mouseenter', (event) => {
-          mapData.value = data.children[i].classList[0].toString();
+          mapData.value = data.children[i].getAttribute("data-name");
         });
       }
+
     });
 
     return {

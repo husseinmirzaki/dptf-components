@@ -25,14 +25,22 @@
             ref="fieldRef"
         >
           <template v-if="select_data">
-            <option
-                v-for="value in select_data"
-                :key="value[0]"
-                :value="value[0]"
-                :selected="value[2]"
-            >
+            <template v-for="value in select_data" :key="value[0]">
+              <option
+                  :value="value[0]"
+                  selected="selected"
+                  v-if="value[2] === 'selected'"
+              >
+              {{ value[1] }} {{ value[2]}}
+            </option>
+              <option
+                  :value="value[0]"
+                  selected
+                  v-else
+              >
               {{ value[1] }}
             </option>
+            </template>
           </template>
         </Field>
       </template>
