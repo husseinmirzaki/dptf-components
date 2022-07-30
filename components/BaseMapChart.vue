@@ -190,37 +190,37 @@ export default {
     let lastTimeout = null;
     let nextUpdate = 0;
     const mapPmap = {
-      "azerbaijan-east": "آذربایجان شرقی",
-      "azerbaijan-west": "آذربایجان غربی",
-      "ardabil": "اردبیل",
+      "azerbaijan-east": "آذربايجان شرقي",
+      "azerbaijan-west": "آذربايجان غربي",
+      "ardabil": "اردبيل",
       "isfahan": "اصفهان",
       "alborz": "البرز",
-      "ilam": "ایلام",
+      "ilam": "ايلام",
       "bushehr": "بوشهر",
       "tehran": "تهران",
-      "chahar-mahaal-bakhtiari": "چهارمحال بختیاری",
-      "khorasan-south": "خراسان جنوبی",
-      "khorasan-razavi": "خراسان رضوی",
-      "khorasan-north": "خراسان شمالی",
+      "chahar-mahaal-bakhtiari": "چهارمحال وبختياري",
+      "khorasan-south": "خراسان جنوبي",
+      "khorasan-razavi": "خراسان رضوئ",
+      "khorasan-north": "خراسان شمالي",
       "khuzestan": "خوزستان",
       "zanjan": "زنجان",
       "semnan": "سمنان",
-      "sistan-baluchestan": "سیستان و بلوچستان",
+      "sistan-baluchestan": "سيستان وبلوچستان",
       "fars": "فارس",
-      "qazvin": "قزوین",
+      "qazvin": "قزوين",
       "qom": "قم",
-      "kurdistan": "کردستان",
-      "kerman": "کرمان",
+      "kurdistan": "كردستان",
+      "kerman": "كرمان",
       "kermanshah": "کرمانشاه",
-      "kohgiluyeh-boyer-ahmad": "کهگیلویه و بویر احمد",
+      "kohgiluyeh-boyer-ahmad": "كهگيلويه وبويراحمد",
       "golestan": "گلستان",
-      "gilan": "گیلان",
+      "gilan": "گيلان",
       "lorestan": "لرستان",
       "mazandaran": "مازندران",
-      "markazi": "مرکزی",
+      "markazi": "مرکزي",
       "hormozgan": "هرمزگان",
       "hamadan": "همدان",
-      "yazd": "یزد",
+      "yazd": "يزد",
     }
 
     let setCityValue = (city, value, max) => {
@@ -258,7 +258,7 @@ export default {
       });
       for (let i = 0; i < data.children.length; i++) {
         data.children[i].addEventListener('mouseenter', (event) => {
-          mapData.value = data.children[i].classList.toString();
+          mapData.value = data.children[i].classList[0].toString();
         });
       }
     });
