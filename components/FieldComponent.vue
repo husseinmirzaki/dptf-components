@@ -517,6 +517,8 @@ export default defineComponent({
     ) => {
       if (options.length > 0 && options[0] && !options[0]['text']) {
         select2Instance.value?.val(options);
+      } else if (!Array.isArray(options)) {
+          select2Instance.value?.val(String(options));
       } else
         options.forEach((data) => {
           if (!data) return;
