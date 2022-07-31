@@ -33,6 +33,7 @@ import {defineComponent} from "vue";
 import {randomId} from "@/custom/helpers/random";
 import Modal from "bootstrap/js/dist/modal";
 import _$ from "jquery";
+import {VueInstanceService} from "@/Defaults";
 
 export default defineComponent({
   name: "modal",
@@ -84,6 +85,7 @@ export default defineComponent({
   methods: {
     emitEvent: function (event) {
       return (e) => {
+        VueInstanceService.emit(`${event}.bs.modal`);
         this.$emit(event, {event: e, data: this.event});
       }
     },
