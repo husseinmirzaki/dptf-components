@@ -4,7 +4,7 @@
       <div :class="'local-color-' + i" v-for="i in 10" :key="i"></div>
     </div>
   </el-tooltip>
-  <div class="position-relative">
+  <div class="position-relative" ref="container">
     <div class="custom-map-tooltip" ref="mapToolTip">
       <slot :mapToolTip="mapToolTip" :mapData="mapData" :persianName="persianName">
         {{ mapData }}
@@ -184,6 +184,7 @@ import {computed, onMounted, ref} from "vue";
 
 export default {
   setup() {
+    const container = ref();
     const mapToolTip = ref();
     const map = ref();
     const mapData = ref("");
@@ -260,6 +261,12 @@ export default {
 
     onMounted(() => {
       let data = document.querySelector('.province');
+      container.value.addEventListener('mouseleave' , () => {
+        clearTimeout(lastTimeout);
+        mapToolTip.value.style.opacity = 0;
+        mapToolTip.value.style.left = '-1000px';
+        mapToolTip.value.style.top = '-1000px';
+      })
 
       data.addEventListener('mousemove', (event) => {
         mapToolTip.value.style.left = event.layerX + 10 + 'px';
@@ -281,6 +288,7 @@ export default {
     });
 
     return {
+      container,
       mapToolTip,
       persianName,
       setCityColor,
