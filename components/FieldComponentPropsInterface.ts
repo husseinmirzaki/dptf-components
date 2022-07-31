@@ -16,6 +16,7 @@ export default interface FieldComponentPropsInterface {
     select_multiple?: boolean;
     multiple?: boolean;
     select_tag?: boolean;
+    'show-help'?: string;
     read_only?: boolean;
     label?: string;
     field_type?: string|"text"|"component"|"hidden"|"file"|"select"|"textarea"|"p-date-time"|"checkbox"|"separator"|"auto-complete"|"currency";

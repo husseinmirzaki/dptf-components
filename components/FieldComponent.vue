@@ -10,7 +10,7 @@
     </label>
     <!--end::Label-->
     <!--begin::Input-->
-    <div :class="[one_line_field_classes_c, field_container_classes]">
+    <div :class="[one_line_field_classes_c, field_container_classes]" :show-help="showHelp">
       <template v-if="field_type === 'select'">
         <Field
             :class="[defaultInputClasses, input_class]"
@@ -220,6 +220,9 @@ export default defineComponent({
   props: {
     defaultInputClasses: {
       default: "form-control h-auto py-3 px-2 rounded-lg"
+    },
+    showHelp: {
+      type: String
     },
     outerAccess: {
       type: Function
