@@ -182,47 +182,48 @@ svg {
 <script>
 import {computed, onMounted, ref} from "vue";
 
+export const mapPmap = {
+  "azerbaijan-east": "آذربايجان شرقي",
+  "azerbaijan-west": "آذربايجان غربي",
+  "ardabil": "اردبيل",
+  "isfahan": "اصفهان",
+  "alborz": "البرز",
+  "ilam": "ايلام",
+  "bushehr": "بوشهر",
+  "tehran": "تهران",
+  "chahar-mahaal-bakhtiari": "چهارمحال وبختياري",
+  "khorasan-south": "خراسان جنوبي",
+  "khorasan-razavi": "خراسان رضوئ",
+  "khorasan-north": "خراسان شمالي",
+  "khuzestan": "خوزستان",
+  "zanjan": "زنجان",
+  "semnan": "سمنان",
+  "sistan-baluchestan": "سيستان وبلوچستان",
+  "fars": "فارس",
+  "qazvin": "قزوين",
+  "qom": "قم",
+  "kurdistan": "كردستان",
+  "kerman": "كرمان",
+  "kermanshah": "کرمانشاه",
+  "kohgiluyeh-boyer-ahmad": "كهگيلويه وبويراحمد",
+  "golestan": "گلستان",
+  "gilan": "گيلان",
+  "lorestan": "لرستان",
+  "mazandaran": "مازندران",
+  "markazi": "مرکزي",
+  "hormozgan": "هرمزگان",
+  "hamadan": "همدان",
+  "yazd": "يزد",
+}
+
 export default {
-  setup() {
+  setup(props, context) {
     const container = ref();
     const mapToolTip = ref();
     const map = ref();
     const mapData = ref("");
     let lastTimeout = null;
     let nextUpdate = 0;
-    const mapPmap = {
-      "azerbaijan-east": "آذربايجان شرقي",
-      "azerbaijan-west": "آذربايجان غربي",
-      "ardabil": "اردبيل",
-      "isfahan": "اصفهان",
-      "alborz": "البرز",
-      "ilam": "ايلام",
-      "bushehr": "بوشهر",
-      "tehran": "تهران",
-      "chahar-mahaal-bakhtiari": "چهارمحال وبختياري",
-      "khorasan-south": "خراسان جنوبي",
-      "khorasan-razavi": "خراسان رضوئ",
-      "khorasan-north": "خراسان شمالي",
-      "khuzestan": "خوزستان",
-      "zanjan": "زنجان",
-      "semnan": "سمنان",
-      "sistan-baluchestan": "سيستان وبلوچستان",
-      "fars": "فارس",
-      "qazvin": "قزوين",
-      "qom": "قم",
-      "kurdistan": "كردستان",
-      "kerman": "كرمان",
-      "kermanshah": "کرمانشاه",
-      "kohgiluyeh-boyer-ahmad": "كهگيلويه وبويراحمد",
-      "golestan": "گلستان",
-      "gilan": "گيلان",
-      "lorestan": "لرستان",
-      "mazandaran": "مازندران",
-      "markazi": "مرکزي",
-      "hormozgan": "هرمزگان",
-      "hamadan": "همدان",
-      "yazd": "يزد",
-    }
 
     let setCityValue = (city, value, max) => {
       const element = map.value.querySelector(`[data-name="${city}"]`);
@@ -261,7 +262,7 @@ export default {
 
     onMounted(() => {
       let data = document.querySelector('.province');
-      container.value.addEventListener('mouseleave' , () => {
+      container.value.addEventListener('mouseleave', () => {
         clearTimeout(lastTimeout);
         mapToolTip.value.style.opacity = 0;
         mapToolTip.value.style.left = '-1000px';
@@ -272,16 +273,21 @@ export default {
         mapToolTip.value.style.left = event.layerX + 10 + 'px';
         mapToolTip.value.style.top = event.layerY + 10 + 'px';
         mapToolTip.value.style.opacity = 1;
-        clearTimeout(lastTimeout);
-        lastTimeout = setTimeout(() => {
-          mapToolTip.value.style.opacity = 0;
-        }, 5000);
+        (async () => {
+          clearTimeout(lastTimeout);
+          lastTimeout = setTimeout(() => {
+            mapToolTip.value.style.opacity = 0;
+          }, 5000);
+        })();
       });
 
       for (let i = 0; i < data.children.length; i++) {
         data.children[i].setAttribute("data-name", data.children[i].classList[0]);
         data.children[i].addEventListener('mouseenter', (event) => {
           mapData.value = data.children[i].getAttribute("data-name");
+        });
+        data.children[i].addEventListener('click', (event) => {
+          context.emit('province-clicked', data.children[i].getAttribute("data-name"));
         });
       }
 
