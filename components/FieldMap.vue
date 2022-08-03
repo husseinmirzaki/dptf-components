@@ -2,6 +2,7 @@
   <div class="d-flex flex-column">
     <input :readonly="readonly" class="form-control mb-2" v-model="inputValue"/>
     <LMap
+        v-if="unmount"
         ref="map"
         @click="moveMarkerHere"
         style="width: 100%;height: 500px"
@@ -25,7 +26,7 @@ import {
   LTileLayer,
   LMarker,
 } from "@vue-leaflet/vue-leaflet";
-import {onMounted, ref, toRef, watch} from "vue";
+import {onBeforeMount, onBeforeUnmount, onMounted, ref, toRef, watch} from "vue";
 import {VueInstanceService} from "@/Defaults";
 
 export default {
@@ -46,6 +47,7 @@ export default {
     const modelValue = toRef(props, 'modelValue');
     const inputValue = ref("");
     const zoom = ref(17);
+    const unmount = ref(false);
 
     const marker = ref();
 
@@ -93,12 +95,16 @@ export default {
     })
 
     onMounted(() => {
+      unmount.value = true;
       inputValue.value = modelValue.value;
       VueInstanceService.on('opened.bs.modal', () => {
         setTimeout(() => {
           map.value.leafletObject.invalidateSize();
         }, 10);
       });
+    })
+    onBeforeUnmount(() => {
+      unmount.value = false;
     })
 
     return {
@@ -107,6 +113,7 @@ export default {
       marker,
       map,
       zoom,
+      unmount,
     }
   },
 }

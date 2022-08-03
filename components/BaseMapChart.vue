@@ -276,7 +276,8 @@ export default {
         (async () => {
           clearTimeout(lastTimeout);
           lastTimeout = setTimeout(() => {
-            mapToolTip.value.style.opacity = 0;
+            if (mapToolTip.value)
+              mapToolTip.value.style.opacity = 0;
           }, 5000);
         })();
       });
