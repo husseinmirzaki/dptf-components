@@ -182,6 +182,7 @@
             :type="field_type"
             :name="name"
             :modelValue="this.$props.modelValue"
+            @focusin="$emit('focusin')"
             @change="$emit('update:modelValue', $event.target.value)"
             ref="fieldRef"
         />
