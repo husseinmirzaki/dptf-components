@@ -5,7 +5,11 @@
 import {defineComponent} from "vue";
 
 export default defineComponent({
+  name: "MapToolsButton",
   props: {
+    windowActivationKey: {
+      type: String,
+    },
     hint: {
       type: String,
     },

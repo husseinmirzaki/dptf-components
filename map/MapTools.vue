@@ -1,5 +1,5 @@
 <script lang="ts">
-import {defineComponent, h, onMounted, Ref, ref} from "vue";
+import {computed, defineComponent, h, onMounted, Ref, ref, toRef, watch, withModifiers} from "vue";
 import {VueInstanceService} from "@/Defaults";
 import MapToolsButton from "@/custom/map/MapToolsButton.vue";
 import {LControl} from "@vue-leaflet/vue-leaflet"
@@ -16,37 +16,43 @@ export class AMapToolsButton {
 
 export default defineComponent({
   props: {
-    name: {
-      type: String,
-      required: true,
-    },
+    modelValue: {
+      type: String
+    }
   },
-  setup(props) {
+  setup(props, context) {
+    const modelValue = toRef(props, 'modelValue');
+    const activeItem = ref(props.modelValue);
 
-    const buttons: Ref<Array<any>> = ref([]);
+    watch(modelValue, (e) => {
+      activeItem.value = e;
+    })
 
-    const addButton = () => {
-      console.log("button added");
-      buttons.value.push(h(MapToolsButton, {
-        hint: 'test',
-        iconUrl: '/media/map/tubes.png',
-      }))
+    /**
+     * must contain all slots we should have
+     */
+    const slots = context.slots.default?.() ?? [] as Array<any>;
+
+    for (let i = 0; i < slots.length; i++) {
+      const windowActivationKey = slots[i].props['window-activation-key'];
+      if (slots[i].props['window-activation-key']) {
+        slots[i].props['class'] = slots[i].props['window-activation-key'] == activeItem.value ? 'active' : ''
+        slots[i].props.onClick = withModifiers(() => {
+              if (activeItem.value === windowActivationKey) {
+                activeItem.value = undefined;
+              } else {
+                activeItem.value = windowActivationKey;
+              }
+              context.emit('update:modelValue', activeItem.value);
+
+            }
+            , ['stop']);
+      }
     }
 
-    onMounted(() => {
-      VueInstanceService.on(props.name, (e) => {
-        const command = e[0];
-
-        switch (command) {
-          case "add-icon":
-            addButton();
-            break;
-        }
-      });
-    });
-
     return {
-      buttons,
+      slots,
+      activeItem,
     }
   },
   render() {
@@ -57,11 +63,12 @@ export default defineComponent({
           h(
               'div',
               {class: 'd-flex flex-column'},
-              [
-                ...this.buttons
-              ]
-          )
-
+              this.slots.map((item) => {
+                item.props['class'] = item.props['window-activation-key'] == this.activeItem ? 'active' : '';
+                item.props.key = Math.random();
+                return item;
+              }),
+          ),
         ]
     );
   }

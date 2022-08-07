@@ -1,13 +1,39 @@
 <script lang="ts">
-import {defineComponent, h, onMounted, ref, toRef, watch} from "vue";
+import {Component, defineComponent, h, onMounted, ref, toRef, watch} from "vue";
 import {LMap, LTileLayer, LControl, LControlScale} from "@vue-leaflet/vue-leaflet"
 import MapLatLngHolder from "@/custom/map/MapLatLngHolder.vue";
 import {ContextMenuService} from "@/custom/components/ContextMenuService";
-import MapLine from "@/custom/map/MapLine.vue";
 import MapTools from "@/custom/map/MapTools.vue";
 import MapStateHolder from "@/custom/map/MapStateHolder.vue";
 import {buildLayers, mapLayers} from "@/custom/map/MapLayers";
 import MapLayerChangerButton from "@/custom/map/MapLayerChangerButton.vue";
+import MapWindows from "@/custom/map/MapWindows.vue";
+
+class CustomLayerItems {
+  mapToolsButton: Array<any> = [];
+  mapToolWindow: Array<any> = [];
+
+  get hasMapToolsButton() {
+    return this.mapToolsButton.length > 0
+  }
+
+  get hasMapToolWindow() {
+    return this.mapToolWindow.length > 0
+  }
+
+  add(item: Record<"type", Component>) {
+    if (!item["type"].name) {
+      return;
+    }
+    const componentName = item["type"].name.toLowerCase();
+    console.log(componentName);
+    if (componentName.startsWith("maptoolsbutton")) {
+      this.mapToolsButton.push(item);
+    } else if (componentName.startsWith("maptoolswindow")) {
+      this.mapToolWindow.push(item);
+    }
+  }
+}
 
 export default defineComponent({
   props: {
@@ -31,6 +57,8 @@ export default defineComponent({
     const state = toRef(props, 'state');
     const innerState = ref(state.value);
     const satellite = ref(false);
+    const mapCenter = ref(props.mapXY);
+    const activeWindow = ref();
 
     const tileProviders = ref(mapLayers);
 
@@ -38,28 +66,76 @@ export default defineComponent({
       innerState.value = e;
     });
 
+    const onMapReady = () => {
+      context.emit('mapReady')
+    }
+
+    const onUpdateCenter = (value) => {
+      if (value) {
+        mapCenter.value = [value.lat, value.lng]
+        context.emit('update:center', mapCenter.value);
+      }
+    }
+
+    const onContextmenu = (event) => {
+      if (event.originalEvent) {
+        if (!event.originalEvent._alreadyFilled)
+          ContextMenuService.set([
+            {
+              text: "test",
+              onClick: () => {
+                //
+              }
+            }
+          ])
+      }
+    }
+
+
+    const slotLayers = context.slots.default?.() ?? [] as Array<any>;
+    const customLayers: CustomLayerItems = new CustomLayerItems();
+    for (let i = 0; i < slotLayers.length; i++) {
+      customLayers.add(slotLayers[i]);
+    }
+
     return {
-      mapCenter: ref(props.mapXY),
+      onMapReady,
+      onUpdateCenter,
+      onContextmenu,
+
+      activeWindow,
+      customLayers,
+      mapCenter,
       innerState,
       tileProviders,
       satellite,
     }
   },
   render() {
+
     const layers: any = [];
 
     this.tileProviders.forEach((tileProvider) => {
       buildLayers(layers, tileProvider, this.satellite);
     });
 
+    // whether show lng and lat on top right
+    // of map
     if (this.showXY) {
       layers.push(h(MapLatLngHolder, {xy: this.mapCenter}))
     }
 
+    /**
+     * shows a simple description of what is happening now
+     */
     if (this.showState) {
       layers.push(h(MapStateHolder, {state: this.innerState}))
     }
 
+    /**
+     * show the button to change layer from street
+     * to satellite
+     */
     if (this.showLayers) {
       layers.push(h(MapLayerChangerButton, {
         "modelValue": this.satellite,
@@ -67,8 +143,26 @@ export default defineComponent({
       }));
     }
 
+    // shows the map scale
     layers.push(h(LControlScale, {imperial: false,}));
-    layers.push(h(MapTools, {name: 'map-tool-control'}));
+
+    // a bar on left which holds buttons which
+    // are responsible for drawing and using
+    // map to do specific things
+    if (this.customLayers.hasMapToolsButton) {
+      layers.push(h(MapTools, {
+        modelValue: this.activeWindow,
+        'onUpdate:modelValue': (value) => this.activeWindow = value,
+      }, this.customLayers.mapToolsButton));
+    }
+    if (this.customLayers.hasMapToolWindow) {
+      layers.push(
+          h(
+              MapWindows,
+              this.customLayers.mapToolWindow.filter((item) => item.props['activation-key'] === this.activeWindow)
+          )
+      );
+    }
 
     const map = h(LMap, {
       options: {
@@ -79,29 +173,11 @@ export default defineComponent({
       minZoom: 5,
       zoom: 8,
       center: this.mapCenter,
-      onReady: () => {
-        this.$emit('mapReady');
-      },
-      'onUpdate:center': (value) => {
-        if (value) {
-          this.mapCenter = [value.lat, value.lng]
-          this.$emit('update:center', this.mapCenter);
-        }
-      },
-      onContextmenu: (event) => {
-        if (event.originalEvent) {
-          if (!event.originalEvent._alreadyFilled)
-            ContextMenuService.set([
-              {
-                text: "test",
-                onClick: () => {
-                  //
-                }
-              }
-            ])
-
-        }
-      },
+      onReady: this.onMapReady,
+      'onUpdate:center': this.onUpdateCenter,
+      onContextmenu: this.onContextmenu,
+      // this will let us show a context menu
+      // by filling ContextMenuService
       'data-context-menu': "true"
     }, layers);
 
