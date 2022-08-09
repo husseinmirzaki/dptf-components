@@ -36,17 +36,17 @@ export default defineComponent({
     for (let i = 0; i < slots.length; i++) {
       const windowActivationKey = slots[i].props['window-activation-key'];
       if (slots[i].props['window-activation-key']) {
-        slots[i].props['class'] = slots[i].props['window-activation-key'] == activeItem.value ? 'active' : ''
-        slots[i].props.onClick = withModifiers(() => {
-              if (activeItem.value === windowActivationKey) {
-                activeItem.value = undefined;
-              } else {
-                activeItem.value = windowActivationKey;
-              }
-              context.emit('update:modelValue', activeItem.value);
-
-            }
-            , ['stop']);
+        slots[i].props['onUpdate:state'] = (state) => {
+          context.emit('update:state', state);
+        }
+        slots[i].props['onUpdate:activeKey'] = () => {
+          if (activeItem.value === windowActivationKey) {
+            activeItem.value = undefined;
+          } else {
+            activeItem.value = windowActivationKey;
+          }
+          context.emit('update:modelValue', activeItem.value);
+        };
       }
     }
 
@@ -64,8 +64,8 @@ export default defineComponent({
               'div',
               {class: 'd-flex flex-column'},
               this.slots.map((item) => {
-                item.props['class'] = item.props['window-activation-key'] == this.activeItem ? 'active' : '';
-                item.props.key = Math.random();
+                if (item.component)
+                  item.component.props['isActive'] = item.props['window-activation-key'] == this.activeItem;
                 return item;
               }),
           ),

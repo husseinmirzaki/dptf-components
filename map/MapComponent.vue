@@ -47,7 +47,7 @@ export default defineComponent({
       default: true,
     },
     state: {
-      default: '',
+      default: "یکی از ابزارها را استفاده کنید",
     },
     mapXY: {
       default: [35.632744348010625, 51.43146514892579]
@@ -56,6 +56,7 @@ export default defineComponent({
   setup(props, context) {
     const state = toRef(props, 'state');
     const innerState = ref(state.value);
+    const activeState = ref();
     const satellite = ref(false);
     const mapCenter = ref(props.mapXY);
     const activeWindow = ref();
@@ -64,6 +65,13 @@ export default defineComponent({
 
     watch(state, (e) => {
       innerState.value = e;
+    });
+
+    watch(activeWindow, (e) => {
+      if (e)
+        activeState.value = innerState.value;
+      else
+        activeState.value = undefined;
     });
 
     const onMapReady = () => {
@@ -91,6 +99,14 @@ export default defineComponent({
       }
     }
 
+    const onUpdateState = (_state: string) => {
+      if (_state == '') {
+        innerState.value = state.value;
+      } else {
+        innerState.value = _state;
+      }
+    }
+
 
     const slotLayers = context.slots.default?.() ?? [] as Array<any>;
     const customLayers: CustomLayerItems = new CustomLayerItems();
@@ -102,10 +118,12 @@ export default defineComponent({
       onMapReady,
       onUpdateCenter,
       onContextmenu,
+      onUpdateState,
 
       activeWindow,
       customLayers,
       mapCenter,
+      activeState,
       innerState,
       tileProviders,
       satellite,
@@ -129,7 +147,7 @@ export default defineComponent({
      * shows a simple description of what is happening now
      */
     if (this.showState) {
-      layers.push(h(MapStateHolder, {state: this.innerState}))
+      layers.push(h(MapStateHolder, {state: this.activeState ? this.activeState : this.innerState}))
     }
 
     /**
@@ -153,6 +171,7 @@ export default defineComponent({
       layers.push(h(MapTools, {
         modelValue: this.activeWindow,
         'onUpdate:modelValue': (value) => this.activeWindow = value,
+        'onUpdate:state': this.onUpdateState,
       }, this.customLayers.mapToolsButton));
     }
     if (this.customLayers.hasMapToolWindow) {

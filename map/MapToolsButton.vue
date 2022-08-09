@@ -1,5 +1,12 @@
 <template>
-  <div class="icon" :style="style"></div>
+  <el-tooltip :content="hint">
+    <div
+        @mouseenter="$emit('update:state', hint)"
+        @mouseleave="$emit('update:state', '')"
+        @click.stop="$emit('update:activeKey', windowActivationKey)"
+        :class="['icon', {active: isActive}]"
+        :style="style"></div>
+  </el-tooltip>
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
@@ -9,6 +16,9 @@ export default defineComponent({
   props: {
     windowActivationKey: {
       type: String,
+    },
+    isActive: {
+      type: Boolean,
     },
     hint: {
       type: String,
