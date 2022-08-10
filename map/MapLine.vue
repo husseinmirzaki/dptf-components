@@ -11,6 +11,9 @@ export default defineComponent({
     innerColor: {
       type: String
     },
+    lines: {
+      type: Array
+    },
   },
   setup(props, context) {
     const onEnter = () => {
@@ -23,17 +26,12 @@ export default defineComponent({
 
     const onContextmenu = (e) => {
       if (e.originalEvent) {
-        e.originalEvent.stopPropagation();
         if (!e.originalEvent._alreadyFilled) {
           e.originalEvent._alreadyFilled = true;
           ContextMenuService.set([
             {
               text: "ویرایش",
               onClick: () => context.emit("edit")
-            },
-            {
-              text: "حذف",
-              onClick: () => context.emit("delete")
             },
           ]);
         }
@@ -47,11 +45,6 @@ export default defineComponent({
     }
   },
   render() {
-    const lines = [
-      [35.632744348010625, 51.43146514892579],
-      [35.55010533588552, 51.22650146484375],
-      [35.18278813800229, 50.86395263671875],
-    ];
 
     const draw: any = [];
 
@@ -59,7 +52,7 @@ export default defineComponent({
       onMouseenter: this.onEnter,
       onMouseleave: this.onLeave,
       onContextmenu: this.onContextmenu,
-      latLngs: lines,
+      latLngs: this.lines,
     };
 
     if (this.strokeColor) {
@@ -69,6 +62,7 @@ export default defineComponent({
         weight: this.innerColor ? 6 : 4,
       }));
     }
+
     if (this.innerColor) {
       draw.push(h(LPolyline, {
         ...options,

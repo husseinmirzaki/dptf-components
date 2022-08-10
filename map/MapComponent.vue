@@ -1,6 +1,7 @@
+<style lang="scss" src="./MapComponent.scss"/>
 <script lang="ts">
-import {Component, defineComponent, h, onMounted, ref, toRef, watch} from "vue";
-import {LMap, LTileLayer, LControl, LControlScale} from "@vue-leaflet/vue-leaflet"
+import {defineComponent, h, ref, toRef, watch} from "vue";
+import {LControlScale, LMap} from "@vue-leaflet/vue-leaflet"
 import MapLatLngHolder from "@/custom/map/MapLatLngHolder.vue";
 import {ContextMenuService} from "@/custom/components/ContextMenuService";
 import MapTools from "@/custom/map/MapTools.vue";
@@ -8,32 +9,9 @@ import MapStateHolder from "@/custom/map/MapStateHolder.vue";
 import {buildLayers, mapLayers} from "@/custom/map/MapLayers";
 import MapLayerChangerButton from "@/custom/map/MapLayerChangerButton.vue";
 import MapWindows from "@/custom/map/MapWindows.vue";
-
-class CustomLayerItems {
-  mapToolsButton: Array<any> = [];
-  mapToolWindow: Array<any> = [];
-
-  get hasMapToolsButton() {
-    return this.mapToolsButton.length > 0
-  }
-
-  get hasMapToolWindow() {
-    return this.mapToolWindow.length > 0
-  }
-
-  add(item: Record<"type", Component>) {
-    if (!item["type"].name) {
-      return;
-    }
-    const componentName = item["type"].name.toLowerCase();
-    console.log(componentName);
-    if (componentName.startsWith("maptoolsbutton")) {
-      this.mapToolsButton.push(item);
-    } else if (componentName.startsWith("maptoolswindow")) {
-      this.mapToolWindow.push(item);
-    }
-  }
-}
+import MapExtensions from "@/custom/map/MapExtensions.vue";
+import {buildEmitter} from "@/custom/map/utils/emitter";
+import {CustomLayerItems} from "@/custom/map/utils/CustomLayerItems";
 
 export default defineComponent({
   props: {
@@ -54,6 +32,10 @@ export default defineComponent({
     },
   },
   setup(props, context) {
+    const mapRef = ref();
+    const mapToolsRef = ref();
+    const mapWindowsRef = ref();
+    const mapExtensionsRef = ref();
     const state = toRef(props, 'state');
     const innerState = ref(state.value);
     const activeState = ref();
@@ -62,6 +44,7 @@ export default defineComponent({
     const activeWindow = ref();
 
     const tileProviders = ref(mapLayers);
+    const {emitTo, emitsTo} = buildEmitter();
 
     watch(state, (e) => {
       innerState.value = e;
@@ -76,6 +59,19 @@ export default defineComponent({
 
     const onMapReady = () => {
       context.emit('mapReady')
+      emitTo('mapReady', null);
+    }
+
+    const onClick = (value) => {
+      emitTo('click', value);
+    }
+
+    const setProperty = (key, value) => {
+      switch (key) {
+        case "activeWindow":
+          activeWindow.value = value;
+          break
+      }
     }
 
     const onUpdateCenter = (value) => {
@@ -107,19 +103,38 @@ export default defineComponent({
       }
     }
 
-
+    const mapRefs = {
+      mapRef,
+      mapToolsRef,
+      mapExtensionsRef,
+      emitsTo
+    };
     const slotLayers = context.slots.default?.() ?? [] as Array<any>;
     const customLayers: CustomLayerItems = new CustomLayerItems();
     for (let i = 0; i < slotLayers.length; i++) {
+      if (!slotLayers[i]['props']) {
+        slotLayers[i]['props'] = {};
+      }
+      slotLayers[i]['props']['mapInstance'] = mapRefs;
       customLayers.add(slotLayers[i]);
     }
 
     return {
+      // functions
       onMapReady,
+      onClick,
       onUpdateCenter,
       onContextmenu,
       onUpdateState,
+      setProperty,
 
+      // refs
+      mapRef,
+      mapToolsRef,
+      mapWindowsRef,
+      mapExtensionsRef,
+
+      // data
       activeWindow,
       customLayers,
       mapCenter,
@@ -169,21 +184,37 @@ export default defineComponent({
     // map to do specific things
     if (this.customLayers.hasMapToolsButton) {
       layers.push(h(MapTools, {
+        ref: 'mapToolsRef',
         modelValue: this.activeWindow,
         'onUpdate:modelValue': (value) => this.activeWindow = value,
         'onUpdate:state': this.onUpdateState,
       }, this.customLayers.mapToolsButton));
     }
+
     if (this.customLayers.hasMapToolWindow) {
       layers.push(
           h(
               MapWindows,
+              {ref: 'mapWindowsRef'},
               this.customLayers.mapToolWindow.filter((item) => item.props['activation-key'] === this.activeWindow)
           )
       );
     }
 
+    if (this.customLayers.hasMapExtensions) {
+      layers.push(
+          h(
+              MapExtensions, {
+                ref: 'mapExtensionsRef',
+                parent: this,
+              },
+              this.customLayers.mapExtensions,
+          )
+      );
+    }
+
     const map = h(LMap, {
+      ref: 'mapRef',
       options: {
         attributionControl: false,
       },
@@ -191,8 +222,10 @@ export default defineComponent({
       maxZoom: 19,
       minZoom: 5,
       zoom: 8,
+      class: ['map-component-custom-class'],
       center: this.mapCenter,
       onReady: this.onMapReady,
+      onClick: this.onClick,
       'onUpdate:center': this.onUpdateCenter,
       onContextmenu: this.onContextmenu,
       // this will let us show a context menu

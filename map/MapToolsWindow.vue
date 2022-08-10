@@ -1,20 +1,18 @@
-<template>
-  <Card
-      body-padding-class="p-1"
-      card-title="یک ابزار"
-      :disable-drag="true"
-      class="w-100 h-100px bg-light">
-
-  </Card>
-</template>
 <script lang="ts">
 import Card from "@/custom/components/Card.vue";
+import {defineComponent, h} from "vue";
 
-export default {
+export default defineComponent({
   props: {
     activationKey: String,
   },
   name: "MapToolsWindow",
-  components: {Card},
-}
+  render() {
+    return h(Card, {
+      bodyPaddingClass: 'p-1',
+      disableDrag: true,
+      'class': ['w-100 bg-light']
+    }, this.$slots);
+  }
+})
 </script>
