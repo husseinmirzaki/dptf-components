@@ -38,13 +38,24 @@ export default defineComponent({
       }
     }
 
+
+    const sumOfLines = (points: Array<Array<number>>) => {
+      let sum = 0;
+      for (let i = 0; i < points.length; i++) {
+        sum += points[i][0] + points[i][1];
+      }
+      return sum;
+    }
+
     return {
+      sumOfLines,
       onEnter,
       onLeave,
       onContextmenu,
     }
   },
   render() {
+    console.log("MapLine",this.sumOfLines(this.lines as any))
 
     const draw: any = [];
 
@@ -53,6 +64,7 @@ export default defineComponent({
       onMouseleave: this.onLeave,
       onContextmenu: this.onContextmenu,
       latLngs: this.lines,
+      key: this.sumOfLines(this.lines as any),
     };
 
     if (this.strokeColor) {

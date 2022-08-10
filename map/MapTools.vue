@@ -18,7 +18,10 @@ export default defineComponent({
   props: {
     modelValue: {
       type: String
-    }
+    },
+    parent: {
+      type: Object
+    },
   },
   setup(props, context) {
     const modelValue = toRef(props, 'modelValue');

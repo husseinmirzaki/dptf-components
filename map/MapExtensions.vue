@@ -25,6 +25,14 @@ export default defineComponent({
     const slots = context.slots!.default!();
     slots.forEach((e) => {
       const componentName = e['type']['name'];
+      props.parent.plugins.register(componentName, e);
+
+      if (!e['props']) {
+        e['props'] = {};
+      }
+
+      e['props']['plugins'] = props.parent.plugins;
+
       extensions[componentName] = e;
     })
 

@@ -13,6 +13,22 @@ import MapExtensions from "@/custom/map/MapExtensions.vue";
 import {buildEmitter} from "@/custom/map/utils/emitter";
 import {CustomLayerItems} from "@/custom/map/utils/CustomLayerItems";
 
+class PluginManager {
+  plugins: any = {};
+
+  register(key, e) {
+    this.plugins[key] = e;
+  }
+
+  get(key) {
+    return this.plugins[key].component;
+  }
+
+  getMain() {
+    return this.plugins["LMap"].component.parent;
+  }
+}
+
 export default defineComponent({
   props: {
     showXY: {
@@ -42,6 +58,8 @@ export default defineComponent({
     const satellite = ref(false);
     const mapCenter = ref(props.mapXY);
     const activeWindow = ref();
+
+    const plugins = new PluginManager();
 
     const tileProviders = ref(mapLayers);
     const {emitTo, emitsTo} = buildEmitter();
@@ -135,6 +153,7 @@ export default defineComponent({
       mapExtensionsRef,
 
       // data
+      plugins,
       activeWindow,
       customLayers,
       mapCenter,
@@ -155,14 +174,18 @@ export default defineComponent({
     // whether show lng and lat on top right
     // of map
     if (this.showXY) {
-      layers.push(h(MapLatLngHolder, {xy: this.mapCenter}))
+      const vNode = h(MapLatLngHolder, {xy: this.mapCenter});
+      this.plugins.register('MapLatLngHolder', vNode);
+      layers.push(vNode)
     }
 
     /**
      * shows a simple description of what is happening now
      */
     if (this.showState) {
-      layers.push(h(MapStateHolder, {state: this.activeState ? this.activeState : this.innerState}))
+      const vNode = h(MapStateHolder, {state: this.activeState ? this.activeState : this.innerState});
+      this.plugins.register('MapStateHolder', vNode);
+      layers.push(vNode)
     }
 
     /**
@@ -170,10 +193,12 @@ export default defineComponent({
      * to satellite
      */
     if (this.showLayers) {
-      layers.push(h(MapLayerChangerButton, {
+      const vNode = h(MapLayerChangerButton, {
         "modelValue": this.satellite,
         'onUpdate:modelValue': (v) => this.satellite = v
-      }));
+      });
+      this.plugins.register('MapLayerChangerButton', vNode);
+      layers.push(vNode);
     }
 
     // shows the map scale
@@ -183,21 +208,29 @@ export default defineComponent({
     // are responsible for drawing and using
     // map to do specific things
     if (this.customLayers.hasMapToolsButton) {
-      layers.push(h(MapTools, {
+      const vNode = h(MapTools, {
         ref: 'mapToolsRef',
+        parent: this,
         modelValue: this.activeWindow,
         'onUpdate:modelValue': (value) => this.activeWindow = value,
         'onUpdate:state': this.onUpdateState,
-      }, this.customLayers.mapToolsButton));
+      }, this.customLayers.mapToolsButton);
+      this.plugins.register('MapTools', vNode);
+      layers.push(vNode);
     }
 
     if (this.customLayers.hasMapToolWindow) {
+      const vNode = h(
+          MapWindows,
+          {
+            ref: 'mapWindowsRef',
+            parent: this
+          },
+          this.customLayers.mapToolWindow.filter((item) => item.props['activation-key'] === this.activeWindow)
+      );
+      this.plugins.register('MapWindows', vNode);
       layers.push(
-          h(
-              MapWindows,
-              {ref: 'mapWindowsRef'},
-              this.customLayers.mapToolWindow.filter((item) => item.props['activation-key'] === this.activeWindow)
-          )
+          vNode
       );
     }
 
@@ -233,6 +266,7 @@ export default defineComponent({
       'data-context-menu': "true"
     }, layers);
 
+    this.plugins.register("LMap", map);
     return map;
   }
 });

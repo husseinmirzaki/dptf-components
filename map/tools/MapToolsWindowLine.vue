@@ -1,3 +1,10 @@
+<style lang="scss">
+.custom-input-class {
+  &:focus {
+    box-shadow: 0 0 3px red !important;
+  }
+}
+</style>
 <template>
   <MapToolsWindow card-title="اضافه / ویرایش خط">
     <template #toolbar1>
@@ -14,10 +21,12 @@
       </div>
     </template>
     <template #card-content>
-      <template v-for="data in orderedList.computedOrderKeys().value" :key="data">
+      <template v-for="(index, data) in orderedList.computedOrderKeys().value" :key="data">
         <FieldComponent
+            input_class="custom-input-class"
             :model-value="orderedList.get(data)"
-            @update:modelValue="updateListData(data, $event)"
+            @update:modelValue="updateListData(index, $event)"
+            @focusin="emitTo('focusin', [index, data])"
             placeholder="مختصات مثال :  100,100"
         />
       </template>
@@ -42,6 +51,9 @@ export default defineComponent({
     mapInstance: {
       default: () => ({} as any),
     },
+    plugins: {
+      type: Object
+    }
   },
   components: {FieldComponent, MapToolsWindow},
   setup(props, context) {
@@ -52,7 +64,6 @@ export default defineComponent({
     const orderedList = new OrderedList();
 
     const {emitTo, emitsTo} = buildEmitter();
-    context.expose({emitTo, emitsTo})
 
     const focusIn = () => {
       //
@@ -70,6 +81,7 @@ export default defineComponent({
           return;
         }
         const numbers = [Number(s[0]), Number(s[1])];
+        emitTo('update', [index, numbers]);
         console.log(numbers);
       } catch (e) {
         VueInstanceService.showErrorMessage("مختصات اشتباه وارد شده", null, 4000, "top-right")
@@ -142,8 +154,9 @@ export default defineComponent({
       // data
       mode,
       orderedList,
-
+      emitsTo,
       // functions
+      emitTo,
       focusIn,
       focusOut,
       updateListData,
