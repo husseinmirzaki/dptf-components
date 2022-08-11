@@ -11,12 +11,27 @@
       <!--:class="{'btn-primary': mode == MODE_DEFAULT,'btn-secondary': mode != MODE_DEFAULT}"-->
       <!--@click="changeMode"-->
       <div
-          class="btn btn-sm btn-icon btn-primary"
+          class="btn btn-sm p-1 btn-primary me-1"
           data-bs-dismiss="modal"
-          @click="addPoint"
+          @click="addPoint(true)"
       >
-            <span class="svg-icon svg-icon-1">
+            <span class="svg-icon svg-icon-3">
               <inline-svg src="media/icons/duotune/general/gen041.svg"/>
+            </span>
+            <span class="svg-icon svg-icon-3">
+              <inline-svg src="media/icons/duotune/arrows/arr067.svg"/>
+            </span>
+      </div>
+      <div
+          class="btn btn-sm p-1 btn-primary me-1"
+          data-bs-dismiss="modal"
+          @click="addPoint(false)"
+      >
+            <span class="svg-icon svg-icon-3">
+              <inline-svg src="media/icons/duotune/general/gen041.svg"/>
+            </span>
+            <span class="svg-icon svg-icon-3">
+              <inline-svg src="media/icons/duotune/arrows/arr068.svg"/>
             </span>
       </div>
     </template>
@@ -123,16 +138,20 @@ export default defineComponent({
 
     const utils = {
       addingPoints: () => {
-        orderedList.addToTop('')
-        // mapRef.value.$el.classList.add('adding-points');
+        //
       },
       notAddingPoints: () => {
         // mapRef.value.$el.classList.remove('adding-points');
       }
     };
 
-    const addPoint = () => {
-      orderedList.addToTop('');
+    const addPoint = (top=true) => {
+      if (top) {
+        orderedList.addToTop('');
+      } else {
+        orderedList.addToBottom('');
+      }
+      emitTo('updateData', [orderedList.orderedList()]);
     }
 
     const changeMode = () => {

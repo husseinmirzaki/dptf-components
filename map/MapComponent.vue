@@ -88,6 +88,10 @@ export default defineComponent({
       emitTo('click', value);
     }
 
+    const onMousemove = (value) => {
+      emitTo('mousemove', value);
+    }
+
     const setProperty = (key, value) => {
       switch (key) {
         case "activeWindow":
@@ -145,12 +149,14 @@ export default defineComponent({
       // functions
       onMapReady,
       onClick,
+      onMousemove,
       onUpdateCenter,
       onContextmenu,
       onUpdateState,
       setProperty,
 
       // refs
+      emitsTo,
       mapRef,
       mapToolsRef,
       mapWindowsRef,
@@ -182,6 +188,7 @@ export default defineComponent({
       center: this.mapCenter,
       onReady: this.onMapReady,
       onClick: this.onClick,
+      onMousemove: this.onMousemove,
       'onUpdate:center': this.onUpdateCenter,
       onContextmenu: this.onContextmenu,
       // this will let us show a context menu

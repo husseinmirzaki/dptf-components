@@ -9,7 +9,7 @@ export default defineComponent({
   name: "MapToolsWindow",
   render() {
     return h(Card, {
-      bodyPaddingClass: 'p-1',
+      bodyPaddingClass: 'p-1 mh-350px overflow-scroll',
       disableDrag: true,
       'class': ['w-100 bg-light']
     }, this.$slots);

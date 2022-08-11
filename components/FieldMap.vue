@@ -103,6 +103,7 @@ export default {
         }, 10);
       });
     })
+
     onBeforeUnmount(() => {
       unmount.value = false;
     })
