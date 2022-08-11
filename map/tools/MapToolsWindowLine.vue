@@ -21,13 +21,14 @@
       </div>
     </template>
     <template #card-content>
-      <template v-for="(index, data) in orderedList.computedOrderKeys().value" :key="data">
+      <template v-for="(index, data) in computedOrderKeys" :key="data">
         <FieldComponent
-            input_class="custom-input-class"
+            :input_class="`custom-input-class custom-index-class-${index}`"
             :model-value="orderedList.get(data)"
             @update:modelValue="updateListData(index, $event)"
             @focusin="emitTo('focusin', [index, data])"
             placeholder="مختصات مثال :  100,100"
+            :data-index="index"
         />
       </template>
     </template>
@@ -82,7 +83,6 @@ export default defineComponent({
         }
         const numbers = [Number(s[0]), Number(s[1])];
         emitTo('update', [index, numbers]);
-        console.log(numbers);
       } catch (e) {
         VueInstanceService.showErrorMessage("مختصات اشتباه وارد شده", null, 4000, "top-right")
       }
@@ -155,6 +155,9 @@ export default defineComponent({
       mode,
       orderedList,
       emitsTo,
+
+      //computed
+      computedOrderKeys: orderedList.computedOrderKeys(),
       // functions
       emitTo,
       focusIn,

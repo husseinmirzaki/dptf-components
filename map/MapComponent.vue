@@ -24,6 +24,10 @@ class PluginManager {
     return this.plugins[key].component;
   }
 
+  getRaw(key) {
+    return this.plugins[key];
+  }
+
   getMain() {
     return this.plugins["LMap"].component.parent;
   }
@@ -165,87 +169,6 @@ export default defineComponent({
   },
   render() {
 
-    const layers: any = [];
-
-    this.tileProviders.forEach((tileProvider) => {
-      buildLayers(layers, tileProvider, this.satellite);
-    });
-
-    // whether show lng and lat on top right
-    // of map
-    if (this.showXY) {
-      const vNode = h(MapLatLngHolder, {xy: this.mapCenter});
-      this.plugins.register('MapLatLngHolder', vNode);
-      layers.push(vNode)
-    }
-
-    /**
-     * shows a simple description of what is happening now
-     */
-    if (this.showState) {
-      const vNode = h(MapStateHolder, {state: this.activeState ? this.activeState : this.innerState});
-      this.plugins.register('MapStateHolder', vNode);
-      layers.push(vNode)
-    }
-
-    /**
-     * show the button to change layer from street
-     * to satellite
-     */
-    if (this.showLayers) {
-      const vNode = h(MapLayerChangerButton, {
-        "modelValue": this.satellite,
-        'onUpdate:modelValue': (v) => this.satellite = v
-      });
-      this.plugins.register('MapLayerChangerButton', vNode);
-      layers.push(vNode);
-    }
-
-    // shows the map scale
-    layers.push(h(LControlScale, {imperial: false,}));
-
-    // a bar on left which holds buttons which
-    // are responsible for drawing and using
-    // map to do specific things
-    if (this.customLayers.hasMapToolsButton) {
-      const vNode = h(MapTools, {
-        ref: 'mapToolsRef',
-        parent: this,
-        modelValue: this.activeWindow,
-        'onUpdate:modelValue': (value) => this.activeWindow = value,
-        'onUpdate:state': this.onUpdateState,
-      }, this.customLayers.mapToolsButton);
-      this.plugins.register('MapTools', vNode);
-      layers.push(vNode);
-    }
-
-    if (this.customLayers.hasMapToolWindow) {
-      const vNode = h(
-          MapWindows,
-          {
-            ref: 'mapWindowsRef',
-            parent: this
-          },
-          this.customLayers.mapToolWindow.filter((item) => item.props['activation-key'] === this.activeWindow)
-      );
-      this.plugins.register('MapWindows', vNode);
-      layers.push(
-          vNode
-      );
-    }
-
-    if (this.customLayers.hasMapExtensions) {
-      layers.push(
-          h(
-              MapExtensions, {
-                ref: 'mapExtensionsRef',
-                parent: this,
-              },
-              this.customLayers.mapExtensions,
-          )
-      );
-    }
-
     const map = h(LMap, {
       ref: 'mapRef',
       options: {
@@ -264,7 +187,100 @@ export default defineComponent({
       // this will let us show a context menu
       // by filling ContextMenuService
       'data-context-menu': "true"
-    }, layers);
+    }, {
+      default: () => {
+
+
+        const layers: any = [];
+
+        this.tileProviders.forEach((tileProvider) => {
+          buildLayers(layers, tileProvider, this.satellite);
+        });
+
+        // whether show lng and lat on top right
+        // of map
+        if (this.showXY) {
+          const vNode = h(MapLatLngHolder, {xy: this.mapCenter});
+          this.plugins.register('MapLatLngHolder', vNode);
+          layers.push(vNode)
+        }
+
+        /**
+         * shows a simple description of what is happening now
+         */
+        if (this.showState) {
+          const vNode = h(MapStateHolder, {state: this.activeState ? this.activeState : this.innerState});
+          this.plugins.register('MapStateHolder', vNode);
+          layers.push(vNode)
+        }
+
+        /**
+         * show the button to change layer from street
+         * to satellite
+         */
+        if (this.showLayers) {
+          const vNode = h(MapLayerChangerButton, {
+            "modelValue": this.satellite,
+            'onUpdate:modelValue': (v) => this.satellite = v
+          });
+          this.plugins.register('MapLayerChangerButton', vNode);
+          layers.push(vNode);
+        }
+
+        // shows the map scale
+        layers.push(h(LControlScale, {imperial: false,}));
+
+        // a bar on left which holds buttons which
+        // are responsible for drawing and using
+        // map to do specific things
+        if (this.customLayers.hasMapToolsButton) {
+          const vNode = h(MapTools, {
+            ref: 'mapToolsRef',
+            parent: this,
+            modelValue: this.activeWindow,
+            'onUpdate:modelValue': (value) => this.activeWindow = value,
+            'onUpdate:state': this.onUpdateState,
+          }, {
+            default: () => this.customLayers.mapToolsButton
+          });
+          this.plugins.register('MapTools', vNode);
+          layers.push(vNode);
+        }
+
+        if (this.customLayers.hasMapToolWindow) {
+          const vNode = h(
+              MapWindows,
+              {
+                ref: 'mapWindowsRef',
+                parent: this
+              },
+              {
+                default: () => this.customLayers.mapToolWindow.filter((item) => item.props['activation-key'] === this.activeWindow)
+              }
+          );
+          this.plugins.register('MapWindows', vNode);
+          layers.push(
+              vNode
+          );
+        }
+
+        if (this.customLayers.hasMapExtensions) {
+          layers.push(
+              h(
+                  MapExtensions, {
+                    ref: 'mapExtensionsRef',
+                    parent: this,
+                  },
+                  {
+                    default: () => this.customLayers.mapExtensions
+                  }
+              )
+          );
+        }
+
+        return layers
+      }
+    });
 
     this.plugins.register("LMap", map);
     return map;

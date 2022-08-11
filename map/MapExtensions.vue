@@ -64,7 +64,9 @@ export default defineComponent({
     });
 
     return () => {
-      return h('div', slots);
+      return h('div', {}, {
+        default: () => slots
+      });
     }
   }
 });

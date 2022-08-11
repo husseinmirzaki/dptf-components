@@ -1,6 +1,6 @@
 <script lang="ts">
-import {defineComponent, h, nextTick, onMounted, Ref, ref} from "vue";
-import {LMarker} from "@vue-leaflet/vue-leaflet"
+import {defineComponent, h, nextTick, onMounted, Ref, ref, watch} from "vue";
+import {LMarker, LIcon} from "@vue-leaflet/vue-leaflet"
 import MapLine from "@/custom/map/MapLine.vue";
 import {buildEmitter} from "@/custom/map/utils/emitter";
 
@@ -45,61 +45,104 @@ export default defineComponent({
       },
     });
 
+    const openDefaultWindow = (key, lines) => {
+      return new Promise<void>((finished) => {
+        const mapComponent = props.plugins.getMain();
+        if (!mapComponent.proxy.activeWindow) {
+          mapComponent.proxy.activeWindow = 'default-windows';
+          nextTick(() => {
+            const defaultWindows = props.plugins.get('MapToolsWindowLine');
+            defaultWindows.proxy.orderedList.setInitial(lines);
+            defaultWindows.proxy.emitsTo['MapExtensionLineDrawer'] = onMapToolsWindowEvent(key);
+            finished();
+          });
+        } else {
+          finished();
+        }
+      });
+    }
+
     const onMapToolsWindowEvent = (key) => {
       return (name, event) => {
-        let index = -1;
+        let _index = -1;
         switch (name) {
           case "focusin":
-            index = event[0];
+            var line = Object.assign(lines.value[key].lines);
+            _index = event[0];
             extraLayers.value['marker'] = h(LMarker, {
               draggable: true,
               'onUpdate:latLng': (e) => {
-                lines.value[key].lines[index] = [e.lat, e.lng];
+                lines.value[key].lines[_index] = [e.lat, e.lng];
+                const defaultWindows = props.plugins.get('MapToolsWindowLine');
+                defaultWindows.proxy.orderedList.setInitial(line);
               },
-              key: lines.value[key].lines[index][0] + lines.value[key].lines[index][1],
-              latLng: lines.value[key].lines[index]
+              key: `${line[_index][0]}${line[_index][1]}`,
+              latLng: line[_index]
             });
             break;
           case "update":
-            index = event[0];
-            lines.value[key].lines[index] = event[1];
+            _index = event[0];
+
+            if (lines.value[key].lines[_index] != event[1])
+              lines.value[key].lines[_index] = event[1];
+
             break;
         }
       }
     }
 
     const sumOfLines = (points: Array<Array<number>>) => {
-      let sum = 0;
-      for (let i = 0; i < points.length; i++) {
-        sum += points[i][0] + points[i][1];
+      let sum = '';
+      for (let i = 0; i < Math.min(points.length, 5); i++) {
+        sum += `${points[i][0]}${points[i][1]}`;
       }
       return sum;
     }
 
-    const buildLine = (e) => {
-      const line = lines.value[e];
-      console.log("MapExtension", sumOfLines(line.lines as any))
+    const buildLine = (key) => {
+      const line = Object.assign(lines.value)[key];
+
+      line.lines.forEach((e: Array<number>, index: number) => {
+        const _key = `${e[0]},${e[1]}`;
+        const layer = extraLayers.value[_key];
+
+        if (layer && layer['key'] == _key) {
+          return;
+        }
+        const icon = h(LIcon, {
+          iconUrl: '/media/icons/duotune/abstract/abs050.svg',
+          iconSize: [25, 25]
+        });
+
+        const marker = h(LMarker, {
+          key: _key,
+          latLng: e,
+          onClick: async () => {
+            await openDefaultWindow(key, line.lines);
+            const defaultWindows = props.plugins.getRaw('MapToolsWindowLine');
+            defaultWindows.el.querySelector(`.custom-index-class-${index}`).focus();
+          }
+        }, {
+          default: () => icon
+        });
+
+        extraLayers.value[_key] = marker;
+      })
+
       return h(MapLine, {
         strokeColor: line['strokeColor'], lines: line.lines, key: sumOfLines(line.lines), onEdit: () => {
-          const mapComponent = props.plugins.getMain();
-          if (!mapComponent.proxy.activeWindow) {
-            mapComponent.proxy.activeWindow = 'default-windows';
-            nextTick(() => {
-              const defaultWindows = props.plugins.get('MapToolsWindowLine');
-              defaultWindows.proxy.orderedList.setInitial(line.lines);
-              defaultWindows.proxy.emitsTo['MapExtensionLineDrawer'] = onMapToolsWindowEvent(e);
-            });
-          }
-
+          openDefaultWindow(key, line.lines);
         }
       });
 
     }
+
     const buildLayers = (e) => {
       const layer = extraLayers.value[e];
 
       return layer;
     }
+
     return {
       // data
       emitsTo,
@@ -113,10 +156,12 @@ export default defineComponent({
     }
   },
   render() {
-    return h('div', [
-      ...Object.keys(this.lines).map(this.buildLine),
-      ...Object.keys(this.extraLayers).map(this.buildLayers),
-    ]);
+    return h('div', {}, {
+      default: () => [
+        ...Object.keys(this.lines).map(this.buildLine),
+        ...Object.keys(this.extraLayers).map(this.buildLayers),
+      ]
+    });
   }
 });
 </script>

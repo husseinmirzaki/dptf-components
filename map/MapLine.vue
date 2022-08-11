@@ -55,7 +55,6 @@ export default defineComponent({
     }
   },
   render() {
-    console.log("MapLine",this.sumOfLines(this.lines as any))
 
     const draw: any = [];
 
@@ -80,7 +79,7 @@ export default defineComponent({
         ...options,
         color: this.innerColor,
         weight: 3,
-      }))
+      }));
     }
 
 

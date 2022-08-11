@@ -7,16 +7,21 @@ export default defineComponent({
   name: "MapToolsWindow",
   props: ['parent'],
   render() {
-    const slots = this.$slots.default!();
 
-    slots.forEach((e) => {
-      this.$props.parent.plugins.register(e['type']['name'], e);
-      if (!e['props']) {
-        e['props'] = {};
+
+    return h(LControl, {position: "topright"}, h('div', {'class': 'w-350px'}, {
+      default: () => {
+        const slots = this.$slots.default!();
+
+        slots.forEach((e) => {
+          this.$props.parent.plugins.register(e['type']['name'], e);
+          if (!e['props']) {
+            e['props'] = {};
+          }
+          e['props']['plugins'] = this.$props.parent.plugins;
+        });
+        return slots;
       }
-      e['props']['plugins'] = this.$props.parent.plugins;
-    });
-
-    return h(LControl, {position: "topright"}, h('div', {'class': 'w-350px'}, slots))
+    }))
   }
 })</script>

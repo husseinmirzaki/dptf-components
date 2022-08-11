@@ -28,15 +28,19 @@ export default defineComponent({
     },
   },
   render() {
-    return h(LControl, [
-          h('div', {
-            class: 'lat-lng-holder', onClick: (e) => {
-              navigator.clipboard.writeText(JSON.stringify(this.xy));
-              VueInstanceService.showSuccessMessage('مختصات کپی شد')
-            }
-          }, JSON.stringify(this.xy))
-        ]
-    );
+    return h(LControl, {}, {
+      default: () => [
+        h('div', {
+          class: 'lat-lng-holder', onClick: (e) => {
+            navigator.clipboard.writeText(JSON.stringify(this.xy));
+            VueInstanceService.showSuccessMessage('مختصات کپی شد')
+          }
+        }, {
+          default: () => JSON.stringify(this.xy)
+        })
+      ]
+    })
+        ;
   }
 })
 </script>

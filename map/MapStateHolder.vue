@@ -19,12 +19,13 @@ export default defineComponent({
     },
   },
   render() {
-    return h(LControl, {position: 'bottomleft'}, [
-          h('div', {
-            class: 'lat-lng-holder'
-          }, this.state)
-        ]
-    );
+    return h(LControl, {position: 'bottomleft'}, {
+      default: () => [
+        h('div', {
+          class: 'lat-lng-holder'
+        }, this.state)
+      ]
+    });
   }
 })
 </script>
