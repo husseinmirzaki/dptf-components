@@ -22,6 +22,8 @@ export default defineComponent({
     const {emitTo, emitsTo} = buildEmitter();
 
     const extraLayers: Ref<Record<string, any>> = ref({});
+    const dots: Ref<Record<string, any>> = ref({});
+    const currentKey = ref();
     /**
      * hold a set of unique lines which are shown
      * to user
@@ -45,36 +47,77 @@ export default defineComponent({
       },
     });
 
-    const openDefaultWindow = (key, lines) => {
+    const drawDots = (lines) => {
+      lines.forEach((e: Array<number>, index: number) => {
+        const _key = `${e[0]},${e[1]}`;
+
+        const marker = h(LMarker, {
+          key: _key,
+          latLng: e,
+          onClick: async () => {
+            await openDefaultWindow(lines);
+            const defaultWindows = props.plugins.getRaw('MapToolsWindowLine');
+            defaultWindows.el.querySelector(`.custom-index-class-${index}`).focus();
+          }
+        }, h(LIcon, {
+          iconUrl: '/media/icons/duotune/abstract/abs050.svg',
+          iconSize: [25, 25]
+        }));
+
+        dots.value[_key] = marker;
+      })
+
+      // remove non-existing ones
+      Object.keys(dots.value).filter((_key) => {
+        const s = _key.split(',');
+        return lines.findIndex((item) => {
+          return item[0] == Number(s[0]) && item[1] == Number(s[1])
+        }) == -1;
+      }).forEach((_key) => {
+        delete dots.value[_key];
+      });
+    }
+
+    const setLineDataOnWindow = (lines) => {
+      const defaultWindows = props.plugins.get('MapToolsWindowLine');
+      defaultWindows.proxy.orderedList.setInitial(lines);
+      defaultWindows.proxy.emitsTo['MapExtensionLineDrawer'] = onMapToolsWindowEvent();
+    }
+
+    const openDefaultWindow = (lines, forceReset = false) => {
       return new Promise<void>((finished) => {
         const mapComponent = props.plugins.getMain();
         if (!mapComponent.proxy.activeWindow) {
           mapComponent.proxy.activeWindow = 'default-windows';
           nextTick(() => {
-            const defaultWindows = props.plugins.get('MapToolsWindowLine');
-            defaultWindows.proxy.orderedList.setInitial(lines);
-            defaultWindows.proxy.emitsTo['MapExtensionLineDrawer'] = onMapToolsWindowEvent(key);
+            setLineDataOnWindow(lines);
+            drawDots(lines);
             finished();
           });
         } else {
+          if (forceReset) {
+            setLineDataOnWindow(lines);
+          }
+          drawDots(lines);
           finished();
         }
       });
     }
 
-    const onMapToolsWindowEvent = (key) => {
+    const onMapToolsWindowEvent = () => {
       return (name, event) => {
         let _index = -1;
         switch (name) {
           case "focusin":
-            var line = Object.assign(lines.value[key].lines);
+            var line = Object.assign(lines.value[currentKey.value].lines);
             _index = event[0];
             extraLayers.value['marker'] = h(LMarker, {
               draggable: true,
               'onUpdate:latLng': (e) => {
-                lines.value[key].lines[_index] = [e.lat, e.lng];
+                lines.value[currentKey.value].lines[_index] = [e.lat, e.lng];
                 const defaultWindows = props.plugins.get('MapToolsWindowLine');
                 defaultWindows.proxy.orderedList.setInitial(line);
+                drawDots(line);
               },
               key: `${line[_index][0]}${line[_index][1]}`,
               latLng: line[_index]
@@ -83,8 +126,9 @@ export default defineComponent({
           case "update":
             _index = event[0];
 
-            if (lines.value[key].lines[_index] != event[1])
-              lines.value[key].lines[_index] = event[1];
+            if (lines.value[currentKey.value].lines[_index] != event[1])
+              lines.value[currentKey.value].lines[_index] = event[1];
+            drawDots(lines.value[currentKey.value].lines);
 
             break;
         }
@@ -102,65 +146,48 @@ export default defineComponent({
     const buildLine = (key) => {
       const line = Object.assign(lines.value)[key];
 
-      line.lines.forEach((e: Array<number>, index: number) => {
-        const _key = `${e[0]},${e[1]}`;
-        const layer = extraLayers.value[_key];
-
-        if (layer && layer['key'] == _key) {
-          return;
-        }
-        const icon = h(LIcon, {
-          iconUrl: '/media/icons/duotune/abstract/abs050.svg',
-          iconSize: [25, 25]
-        });
-
-        const marker = h(LMarker, {
-          key: _key,
-          latLng: e,
-          onClick: async () => {
-            await openDefaultWindow(key, line.lines);
-            const defaultWindows = props.plugins.getRaw('MapToolsWindowLine');
-            defaultWindows.el.querySelector(`.custom-index-class-${index}`).focus();
-          }
-        }, {
-          default: () => icon
-        });
-
-        extraLayers.value[_key] = marker;
-      })
-
       return h(MapLine, {
         strokeColor: line['strokeColor'], lines: line.lines, key: sumOfLines(line.lines), onEdit: () => {
-          openDefaultWindow(key, line.lines);
+          dots.value = {};
+          extraLayers.value = {};
+          currentKey.value = key;
+          openDefaultWindow(line.lines, true);
         }
       });
 
     }
 
     const buildLayers = (e) => {
-      const layer = extraLayers.value[e];
+      return extraLayers.value[e];
+    }
 
-      return layer;
+    const buildDots = (e) => {
+      return dots.value[e];
     }
 
     return {
       // data
       emitsTo,
       lines,
+      dots,
       extraLayers,
 
       // functions
       emitTo,
       buildLine,
+      buildDots,
       buildLayers,
     }
   },
   render() {
     return h('div', {}, {
-      default: () => [
-        ...Object.keys(this.lines).map(this.buildLine),
-        ...Object.keys(this.extraLayers).map(this.buildLayers),
-      ]
+      default: () => {
+        return [
+          ...Object.keys(this.extraLayers).map(this.buildLayers),
+          ...Object.keys(this.lines).map(this.buildLine),
+          ...Object.keys(this.dots).map(this.buildDots),
+        ];
+      }
     });
   }
 });
