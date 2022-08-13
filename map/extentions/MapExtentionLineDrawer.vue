@@ -145,6 +145,8 @@ class LineDrawer {
   props: any;
   context: any;
 
+  plugins: any;
+
   _lines: Ref<Record<string, LineInfo>>;
   currentKey = '';
   activeIndex = '';
@@ -154,16 +156,15 @@ class LineDrawer {
 
   constructor(props, context, lines: Ref<Record<string, LineInfo>>) {
     this.props = props;
+    this.plugins = toRef(this.props, 'plugins');
     this.context = context;
     this._lines = lines;
     this.dotDrawer = new DotDrawer(this);
   }
 
   clear() {
-      this.icons.value = {};
-      this.layers.value = {};
-      this.activeIndex = '';
-      this.currentKey = '';
+    this.icons.value = {};
+    this.layers.value = {};
   }
 
   get lines() {
@@ -175,15 +176,19 @@ class LineDrawer {
   }
 
   get mapComponent() {
-    return this.props.plugins.getMain();
+    return this.plugins.value.getMain();
+  }
+
+  get _mapToolsWindowLine() {
+    return this.plugins.value.get('MapToolsWindowLine');
   }
 
   get mapToolsWindowLine() {
-    return this.props.plugins.get('MapToolsWindowLine').proxy;
+    return this._mapToolsWindowLine.proxy;
   }
 
   get mapToolsWindowLineRaw() {
-    return this.props.plugins.getRaw('MapToolsWindowLine');
+    return this.plugins.value.getRaw('MapToolsWindowLine');
   }
 
   setActiveInput(index) {
@@ -272,7 +277,7 @@ class LineDrawer {
                 })
               }
             } else {
-              event[0][0] = this.props.plugins.get('LMap').proxy.center;
+              event[0][0] = this.plugins.value.get('LMap').proxy.center;
               nextTick(() => {
                 this.setActiveInput(0);
               })
@@ -307,17 +312,13 @@ class LineDrawer {
       if (!this.mapComponent.proxy.activeWindow) {
         this.mapComponent.proxy.activeWindow = 'default-windows';
         nextTick(() => {
-          console.log("showing data using nextTick", this.lines);
           this.setLineDataOnWindow();
           this.dotDrawer.drawDots();
           finished();
         });
       } else {
-        if (forceReset) {
-          console.log("showing data using forceReset", this.lines);
-          this.setLineDataOnWindow();
-          this.dotDrawer.drawDots();
-        }
+        this.setLineDataOnWindow();
+        this.dotDrawer.drawDots();
         finished();
       }
     });

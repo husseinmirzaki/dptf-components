@@ -20,6 +20,10 @@ class PluginManager {
     this.plugins[key] = e;
   }
 
+  unRegister(key) {
+    delete this.plugins[key];
+  }
+
   get(key) {
     return this.plugins[key].component;
   }

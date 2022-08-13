@@ -8,8 +8,6 @@
 <template>
   <MapToolsWindow card-title="اضافه / ویرایش خط">
     <template #toolbar1>
-      <!--:class="{'btn-primary': mode == MODE_DEFAULT,'btn-secondary': mode != MODE_DEFAULT}"-->
-      <!--@click="changeMode"-->
       <div
           class="btn btn-sm p-1 btn-primary me-1"
           data-bs-dismiss="modal"
@@ -18,7 +16,7 @@
             <span class="svg-icon svg-icon-3">
               <inline-svg src="media/icons/duotune/general/gen041.svg"/>
             </span>
-            <span class="svg-icon svg-icon-3">
+        <span class="svg-icon svg-icon-3">
               <inline-svg src="media/icons/duotune/arrows/arr067.svg"/>
             </span>
       </div>
@@ -30,12 +28,13 @@
             <span class="svg-icon svg-icon-3">
               <inline-svg src="media/icons/duotune/general/gen041.svg"/>
             </span>
-            <span class="svg-icon svg-icon-3">
+        <span class="svg-icon svg-icon-3">
               <inline-svg src="media/icons/duotune/arrows/arr068.svg"/>
             </span>
       </div>
     </template>
     <template #card-content>
+      {{ orderedList.listOfData }}
       <template v-for="(index, data) in computedOrderKeys" :key="data">
         <FieldComponent
             :input_class="`custom-input-class custom-index-class-${index}`"
@@ -51,15 +50,16 @@
 </template>
 <script lang="ts">
 import MapToolsWindow from "@/custom/map/MapToolsWindow.vue";
-import {computed, defineComponent, nextTick, onMounted, onUnmounted, ref, toRef} from "vue";
+import {computed, defineComponent, nextTick, onMounted, onUnmounted, ref, toRef, watch} from "vue";
 import {OrderedList} from "@/views/province/utils";
 import FieldComponent from "@/custom/components/FieldComponent.vue";
 import {VueInstanceService} from "@/Defaults";
 import {buildEmitter} from "@/custom/map/utils/emitter";
 
-const MODE_DEFAULT = -1;
-const MODE_ADD_POINT = 0;
-const MODE_SELECT_ITEM = 1;
+export const MODE_DEFAULT = -1;
+export const MODE_CREATE_NEW = 1;
+export const MODE_ADD_POINT = 2;
+export const MODE_SELECT_ITEM = 3;
 export default defineComponent({
   inheritAttrs: true,
   name: "MapToolsWindowLine",
@@ -73,21 +73,15 @@ export default defineComponent({
   },
   components: {FieldComponent, MapToolsWindow},
   setup(props, context) {
+    const {emitTo, emitsTo} = buildEmitter();
+
     const refs = toRef(props, 'mapInstance');
     const mapRef = refs.value.mapRef;
     const mapExtensions = refs.value.mapExtensionsRef;
     const extensions = mapExtensions.value.extensions;
+
     const orderedList = new OrderedList();
 
-    const {emitTo, emitsTo} = buildEmitter();
-
-    const focusIn = () => {
-      //
-    }
-
-    const focusOut = () => {
-      //
-    }
 
     const updateListData = (index, data) => {
       try {
@@ -124,11 +118,13 @@ export default defineComponent({
     onMounted(() => {
       // add event listener on map compone`nt
       refs.value.emitsTo['MapToolsWindowLine'] = onParentEvent;
-      extensions.get('MapExtensionLineDrawer').emitsTo['MapToolsWindowLine'] = onMapExtensionLineDrawer
+      if (props.plugins)
+        props.plugins.get('MapExtensionLineDrawer').proxy.emitsTo['MapToolsWindowLine'] = onMapExtensionLineDrawer
     });
 
     onUnmounted(() => {
-      delete extensions.get('MapExtensionLineDrawer').emitsTo['MapToolsWindowLine']
+      if (props.plugins)
+        delete props.plugins.get('MapExtensionLineDrawer').proxy.emitsTo['MapToolsWindowLine']
     })
 
     const onMapClicked = (e) => {
@@ -136,16 +132,7 @@ export default defineComponent({
         console.log(mapRef.value);
     }
 
-    const utils = {
-      addingPoints: () => {
-        //
-      },
-      notAddingPoints: () => {
-        // mapRef.value.$el.classList.remove('adding-points');
-      }
-    };
-
-    const addPoint = (top=true) => {
+    const addPoint = (top = true) => {
       if (top) {
         orderedList.addToTop('');
       } else {
@@ -154,20 +141,15 @@ export default defineComponent({
       emitTo('updateData', [orderedList.orderedList()]);
     }
 
-    const changeMode = () => {
+    const computedOrderKeys = orderedList.computedOrderKeys();
 
-      switch (mode.value) {
-        case MODE_ADD_POINT:
-          utils.notAddingPoints();
-          mode.value = MODE_DEFAULT;
-          break;
-        case MODE_DEFAULT:
-          utils.addingPoints();
-          mode.value = MODE_ADD_POINT;
-          break;
-      }
+    watch(computedOrderKeys, () => {
+      console.log(computedOrderKeys.value);
+    });
 
-    }
+    onUnmounted(() => {
+      props.plugins?.unRegister('MapToolsWindowLine');
+    })
 
     return {
       // data
@@ -176,17 +158,15 @@ export default defineComponent({
       emitsTo,
 
       //computed
-      computedOrderKeys: orderedList.computedOrderKeys(),
+      computedOrderKeys,
       // functions
       emitTo,
-      focusIn,
-      focusOut,
       updateListData,
-      changeMode,
       addPoint,
 
       // consts
       MODE_DEFAULT,
+      MODE_CREATE_NEW,
       MODE_ADD_POINT,
       MODE_SELECT_ITEM,
     }
