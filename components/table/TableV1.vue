@@ -11,7 +11,7 @@
     <template #card-title-content>
       <slot name="card-title-content"/>
     </template>
-    <template v-slot:dropDown>
+    <template v-slot:dropDown v-if="!disableDropdown">
       <DropdownV2>
         <!--        <div class="pb-1" v-if="defaultConfig.filterForm.formInstance">-->
         <!--          <button @click="filterShow = !filterShow" class="btn btn-sm btn-primary btn-icon ms-2">-->
@@ -352,6 +352,9 @@ export default defineComponent({
       default: false,
     },
     userPreferences: {
+      default: false,
+    },
+    disableDropdown: {
       default: false,
     },
     list: {
