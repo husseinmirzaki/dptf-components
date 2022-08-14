@@ -31,17 +31,39 @@
                   selected="selected"
                   v-if="value[2] === 'selected'"
               >
-              {{ value[1] }} {{ value[2]}}
-            </option>
+                {{ value[1] }} {{ value[2] }}
+              </option>
               <option
                   :value="value[0]"
                   selected
                   v-else
               >
-              {{ value[1] }}
-            </option>
+                {{ value[1] }}
+              </option>
             </template>
           </template>
+        </Field>
+      </template>
+      <template v-if="field_type === 'select-v2'">
+        <Field
+            :class="[defaultInputClasses, input_class]"
+            :id="field_id"
+            :placeholder="placeholder"
+            :validateOnModelUpdate="true"
+            :multiple="select_multiple"
+            :as="field_type"
+            :name="name"
+            style="width: 100%"
+            :modelValue="this.$props.modelValue"
+            ref="fieldRef"
+        >
+          <Select2AlternativeField
+              :model-value="this.$props.modelValue"
+              :url="$props.select_url"
+              :config="$props.selectV2Config"
+              :multiple="$props.select_multiple"
+              @update:modelValue="$emit('update:modelValue', $event)"
+          />
         </Field>
       </template>
       <template v-else-if="field_type === 'textarea'">
@@ -208,11 +230,13 @@ import {findClassInParent} from "@/custom/helpers/DomHelpers";
 import {VueInstanceService} from "@/Defaults";
 import AutoComplete from "@/custom/components/forms/AutoComplete.vue";
 import {deformatNumber, formatCurrency} from "@/custom/components/FieldComponentCurrency.js"
+import Select2AlternativeField from "@/custom/components/Select2AlternativeField.vue";
 
 export default defineComponent({
   name: "field-component",
   inheritAttrs: false,
   components: {
+    Select2AlternativeField,
     AutoComplete,
     Field,
     ErrorMessage,
@@ -325,6 +349,9 @@ export default defineComponent({
       default: () => {
         return {};
       },
+    },
+    selectV2Config: {
+      type: Object,
     },
     select_data: {
       type: Array,
@@ -519,7 +546,7 @@ export default defineComponent({
       if (options.length > 0 && options[0] && !options[0]['text']) {
         select2Instance.value?.val(options);
       } else if (!Array.isArray(options)) {
-          select2Instance.value?.val(String(options));
+        select2Instance.value?.val(String(options));
       } else
         options.forEach((data) => {
           if (!data) return;
@@ -601,6 +628,6 @@ export function fieldC(
 </script>
 <style scoped>
 input[type="color"] {
-	height: 40px !important;
+  height: 40px !important;
 }
 </style>

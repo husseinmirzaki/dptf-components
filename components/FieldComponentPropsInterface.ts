@@ -19,7 +19,7 @@ export default interface FieldComponentPropsInterface {
     'show-help'?: string;
     read_only?: boolean;
     label?: string;
-    field_type?: string|"text"|"component"|"hidden"|"file"|"select"|"textarea"|"p-date-time"|"checkbox"|"separator"|"auto-complete"|"currency";
+    field_type?: string | "text" | "component" | "hidden" | "file" | "select" | "select-v2" | "textarea" | "p-date-time" | "checkbox" | "separator" | "auto-complete" | "currency";
     field_container_classes?: string;
     file_accept?: string;
     placeholder?: string;
@@ -36,6 +36,7 @@ export default interface FieldComponentPropsInterface {
     outerAccess?: (elementRef) => void;
     excludeOnModes?: Array<string>,
     onlyOnModes?: Array<string>,
+    selectV2Config?: Record<string, any>,
 }
 export default class FieldComponentProps implements FieldComponentPropsInterface {
 }
