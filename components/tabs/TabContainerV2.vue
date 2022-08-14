@@ -28,6 +28,12 @@ export default {
     },
     routerMode: {
       default: false,
+    },
+    disableDragging: {
+      default: false,
+    },
+    disablePreferences: {
+      default: false,
     }
   },
   setup(props, context) {
@@ -39,8 +45,11 @@ export default {
     const bodyHeight = ref(0);
 
     const preferencesManager = new UserPreferencesManager(`tab_container_${props.routerPrefix}`);
-    watch(preferencesManager.value, () => preFormReordering(), {deep: true});
-    preferencesManager.get();
+
+    if (!props.disablePreferences) {
+      watch(preferencesManager.value, () => preFormReordering(), {deep: true});
+      preferencesManager.get();
+    }
 
 
     let lastIntroduceActivity = null;
@@ -86,11 +95,16 @@ export default {
 
       clearTimeout(lastIntroduceActivity);
       lastIntroduceActivity = setTimeout(() => {
-        initDragger();
-        preFormReordering();
+        if (!props.disableDragging)
+          initDragger();
+
+        if (!props.disablePreferences)
+          preFormReordering();
+
         setTimeout(() => {
           updateBodyHeight();
         }, 500);
+
       }, 500);
 
       const current = childCounter;
@@ -153,14 +167,17 @@ export default {
       updateBodyHeight();
       tabNames.value = [];
       show.value = true;
-      dragInstance = new SimpleDrag(container.value);
-      dragInstance.onItemDropped = (element) => {
-        const items = selectItems();
-        const newOrder = {};
-        for (let i = 0; i < items.length; i++) {
-          newOrder[i] = items[i].getAttribute('data-item-name');
+      if (!props.disableDragging) {
+        dragInstance = new SimpleDrag(container.value);
+        dragInstance.onItemDropped = (element) => {
+          const items = selectItems();
+          const newOrder = {};
+          for (let i = 0; i < items.length; i++) {
+            newOrder[i] = items[i].getAttribute('data-item-name');
+          }
+          if (!props.disablePreferences)
+            preferencesManager.set(newOrder);
         }
-        preferencesManager.set(newOrder);
       }
     })
 

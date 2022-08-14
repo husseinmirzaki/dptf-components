@@ -345,6 +345,22 @@ class ApiService {
     }
 
     /**
+     * @description send the OPTIONS HTTP request
+     * @param resource: string
+     * @param params
+     * @returns Promise<AxiosResponse>
+     */
+    public static options<T = any>(
+        resource: string,
+        params = {}
+    ): Promise<AxiosResponse<T>> {
+        resource = this.fixUrlParams(resource);
+        return this.wrap(() => {
+            return this.vueInstance.axios.options(resource, this.calcConf(params));
+        });
+    }
+
+    /**
      * @description set the POST HTTP request
      * @param resource: string
      * @param params: AxiosRequestConfig
