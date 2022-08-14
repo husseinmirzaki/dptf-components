@@ -1,48 +1,63 @@
 <template>
   <div class="field fv-row" :class="[col_class_c, { row: one_line }]" ref="root">
     <!--begin::Label-->
-    <label
-        class="fs-5 fw-bold mb-2 font-weight-bolder text-dark"
-        :class="[{ required: required }, one_line_label_classes_c, label_class]"
-        v-if="label != null && label !== '' && field_type != 'separator'"
-    >
-      {{ label }}
-    </label>
+    <div class="d-flex align-items-end">
+      <div class="add-icon-item" v-if="canAddItem">
+          <el-tooltip content="اضافه کردن">
+            <span class="svg-icon svg-icon-3 svg-icon-primary"  @click="onAddClick">
+            <inline-svg src="media/icons/duotune/arrows/arr013.svg"/>
+          </span>
+          </el-tooltip>
+      </div>
+      <label
+          class="fs-5 fw-bold mb-2 font-weight-bolder text-dark"
+          :class="[{ required: required }, one_line_label_classes_c, label_class]"
+          v-if="label != null && label !== '' && field_type != 'separator'"
+      >        {{ label }}
+      </label>
+    </div>
     <!--end::Label-->
     <!--begin::Input-->
-    <div :class="[one_line_field_classes_c, field_container_classes]" :show-help="showHelp">
+    <div :class="[one_line_field_classes_c, field_container_classes]" class="position-relative" :show-help="showHelp">
       <template v-if="field_type === 'select'">
-        <Field
-            :class="[defaultInputClasses, input_class]"
-            :id="field_id"
-            :placeholder="placeholder"
-            :validateOnModelUpdate="true"
-            :multiple="select_multiple"
-            :as="field_type"
-            :name="name"
-            style="width: 100%"
-            :modelValue="this.$props.modelValue"
-            ref="fieldRef"
-        >
-          <template v-if="select_data">
-            <template v-for="value in select_data" :key="value[0]">
-              <option
-                  :value="value[0]"
-                  selected="selected"
-                  v-if="value[2] === 'selected'"
-              >
-                {{ value[1] }} {{ value[2] }}
-              </option>
-              <option
-                  :value="value[0]"
-                  selected
-                  v-else
-              >
-                {{ value[1] }}
-              </option>
+        <div>
+          <Field
+              :class="[defaultInputClasses, input_class]"
+              :id="field_id"
+              :placeholder="placeholder"
+              :validateOnModelUpdate="true"
+              :multiple="select_multiple"
+              :as="field_type"
+              :name="name"
+              style="width: 100%"
+              :modelValue="this.$props.modelValue"
+              ref="fieldRef"
+          >
+            <template v-if="select_data">
+              <template v-for="value in select_data" :key="value[0]">
+                <option
+                    :value="value[0]"
+                    selected="selected"
+                    v-if="value[2] === 'selected'"
+                >
+                  {{ value[1] }} {{ value[2] }}
+                </option>
+                <option
+                    :value="value[0]"
+                    selected
+                    v-else
+                >
+                  {{ value[1] }}
+                </option>
+              </template>
             </template>
-          </template>
-        </Field>
+          </Field>
+        </div>
+        <div class="floating-icon">
+          <span class="svg-icon svg-icon-3 svg-icon-primary">
+            <inline-svg src="media/icons/duotune/arrows/arr082.svg"/>
+          </span>
+        </div>
       </template>
       <template v-else-if="field_type === 'select-v2'">
         <Field
@@ -245,6 +260,14 @@ export default defineComponent({
   props: {
     defaultInputClasses: {
       default: "form-control h-auto py-3 px-2 rounded-lg"
+    },
+    canAddItem: {
+      default: false,
+    },
+    onAddClick: {
+      default: () => (() => {
+        //
+      }),
     },
     showHelp: {
       type: String
@@ -626,8 +649,36 @@ export function fieldC(
   return new FieldComponentProps(options);
 }
 </script>
-<style scoped>
+<style scoped lang="scss">
 input[type="color"] {
   height: 40px !important;
+}
+
+.floating-icon {
+  position: absolute;
+  z-index: 99;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 5px;
+  pointer-events: none;
+}
+label {
+  font-size: 12px !important;
+}
+
+:deep(.add-icon-item) {
+  /*position: absolute;*/
+  padding: 3px;
+  margin: 0 0 5px 5px;
+  border-radius: 5px;
+
+  &:hover {
+    svg path {
+      fill: #40f030 !important;
+    }
+  }
+}
+:deep(.select2-selection__placeholder) {
+  font-size: 12px;
 }
 </style>

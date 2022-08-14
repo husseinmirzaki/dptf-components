@@ -1,10 +1,34 @@
 <template>
-  <div class="tab-item-v2" :data-item-name="indexUniqueName" :class="{active: parent && index == parent.activeItem}" data-kt-stepper-element="nav"
+  <div class="tab-item-v2" :data-item-name="indexUniqueName" :class="{
+    active: parent && index == parent.activeItem,
+    iconOnly: iconOnly
+  }"
+       data-kt-stepper-element="nav"
        @click="$emit('change', log(index))">
     <slot>
-      <span class="stepper-title">
+      <template v-if="iconOnly">
+        <div class="d-flex flex-column align-items-center">
+          <div class="icon-container" :class="{active: parent && index == parent.activeItem}">
+          <span class="svg-icon svg-icon-2x" v-if="svgIcon"
+                :class="{'svg-icon-primary': parent && index == parent.activeItem}">
+            <inline-svg :src="svgIcon"/>
+          </span>
+          </div>
+
+          <span class="stepper-title title" v-if="title">
+            {{ title }}
+          </span>
+        </div>
+      </template>
+      <template v-if="!iconOnly">
+        <span class="svg-icon svg-icon-2x" v-if="svgIcon"
+              :class="{'svg-icon-primary': parent && index == parent.activeItem}">
+          <inline-svg :src="svgIcon"/>
+        </span>
+        <span class="stepper-title" v-if="title">
         {{ title }}
       </span>
+      </template>
     </slot>
   </div>
 </template>
@@ -12,7 +36,7 @@
 import {onMounted, ref, toRef, watch} from "vue";
 
 export default {
-  props: ['title', 'active', 'parent', 'name'],
+  props: ['title', 'active', 'parent', 'name', 'svgIcon', 'iconOnly'],
   setup(props) {
     const index = ref(0);
     const indexUniqueName = ref('');
@@ -40,10 +64,60 @@ export default {
 $active-color: #0d8ddc;
 @keyframes backgroundPosition {
   from {
-    background-position: 50px -20px ;
+    background-position: 50px -20px;
   }
   to {
     background-position: 150% -70px;
+  }
+}
+
+.active {
+  .title {
+    transition: font-size 250ms ease;
+    color: black !important;
+    font-size: 15px;
+  }
+}
+
+.title {
+  color: #5b5b5b !important;
+  font-size: 15px;
+}
+
+.icon-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background-color: #f2f2f2;
+  border-radius: 50%;
+  transition: background-color 250ms ease;
+  margin-bottom: 5px;
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-bottom: 1px solid #3a86f9;
+  }
+
+  span.svg-icon svg {
+    width: 35px !important;
+    height: 35px !important;
+  }
+  &.active {
+    background-color: #373636;
+
+    svg {
+      rect, path {
+        fill: #f2f2f2 !important;
+      }
+    }
   }
 }
 
@@ -57,6 +131,7 @@ $active-color: #0d8ddc;
   &.show-animation {
     z-index: 4;
   }
+
   &.is-replace-able {
     z-index: 4;
     background-repeat: no-repeat;
@@ -81,7 +156,7 @@ $active-color: #0d8ddc;
     box-shadow: 0 0 0 5px black !important;
   }
 
-  &.active {
+  &.active:not(.iconOnly) {
     position: relative;
     color: $active-color;
 

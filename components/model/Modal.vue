@@ -5,7 +5,7 @@
     <div class="modal-dialog modal-dialog-centered" :class="modalSizeClass">
       <!--begin::Modal content-->
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header" :class="{'p-2': thinFooter}">
           <h5 class="modal-title" id="exampleModalLabel">{{ modalTitle }}</h5>
           <div
               class="btn btn-sm btn-icon btn-active-icon-primary close" @click="close()"
@@ -19,8 +19,8 @@
         <div class="modal-body">
           <slot name="modal-content" :modalId="modalId"/>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-light-primary font-weight-bold mt-4" @click="close()">بستن</button>
+        <div class="modal-footer" :class="{'p-2': thinFooter}">
+          <button type="button" class="btn btn-light-primary font-weight-bold" :class="{'mt-4': !thinFooter}" @click="close()">بستن</button>
           <slot name="modal-footer"/>
         </div>
       </div>
@@ -80,6 +80,9 @@ export default defineComponent({
     },
     modalSizeClass: {
       default: "mw-700px",
+    },
+    thinFooter: {
+      default: false,
     },
   },
   methods: {

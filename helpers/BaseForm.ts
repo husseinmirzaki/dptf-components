@@ -85,7 +85,7 @@ export class CreateForm<T extends FieldsInterface = any> {
     /**
      * raw fields
      */
-    rawFields: string = JSON.stringify([]);
+    rawFields: any = [];
 
     /**
      * these are generated fields base on the modes, user
@@ -187,9 +187,7 @@ export class CreateForm<T extends FieldsInterface = any> {
 
     constructor(rawFields: null | Array<FieldComponentPropsInterface> = null) {
 
-        if (rawFields) {
-            this.rawFields = JSON.stringify(rawFields);
-        }
+        this.rawFields = rawFields;
 
         // first get current service instance or class
         this.service = this.getService();
@@ -315,7 +313,9 @@ export class CreateForm<T extends FieldsInterface = any> {
      * validation schemas
      */
     concatFields(): Array<FieldComponentPropsInterface> {
-        return JSON.parse(this.rawFields);
+        if (typeof this.rawFields == 'string')
+            return JSON.parse(this.rawFields);
+        return this.rawFields;
     }
 
     /**
@@ -684,7 +684,7 @@ export class CreateForm<T extends FieldsInterface = any> {
         Object.keys(data).forEach((e) => {
             try {
                 if (this.elementRefs[e])
-                (this.elementRefs[e] as any).setValue(data[e]);
+                    (this.elementRefs[e] as any).setValue(data[e]);
             } catch (e) {
                 console.log(e);
             }
