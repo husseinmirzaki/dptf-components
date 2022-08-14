@@ -44,7 +44,7 @@
           </template>
         </Field>
       </template>
-      <template v-if="field_type === 'select-v2'">
+      <template v-else-if="field_type === 'select-v2'">
         <Field
             :class="[defaultInputClasses, input_class]"
             :id="field_id"
