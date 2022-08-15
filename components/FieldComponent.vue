@@ -464,7 +464,8 @@ export default defineComponent({
         const modalParent = findClassInParent(root.value, 'modal');
 
         if (modalParent != null) {
-          select_options.value["dropdownParent"] = modalParent;
+          // using first child to support better scrolling behaviour
+          select_options.value["dropdownParent"] = modalParent.children[0];
         }
         if (select_filter_id.value) {
           const v = select_filter_id.value as any;
