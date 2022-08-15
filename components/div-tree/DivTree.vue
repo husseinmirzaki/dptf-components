@@ -2,7 +2,7 @@
   <div class="row justify-content-center align-items-center">
     <div class="items-row">
       <div class="item-container">
-        <DivTreeItem v-bind="item" v-for="item in $attrs.structure" :key="item"/>
+        <DivTreeItem v-bind="item" v-for="item in structure" :key="item"/>
       </div>
     </div>
   </div>
@@ -11,9 +11,10 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import DivTreeItem from "@/custom/components/div-tree/DivTreeItem.vue";
+
 export default defineComponent({
-  components: {DivTreeItem}
-});
+  components: {DivTreeItem},
+  props: ['structure']});
 </script>
 <style>
 /*

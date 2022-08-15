@@ -1,6 +1,8 @@
 <template>
-  <div class="item" @click="onItemClick()"
-       :style="{backgroundColor: color, color: lightenDarkenColor(color, colorShift)}">{{ title }}
+  <div class="item border border-2 px-3" @click="onItemClick()"
+       :style="[{
+    backgroundColor: color, color: lightenDarkenColor(color, colorShift)
+  }, style]">{{ title }}
   </div>
   <div class="item-children" :class="{'show-stuff': children.length > 0}" v-if="children.length > 0">
     <DivTreeItem v-bind="item" v-for="item in children" :key="item"/>
@@ -19,6 +21,9 @@ export default {
     },
     colorShift: {
       default: 200
+    },
+    style: {
+      default: () => ({})
     },
     children: {
       default: () => [],
@@ -54,6 +59,7 @@ export default {
 </script>
 <style scoped>
 .item {
+  border-radius: 10px;
   padding: 0;
   display: flex;
   align-items: center;
