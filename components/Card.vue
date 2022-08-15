@@ -14,7 +14,7 @@
         <slot name="card-title-content" :cardTitle="cardTitle" :cardDescription="cardDescription">
           <h3 class="card-title align-items-start flex-column my-0">
             <slot name="card-title">
-            <span class="fw-bolder mb-2 text-dark">
+            <span class="fw-bold fs-4 mb-2 text-dark">
               <inline-svg :src="$props.icon"/>
               {{ cardTitle }}
             </span>
