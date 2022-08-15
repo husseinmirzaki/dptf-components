@@ -44,7 +44,6 @@
                 </option>
                 <option
                     :value="value[0]"
-                    selected
                     v-else
                 >
                   {{ value[1] }}
@@ -566,6 +565,12 @@ export default defineComponent({
     const setOptions = (
         options: Array<{ value: number | string; text: string }> | Array<string> | Array<number>
     ) => {
+      console.log("options", options)
+      if (!options){
+
+      select2Instance.value?.change();
+        return
+      }
       if (options.length > 0 && options[0] && !options[0]['text']) {
         select2Instance.value?.val(options);
       } else if (!Array.isArray(options)) {

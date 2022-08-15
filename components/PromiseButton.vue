@@ -28,6 +28,10 @@ export default defineComponent({
     promise: {
       type: Promise,
     },
+    successMessage: {
+      type: String,
+      default: 'با موفقیت انجام شد'
+    }
   },
   setup(props, context) {
     const submitButton = ref<any>();
@@ -69,6 +73,7 @@ export default defineComponent({
             const response = await formExtend.formInstance.submit();
             setTimeout(() => {
               context.emit('submitDone', response);
+              VueInstanceService.showSuccessMessage(props.successMessage)
             }, 500)
           } catch (e) {
             VueInstanceService.store.dispatch(Actions.REQUEST_ERROR_TOAST);
