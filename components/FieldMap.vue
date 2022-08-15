@@ -26,7 +26,7 @@ import {
   LTileLayer,
   LMarker,
 } from "@vue-leaflet/vue-leaflet";
-import {onBeforeMount, onBeforeUnmount, onMounted, ref, toRef, watch} from "vue";
+import {nextTick, onBeforeMount, onBeforeUnmount, onMounted, ref, toRef, watch} from "vue";
 import {VueInstanceService} from "@/Defaults";
 
 export default {
@@ -64,7 +64,7 @@ export default {
     const tryToCenter = async (s) => {
       let done = 0;
       while (done < 5) {
-        if (map.value.leafletObject.setView) {
+        if (map.value && map.value.leafletObject && map.value.leafletObject.setView && typeof map.value.leafletObject.setView == 'function') {
           map.value.leafletObject.setView([Number(s[0]), Number(s[1])]);
           done++;
         }
@@ -97,6 +97,7 @@ export default {
     onMounted(() => {
       unmount.value = true;
       inputValue.value = modelValue.value;
+      tryToCenter(inputValue.value.split(','))
       VueInstanceService.on('opened.bs.modal', () => {
         setTimeout(() => {
           map.value.leafletObject.invalidateSize();
