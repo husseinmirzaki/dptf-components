@@ -100,8 +100,8 @@ export default {
     let textText = "";
 
     if (typeof modeValue.value === "string") {
-      textValue = modeValue;
-      textText = modeValue;
+      textValue = modeValue.value;
+      textText = modeValue.value;
     } else if (typeof modeValue.value === "object") {
       textValue = modeValue.value.id;
       textText = modeValue.value.text;
