@@ -63,9 +63,9 @@ export default defineComponent({
     const onClickDelegation = () => {
 
       const delegation = (formContainsRef, formExtend) => {
+        console.log(formContainsRef, formExtend);
         loading((async () => {
           await formContainsRef.submitForm();
-          console.error("formContainsRef.errors", formContainsRef.errors);
           if (Object.keys(formContainsRef.errors).length > 0) {
             return 0;
           }
@@ -76,6 +76,7 @@ export default defineComponent({
               VueInstanceService.showSuccessMessage(props.successMessage)
             }, 500)
           } catch (e) {
+            console.error(e, formExtend);
             VueInstanceService.store.dispatch(Actions.REQUEST_ERROR_TOAST);
           }
           return 0;

@@ -1,6 +1,5 @@
-import {computed, ComputedRef, nextTick, ref, Ref, UnwrapRef, watch} from "vue";
+import {computed, nextTick, ref, Ref, watch} from "vue";
 import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
-import {onkeys} from "@/custom/helpers/CustomFunctions";
 import * as Yup from 'yup';
 
 export interface CreateFormExtend<T extends CreateForm, E = any> {
@@ -242,13 +241,15 @@ export class CreateForm<T extends FieldsInterface = any> {
         // and then using that field name we will check
         // whether that field's that hold possible file
         // object or not
-        Object.keys(this.refs[mode].value).forEach((e1) => {
+
+        const r = this.refs[mode].value ? this.refs[mode].value : this.refs[mode];
+        Object.keys(r).forEach((e1) => {
             const field = this.fields.find((e) => e.name == e1);
             if (field && field.field_type === 'file')
-                if (this.refs[mode].value[e1] && this.refs[mode].value[e1].length) {
-                    for (let i = 0; i < this.refs[mode].value[e1].length; i++) {
+                if (r[e1] && r[e1].length) {
+                    for (let i = 0; i < r[e1].length; i++) {
                         files.push({
-                            file: this.refs[mode].value[e1][i] as any,
+                            file: r[e1][i] as any,
                             field: this.fields.find((field) => field.name == e1)
                         });
                     }
@@ -272,21 +273,25 @@ export class CreateForm<T extends FieldsInterface = any> {
         // possible file and then set those found
         // Array<File> or File to a key in files
 
-        Object.keys(this.refs[mode].value).forEach((e1) => {
-            if (this.refs[mode].value[e1] instanceof FileList) {
-                for (let i = 0; i < this.refs[mode].value[e1].length; i++) {
+        const r = this.refs[mode].value ? this.refs[mode].value : this.refs[mode];
+
+        Object.keys(r).forEach((e1) => {
+            if (r[e1] instanceof FileList) {
+                for (let i = 0; i < r[e1].length; i++) {
                     const field = this.fields.find((field) => field.name == e1);
                     if (field) {
                         if (!files[field.name] && is_array.indexOf(field.name) > -1)
                             files[field.name] = [];
                         if (is_array.indexOf(field.name) > -1)
-                            files[field.name].push(this.refs[mode].value[e1][i] as any);
+                            files[field.name].push(r[e1][i] as any);
                         else
-                            files[field.name] = this.refs[mode].value[e1][i] as any
+                            files[field.name] = r[e1][i] as any
                     }
                 }
             }
         })
+
+
         return files;
     }
 
