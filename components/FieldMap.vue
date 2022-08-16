@@ -21,12 +21,8 @@
 </template>
 <script>
 import "leaflet/dist/leaflet.css";
-import {
-  LMap,
-  LTileLayer,
-  LMarker,
-} from "@vue-leaflet/vue-leaflet";
-import {nextTick, onBeforeMount, onBeforeUnmount, onMounted, ref, toRef, watch} from "vue";
+import {LMap, LMarker, LTileLayer,} from "@vue-leaflet/vue-leaflet";
+import {onBeforeUnmount, onMounted, ref, toRef, watch} from "vue";
 import {VueInstanceService} from "@/Defaults";
 
 export default {
@@ -103,6 +99,7 @@ export default {
           map.value.leafletObject.invalidateSize();
         }, 10);
       });
+      context.emit('update:modelValue', inputValue.value);
     })
 
     onBeforeUnmount(() => {
