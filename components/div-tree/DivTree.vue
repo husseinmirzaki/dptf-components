@@ -70,6 +70,8 @@ export default defineComponent({
 }
 
 .items-row .item {
+  cursor:pointer;
+  /*user-select: none;*/
   direction: rtl;
   position: relative;
   min-width: 150px;
