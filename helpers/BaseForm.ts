@@ -561,26 +561,39 @@ export class CreateForm<T extends FieldsInterface = any> {
                 return formData;
             }
             if (this.isUpdate.value)
-                promise = this.service.updateOne(
+                promise = this.update(
                     this.refs[this.activeMode.value].value['id'],
                     formData
                 );
             else
-                promise = this.service.createOne(formData);
+                promise = this.createD(formData);
         } else {
             // a JsonObject is returned if `isCustom` is set to `true`
             if (isCustom) {
                 return this.refs[this.activeMode.value].value;
             }
             if (this.isUpdate.value)
-                promise = this.service.updateOne(
+                promise = this.update(
                     this.refs[this.activeMode.value].value['id'],
                     this.refs[this.activeMode.value].value
                 );
             else
-                promise = this.service.createOne(this.refs[this.activeMode.value].value);
+                promise = this.createD(this.refs[this.activeMode.value].value);
         }
         return promise;
+    }
+
+    update(id: any, data: any): any {
+        return this.service.updateOne(
+            id,
+            data
+        )
+    }
+
+    createD(data: any): any {
+        return this.service.createOne(
+            data
+        )
     }
 
     /**
@@ -684,6 +697,9 @@ export class CreateForm<T extends FieldsInterface = any> {
 
         if (data.id) {
             this.refs.basic.value['id'] = data.id;
+            this.isUpdate.value = true;
+        } else {
+            this.isUpdate.value = false;
         }
 
         Object.keys(data).forEach((e) => {

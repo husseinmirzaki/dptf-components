@@ -19,6 +19,7 @@ export function formFromOptions(options: Record<string, any>, extra_options: Rec
             d['col_class'] = 'col-xl-4 col-lg-4 col-md-6 col-sm-12 mt-2'
             switch (d['type']) {
                 case 'integer':
+                    d.field_type = 'number';
                 case 'string':
                     d.field_type = 'text';
                     break;

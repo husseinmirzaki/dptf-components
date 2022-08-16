@@ -3,17 +3,17 @@
     <!--begin::Label-->
     <div class="d-flex align-items-end">
       <div class="add-icon-item" v-if="canAddItem">
-          <el-tooltip content="اضافه کردن">
-            <span class="svg-icon svg-icon-3 svg-icon-primary"  @click="onAddClick">
+        <el-tooltip content="اضافه کردن">
+            <span class="svg-icon svg-icon-3 svg-icon-primary" @click="onAddClick">
             <inline-svg src="media/icons/duotune/arrows/arr013.svg"/>
           </span>
-          </el-tooltip>
+        </el-tooltip>
       </div>
       <label
           class="fs-5 fw-bold mb-2 font-weight-bolder text-dark"
           :class="[{ required: required }, one_line_label_classes_c, label_class]"
           v-if="label != null && label !== '' && field_type != 'separator'"
-      >        {{ label }}
+      > {{ label }}
       </label>
     </div>
     <!--end::Label-->
@@ -525,6 +525,10 @@ export default defineComponent({
     });
 
     const setValue = (data) => {
+      if (typeof data === 'boolean') {
+        if (data != undefined)
+          data = data ? 1 : 0;
+      }
       if (field_type.value === 'select') {
         nextTick(() => {
           setOptions(data);
@@ -566,10 +570,10 @@ export default defineComponent({
     const setOptions = (
         options: Array<{ value: number | string; text: string }> | Array<string> | Array<number>
     ) => {
-      console.log("options", options)
-      if (!options){
+      if (options == null) {
 
-      select2Instance.value?.change();
+
+        select2Instance.value?.change();
         return
       }
       if (options.length > 0 && options[0] && !options[0]['text']) {
@@ -668,6 +672,7 @@ input[type="color"] {
   left: 5px;
   pointer-events: none;
 }
+
 label {
   font-size: 12px !important;
 }
@@ -684,6 +689,7 @@ label {
     }
   }
 }
+
 :deep(.select2-selection__placeholder) {
   font-size: 12px;
 }
