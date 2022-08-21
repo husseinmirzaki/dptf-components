@@ -15,7 +15,8 @@
           <h3 class="card-title align-items-start flex-column my-0">
             <slot name="card-title">
             <span class="fw-bold fs-4 mb-2 text-dark">
-              <inline-svg :src="$props.icon"/>
+              <inline-svg v-if="cardIconWidth" :style="`width: ${cardIconWidth}px`" :src="$props.icon"/>
+              <inline-svg v-else :src="$props.icon"/>
               {{ cardTitle }}
             </span>
             </slot>
@@ -143,6 +144,9 @@ export default {
     },
     "icon": {
       default: "media/icons/duotune/maps/map008.svg",
+    },
+    "cardIconWidth": {
+      default: null
     }
   },
   setup(props, context) {
