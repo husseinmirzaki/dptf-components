@@ -30,7 +30,6 @@
               :as="field_type"
               :name="name"
               style="width: 100%"
-              :modelValue="this.$props.modelValue"
               ref="fieldRef"
           >
             <template v-if="select_data">
@@ -68,14 +67,13 @@
             :as="field_type"
             :name="name"
             style="width: 100%"
-            :modelValue="this.$props.modelValue"
             ref="fieldRef"
         >
           <Select2AlternativeField
-              :model-value="this.$props.modelValue"
               :url="$props.select_url"
               :config="$props.selectV2Config"
               :multiple="$props.select_multiple"
+              :model-value="this.$props.modelValue"
               @update:modelValue="$emit('update:modelValue', $event)"
           />
         </Field>
@@ -389,7 +387,6 @@ export default defineComponent({
     const show_errors = toRef(props, "show_errors");
     const select_url = toRef(props, "select_url");
     const multiple = toRef(props, "multiple");
-    const select_multiple = toRef(props, "select_multiple");
     const read_only = toRef(props, "read_only");
     const select_tag = toRef(props, "select_tag");
     const select_options = toRef(props, "select_options");
@@ -415,6 +412,11 @@ export default defineComponent({
 
     watch(modelValue, () => {
       showError.value = true;
+      if (field_type.value == 'select' && !modelValue.value && select2Instance.value) {
+        select2Instance.value.val('').change();
+      } else if (field_type.value == 'checkbox' && !modelValue.value && field.value) {
+        field.value.checked = false;
+      }
     });
 
     const select2Instance = ref<any>(null);
@@ -511,9 +513,11 @@ export default defineComponent({
         );
 
         select2Instance.value?.change((e) => {
-          console.log("select 2 value", e.target, $(e.target).val());
-          context.emit("update:modelValue", $(e.target).val());
+          const _data = $(e.target).val();
+          if (_data != undefined)
+            context.emit("update:modelValue", _data);
         });
+
       } else if (field_type.value === "file") {
         if (multiple.value) {
           field.value.$el.setAttribute('multiple', 'multiple');
@@ -570,12 +574,13 @@ export default defineComponent({
     const setOptions = (
         options: Array<{ value: number | string; text: string }> | Array<string> | Array<number>
     ) => {
-      if (options == null) {
 
-
+      if (!options) {
+        select2Instance.value?.val(null);
         select2Instance.value?.change();
         return
       }
+
       if (options.length > 0 && options[0] && !options[0]['text']) {
         select2Instance.value?.val(options);
       } else if (!Array.isArray(options)) {
