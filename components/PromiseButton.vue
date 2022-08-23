@@ -63,7 +63,6 @@ export default defineComponent({
     const onClickDelegation = () => {
 
       const delegation = (formContainsRef, formExtend) => {
-        console.log(formContainsRef, formExtend);
         loading((async () => {
           await formContainsRef.submitForm();
           if (Object.keys(formContainsRef.errors).length > 0) {

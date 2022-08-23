@@ -393,7 +393,7 @@ export class Table {
                     return TableTDDateTime;
                 }
             } else if (typeof data === 'object') {
-                if (data.length) {
+                if (Array.isArray(data)) {
                     if (data[0]['avatar'] || data[0]['full_name'] || data[0]['last_name']) {
                         return TableTDUserMulti;
                     }

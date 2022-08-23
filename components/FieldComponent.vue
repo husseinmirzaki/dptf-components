@@ -29,6 +29,7 @@
               :multiple="select_multiple"
               :as="field_type"
               :name="name"
+              :modelValue="this.$props.modelValue"
               style="width: 100%"
               ref="fieldRef"
           >
@@ -415,13 +416,16 @@ export default defineComponent({
       })
     }
 
-    watch(modelValue, () => {
+    watch(modelValue, (e) => {
       showError.value = true;
       if (field_type.value == 'select' && !modelValue.value && select2Instance.value) {
         select2Instance.value.val('').change();
       } else if (field_type.value == 'checkbox' && !modelValue.value && field.value) {
         field.value.checked = false;
+      } else if (select2Instance.value) {
+        select2Instance.value.change();
       }
+
     });
 
     const select2Instance = ref<any>(null);
