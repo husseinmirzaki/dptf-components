@@ -106,6 +106,7 @@
               :disabled="read_only"
               :placeholder="placeholder"
               :modelValue="this.$props.modelValue"
+              :type="$props.dateTimeType"
               @update:modelValue="$emit('update:modelValue', fieldRef.outputValue[0])"
               @change="$emit('update:modelValue', fieldRef.outputValue[0])"
               ref="fieldRef"/>
@@ -265,6 +266,10 @@ export default defineComponent({
       default: () => (() => {
         //
       }),
+    },
+    dateTimeType: {
+      type: String,
+      default: "date"
     },
     showHelp: {
       type: String
