@@ -1,7 +1,8 @@
 import {App, ref} from "vue";
-import {setLocale, addMethod} from "yup";
 import * as Yup from "yup";
+import {addMethod, setLocale} from "yup";
 import {Router} from "vue-router";
+import {Actions} from "@/store/enums/StoreEnums";
 
 export default class VueInstanceService {
     public static pageIsLoading = ref(false);
@@ -92,6 +93,12 @@ export default class VueInstanceService {
             message: text,
             type: "success",
             position: "bottom-left"
+        });
+    }
+
+    public static setPageTitle(title: string) {
+        this.store.dispatch(Actions.SET_BREADCRUMB_ACTION, {
+            title: title,
         });
     }
 }

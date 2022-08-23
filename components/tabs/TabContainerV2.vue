@@ -1,8 +1,8 @@
 <template>
-  <div class="d-flex justify-content-center align-items-center" ref="container">
+  <div class="d-flex justify-content-center align-items-center tab-items-container" ref="container">
     <slot name="tabs" v-if="show" :setActiveItem="setActiveItem"/>
   </div>
-  <div class="d-flex justify-content-center align-items-center w-100 h-100 pb-7" ref="tabContainerBody">
+  <div class="d-flex justify-content-center align-items-center w-100 h-100 pb-7 tab-content-container" ref="tabContainerBody">
     <slot name="tab-container" :tabNames="tabNames" :activeItem="activeItem" :routerMode="routerMode"
           :bodyHeight="bodyHeight">
       <router-view v-if="routerMode"/>
@@ -139,7 +139,6 @@ export default {
           const sharedParents = tabs[0].parentElement;
           for (let i = 0; i < tabsList.length; i++) {
             const dataItemName = tabsList[i]
-            console.log(dataItemName);
             for (let j = 0; j < tabs.length; j++) {
               const tabElement = tabs[j];
               if (tabElement.getAttribute('data-item-name') === dataItemName)
@@ -152,6 +151,8 @@ export default {
 
     const updateBodyHeight = () => {
       const cardBodyParent = findClassInParent(tabContainerBody.value, 'card-body');
+      if (!cardBodyParent)
+        return;
       const myStyle = getComputedStyle(tabContainerBody.value);
       const style = getComputedStyle(cardBodyParent);
       console.log(myStyle.height, style.height);

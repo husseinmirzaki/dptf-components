@@ -190,7 +190,7 @@ export class Table {
         if (this.basePushAddress != "") {
             VueInstanceService.router.push(this.viewPushAddress(data));
         } else {
-            this.context.emit('update', data);
+            this.context.emit('view', data);
         }
     }
 
