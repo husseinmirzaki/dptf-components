@@ -693,7 +693,7 @@ label {
 
 :deep(.add-icon-item) {
   /*position: absolute;*/
-  padding: 3px;
+  //padding: 3px;
   margin: 0 0 5px 5px;
   border-radius: 5px;
 
