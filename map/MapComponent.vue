@@ -1,6 +1,7 @@
 <style lang="scss" src="./MapComponent.scss"/>
 <script lang="ts">
-import {defineComponent, h, ref, toRef, watch} from "vue";
+import "leaflet/dist/leaflet.css";
+import {defineComponent, h, onMounted, ref, toRef, watch} from "vue";
 import {LControlScale, LMap} from "@vue-leaflet/vue-leaflet"
 import MapLatLngHolder from "@/custom/map/MapLatLngHolder.vue";
 import {ContextMenuService} from "@/custom/components/ContextMenuService";
@@ -39,6 +40,9 @@ class PluginManager {
 
 export default defineComponent({
   props: {
+    readOnly: {
+      default: false,
+    },
     showXY: {
       default: true,
     },
@@ -141,6 +145,7 @@ export default defineComponent({
     };
     const slotLayers = context.slots.default?.() ?? [] as Array<any>;
     const customLayers: CustomLayerItems = new CustomLayerItems();
+
     for (let i = 0; i < slotLayers.length; i++) {
       if (!slotLayers[i]['props']) {
         slotLayers[i]['props'] = {};
@@ -148,6 +153,21 @@ export default defineComponent({
       slotLayers[i]['props']['mapInstance'] = mapRefs;
       customLayers.add(slotLayers[i]);
     }
+
+    onMounted(() => {
+      const interval = setInterval(() => {
+        if (mapRef.value.leafletObject) {
+          clearInterval(interval);
+          console.log(mapRef.value.leafletObject);
+          mapRef.value.leafletObject.zoomControl.remove()
+          mapRef.value.leafletObject.doubleClickZoom.disable()
+          mapRef.value.leafletObject.dragging.disable()
+          mapRef.value.leafletObject.touchZoom.disable()
+        }
+        console.log()
+      }, 100);
+
+    })
 
     return {
       // functions
@@ -201,7 +221,6 @@ export default defineComponent({
     }, {
       default: () => {
 
-
         const layers: any = [];
 
         this.tileProviders.forEach((tileProvider) => {
@@ -210,7 +229,7 @@ export default defineComponent({
 
         // whether show lng and lat on top right
         // of map
-        if (this.showXY) {
+        if (this.showXY && !this.readOnly) {
           const vNode = h(MapLatLngHolder, {xy: this.mapCenter});
           this.plugins.register('MapLatLngHolder', vNode);
           layers.push(vNode)
@@ -219,7 +238,7 @@ export default defineComponent({
         /**
          * shows a simple description of what is happening now
          */
-        if (this.showState) {
+        if (this.showState && !this.readOnly) {
           const vNode = h(MapStateHolder, {state: this.activeState ? this.activeState : this.innerState});
           this.plugins.register('MapStateHolder', vNode);
           layers.push(vNode)
@@ -229,7 +248,7 @@ export default defineComponent({
          * show the button to change layer from street
          * to satellite
          */
-        if (this.showLayers) {
+        if (this.showLayers && !this.readOnly) {
           const vNode = h(MapLayerChangerButton, {
             "modelValue": this.satellite,
             'onUpdate:modelValue': (v) => this.satellite = v
@@ -244,7 +263,7 @@ export default defineComponent({
         // a bar on left which holds buttons which
         // are responsible for drawing and using
         // map to do specific things
-        if (this.customLayers.hasMapToolsButton) {
+        if (this.customLayers.hasMapToolsButton && !this.readOnly) {
           const vNode = h(MapTools, {
             ref: 'mapToolsRef',
             parent: this,
@@ -258,7 +277,7 @@ export default defineComponent({
           layers.push(vNode);
         }
 
-        if (this.customLayers.hasMapToolWindow) {
+        if (this.customLayers.hasMapToolWindow && !this.readOnly) {
           const vNode = h(
               MapWindows,
               {
@@ -275,7 +294,7 @@ export default defineComponent({
           );
         }
 
-        if (this.customLayers.hasMapExtensions) {
+        if (this.customLayers.hasMapExtensions && !this.readOnly) {
           layers.push(
               h(
                   MapExtensions, {

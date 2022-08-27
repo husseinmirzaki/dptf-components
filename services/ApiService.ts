@@ -1,8 +1,7 @@
 import {App} from "vue";
-import axios from "axios";
+import axios, {AxiosResponse} from "axios";
 import VueAxios from "vue-axios";
 import JwtService from "@/custom/core/services/JwtService";
-import {AxiosResponse} from "axios";
 import {Actions, Mutations} from "@/custom/store/enums/StoreEnums";
 import {VueInstanceService} from "@/Defaults";
 import {initMockAdapter} from "@/custom/mock/mock_server";
@@ -417,7 +416,9 @@ class ApiService {
         });
     }
 
-    public static list() {
+    public static list(customUrl: string | undefined) {
+        if (customUrl)
+            return this.get(customUrl);
         return this.get(this.url);
     }
 

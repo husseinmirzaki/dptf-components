@@ -2,7 +2,8 @@
   <div class="d-flex justify-content-center align-items-center tab-items-container" ref="container">
     <slot name="tabs" v-if="show" :setActiveItem="setActiveItem"/>
   </div>
-  <div class="d-flex justify-content-center align-items-center w-100 h-100 pb-7 tab-content-container" ref="tabContainerBody">
+  <div class="d-flex justify-content-center align-items-center w-100 h-100 pb-7 tab-content-container"
+       ref="tabContainerBody">
     <slot name="tab-container" :tabNames="tabNames" :activeItem="activeItem" :routerMode="routerMode"
           :bodyHeight="bodyHeight">
       <router-view v-if="routerMode"/>
@@ -132,6 +133,10 @@ export default {
     }
 
     const preFormReordering = () => {
+
+      if (!preferencesManager.value.value)
+        return;
+
       const tabsList = Object.values(preferencesManager.value.value);
       if (tabsList.length > 0 && container.value) {
         const tabs = selectItems();
