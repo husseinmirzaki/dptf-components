@@ -2,7 +2,7 @@
 <script lang="ts">
 import "leaflet/dist/leaflet.css";
 import {defineComponent, h, onMounted, ref, toRef, watch} from "vue";
-import {LControlScale, LMap} from "@vue-leaflet/vue-leaflet"
+import {LControlScale, LMap, LMarker} from "@vue-leaflet/vue-leaflet"
 import MapLatLngHolder from "@/custom/map/MapLatLngHolder.vue";
 import {ContextMenuService} from "@/custom/components/ContextMenuService";
 import MapTools from "@/custom/map/MapTools.vue";
@@ -155,14 +155,16 @@ export default defineComponent({
     }
 
     onMounted(() => {
+      if (!props.readOnly) return;
       const interval = setInterval(() => {
-        if (mapRef.value.leafletObject) {
+        if (mapRef.value.leafletObject.zoomControl) {
           clearInterval(interval);
           console.log(mapRef.value.leafletObject);
           mapRef.value.leafletObject.zoomControl.remove()
           mapRef.value.leafletObject.doubleClickZoom.disable()
           mapRef.value.leafletObject.dragging.disable()
           mapRef.value.leafletObject.touchZoom.disable()
+          mapRef.value.leafletObject.scrollWheelZoom.disable()
         }
         console.log()
       }, 100);
@@ -206,7 +208,7 @@ export default defineComponent({
       },
       style: "width: 100%;height: 800px;",
       maxZoom: 19,
-      minZoom: 5,
+      minZoom: this.readOnly ? 15 : 5,
       zoom: 8,
       class: ['map-component-custom-class'],
       center: this.mapCenter,
@@ -222,6 +224,14 @@ export default defineComponent({
       default: () => {
 
         const layers: any = [];
+
+        if (this.readOnly) {
+          layers.push(
+              h(LMarker, {
+                latLng: this.mapCenter,
+              }),
+          )
+        }
 
         this.tileProviders.forEach((tileProvider) => {
           buildLayers(layers, tileProvider, this.satellite);
