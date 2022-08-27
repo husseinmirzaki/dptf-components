@@ -1,9 +1,4 @@
 <template>
-  <el-tooltip content="قرمز بیشتر">
-    <div class="rate w-100 d-flex" ref="rate">
-      <div :class="'local-color-' + i" v-for="i in 10" :key="i"></div>
-    </div>
-  </el-tooltip>
   <div class="position-relative" ref="container">
     <div class="custom-map-tooltip" ref="mapToolTip">
       <slot :mapToolTip="mapToolTip" :mapData="mapData" :persianName="persianName">
@@ -231,14 +226,10 @@ export default {
       let classList = element.classList;
       if (value > 0) {
         const a = 11 - Math.round((value * 10) / max);
-        for (const i of classList) {
-          classList.remove(i);
-        }
+        element.classList = '';
         classList.add(city, `local-color-${a}`);
       } else {
-        for (const i of classList) {
-          classList.remove(i);
-        }
+        element.classList = '';
         classList.add(city, `local-color-10`);
       }
       element.setAttribute('data-value', String(value))
