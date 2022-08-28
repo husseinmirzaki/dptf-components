@@ -17,7 +17,7 @@
            v-if="$slots['card-header'] || cardTitle || cardDescription">
         <slot name="card-title-content" :cardTitle="cardTitle" :cardDescription="cardDescription">
           <div class="d-flex">
-            <div class="h-60px d-flex justify-content-center align-items-center back-button" v-if="backButtonRoute">
+            <div class="h-60px d-flex justify-content-center align-items-center back-button" v-if="backButtonRoute" @click="$router.push(backButtonRoute)">
               <div
                   class="btn btn-sm btn-icon btn-active-color-primary"
               >
