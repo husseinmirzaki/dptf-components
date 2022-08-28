@@ -159,14 +159,12 @@ export default defineComponent({
       const interval = setInterval(() => {
         if (mapRef.value.leafletObject.zoomControl) {
           clearInterval(interval);
-          console.log(mapRef.value.leafletObject);
           mapRef.value.leafletObject.zoomControl.remove()
           mapRef.value.leafletObject.doubleClickZoom.disable()
           mapRef.value.leafletObject.dragging.disable()
           mapRef.value.leafletObject.touchZoom.disable()
           mapRef.value.leafletObject.scrollWheelZoom.disable()
         }
-        console.log()
       }, 100);
 
     })

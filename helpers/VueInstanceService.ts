@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import {addMethod, setLocale} from "yup";
 import {Router} from "vue-router";
 import {Actions} from "@/store/enums/StoreEnums";
+import {SweetAlertOptions} from "sweetalert2";
 
 export default class VueInstanceService {
     public static pageIsLoading = ref(false);
@@ -56,8 +57,12 @@ export default class VueInstanceService {
         else this.vue.config.globalProperties["emitter"].emit(event);
     }
 
+    public static off(event: string, e?: unknown) {
+        console.log("emit result",this.vue.config.globalProperties["emitter"].off(event, e));
+    }
+
     public static on(event: string, e?: unknown) {
-        this.vue.config.globalProperties["emitter"].on(event, e);
+        console.log("emit result",this.vue.config.globalProperties["emitter"].on(event, e));
     }
 
     public static get store() {
@@ -94,6 +99,10 @@ export default class VueInstanceService {
             type: "success",
             position: "bottom-left"
         });
+    }
+
+    public static swal(config: SweetAlertOptions | string) {
+        return this.vue.config.globalProperties["$swal"](config);
     }
 
     public static setPageTitle(title: string) {

@@ -2,9 +2,7 @@ import TableHeader from "@/custom/components/table/header/TableHeader.vue";
 import TableTH from "@/custom/components/table/thead/TableTH.vue";
 import TableTD from "@/custom/components/table/tbody/TableTD.vue";
 import {Ref, ref, toRefs, watch} from "vue";
-import {VueInstanceService} from "@/Defaults";
-import {ApiService} from "@/Defaults";
-import TableTDDate from "@/custom/components/table/tbody/TableTDDate.vue";
+import {ApiService, VueInstanceService} from "@/Defaults";
 import TableTDUser from "@/custom/components/table/tbody/TableTDUser.vue";
 import TableTDUserMulti from "@/custom/components/table/tbody/TableTDUserMulti.vue";
 import TableTDEmpty from "@/custom/components/table/tbody/TableTDEmpty.vue";
@@ -483,7 +481,7 @@ export class Table {
      * context menu is asked for and not just for the table
      * it self
      */
-    getContextMenuItems(): Array<ContextMenuItem> {
+    getContextMenuItems(data: any = undefined): Array<ContextMenuItem> {
         return this.contextMenuItems;
     }
 }

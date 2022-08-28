@@ -9,25 +9,40 @@
       <div class="card-header align-items-center border-bottom-1 border-dark mt-0 px-2"
            :dragable="disableDrag ? 'no': 'dragable'"
            @mousedown.stop="dragMouseDown"
-           :class="[headerClasses, {'border-0': isCollapsed, 'border-bottom-1': !isCollapsed }]"
+           :class="[headerClasses, {
+             'border-0': isCollapsed,
+             'border-bottom-1': !isCollapsed,
+             'header-with-back-button': backButtonRoute
+           }]"
            v-if="$slots['card-header'] || cardTitle || cardDescription">
         <slot name="card-title-content" :cardTitle="cardTitle" :cardDescription="cardDescription">
-          <h3 class="card-title align-items-start flex-column my-0">
-            <slot name="card-title">
-            <span class="fw-bold fs-4 mb-2 text-dark">
-              <inline-svg v-if="cardIconWidth" :style="`width: ${cardIconWidth}px`" :src="$props.icon"/>
-              <inline-svg v-else :src="$props.icon"/>
-              {{ cardTitle }}
-            </span>
-            </slot>
+          <div class="d-flex">
+            <div class="h-60px d-flex justify-content-center align-items-center back-button" v-if="backButtonRoute">
+              <div
+                  class="btn btn-sm btn-icon btn-active-color-primary"
+              >
+              <span class="svg-icon svg-icon-1">
+                <inline-svg src="media/icons/duotune/arrows/arr001.svg"/>
+              </span>
+              </div>
+            </div>
+            <h3 class="card-title align-items-center flex-column my-0">
+              <slot name="card-title">
+              <span class="fw-bold fs-4 mb-2 text-dark">
+                <inline-svg v-if="cardIconWidth" :style="`width: ${cardIconWidth}px`" :src="$props.icon"/>
+                <inline-svg v-else :src="$props.icon"/>
+                {{ cardTitle }}
+              </span>
+              </slot>
 
-            <slot name="card-description">
-            <span class="text-muted fw-bold fs-7 my-0">
-              {{ cardDescription }}
-            </span>
-            </slot>
+              <slot name="card-description">
+                <span class="text-muted fw-bold fs-7 my-0">
+                  {{ cardDescription }}
+                </span>
+              </slot>
 
-          </h3>
+            </h3>
+          </div>
         </slot>
 
         <slot name="card-toolbar">
@@ -96,6 +111,28 @@
   cursor: move;
 }
 
+.header-with-back-button {
+  margin-right: 0 !important;
+  padding-right: 0 !important;
+}
+
+.back-button {
+  background-color: rgba(0, 0, 0, 0.0);
+  border-top-right-radius: 13px;
+  transition: background-color 250ms ease;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(10, 10, 10, 0.65);
+
+    svg {
+      path {
+        fill: #0d8ddc !important;
+      }
+    }
+  }
+}
+
 .draggable-start {
   position: relative;
 
@@ -147,7 +184,10 @@ export default {
     },
     "cardIconWidth": {
       default: null
-    }
+    },
+    "backButtonRoute": {
+      default: null,
+    },
   },
   setup(props, context) {
     const cardRef = ref();

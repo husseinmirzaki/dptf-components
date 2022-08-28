@@ -496,7 +496,7 @@ export default defineComponent({
 
     const contextMenu = (item) => {
       ContextMenuService.clickData = item;
-      ContextMenuService.set(defaultConfig.getContextMenuItems());
+      ContextMenuService.set(defaultConfig.getContextMenuItems(item));
     }
 
     const getTableSettings = () => {
