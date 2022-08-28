@@ -56,8 +56,12 @@ export default class VueInstanceService {
         else this.vue.config.globalProperties["emitter"].emit(event);
     }
 
+    public static off(event: string, e?: unknown) {
+        console.log("emit result",this.vue.config.globalProperties["emitter"].off(event, e));
+    }
+
     public static on(event: string, e?: unknown) {
-        this.vue.config.globalProperties["emitter"].on(event, e);
+        console.log("emit result",this.vue.config.globalProperties["emitter"].on(event, e));
     }
 
     public static get store() {
@@ -94,6 +98,10 @@ export default class VueInstanceService {
             type: "success",
             position: "bottom-left"
         });
+    }
+
+    public static swal(config: any) {
+        return this.vue.config.globalProperties["$swal"](config);
     }
 
     public static setPageTitle(title: string) {

@@ -128,8 +128,8 @@ export default defineComponent({
     })
 
     const onMapClicked = (e) => {
-      if (mode.value != MODE_DEFAULT)
-        console.log(mapRef.value);
+      // if (mode.value != MODE_DEFAULT)
+      //   console.log(mapRef.value);
     }
 
     const addPoint = (top = true) => {
@@ -143,9 +143,9 @@ export default defineComponent({
 
     const computedOrderKeys = orderedList.computedOrderKeys();
 
-    watch(computedOrderKeys, () => {
-      console.log(computedOrderKeys.value);
-    });
+    // watch(computedOrderKeys, () => {
+    //   console.log(computedOrderKeys.value);
+    // });
 
     onUnmounted(() => {
       props.plugins?.unRegister('MapToolsWindowLine');
