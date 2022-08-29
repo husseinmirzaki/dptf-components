@@ -16,7 +16,7 @@
           </div>
         </div>
 
-        <div class="modal-body">
+        <div class="modal-body" :class="[modalBodyClassExtra]">
           <slot name="modal-content" :modalId="modalId"/>
         </div>
         <div class="modal-footer" :class="{'p-2': thinFooter}">
@@ -68,7 +68,7 @@ export default defineComponent({
   },
   props: {
     modalBodyClassExtra: {
-      default: "py-5 px-7",
+      default: "",
     },
     modalId: {
       default: () => {
