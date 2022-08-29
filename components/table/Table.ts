@@ -173,8 +173,7 @@ export class Table {
             if (this.props.url.value != "") {
                 if (e.value) {
                     this.service.deleteOne(this.getDeleteItemId(data)).then(() => {
-                        this.refresh();
-                        this.context.emit('delete', data);
+                        this.onDataDeleted(data)
                     });
                 }
             } else {
@@ -182,6 +181,11 @@ export class Table {
             }
 
         });
+    }
+
+    onDataDeleted(data) {
+        this.refresh();
+        this.context.emit('delete', data);
     }
 
     onViewClicked(data) {
