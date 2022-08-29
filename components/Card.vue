@@ -102,7 +102,7 @@
         <slot name="card-content"/>
       </div>
     </slot>
-    <div class="card-footer p-3" v-if="$slots['card-footer']">
+    <div class="card-footer" :class="[footerPaddingClass]" v-if="$slots['card-footer']">
       <slot name="card-footer"/>
     </div>
   </div>

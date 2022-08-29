@@ -10,6 +10,9 @@ span, p, h1,h2,h3,h4,h5,h6, div {
 .breadcrumb .breadcrumb-item:last-child {
     padding-right: 5px !important;
 }
+
+
+/** el package **/
 .el-notification {
     padding: 14px 13px 14px 26px;
 }
@@ -45,6 +48,15 @@ span, p, h1,h2,h3,h4,h5,h6, div {
     width: 1px;
     background: #a4a6a9;
 }
+
+
+/** apexcharts **/
 .apexcharts-svg *{
     font-family: "IRANSans" !important;
+}
+
+
+/** swal **/
+.swal2-html-container {
+    text-align: center;
 }

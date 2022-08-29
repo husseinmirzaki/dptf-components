@@ -7,6 +7,9 @@ export default {
         cardDescription: [String],
         bodyPaddingClass: {
             default: "px-3",
-        }
+        },
+        footerPaddingClass: {
+            default: "p-3",
+        },
     }
 };
