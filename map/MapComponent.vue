@@ -242,9 +242,10 @@ export default defineComponent({
       'data-context-menu': "true"
     }, () => {
 
-        const layers: any = [
-            ...this.$slots.default!().filter((slot) => !slot || !slot['type'] || !slot['name']),
-        ];
+        const layers: any = [];
+
+        if (this.$slots.default)
+          layers.push(...this.$slots.default!().filter((slot) => !slot || !slot['type'] || !slot['name']))
 
         if (this.readOnly) {
           layers.push(
