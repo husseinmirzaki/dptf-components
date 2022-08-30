@@ -11,6 +11,10 @@ export default defineComponent({
 
     return h(LControl, {position: "topright"}, h('div', {'class': 'w-350px'}, {
       default: () => {
+
+        if (this.$slots.default && typeof this.$slots.default == 'function')
+          return;
+
         const slots = this.$slots.default!();
 
         slots.forEach((e) => {

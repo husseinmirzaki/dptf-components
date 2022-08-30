@@ -416,7 +416,7 @@ class ApiService {
         });
     }
 
-    public static list(customUrl: string | undefined) {
+    public static list(customUrl: string | undefined=undefined) {
         if (customUrl)
             return this.get(customUrl);
         return this.get(this.url);

@@ -46,6 +46,15 @@ export default defineComponent({
     showXY: {
       default: true,
     },
+    maxZoom: {
+      default: 18
+    },
+    minZoom: {
+      default: 5,
+    },
+    zoom: {
+      default: 8,
+    },
     showState: {
       default: true,
     },
@@ -57,6 +66,9 @@ export default defineComponent({
     },
     mapXY: {
       default: [35.632744348010625, 51.43146514892579]
+    },
+    boundary: {
+      default: () => ({})
     },
   },
   setup(props, context) {
@@ -87,9 +99,11 @@ export default defineComponent({
         activeState.value = undefined;
     });
 
-    const onMapReady = () => {
-      context.emit('mapReady')
+    const onMapReady = (e) => {
+      context.emit('mapReady', e)
       emitTo('mapReady', null);
+      console.log("map cords", mapCenter.value);
+      // e.setView(mapCenter.value)
     }
 
     const onClick = (value) => {
@@ -145,12 +159,19 @@ export default defineComponent({
     };
     const slotLayers = context.slots.default?.() ?? [] as Array<any>;
     const customLayers: CustomLayerItems = new CustomLayerItems();
+    const outerLayers: any = [];
 
     for (let i = 0; i < slotLayers.length; i++) {
+      if (!slotLayers[i] || !slotLayers[i]['type'] || !slotLayers[i]['name']) {
+        continue;
+      }
+
       if (!slotLayers[i]['props']) {
         slotLayers[i]['props'] = {};
       }
+
       slotLayers[i]['props']['mapInstance'] = mapRefs;
+
       customLayers.add(slotLayers[i]);
     }
 
@@ -190,6 +211,7 @@ export default defineComponent({
       plugins,
       activeWindow,
       customLayers,
+      outerLayers,
       mapCenter,
       activeState,
       innerState,
@@ -205,9 +227,9 @@ export default defineComponent({
         attributionControl: false,
       },
       style: "width: 100%;height: 800px;",
-      maxZoom: 19,
-      minZoom: this.readOnly ? 15 : 5,
-      zoom: 8,
+      maxZoom: this.maxZoom,
+      minZoom: this.readOnly ? 15 : this.minZoom,
+      zoom: this.zoom,
       class: ['map-component-custom-class'],
       center: this.mapCenter,
       onReady: this.onMapReady,
@@ -218,10 +240,11 @@ export default defineComponent({
       // this will let us show a context menu
       // by filling ContextMenuService
       'data-context-menu': "true"
-    }, {
-      default: () => {
+    }, () => {
 
-        const layers: any = [];
+        const layers: any = [
+            ...this.$slots.default!().filter((slot) => !slot || !slot['type'] || !slot['name']),
+        ];
 
         if (this.readOnly) {
           layers.push(
@@ -316,12 +339,20 @@ export default defineComponent({
           );
         }
 
+
+        console.log("layers",this.outerLayers);
+
         return layers
       }
-    });
+);
 
     this.plugins.register("LMap", map);
     return map;
   }
 });
 </script>
+<style>
+.leaflet-pane.leaflet-tooltip-pane {
+  direction: ltr;
+}
+</style>
