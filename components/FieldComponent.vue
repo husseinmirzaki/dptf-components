@@ -493,6 +493,12 @@ export default defineComponent({
           select_options.value["disabled"] = "readonly";
         }
 
+        watch(read_only, () => {
+          if (select2Instance.value) {
+            select2Instance.value.prop("disabled",read_only.value)
+          }
+        })
+
         if (placeholder.value != "") {
           select_options.value["placeholder"] = placeholder.value;
         }

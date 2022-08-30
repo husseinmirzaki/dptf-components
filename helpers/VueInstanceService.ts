@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import {addMethod, setLocale} from "yup";
 import {Router} from "vue-router";
 import {Actions} from "@/store/enums/StoreEnums";
+import {SweetAlertOptions, SweetAlertResult} from "sweetalert2";
 
 export default class VueInstanceService {
     public static pageIsLoading = ref(false);
@@ -100,7 +101,7 @@ export default class VueInstanceService {
         });
     }
 
-    public static swal(config: any) {
+    public static swal(config: SweetAlertOptions|string): Promise<SweetAlertResult> {
         return this.vue.config.globalProperties["$swal"](config);
     }
 

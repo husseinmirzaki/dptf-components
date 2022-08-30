@@ -17,7 +17,7 @@ export default interface FieldComponentPropsInterface {
     multiple?: boolean;
     select_tag?: boolean;
     'show-help'?: string;
-    read_only?: boolean;
+    read_only?: boolean | Ref<boolean>;
     label?: string;
     field_type?: string | "text" | "component" | "hidden" | "file" | "select" | "select-v2" | "textarea" | "p-date-time" | "checkbox" | "separator" | "auto-complete" | "currency";
     field_container_classes?: string;

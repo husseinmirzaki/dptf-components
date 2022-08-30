@@ -68,6 +68,7 @@ export default {
       console.log("goToRoute(");
       VueInstanceService.router.push({
         name: tabNames.value[index],
+        query: VueInstanceService.router.query,
       })
     }
 
