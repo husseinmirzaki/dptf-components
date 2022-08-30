@@ -471,6 +471,19 @@ export default defineComponent({
         field.value.$el.setAttribute("id", context.attrs["id"]);
       }
 
+
+      watch(read_only, (e) => {
+        if (select2Instance.value) {
+          select2Instance.value.prop("disabled", read_only.value)
+        } else {
+          if (e) {
+            field.value.$el.setAttribute("readonly", "readonly");
+          } else {
+            field.value.$el.removeAttribute("readonly");
+          }
+        }
+      })
+
       if (field_type.value === "select") {
         const modalParent = findClassInParent(root.value, 'modal-body');
 
@@ -492,12 +505,6 @@ export default defineComponent({
         if (read_only.value) {
           select_options.value["disabled"] = "readonly";
         }
-
-        watch(read_only, () => {
-          if (select2Instance.value) {
-            select2Instance.value.prop("disabled",read_only.value)
-          }
-        })
 
         if (placeholder.value != "") {
           select_options.value["placeholder"] = placeholder.value;
