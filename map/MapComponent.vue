@@ -188,7 +188,7 @@ export default defineComponent({
         }
       }, 100);
 
-    })
+    });
 
     return {
       // functions
@@ -222,130 +222,130 @@ export default defineComponent({
   render() {
 
     const map = h(LMap, {
-      ref: 'mapRef',
-      options: {
-        attributionControl: false,
-      },
-      style: "width: 100%;height: 800px;",
-      maxZoom: this.maxZoom,
-      minZoom: this.readOnly ? 15 : this.minZoom,
-      zoom: this.zoom,
-      class: ['map-component-custom-class'],
-      center: this.mapCenter,
-      onReady: this.onMapReady,
-      onClick: this.onClick,
-      onMousemove: this.onMousemove,
-      'onUpdate:center': this.onUpdateCenter,
-      onContextmenu: this.onContextmenu,
-      // this will let us show a context menu
-      // by filling ContextMenuService
-      'data-context-menu': "true"
-    }, () => {
+          ref: 'mapRef',
+          options: {
+            attributionControl: false,
+          },
+          style: "width: 100%;height: 800px;",
+          maxZoom: this.maxZoom,
+          minZoom: this.readOnly ? 15 : this.minZoom,
+          zoom: this.zoom,
+          class: ['map-component-custom-class'],
+          center: this.mapCenter,
+          onReady: this.onMapReady,
+          onClick: this.onClick,
+          onMousemove: this.onMousemove,
+          'onUpdate:center': this.onUpdateCenter,
+          onContextmenu: this.onContextmenu,
+          // this will let us show a context menu
+          // by filling ContextMenuService
+          'data-context-menu': "true"
+        }, () => {
 
-        const layers: any = [];
+          const layers: any = [];
 
-        if (this.$slots.default)
-          layers.push(...this.$slots.default!().filter((slot) => !slot || !slot['type'] || !slot['name']))
+          if (this.$slots.default)
+            layers.push(...this.$slots.default!().filter((slot) => !slot || !slot['type'] || !slot['name']))
 
-        if (this.readOnly) {
-          layers.push(
-              h(LMarker, {
-                latLng: this.mapCenter,
-              }),
-          )
-        }
+          if (this.readOnly) {
+            layers.push(
+                h(LMarker, {
+                  latLng: this.mapCenter,
+                }),
+            )
+          }
 
-        this.tileProviders.forEach((tileProvider) => {
-          buildLayers(layers, tileProvider, this.satellite);
-        });
-
-        // whether show lng and lat on top right
-        // of map
-        if (this.showXY && !this.readOnly) {
-          const vNode = h(MapLatLngHolder, {xy: this.mapCenter});
-          this.plugins.register('MapLatLngHolder', vNode);
-          layers.push(vNode)
-        }
-
-        /**
-         * shows a simple description of what is happening now
-         */
-        if (this.showState && !this.readOnly) {
-          const vNode = h(MapStateHolder, {state: this.activeState ? this.activeState : this.innerState});
-          this.plugins.register('MapStateHolder', vNode);
-          layers.push(vNode)
-        }
-
-        /**
-         * show the button to change layer from street
-         * to satellite
-         */
-        if (this.showLayers && !this.readOnly) {
-          const vNode = h(MapLayerChangerButton, {
-            "modelValue": this.satellite,
-            'onUpdate:modelValue': (v) => this.satellite = v
+          this.tileProviders.forEach((tileProvider) => {
+            buildLayers(layers, tileProvider, this.satellite);
           });
-          this.plugins.register('MapLayerChangerButton', vNode);
-          layers.push(vNode);
+
+          // whether show lng and lat on top right
+          // of map
+          if (this.showXY && !this.readOnly) {
+            const vNode = h(MapLatLngHolder, {xy: this.mapCenter});
+            this.plugins.register('MapLatLngHolder', vNode);
+            layers.push(vNode)
+          }
+
+          /**
+           * shows a simple description of what is happening now
+           */
+          if (this.showState && !this.readOnly) {
+            const vNode = h(MapStateHolder, {state: this.activeState ? this.activeState : this.innerState});
+            this.plugins.register('MapStateHolder', vNode);
+            layers.push(vNode)
+          }
+
+          /**
+           * show the button to change layer from street
+           * to satellite
+           */
+          if (this.showLayers && !this.readOnly) {
+            const vNode = h(MapLayerChangerButton, {
+              "modelValue": this.satellite,
+              'onUpdate:modelValue': (v) => this.satellite = v
+            });
+            this.plugins.register('MapLayerChangerButton', vNode);
+            layers.push(vNode);
+          }
+
+          // shows the map scale
+          layers.push(h(LControlScale, {imperial: false,}));
+
+          // a bar on left which holds buttons which
+          // are responsible for drawing and using
+          // map to do specific things
+          if (this.customLayers.hasMapToolsButton && !this.readOnly) {
+            const vNode = h(MapTools, {
+              ref: 'mapToolsRef',
+              parent: this,
+              modelValue: this.activeWindow,
+              'onUpdate:modelValue': (value) => this.activeWindow = value,
+              'onUpdate:state': this.onUpdateState,
+            }, {
+              default: () => this.customLayers.mapToolsButton
+            });
+            this.plugins.register('MapTools', vNode);
+            layers.push(vNode);
+          }
+
+          if (this.customLayers.hasMapToolWindow && !this.readOnly) {
+            const vNode = h(
+                MapWindows,
+                {
+                  ref: 'mapWindowsRef',
+                  parent: this
+                },
+                {
+                  default: () => this.customLayers.mapToolWindow.filter((item) => item.props['activation-key'] === this.activeWindow)
+                }
+            );
+            this.plugins.register('MapWindows', vNode);
+            layers.push(
+                vNode
+            );
+          }
+
+          if (this.customLayers.hasMapExtensions && !this.readOnly) {
+            layers.push(
+                h(
+                    MapExtensions, {
+                      ref: 'mapExtensionsRef',
+                      parent: this,
+                    },
+                    {
+                      default: () => this.customLayers.mapExtensions
+                    }
+                )
+            );
+          }
+
+
+          console.log("layers", this.outerLayers);
+
+          return layers
         }
-
-        // shows the map scale
-        layers.push(h(LControlScale, {imperial: false,}));
-
-        // a bar on left which holds buttons which
-        // are responsible for drawing and using
-        // map to do specific things
-        if (this.customLayers.hasMapToolsButton && !this.readOnly) {
-          const vNode = h(MapTools, {
-            ref: 'mapToolsRef',
-            parent: this,
-            modelValue: this.activeWindow,
-            'onUpdate:modelValue': (value) => this.activeWindow = value,
-            'onUpdate:state': this.onUpdateState,
-          }, {
-            default: () => this.customLayers.mapToolsButton
-          });
-          this.plugins.register('MapTools', vNode);
-          layers.push(vNode);
-        }
-
-        if (this.customLayers.hasMapToolWindow && !this.readOnly) {
-          const vNode = h(
-              MapWindows,
-              {
-                ref: 'mapWindowsRef',
-                parent: this
-              },
-              {
-                default: () => this.customLayers.mapToolWindow.filter((item) => item.props['activation-key'] === this.activeWindow)
-              }
-          );
-          this.plugins.register('MapWindows', vNode);
-          layers.push(
-              vNode
-          );
-        }
-
-        if (this.customLayers.hasMapExtensions && !this.readOnly) {
-          layers.push(
-              h(
-                  MapExtensions, {
-                    ref: 'mapExtensionsRef',
-                    parent: this,
-                  },
-                  {
-                    default: () => this.customLayers.mapExtensions
-                  }
-              )
-          );
-        }
-
-
-        console.log("layers",this.outerLayers);
-
-        return layers
-      }
-);
+    );
 
     this.plugins.register("LMap", map);
     return map;

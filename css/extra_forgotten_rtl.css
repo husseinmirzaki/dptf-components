@@ -2,7 +2,7 @@
     margin: 0 0 0 0.75rem !important;
 }
 
-span, p, h1,h2,h3,h4,h5,h6, div {
+span, p, h1, h2, h3, h4, h5, h6, div {
     font-family: "IRANSans";
     font-variant-ligatures: discretionary-ligatures;
 }
@@ -16,30 +16,38 @@ span, p, h1,h2,h3,h4,h5,h6, div {
 .el-notification {
     padding: 14px 13px 14px 26px;
 }
+
 .el-icon-close {
     right: auto !important;
     left: 15px !important;
 }
+
 .tooltip {
     font-family: IRANSans !important;
 }
+
 .el-switch__label--left {
     margin-left: 10px;
 }
+
 .el-switch__label--right {
     margin-right: 10px;
 }
+
 .el-switch__label {
     color: var(--el-color-primary) !important;
 }
+
 .el-switch__label.is-active {
     color: var(--el-text-color-primary) !important;
 }
+
 .vpd-input-group {
     height: 42px;
 }
+
 .m-n-l-1 {
-   margin-left: -5px !important;
+    margin-left: -5px !important;
 }
 
 .vertical-divider {
@@ -51,10 +59,18 @@ span, p, h1,h2,h3,h4,h5,h6, div {
 
 
 /** apexcharts **/
-.apexcharts-svg *{
+.apexcharts-svg * {
     font-family: "IRANSans" !important;
 }
 
+span.apexcharts-text, span.apexcharts-title-text, span.apexcharts-legend-text {
+
+    font-family: "IRANSans" !important;
+    margin-right: 2px;
+}
+.apexcharts-tooltip-text-label {
+    margin-right: 3px;
+}
 
 /** swal **/
 .swal2-html-container {
