@@ -11,6 +11,7 @@ export class UserPreferencesManager {
     }
 
     public get() {
+        this.loadingPreferences.value = true;
         UserPreferencesV2Api.getPreferences(this.title).then(
             ({data}) => {
                 this.value.value = JSON.parse(data.value);

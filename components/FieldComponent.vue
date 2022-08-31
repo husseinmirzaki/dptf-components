@@ -536,8 +536,7 @@ export default defineComponent({
 
         select2Instance.value?.change((e) => {
           const _data = $(e.target).val();
-          if (_data != undefined)
-            context.emit("update:modelValue", _data);
+          context.emit("update:modelValue", _data);
         });
 
       } else if (field_type.value === "file") {

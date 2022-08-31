@@ -2,7 +2,8 @@
   <div class="context-menu" ref="contextMenu">
     <ul>
       <li v-for="item in items" :key="item['text']">
-        <div class="menu-item d-flex flex-row align-items-center" @click="clicked(item)">
+        <div class="separator" v-if="item['text'] == 'separator'"></div>
+        <div v-else class="menu-item d-flex flex-row align-items-center" @click="clicked(item)">
           <div class="menu-icon">
             <span class="svg-icon svg-icon-1" v-if="item['icon']">
               <inline-svg :src="item['icon']"/>
@@ -50,6 +51,19 @@
       padding-left: 7px;
     }
   }
+}
+.separator {
+  position: relative;
+  height: 3px;
+  background-image: linear-gradient(90deg, #ffffff, #f38211, #ff0000, #ff0000, #e0e0e0);
+  width: 100%;
+  margin: 2px 0 1px;
+  border-radius: 5px;
+  z-index: 9999999;
+  box-shadow:0 0 4px 0 #0b0e18;
+}
+.menu-item {
+  z-index: 1;
 }
 
 

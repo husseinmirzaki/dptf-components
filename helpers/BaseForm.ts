@@ -70,6 +70,10 @@ export class CreateForm<T extends FieldsInterface = any> {
             this.activeMode.value = mode;
     }
 
+    get theActiveObj() {
+        return this.refs[this.theActiveMode];
+    }
+
     /**
      * an instance or a class which extends ApiService
      */

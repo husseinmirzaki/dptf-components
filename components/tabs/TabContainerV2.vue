@@ -65,7 +65,6 @@ export default {
     let dragInstance = null;
 
     const goToRoute = (index) => {
-      console.log("goToRoute(");
       VueInstanceService.router.push({
         name: tabNames.value[index],
         query: VueInstanceService.router.query,
