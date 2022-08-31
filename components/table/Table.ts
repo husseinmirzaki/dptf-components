@@ -164,7 +164,6 @@ export class Table {
             title: 'آیا تمایل داید که این داده را حذف کنید',
             text: 'توجه کنید بعد از حذف کردن این مورد دیگر قادر به بازگردانی داده های موجود در آن نمیباشید',
             showCancelButton: true,
-            showDenyButton: true,
             confirmButtonText: 'حذف شود',
             cancelButtonText: `حدف نشود`,
             confirmButtonColor: '#F00',
