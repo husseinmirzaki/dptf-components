@@ -97,7 +97,7 @@
         </slot>
       </div>
     </slot>
-    <slot name="card-body">
+    <slot name="card-body" :class="[bodyClass]">
       <div class="card-body" ref="bodyRef" :class="[bodyPaddingClass]">
         <slot name="card-content"/>
       </div>
@@ -186,6 +186,9 @@ export default {
       default: null
     },
     "backButtonRoute": {
+      default: null,
+    },
+    "bodyClass": {
       default: null,
     },
   },

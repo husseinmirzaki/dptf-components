@@ -45,7 +45,7 @@
     </template>
     <template v-slot:card-body>
       <spinner :loading="defaultConfig.isLoading.value">
-        <div class="card-body m-0 p-0">
+        <div class="card-body m-0 p-0" :class="[$attrs.bodyClass]">
           <!--begin::Table container-->
           <div class="table-responsive">
             <!--begin::Table-->
