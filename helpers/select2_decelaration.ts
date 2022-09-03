@@ -118,7 +118,7 @@ export function userToSelect2(user) {
             value: user.id
         }
 
-    return  {
+    return {
         text: '',
         value: 0
     }
@@ -130,4 +130,10 @@ export function usersToSelect2(users) {
         usersSelect2.push(userToSelect2(user));
     })
     return usersSelect2;
+}
+
+export function closeAllOpenInstance() {
+    document.querySelectorAll('.select2-dropdown').forEach((e) => {
+        e.remove()
+    });
 }

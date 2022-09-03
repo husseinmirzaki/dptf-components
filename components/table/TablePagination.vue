@@ -24,6 +24,7 @@
 <script>
 import {computed, defineComponent, toRefs} from "vue";
 import {Configs} from "@/Defaults";
+import {closeAllOpenInstance} from "@/custom/helpers/select2_decelaration";
 
 export default defineComponent({
   props: {
@@ -72,6 +73,7 @@ export default defineComponent({
     }
 
     const nextPage = () => {
+      closeAllOpenInstance();
       if (count.value > 0)
         if (Math.ceil(count.value / perPage.value) > currentPage.value) {
           context.emit('pageSelected', currentPage.value + 1);
@@ -79,6 +81,7 @@ export default defineComponent({
     }
 
     const prevPage = () => {
+      closeAllOpenInstance();
       if (currentPage.value - 1 === 0)
         return;
 

@@ -21,7 +21,11 @@ export default class VueInstanceService {
                 min: "فیلد `${path}` باید حداقل ${min} کاراکتر باشد",
                 max: "فیلد `${path}` باید حداکثر ${max} کاراکتر باشد",
                 email: "فرمت ${path} اشتباه است"
-            }
+            },
+            number: {
+                min: "مقدار فیلد `${path}` باید حداقل ${min} باشد",
+                max: "مقدار فیلد `${path}` باید حداکثر ${max} باشد",
+            },
         });
 
         addMethod(Yup.array, "checkSelect", function (errorMessage) {
