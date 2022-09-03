@@ -144,13 +144,12 @@
                           :show_errors="false"
                           field_type="checkbox"/>
                     </td>
-                    <template v-for="(header, index) in headers" :key="index">
-
+                    <template v-for="(header, headerIndex) in headers" :key="header">
                       <component
                           v-if="headerVisibility[header]"
                           class="pe-2 text-nowrap"
-                          :is="defaultConfig.onTBodyComponent(item, header, index)"
-                          v-bind="defaultConfig.onTBodyProps(item, header, index)"
+                          :is="defaultConfig.onTBodyComponent(item, header, headerIndex, index)"
+                          v-bind="defaultConfig.onTBodyProps(item, header, headerIndex, index)"
                       />
                     </template>
                   </Component>

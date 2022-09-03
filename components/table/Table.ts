@@ -359,7 +359,7 @@ export class Table {
         return this.tBodyRowComponent;
     }
 
-    onTBodyProps(item, header, index): any {
+    onTBodyProps(item, header, index, rowIndex: string|number|undefined=undefined): any {
         let itemElement = Object.assign(item);
         if (header.search('.') > -1) {
             const s = header.split('.');
@@ -387,8 +387,9 @@ export class Table {
         };
     }
 
-    onTBodyComponent(item, header, index) {
+    onTBodyComponent(item, header, index, rowIndex: string|number|undefined = undefined) {
 
+        console.log("rowIndex", rowIndex);
 
         if (this.tBodyComponents[header]) {
             return this.tBodyComponents[header];
