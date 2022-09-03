@@ -111,4 +111,9 @@ export class UserApiService extends ApiService {
             }
         });
     }
+
+    public static getUserRole() {
+        return ApiService.get(`contractor_user/get_user_role/`)
+    }
+
 }
