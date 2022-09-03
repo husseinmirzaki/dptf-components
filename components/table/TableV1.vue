@@ -49,7 +49,10 @@
           <!--begin::Table container-->
           <div class="table-responsive">
             <!--begin::Table-->
-            <table ref="tableRef" class="table table-bordered align-middle gs-4 gy-4 table-hover table table-v2-custom">
+            <table ref="tableRef"
+                   class="table table-bordered align-middle gs-4 gy-4 table-hover table table-v2-custom"
+                   :class="{'mb-0': !defaultConfig.showPagination}"
+            >
               <!--begin::Table head-->
               <thead>
               <tr class="fw-bolder text-muted bg-light text-center" ref="headersRef">
@@ -118,13 +121,15 @@
               <template v-else-if="dList.length > 0">
                 <template v-for="(item, index) in dList" :key="index">
                   <Component class="text-center"
-                      :is="defaultConfig.onTBodyRowComponent(item, index)"
-                      v-bind="defaultConfig.onTBodyRowBinds(item, index)"
-                      data-context-menu="true" @contextmenu="contextMenu(item)"
-                      @drop.prevent="defaultConfig.context.emit('trDrop', [$event, item, index])" @dragenter.prevent
-                      @dragover.prevent
-                      @mouseenter="checkCheckFieldData(`check_${item.id}`)"
-                      @click="$emit('on-row-selected', item)">
+                             :is="defaultConfig.onTBodyRowComponent(item, index)"
+                             v-bind="defaultConfig.onTBodyRowBinds(item, index)"
+                             data-context-menu="true"
+                             @contextmenu="contextMenu(item)"
+                             @drop.prevent="defaultConfig.context.emit('trDrop', [$event, item, index])"
+                             @dragenter.prevent
+                             @dragover.prevent
+                             @mouseenter="checkCheckFieldData(`check_${item.id}`)"
+                             @click="$emit('on-row-selected', item)">
                     <td style="width: 70px" v-if="defaultConfig.checkAble"
                         @mousedown.prevent="checksDragHandler.isMouseDown.value = true"
                         @mouseup.prevent="checksDragHandler.isMouseDown.value = false"
@@ -162,6 +167,7 @@
             <!--end::Table-->
           </div>
           <table-pagination
+              v-if="defaultConfig.showPagination"
               @page-selected="onPage"
               :current-page="defaultConfig.currentPage"
               :count="defaultConfig.count"/>
@@ -191,6 +197,16 @@ th:last-child {
   .filter-place-holder .fixed-filter-container {
     transform: translateX(-10%) !important;
   }
+}
+
+tbody .table-row-container {
+  z-index: 1;
+
+  &:hover {
+    z-index: 2;
+    outline: 3px solid rgba(0, 0, 0, .5);
+  }
+
 }
 
 // //these part is used to make filters look better
@@ -307,7 +323,6 @@ import {UserPreferencesTableApi} from "@/custom/services/UserPreferencesTableApi
 import DropdownV2 from "@/custom/components/DropdownV2.vue";
 import {MenuComponent} from "@/assets/ts/components";
 import FilterContainer from "@/custom/components/table/header/filters/FilterContainer.vue";
-import TableTr from "@/custom/components/table/TableTr.vue"
 
 export default defineComponent({
   components: {

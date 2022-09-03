@@ -137,6 +137,8 @@ export class Table {
 
     basePushAddress = '';
 
+    showPagination = true;
+
     get showContextMenuView() {
         return true;
     }
@@ -331,7 +333,6 @@ export class Table {
     onTHeadProps(header, index) {
 
         let translate = '';
-        console.log(this.headerTranslate);
         if (this.headerTranslate[header]) {
             translate = this.headerTranslate[header];
         } else {

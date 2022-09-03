@@ -12,6 +12,7 @@ export default interface FieldComponentPropsInterface {
     one_line?: boolean;
     show_errors?: boolean;
     name: string;
+    showLabel?: boolean;
     required?: boolean;
     select_multiple?: boolean;
     multiple?: boolean;

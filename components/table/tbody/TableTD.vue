@@ -33,7 +33,7 @@ export default defineComponent({
   },
   methods: {
     truncate(data) {
-      if (data && data.length > 80) {
+      if (data && data.length > 80 && typeof data === 'string') {
         return data.substr(0, 80) + '...';
       }
       return data;

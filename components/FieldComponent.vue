@@ -12,7 +12,7 @@
       <label
           class="fs-5 fw-bold mb-2 font-weight-bolder text-dark"
           :class="[{ required: required }, one_line_label_classes_c, label_class]"
-          v-if="label != null && label !== '' && field_type != 'separator'"
+          v-if="label != null && label !== '' && field_type != 'separator' && showLabel"
       > {{ label }}
       </label>
     </div>
@@ -262,6 +262,9 @@ export default defineComponent({
     },
     canAddItem: {
       default: false,
+    },
+    showLabel: {
+      default: true,
     },
     onAddClick: {
       default: () => (() => {
