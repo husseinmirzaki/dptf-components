@@ -117,7 +117,8 @@
               </tr>
               <template v-else-if="dList.length > 0">
                 <template v-for="(item, index) in dList" :key="index">
-                  <tr class="text-center"
+                  <Component class="text-center"
+                      :is="defaultConfig.onTBodyRowComponent(item, index)"
                       v-bind="defaultConfig.onTBodyRowBinds(item, index)"
                       data-context-menu="true" @contextmenu="contextMenu(item)"
                       @drop.prevent="defaultConfig.context.emit('trDrop', [$event, item, index])" @dragenter.prevent
@@ -147,7 +148,7 @@
                           v-bind="defaultConfig.onTBodyProps(item, header, index)"
                       />
                     </template>
-                  </tr>
+                  </Component>
                 </template>
               </template>
               <!--              <tr v-else-if="noHeaderSelected">-->
@@ -292,7 +293,7 @@ table {
 }
 </style>
 <script lang="ts">
-import {computed, ComputedRef, defineComponent, nextTick, onMounted, ref, toRef, watch} from "vue";
+import {computed, defineComponent, nextTick, onMounted, ref, toRef, watch} from "vue";
 import DropdownV1 from "@/custom/components/DropdownV1.vue";
 import TableTD from "@/custom/components/table/tbody/TableTD.vue";
 import {Table} from "@/custom/components/table/Table";
@@ -304,9 +305,9 @@ import FieldComponent from "@/custom/components/FieldComponent.vue";
 import {DragHandler, SimpleDrag} from "@/custom/components/table/TableDrag";
 import {UserPreferencesTableApi} from "@/custom/services/UserPreferencesTableApi";
 import DropdownV2 from "@/custom/components/DropdownV2.vue";
-import {MenuComponent, ToggleComponent} from "@/assets/ts/components";
-import {del} from "object-path";
+import {MenuComponent} from "@/assets/ts/components";
 import FilterContainer from "@/custom/components/table/header/filters/FilterContainer.vue";
+import TableTr from "@/custom/components/table/TableTr.vue"
 
 export default defineComponent({
   components: {
