@@ -12,6 +12,7 @@ import Swal from "sweetalert2/dist/sweetalert2.js";
 import {fieldC} from "@/custom/components/FieldComponent.vue";
 import TableTDDateTime from "@/custom/components/table/tbody/TableTDDateTime.vue";
 import TableTDColor from "@/custom/components/table/tbody/TableTDColor.vue";
+import TableTr from "@/custom/components/table/TableTr.vue";
 
 export class Table {
     defaultTableName = '';
@@ -65,6 +66,13 @@ export class Table {
      * show data in table <td> tags
      */
     tBodyComponent = TableTD;
+
+    /**
+     * Default table data component for each
+     * individual data item this is used to
+     * show data in table <td> tags
+     */
+    tBodyRowComponent = TableTr;
 
     /**
      * a key value object to determine which
@@ -344,6 +352,10 @@ export class Table {
 
     onTBodyRowBinds(item, index): any {
         return {};
+    }
+
+    onTBodyRowComponent(item, index): any {
+        return this.tBodyRowComponent;
     }
 
     onTBodyProps(item, header, index): any {
