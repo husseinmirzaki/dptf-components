@@ -6,7 +6,7 @@
       <!--begin::Modal content-->
       <div class="modal-content">
         <div class="modal-header" :class="{'p-2': thinFooter}">
-          <h5 class="modal-title" id="exampleModalLabel">{{ modalTitle }}</h5>
+          <h5 class="modal-title" id="exampleModalLabel">{{ innerModalTitle }}</h5>
           <div
               class="btn btn-sm btn-icon btn-active-icon-primary close" @click="close()"
           >
@@ -20,7 +20,9 @@
           <slot name="modal-content" :modalId="modalId"/>
         </div>
         <div class="modal-footer" :class="{'p-2': thinFooter}">
-          <button type="button" class="btn btn-light-primary font-weight-bold" :class="{'mt-4': !thinFooter}" @click="close()">بستن</button>
+          <button type="button" class="btn btn-light-primary font-weight-bold" :class="{'mt-4': !thinFooter}"
+                  @click="close()">بستن
+          </button>
           <slot name="modal-footer"/>
         </div>
       </div>
@@ -32,7 +34,6 @@
 import {defineComponent} from "vue";
 import {randomId} from "@/custom/helpers/random";
 import Modal from "bootstrap/js/dist/modal";
-import _$ from "jquery";
 import {VueInstanceService} from "@/Defaults";
 
 export default defineComponent({
@@ -41,6 +42,7 @@ export default defineComponent({
     return {
       modal: null,
       event: null,
+      innerModalTitle: this.modalTitle,
     };
   },
   mounted() {
@@ -99,8 +101,15 @@ export default defineComponent({
     close: function (event) {
       this.event = event;
       (this.modal as any)?.hide();
+    },
+    setTitle: function (title) {
+      this.innerModalTitle = title;
     }
   },
-
+  watch: {
+    modalTitle: function (e) {
+      this.innerModalTitle = e;
+    }
+  },
 });
 </script>
