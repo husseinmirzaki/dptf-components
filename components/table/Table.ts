@@ -389,8 +389,6 @@ export class Table {
 
     onTBodyComponent(item, header, index, rowIndex: string|number|undefined = undefined) {
 
-        console.log("rowIndex", rowIndex);
-
         if (this.tBodyComponents[header]) {
             return this.tBodyComponents[header];
         }

@@ -23,7 +23,9 @@ to use this field u must provide a v-model field
 and also a field-type field types can be of following
 
 1. text 
-2. component 
+2. component  
+   this one is a useful one it lets developers add their own
+   custom inputs to form
 3. hidden 
 4. file 
 5. select 
@@ -37,3 +39,13 @@ and also a field-type field types can be of following
 10. separator 
 11. auto-complete 
 12. currency
+
+### TableV1
+this component is used to created tables using standard
+apis an can be changed to a custom one as well
+
+this table works base on a class called Table which is in charge
+of controlling and manipulating the table
+
+the table consists of many parts and many of them can be changed
+using components of vue and Table class methods

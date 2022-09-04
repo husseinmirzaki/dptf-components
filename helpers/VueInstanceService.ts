@@ -25,6 +25,7 @@ export default class VueInstanceService {
             number: {
                 min: "مقدار فیلد `${path}` باید حداقل ${min} باشد",
                 max: "مقدار فیلد `${path}` باید حداکثر ${max} باشد",
+                positive: "مقدار فیلد `${path}` باید یک عدد مثبت باشد",
             },
         });
 
@@ -65,7 +66,7 @@ export default class VueInstanceService {
     }
 
     public static on(event: string, e?: unknown) {
-        console.log("emit result",this.vue.config.globalProperties["emitter"].on(event, e));
+        this.vue.config.globalProperties["emitter"].on(event, e)
     }
 
     public static get store() {
