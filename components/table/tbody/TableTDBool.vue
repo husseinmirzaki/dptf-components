@@ -18,14 +18,20 @@
   </table-t-d>
 </template>
 <script lang="ts">
-import {defineComponent, toRef} from "vue";
+import {defineComponent, ref, toRef} from "vue";
 import TableTD from "@/custom/components/table/tbody/TableTD.vue";
 
 export default defineComponent({
   components: {TableTD},
   props: ['data'],
   setup(props) {
-    const bool_data = toRef(props, 'data').value;
+    // eslint-disable-next-line vue/no-setup-props-destructure
+    let bool_data = props.data;
+
+    if (bool_data == 'بلی')
+      bool_data = true
+    else if (bool_data =='خیر')
+      bool_data = false
 
     return {
       bool_data,
