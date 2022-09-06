@@ -599,7 +599,7 @@ export default defineComponent({
         options: Array<{ value: number | string; text: string }> | Array<string> | Array<number>
     ) => {
 
-      if (!options) {
+      if (options == null || options == undefined) {
         select2Instance.value?.val(null);
         select2Instance.value?.change();
         return
