@@ -1,4 +1,4 @@
-import {App, ref} from "vue";
+import {App, ref, watch} from "vue";
 import * as Yup from "yup";
 import {addMethod, setLocale} from "yup";
 import {Router} from "vue-router";
@@ -62,7 +62,7 @@ export default class VueInstanceService {
     }
 
     public static off(event: string, e?: unknown) {
-        console.log("emit result",this.vue.config.globalProperties["emitter"].off(event, e));
+        console.log("emit result", this.vue.config.globalProperties["emitter"].off(event, e));
     }
 
     public static on(event: string, e?: unknown) {
@@ -113,5 +113,19 @@ export default class VueInstanceService {
         this.store.dispatch(Actions.SET_BREADCRUMB_ACTION, {
             title: title,
         });
+    }
+
+    public static getUser(func: any) {
+        if (Object.keys(this.store.getters.currentUser).length < 5) {
+            const w = watch(
+                this.store.getters.currentUser,
+                () => {
+                    func(this.store.getters.currentUser);
+                    w();
+                }, {deep: true}
+            );
+        } else {
+            func(this.store.getters.currentUser);
+        }
     }
 }
