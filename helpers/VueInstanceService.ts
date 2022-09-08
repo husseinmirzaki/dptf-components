@@ -1,4 +1,4 @@
-import {App, ref, watch} from "vue";
+import {App, ref, toRef, watch} from "vue";
 import * as Yup from "yup";
 import {addMethod, setLocale} from "yup";
 import {Router} from "vue-router";
@@ -116,9 +116,9 @@ export default class VueInstanceService {
     }
 
     public static getUser(func: any) {
-        if (Object.keys(this.store.getters.currentUser).length < 5) {
+        if (!this.store.getters.currentUser.id) {
             const w = watch(
-                this.store.getters.currentUser,
+                toRef(this.store.getters, 'currentUser'),
                 () => {
                     func(this.store.getters.currentUser);
                     w();
