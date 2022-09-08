@@ -581,9 +581,14 @@ export default defineComponent({
       }
 
       if (field_type.value === 'p-date-time') {
+
+        if (typeof data == 'string' && data.match(/^\d{4}\/\d{1,2}\/\d{1,2}$/)) {
+          context.emit("update:modelValue", data);
+          return;
+        }
+
         const date = new Date(data);
         const persian = gregorianToJalali(date.getFullYear(), date.getMonth() + 1, date.getDate());
-        console.log(`${persian[0]}/${persian[1]}/${persian[2]}`)
         context.emit("update:modelValue", `${persian[0]}/${persian[1]}/${persian[2]}`);
       } else {
         if (field.value && field.value.$el) {

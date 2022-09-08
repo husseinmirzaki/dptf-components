@@ -19,7 +19,6 @@ function addClass(klass, add: string) {
     return klass
 }
 
-
 function button(props: any, children: any, type = "") {
 
     if (!props) {
@@ -68,7 +67,6 @@ function dropDownButtonWarp(props: any) {
     return props;
 }
 
-
 export const DEFAULT_BUTTONS = {
     "default": (props: any, children: any, type = "") => button(props, children, type),
     "primary": (props: any, children: any) => DEFAULT_BUTTONS.default(props, children, "btn-primary"),
@@ -111,4 +109,37 @@ export const DROPDOWN_BUTTONS = {
 
         return DROPDOWN_BUTTONS.icon(buttonProps, iconProps);
     }
+}
+
+function col(options, children) {
+    return h(
+        'div',
+        Object.assign({}, options),
+        children
+    );
+}
+
+function row(options, children) {
+    return h(
+        'row',
+        Object.assign({}, options),
+        children
+    );
+}
+
+export const DEFAULT_COLS = {
+    "row": (options, children) => row(options, children),
+    "col": (options, children) => col(options, children),
+    "col1": (children) => col({class:'col-2'}, children),
+    "col2": (children) => col({class:'col-2'}, children),
+    "col3": (children) => col({class:'col-3'}, children),
+    "col4": (children) => col({class:'col-4'}, children),
+    "col5": (children) => col({class:'col-5'}, children),
+    "col6": (children) => col({class:'col-6'}, children),
+    "col7": (children) => col({class:'col-7'}, children),
+    "col8": (children) => col({class:'col-8'}, children),
+    "col9": (children) => col({class:'col-9'}, children),
+    "col10": (children) => col({class:'col-10'}, children),
+    "col11": (children) => col({class:'col-11'}, children),
+    "col12": (children) => col({class:'col-12'}, children),
 }

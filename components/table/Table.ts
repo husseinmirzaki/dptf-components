@@ -13,6 +13,7 @@ import {fieldC} from "@/custom/components/FieldComponent.vue";
 import TableTDDateTime from "@/custom/components/table/tbody/TableTDDateTime.vue";
 import TableTDColor from "@/custom/components/table/tbody/TableTDColor.vue";
 import TableTr from "@/custom/components/table/TableTr.vue";
+import TableTDDate from "@/custom/components/table/tbody/TableTDDate.vue";
 
 export class Table {
     defaultTableName = '';
@@ -402,6 +403,9 @@ export class Table {
                     return TableTDColor;
                 if (data === "true" || data == "false")
                     return TableTDBool;
+                else if (data.match(/^\d{4}-\d{1,2}-\d{1,2}$/)) {
+                    return TableTDDate;
+                }
                 // matches the json iso formatted datetime
                 else if ((data.endsWith('Z') && data.search(/[:\-T]{2,}/) > -1) || data.split(/[:\-T]/).length > 2) {
                     return TableTDDateTime;
