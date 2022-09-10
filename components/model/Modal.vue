@@ -7,7 +7,7 @@
       <div class="modal-content">
         <div class="modal-header" :class="{'p-2': thinFooter}">
           <h5 class="modal-title" id="exampleModalLabel">{{ innerModalTitle }}</h5>
-          <div
+          <div v-if="!sticky"
               class="btn btn-sm btn-icon btn-active-icon-primary close" @click="close()"
           >
             <span class="svg-icon svg-icon-2x">
@@ -20,7 +20,7 @@
           <slot name="modal-content" :modalId="modalId"/>
         </div>
         <div class="modal-footer" :class="{'p-2': thinFooter}">
-          <button type="button" class="btn btn-light-primary font-weight-bold" :class="{'mt-4': !thinFooter}"
+          <button type="button" class="btn btn-light-primary font-weight-bold" :class="{'mt-4': !thinFooter}" v-if="!sticky"
                   @click="close()">بستن
           </button>
           <slot name="modal-footer"/>
@@ -49,7 +49,13 @@ export default defineComponent({
     console.log(this.$refs.modalEl);
     (async () => {
       if (document.querySelector("#" + this.modalId)) {
-        this.modal = new Modal("#" + this.modalId);
+        if (this.sticky)
+          this.modal = new Modal("#" + this.modalId, {
+            backdrop: 'static',
+            keyboard: false
+          });
+        else
+          this.modal = new Modal("#" + this.modalId);
         (this.$refs.modalEl as any).addEventListener('show.bs.modal', this.emitEvent('open'));
         (this.$refs.modalEl as any).addEventListener('shown.bs.modal', this.emitEvent('opened'));
         (this.$refs.modalEl as any).addEventListener('hide.bs.modal', this.emitEvent('close'));
@@ -69,6 +75,9 @@ export default defineComponent({
     if (modalE) modalE.remove();
   },
   props: {
+    sticky: {
+      default: false
+    },
     modalBodyClassExtra: {
       default: "",
     },
