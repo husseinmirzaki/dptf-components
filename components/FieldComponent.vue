@@ -422,7 +422,7 @@ export default defineComponent({
     watch(modelValue, (e) => {
       showError.value = true;
       if (field_type.value == 'select' && !modelValue.value && select2Instance.value) {
-        select2Instance.value.val('').change();
+        // select2Instance.value.val('').change();
       } else if (field_type.value == 'checkbox' && !modelValue.value && field.value) {
         field.value.checked = false;
       } else if (select2Instance.value) {
