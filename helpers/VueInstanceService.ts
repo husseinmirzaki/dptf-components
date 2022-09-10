@@ -62,7 +62,7 @@ export default class VueInstanceService {
     }
 
     public static off(event: string, e?: unknown) {
-        console.log("emit result", this.vue.config.globalProperties["emitter"].off(event, e));
+        this.vue.config.globalProperties["emitter"].off(event, e);
     }
 
     public static on(event: string, e?: unknown) {
