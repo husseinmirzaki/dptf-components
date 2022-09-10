@@ -76,3 +76,7 @@ span.apexcharts-text, span.apexcharts-title-text, span.apexcharts-legend-text {
 .swal2-html-container {
     text-align: center;
 }
+
+.menu-section {
+    letter-spacing: 0!important;
+}
