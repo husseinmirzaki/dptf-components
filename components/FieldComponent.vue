@@ -199,14 +199,15 @@
             :class="[defaultInputClasses, input_class]"
             :readonly="read_only"
             :placeholder="placeholder"
-            :type="field_type"
+            type="text"
             :name="name"
             :modelValue="this.$props.modelValue"
+            ref="fieldRef"
         >
           <input type="text"
-                 @keyup="formatCurrency($refs.fieldRef)"
+                 @keyup="formatCurrency($refs.fieldRef.$el.nextElementSibling)"
                  :class="[defaultInputClasses, input_class]"
-                 v-model="currency" ref="fieldRef"
+                 v-model="currency"
           >
         </Field>
       </template>
@@ -459,7 +460,7 @@ export default defineComponent({
     onMounted(() => {
 
       if (field_type.value == 'currency') {
-        formatCurrency(field.value);
+        formatCurrency(field.value.$el.nextElementSibling);
       }
 
       if (field_type.value == 'hidden') {
@@ -591,11 +592,25 @@ export default defineComponent({
         const persian = gregorianToJalali(date.getFullYear(), date.getMonth() + 1, date.getDate());
         context.emit("update:modelValue", `${persian[0]}/${persian[1]}/${persian[2]}`);
       } else {
-        if (field.value && field.value.$el) {
-          field.value.$el.value = data;
-          nextTick(() => {
-            field.value.$el.dispatchEvent(new Event('change'));
-          });
+        if (field.value) {
+          if (field.value.$el) {
+            if (field_type.value == "currency") {
+              field.value.$el.value = data;
+              field.value.$el.nextElementSibling.value = data;
+
+              nextTick(() => {
+                formatCurrency(field.value.$el.nextElementSibling);
+                field.value.$el.nextElementSibling.dispatchEvent(new Event('change'));
+                field.value.$el.dispatchEvent(new Event('change'));
+                currency.value = field.value.$el.nextElementSibling.value;
+              })
+            } else {
+              field.value.$el.value = data;
+              nextTick(() => {
+                field.value.$el.dispatchEvent(new Event('change'));
+              });
+            }
+          }
         }
       }
     }
