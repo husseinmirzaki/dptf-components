@@ -185,6 +185,19 @@
   }
 }
 
+
+@media print {
+  table {
+    top: 0;
+    left: 0;
+    position: fixed !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 999999999999999 !important;
+    background: white !important;
+  }
+}
+
 th:first-child {
   .filter-place-holder .fixed-filter-container {
     right: auto !important;
