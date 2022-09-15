@@ -427,7 +427,7 @@ export default defineComponent({
       } else if (field_type.value == 'checkbox' && !modelValue.value && field.value) {
         field.value.checked = false;
       } else if (select2Instance.value) {
-        select2Instance.value.change();
+        // select2Instance.value.change();
       }
 
     });
