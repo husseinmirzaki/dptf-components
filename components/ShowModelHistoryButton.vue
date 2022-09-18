@@ -5,6 +5,7 @@ import {ElTooltip} from "element-plus";
 import {VueInstanceService} from "@/Defaults";
 
 export default defineComponent({
+  props: ['modelName'],
   setup(props, context) {
     return () => {
       return h(ElTooltip, {
@@ -12,7 +13,7 @@ export default defineComponent({
       }, () => DEFAULT_BUTTONS.icon_1(
           {
             onClick: () => {
-              VueInstanceService.emit('show-history', ['open']);
+              VueInstanceService.emit('show-history', ['open', props.modelName]);
             }
           }, {
             class: 'svg-icon-2x history-icon-color',
