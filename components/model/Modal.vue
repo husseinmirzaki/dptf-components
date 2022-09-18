@@ -6,7 +6,7 @@
       <!--begin::Modal content-->
       <div class="modal-content">
         <div class="modal-header" :class="{'p-2': thinFooter}">
-          <h5 class="modal-title" id="exampleModalLabel">{{ innerModalTitle }}</h5>
+          <h5 class="modal-title fw-light" id="exampleModalLabel">{{ innerModalTitle }}</h5>
           <div v-if="!sticky"
                class="btn btn-sm btn-icon btn-active-icon-primary close" @click="close()"
           >
