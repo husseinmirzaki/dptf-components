@@ -4,6 +4,7 @@ export class ContextMenuItem {
     icon?: string;
     text?: string;
     onClick?: (e) => void;
+    state?: "primary"|"secondary"|"danger"|"info"|"warning"
 }
 
 export class ContextMenuService {

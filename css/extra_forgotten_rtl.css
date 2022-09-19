@@ -12,6 +12,9 @@ span, p, h1, h2, h3, h4, h5, h6, div {
     padding-right: 5px !important;
 }
 
+.form-check .form-check-input {
+    float: left;
+}
 
 /** el package **/
 .el-notification {
@@ -81,3 +84,4 @@ span.apexcharts-text, span.apexcharts-title-text, span.apexcharts-legend-text {
 .menu-section {
     letter-spacing: 0!important;
 }
+
