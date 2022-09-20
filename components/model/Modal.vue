@@ -17,7 +17,7 @@
         </div>
 
         <div class="modal-body" :class="[modalBodyClassExtra]">
-          <slot name="modal-content" :modalId="modalId"/>
+          <slot name="modal-content" :modalId="modalId" :state="state"/>
         </div>
         <div class="modal-footer" :class="{'p-2': thinFooter}">
           <button type="button" class="btn btn-light-primary font-weight-bold" :class="{'mt-4': !thinFooter}"
@@ -41,6 +41,7 @@ export default defineComponent({
   name: "modal",
   data() {
     return {
+      state: 'closed',
       modal: null,
       event: null,
       innerModalTitle: this.modalTitle,
@@ -66,6 +67,7 @@ export default defineComponent({
   unmounted() {
     if (this.modal) {
       try {
+        this.close(null);
         (this.modal as any).dispose();
       } catch (e) {
         //
@@ -99,7 +101,11 @@ export default defineComponent({
   methods: {
     emitEvent: function (event) {
       return (e) => {
-        VueInstanceService.emit(`${event}.bs.modal`);
+        this.state = event;
+        VueInstanceService.emit(`${event}.bs.modal`, {
+          modalId: this.modalId,
+          event: e,
+        });
         this.$emit(event, {event: e, data: this.event});
       }
     },

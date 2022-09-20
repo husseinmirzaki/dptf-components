@@ -2,7 +2,7 @@ import TableHeader from "@/custom/components/table/header/TableHeader.vue";
 import TableTH from "@/custom/components/table/thead/TableTH.vue";
 import TableTD from "@/custom/components/table/tbody/TableTD.vue";
 import {Ref, ref, toRefs, watch} from "vue";
-import {ApiService, VueInstanceService} from "@/Defaults";
+import {ApiService, Configs, VueInstanceService} from "@/Defaults";
 import TableTDUser from "@/custom/components/table/tbody/TableTDUser.vue";
 import TableTDUserMulti from "@/custom/components/table/tbody/TableTDUserMulti.vue";
 import TableTDEmpty from "@/custom/components/table/tbody/TableTDEmpty.vue";
@@ -25,7 +25,6 @@ export class Table {
     get checkAble() {
         return false;
     }
-
 
     getFilterForm(): any {
         return {
@@ -139,6 +138,10 @@ export class Table {
     basePushAddress = '';
 
     showPagination = true;
+
+    get showActionButtons() {
+        return Configs.showTableActionButtons;
+    }
 
     get showContextMenuView() {
         return true;
@@ -259,6 +262,7 @@ export class Table {
 
         if (this.showContextMenuView) {
             items.push({
+                state: "primary",
                 text: this.viewContextMenuText,
                 onClick: (data) => {
                     this.onViewClicked(data);
@@ -268,6 +272,7 @@ export class Table {
 
         if (this.showContextMenuUpdate) {
             items.push({
+                state: "warning",
                 text: this.updateContextMenuText,
                 onClick: (data) => {
                     this.onEditClicked(data);
@@ -277,6 +282,7 @@ export class Table {
 
         if (this.showContextMenuDelete) {
             items.push({
+                state: "danger",
                 text: this.deleteContextMenuText,
                 onClick: (data) => {
                     this.onDeleteClicked(data);
@@ -338,6 +344,10 @@ export class Table {
             translate = this.headerTranslate[header];
         } else {
             translate = VueInstanceService.vue.config.globalProperties['$t'](`table_${header}`);
+        }
+
+        if (header == 'table-action') {
+            translate = 'عملیات';
         }
 
         return {
