@@ -421,7 +421,7 @@ export class Table {
                     return TableTDDateTime;
                 }
             } else if (typeof data === 'object') {
-                if (Array.isArray(data)) {
+                if (Array.isArray(data) && data.length > 0) {
                     if (data[0]['avatar'] || data[0]['full_name'] || data[0]['last_name']) {
                         return TableTDUserMulti;
                     }
