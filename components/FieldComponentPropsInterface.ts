@@ -41,6 +41,7 @@ export default interface FieldComponentPropsInterface {
     selectV2Config?: Record<string, any>;
     canAddItem?: boolean;
     onAddClick?: () => void;
+    defaultValue?: any;
 }
 
 export interface FieldComponentPropsInterfaceNonRequired {
@@ -82,6 +83,7 @@ export interface FieldComponentPropsInterfaceNonRequired {
     selectV2Config?: Record<string, any>,
     canAddItem?: boolean,
     onAddClick?: () => void,
+    defaultValue?: any,
 }
 
 
