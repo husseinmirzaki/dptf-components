@@ -69,6 +69,7 @@
                   <template v-for="(header, index) in changedHeaders" :key="header">
                     <component
                         v-if="headerVisibility[header]"
+                        @show-filter="defaultConfig.onShowFilter(header, index)"
                         moveable="moveable"
                         :header-name="header"
                         class="align-middle pe-2 text-nowrap"
@@ -103,6 +104,7 @@
                 </template>
                 <template v-if="defaultConfig.showActionButtons">
                   <component
+                      :disable-filters="1"
                       header-name="table-action"
                       class="pe-2 text-nowrap"
                       :group="defaultConfig.tableName"
@@ -194,8 +196,10 @@
           <!--end::Table container-->
         </div>
       </spinner>
+      <TableFilter :defaultConfig="defaultConfig"/>
     </template>
   </Card>
+
 </template>
 <style lang="scss">
 @media (max-width: 972px) {
@@ -357,9 +361,11 @@ import {MenuComponent} from "@/assets/ts/components";
 import FilterContainer from "@/custom/components/table/header/filters/FilterContainer.vue";
 import {mobileCheck} from "@/custom/helpers/MobileHelpers";
 import {UserPreferencesManager} from "@/custom/services/UserPreferencesV2Api";
+import TableFilter from "@/custom/components/table/TableFilter.vue";
 
 export default defineComponent({
   components: {
+    TableFilter,
     FilterContainer,
     DropdownV2,
     FieldComponent,

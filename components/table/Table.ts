@@ -14,9 +14,14 @@ import TableTDDateTime from "@/custom/components/table/tbody/TableTDDateTime.vue
 import TableTDColor from "@/custom/components/table/tbody/TableTDColor.vue";
 import TableTr from "@/custom/components/table/TableTr.vue";
 import TableTDDate from "@/custom/components/table/tbody/TableTDDate.vue";
+import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
 
 export class Table {
     defaultTableName = '';
+
+    get modelName() {
+        return '';
+    }
 
     get tableName() {
         return this.defaultTableName;
@@ -370,7 +375,7 @@ export class Table {
         return this.tBodyRowComponent;
     }
 
-    onTBodyProps(item, header, index, rowIndex: string|number|undefined=undefined): any {
+    onTBodyProps(item, header, index, rowIndex: string | number | undefined = undefined): any {
         let itemElement = Object.assign(item);
         if (header.search('.') > -1) {
             const s = header.split('.');
@@ -398,7 +403,7 @@ export class Table {
         };
     }
 
-    onTBodyComponent(item, header, index, rowIndex: string|number|undefined = undefined) {
+    onTBodyComponent(item, header, index, rowIndex: string | number | undefined = undefined) {
 
         if (this.tBodyComponents[header]) {
             return this.tBodyComponents[header];
@@ -513,5 +518,13 @@ export class Table {
      */
     getContextMenuItems(data: any = undefined): Array<ContextMenuItem> {
         return this.contextMenuItems;
+    }
+
+    onShowFilter(header: any = undefined, index: any = undefined, customFilterField: any | FieldComponentPropsInterface = undefined) {
+        if (customFilterField) {
+            VueInstanceService.emit(`show-table-filter-${this.tableName}`, {customFilterField});
+        } else {
+            VueInstanceService.emit(`show-table-filter-${this.tableName}`, {fieldName: header});
+        }
     }
 }
