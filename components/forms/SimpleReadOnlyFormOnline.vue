@@ -21,12 +21,7 @@
         </div>
       </div>
       <template v-if="formBuilt">
-        <FormContainer
-            :validation-schema="buildByModelName.formInstance.activeSchema"
-            ref="form"
-        >
-          <FormBuilder :fields="buildByModelName.formInstance.activeFields"/>
-        </FormContainer>
+        <FormBuilder :fields="buildByModelName.formInstance.activeFields"/>
       </template>
 
       <PromiseButton v-if="$attrs['disable-card']"
@@ -47,7 +42,7 @@ import FieldComponentPropsInterface from "@/custom/components/FieldComponentProp
 import {Table} from "@/custom/components/table/Table";
 
 export default {
-  components: {Card, PromiseButton, FormContainer, FormBuilder},
+  components: {Card, PromiseButton, FormBuilder},
   props: ['modelName', 'showEditButton', 'onFields', 'onTableCreation', 'overrideOptions', 'onOrderField', 'onFormReady', 'onModes'],
   setup(props) {
 
