@@ -29,18 +29,19 @@ export default interface FieldComponentPropsInterface {
     // eslint-disable-next-line @typescript-eslint/ban-types
     select_options?: object;
     selected_component?: any;
+    dateTimeType?: "date"|"date-time";
     validation?: Record<string, any>;
     select_data?: Array<Record<string, any>>;
     "v-model"?: Ref;
     "v-model-key"?: string;
     "update:modelValue"?: (event) => void;
     outerAccess?: (elementRef) => void;
-    excludeOnModes?: Array<string>,
-    onlyOnModes?: Array<string>,
-    selectV2Config?: Record<string, any>,
-    canAddItem?: boolean,
-    onAddClick?: () => void,
-    defaultValue?: any,
+    excludeOnModes?: Array<string>;
+    onlyOnModes?: Array<string>;
+    selectV2Config?: Record<string, any>;
+    canAddItem?: boolean;
+    onAddClick?: () => void;
+    defaultValue?: any;
 }
 
 export interface FieldComponentPropsInterfaceNonRequired {
