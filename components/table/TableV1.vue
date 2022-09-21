@@ -70,7 +70,10 @@
                     <component
                         v-if="headerVisibility[header]"
                         @show-filter="defaultConfig.onShowFilter(header, index)"
+                        @toggle-order="defaultConfig.toggleOrder(header)"
                         moveable="moveable"
+                        :is-filtered="defaultConfig.filteredHeaders.value.indexOf(header) > -1"
+                        :sort-direction="defaultConfig.orderedField.value['name'] === header ? defaultConfig.orderedField.value['order'] : undefined"
                         :header-name="header"
                         class="align-middle pe-2 text-nowrap"
                         :group="defaultConfig.tableName"

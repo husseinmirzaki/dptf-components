@@ -3,10 +3,25 @@
     <div class="d-flex flex-row position-relative align-items-center justify-content-center">
       <div v-if="!disableFilters" class="managed-items-container position-absolute">
         <div class="icon"
-             style="background-image: url(/media/icons/table/not-ordered.png); background-size: 17px 17px"></div>
+             @click="$emit('toggleOrder')"
+             style="background-image: url(/media/icons/table/not-ordered.png); background-size: 17px 17px"
+             v-if="!sortDirection"/>
+        <div class="icon d-block"
+             @click="$emit('toggleOrder')"
+             style="background-image: url(/media/icons/table/ascending.png); background-size: 17px 17px"
+             v-if="sortDirection === 'asc'"/>
+        <div class="icon d-block"
+             @click="$emit('toggleOrder')"
+             style="background-image: url(/media/icons/table/descending.png); background-size: 17px 17px"
+             v-if="sortDirection === 'desc'"/>
         <div class="icon"
+             v-if="isFiltered !== true"
              @click="$emit('showFilter', header)"
              style="background-image: url(/media/icons/table/no-filter.png);background-size: 12px 12px"></div>
+        <div class="icon d-block"
+             v-if="isFiltered === true"
+             @click="$emit('showFilter', header)"
+             style="background-image: url(/media/icons/table/has-filter.png);background-size: 12px 12px"></div>
       </div>
 
       <slot name="extra-part-0"/>
@@ -26,7 +41,7 @@ th:hover .filter-place-holder {
 }
 
 .managed-items-container {
-  display: none;
+  display: flex;
   position: absolute;
   top: 50%;
   left: -5px;
@@ -34,6 +49,7 @@ th:hover .filter-place-holder {
   height: 15px;
 
   .icon {
+    display: none;
     width: 20px;
     height: 20px;
     background-size: cover;
@@ -50,8 +66,8 @@ th:hover .filter-place-holder {
 
 th {
   &:hover {
-    .managed-items-container {
-      display: flex;
+    .icon {
+      display: block;
     }
   }
 }
@@ -61,6 +77,6 @@ import {defineComponent} from "vue";
 
 export default defineComponent({
   components: {},
-  props: ['header', 'disableFilters']
+  props: ['header', 'disableFilters', 'isFiltered', 'sortDirection']
 });
 </script>
