@@ -36,6 +36,7 @@ export default interface FieldComponentPropsInterface {
     "v-model-key"?: string;
     "update:modelValue"?: (event) => void;
     outerAccess?: (elementRef) => void;
+    isFile?: boolean;
     excludeOnModes?: Array<string>;
     onlyOnModes?: Array<string>;
     selectV2Config?: Record<string, any>;
