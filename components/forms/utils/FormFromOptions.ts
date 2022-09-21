@@ -1,7 +1,7 @@
 import FieldComponentProps, {
     FieldComponentPropsInterfaceNonRequired
 } from "@/custom/components/FieldComponentPropsInterface";
-import {modelToServiceMap} from "@/views/villages/instances/tabs/utils/ModelToServiceMap";
+import {modelToServiceMap} from "@/ModelToServiceMap";
 
 export function formFromOptions(options: Record<string, any>, extra_options: Record<string, FieldComponentPropsInterfaceNonRequired>, debug = false) {
     const built = Object.keys(options)
