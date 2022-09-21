@@ -18,7 +18,7 @@
     border-radius: 3px;
     padding: 5px;
 
-    input, .select2-container--default .select2-selection--multiple, .select2-container--default .select2-selection--single {
+    input, .select2-container--default .select2-selection--multiple, .select2-container--default .select2-selection--single , .vpd-input-group{
       border-radius: 0 !important;
       box-shadow: none;
       height: 40px !important;
