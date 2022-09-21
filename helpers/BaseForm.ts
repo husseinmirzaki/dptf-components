@@ -249,7 +249,7 @@ export class CreateForm<T extends FieldsInterface = any> {
         const r = this.refs[mode].value ? this.refs[mode].value : this.refs[mode];
         Object.keys(r).forEach((e1) => {
             const field = this.fields.find((e) => e.name == e1);
-            if (field && field.field_type === 'file')
+            if (field && (field.field_type === 'file' || field.isFile))
                 if (r[e1] && r[e1].length) {
                     for (let i = 0; i < r[e1].length; i++) {
                         files.push({
@@ -417,7 +417,7 @@ export class CreateForm<T extends FieldsInterface = any> {
                             // if select doesn't have a multiple attribute
                             addValidationToModes(e.name, Yup.string().nullable()['checkSingleSelect']('حداقل یکی از موارد را انتخاب کنید').label(text));
                         }
-                    } else if (fieldType == "file" && required) {
+                    } else if ((fieldType == "file" || e['isFile']) && required) {
                         // file filedType returns an Object
                         // as output, so we should use mixed
                         // validation schema for it
@@ -540,13 +540,15 @@ export class CreateForm<T extends FieldsInterface = any> {
                     isArray.push(e.name);
                 }
                 // ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
-                if (e.field_type !== 'file') {
+                if (e.field_type !== 'file' && !e.isFile) {
                     if (e.select_multiple) {
                         if (this.refs.basic.value[e.name] && this.refs.basic.value[e.name].length)
                             this.refs.basic.value[e.name].forEach((value) => {
                                 formData.append(e.name + '[]', value as any)
                             });
                     } else {
+                        if (this.refs.basic.value[e.name] === undefined)
+                            return;
                         formData.append(e.name, this.refs.basic.value[e.name])
                     }
                 }
