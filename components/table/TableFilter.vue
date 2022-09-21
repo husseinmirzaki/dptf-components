@@ -32,7 +32,7 @@ import {h, nextTick, onMounted, ref} from "vue";
 import {VueInstanceService} from "@/Defaults";
 import {Table} from "@/custom/components/table/Table";
 import {FieldsApiService} from "@/custom/services/FieldsApiService";
-import {modelToServiceMap} from "@/views/villages/instances/tabs/utils/ModelToServiceMap";
+import {modelToServiceMap} from "@/ModelToServiceMap";
 
 export default {
   components: {FieldComponent},
