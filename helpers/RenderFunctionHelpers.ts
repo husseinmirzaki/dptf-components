@@ -121,8 +121,8 @@ function col(options, children) {
 
 function row(options, children) {
     return h(
-        'row',
-        Object.assign({}, options),
+        'div',
+        Object.assign({class: 'row'}, options),
         children
     );
 }

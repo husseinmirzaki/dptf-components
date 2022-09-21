@@ -2,7 +2,7 @@ import TableHeader from "@/custom/components/table/header/TableHeader.vue";
 import TableTH from "@/custom/components/table/thead/TableTH.vue";
 import TableTD from "@/custom/components/table/tbody/TableTD.vue";
 import {Ref, ref, toRefs, watch} from "vue";
-import {ApiService, VueInstanceService} from "@/Defaults";
+import {ApiService, Configs, VueInstanceService} from "@/Defaults";
 import TableTDUser from "@/custom/components/table/tbody/TableTDUser.vue";
 import TableTDUserMulti from "@/custom/components/table/tbody/TableTDUserMulti.vue";
 import TableTDEmpty from "@/custom/components/table/tbody/TableTDEmpty.vue";
@@ -14,9 +14,14 @@ import TableTDDateTime from "@/custom/components/table/tbody/TableTDDateTime.vue
 import TableTDColor from "@/custom/components/table/tbody/TableTDColor.vue";
 import TableTr from "@/custom/components/table/TableTr.vue";
 import TableTDDate from "@/custom/components/table/tbody/TableTDDate.vue";
+import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
 
 export class Table {
     defaultTableName = '';
+
+    get modelName() {
+        return '';
+    }
 
     get tableName() {
         return this.defaultTableName;
@@ -25,7 +30,6 @@ export class Table {
     get checkAble() {
         return false;
     }
-
 
     getFilterForm(): any {
         return {
@@ -139,6 +143,10 @@ export class Table {
     basePushAddress = '';
 
     showPagination = true;
+
+    get showActionButtons() {
+        return Configs.showTableActionButtons;
+    }
 
     get showContextMenuView() {
         return true;
@@ -259,6 +267,7 @@ export class Table {
 
         if (this.showContextMenuView) {
             items.push({
+                state: "primary",
                 text: this.viewContextMenuText,
                 onClick: (data) => {
                     this.onViewClicked(data);
@@ -268,6 +277,7 @@ export class Table {
 
         if (this.showContextMenuUpdate) {
             items.push({
+                state: "warning",
                 text: this.updateContextMenuText,
                 onClick: (data) => {
                     this.onEditClicked(data);
@@ -277,6 +287,7 @@ export class Table {
 
         if (this.showContextMenuDelete) {
             items.push({
+                state: "danger",
                 text: this.deleteContextMenuText,
                 onClick: (data) => {
                     this.onDeleteClicked(data);
@@ -340,6 +351,10 @@ export class Table {
             translate = VueInstanceService.vue.config.globalProperties['$t'](`table_${header}`);
         }
 
+        if (header == 'table-action') {
+            translate = 'عملیات';
+        }
+
         return {
             class: {
                 'ps-3': index === 0,
@@ -360,7 +375,7 @@ export class Table {
         return this.tBodyRowComponent;
     }
 
-    onTBodyProps(item, header, index, rowIndex: string|number|undefined=undefined): any {
+    onTBodyProps(item, header, index, rowIndex: string | number | undefined = undefined): any {
         let itemElement = Object.assign(item);
         if (header.search('.') > -1) {
             const s = header.split('.');
@@ -388,7 +403,7 @@ export class Table {
         };
     }
 
-    onTBodyComponent(item, header, index, rowIndex: string|number|undefined = undefined) {
+    onTBodyComponent(item, header, index, rowIndex: string | number | undefined = undefined) {
 
         if (this.tBodyComponents[header]) {
             return this.tBodyComponents[header];
@@ -411,7 +426,7 @@ export class Table {
                     return TableTDDateTime;
                 }
             } else if (typeof data === 'object') {
-                if (Array.isArray(data)) {
+                if (Array.isArray(data) && data.length > 0) {
                     if (data[0]['avatar'] || data[0]['full_name'] || data[0]['last_name']) {
                         return TableTDUserMulti;
                     }
@@ -503,5 +518,13 @@ export class Table {
      */
     getContextMenuItems(data: any = undefined): Array<ContextMenuItem> {
         return this.contextMenuItems;
+    }
+
+    onShowFilter(header: any = undefined, index: any = undefined, customFilterField: any | FieldComponentPropsInterface = undefined) {
+        if (customFilterField) {
+            VueInstanceService.emit(`show-table-filter-${this.tableName}`, {customFilterField});
+        } else {
+            VueInstanceService.emit(`show-table-filter-${this.tableName}`, {fieldName: header});
+        }
     }
 }

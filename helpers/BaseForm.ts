@@ -717,4 +717,12 @@ export class CreateForm<T extends FieldsInterface = any> {
             }
         });
     }
+
+    setDefaults() {
+        this.modeFields[this.theActiveMode].forEach((field)=>{
+            if (field.defaultValue){
+                this.elementRefs[field.name].setValue(field.defaultValue)
+            }
+        })
+    }
 }

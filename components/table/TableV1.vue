@@ -69,6 +69,7 @@
                   <template v-for="(header, index) in changedHeaders" :key="header">
                     <component
                         v-if="headerVisibility[header]"
+                        @show-filter="defaultConfig.onShowFilter(header, index)"
                         moveable="moveable"
                         :header-name="header"
                         class="align-middle pe-2 text-nowrap"
@@ -99,6 +100,16 @@
                       <filter-container v-if="defaultConfig.getFieldByName(header) && headerVisibility[header]"
                                         :field="defaultConfig.getFieldByName(header)"/>
                     </template>
+                  </component>
+                </template>
+                <template v-if="defaultConfig.showActionButtons">
+                  <component
+                      :disable-filters="1"
+                      header-name="table-action"
+                      class="pe-2 text-nowrap"
+                      :group="defaultConfig.tableName"
+                      :is="defaultConfig.onTHeadComponent('table-action', index)"
+                      v-bind="defaultConfig.onTHeadProps('table-action', index)">
                   </component>
                 </template>
               </tr>
@@ -152,6 +163,18 @@
                           v-bind="defaultConfig.onTBodyProps(item, header, headerIndex, index)"
                       />
                     </template>
+                    <td style="width: 70px;white-space: nowrap" v-if="defaultConfig.showActionButtons">
+                      <template v-for="(contextMenuItem, contextMenuIndex) in defaultConfig.getContextMenuItems(item)"
+                                :key="contextMenuItem">
+                        <button class="btn btn-sm p-1"
+                                :class="[{
+                          'ms-1': contextMenuIndex > 0,
+                        }, [`btn-${contextMenuItem.state ? contextMenuItem.state : 'primary'}`]]"
+                                @click="contextMenuItem.onClick(item)">
+                          {{ contextMenuItem.text }}
+                        </button>
+                      </template>
+                    </td>
                   </Component>
                 </template>
               </template>
@@ -173,8 +196,10 @@
           <!--end::Table container-->
         </div>
       </spinner>
+      <TableFilter :defaultConfig="defaultConfig"/>
     </template>
   </Card>
+
 </template>
 <style lang="scss">
 @media (max-width: 972px) {
@@ -331,13 +356,16 @@ import {ContextMenuService} from "@/custom/components/ContextMenuService";
 import Spinner from "@/custom/components/Spinner.vue";
 import FieldComponent from "@/custom/components/FieldComponent.vue";
 import {DragHandler, SimpleDrag} from "@/custom/components/table/TableDrag";
-import {UserPreferencesTableApi} from "@/custom/services/UserPreferencesTableApi";
 import DropdownV2 from "@/custom/components/DropdownV2.vue";
 import {MenuComponent} from "@/assets/ts/components";
 import FilterContainer from "@/custom/components/table/header/filters/FilterContainer.vue";
+import {mobileCheck} from "@/custom/helpers/MobileHelpers";
+import {UserPreferencesManager} from "@/custom/services/UserPreferencesV2Api";
+import TableFilter from "@/custom/components/table/TableFilter.vue";
 
 export default defineComponent({
   components: {
+    TableFilter,
     FilterContainer,
     DropdownV2,
     FieldComponent,
@@ -398,10 +426,10 @@ export default defineComponent({
     }
   },
   setup(props, context) {
+    const isMobile = mobileCheck();
     const conf = toRef(props, 'conf');
     const list = toRef(props, 'list');
     const url = toRef(props, 'url');
-    const userPreferences = toRef(props, 'userPreferences');
 
     const headersRef = ref();
     const tableRef = ref();
@@ -511,6 +539,17 @@ export default defineComponent({
 
     let defaultConfig: Table = initializeConfig();
 
+    const preferencesManager = new UserPreferencesManager(`table_v1_${defaultConfig.tableName}`);
+
+    preferencesManager.get();
+
+
+    watch(preferencesManager.value, (e) => {
+      console.log(e);
+      buildPrimaryTableInfo(e);
+      tableSetup();
+    }, {deep: true});
+
     const headers = computed(() => {
       if (changedHeaders.value.length > 0)
         return changedHeaders.value;
@@ -523,22 +562,44 @@ export default defineComponent({
     }
 
     const contextMenu = (item) => {
-      ContextMenuService.clickData = item;
-      ContextMenuService.set(defaultConfig.getContextMenuItems(item));
+      if (!isMobile) {
+        ContextMenuService.clickData = item;
+        ContextMenuService.set(defaultConfig.getContextMenuItems(item));
+      }
     }
 
     const getTableSettings = () => {
-      return UserPreferencesTableApi.getTableSettings(defaultConfig.tableName);
+      preferencesManager.get().then(() => {
+        tableSetup();
+      }, () => {
+        tableSetup();
+      });
     }
 
     const saveTableSettings = () => {
-      UserPreferencesTableApi.setTableSettings(defaultConfig.tableName, {
+      preferencesManager.set({
         headers: headers.value,
         headerVisibility: headerVisibility.value,
-      }).then((data) => {
-        console.log("getTableSettings", data);
       });
     }
+
+    const buildPrimaryTableInfo = (value) => {
+      if (value.headers) {
+        changedHeaders.value.splice(0)
+        changedHeaders.value.push(...value.headers)
+      } else {
+        changedHeaders.value.splice(0)
+        changedHeaders.value.push(...headers.value)
+      }
+      if (value.headerVisibility) {
+        headerVisibility.value = value.headerVisibility;
+      } else {
+        headerVisibility.value = {}
+        headers.value.forEach((e) => headerVisibility.value[e] = true)
+      }
+    }
+
+    buildPrimaryTableInfo({});
 
     const dragStuff = () => {
       nextTick(() => {
@@ -549,14 +610,29 @@ export default defineComponent({
             nextTick(() => {
               drag!.findElements();
               drag!.addMouseEvents();
-              if (userPreferences.value)
-                saveTableSettings();
+              saveTableSettings();
             })
           }, {
             deep: true,
           });
         }, 100)
       })
+    }
+
+
+    const tableSetup = () => {
+      if (Object.keys(headerVisibility.value).length == 0) {
+        headers.value.forEach((header) => {
+          headerVisibility.value[header] = true;
+        })
+      }
+      if (!url.value || url.value == '') {
+        dragStuff();
+      } else {
+        onGetData().then(() => {
+          dragStuff();
+        });
+      }
     }
 
     const mount = () => {
@@ -581,43 +657,24 @@ export default defineComponent({
         }, 350)
 
         onGetData().then(() => {
-          if (userPreferences.value)
-            saveTableSettings();
+          saveTableSettings();
         });
       }
 
-      const tableSetup = () => {
-        if (Object.keys(headerVisibility.value).length == 0) {
-          headers.value.forEach((header) => {
-            headerVisibility.value[header] = true;
-          })
-        }
-        if (!url.value || url.value == '') {
-          dragStuff();
-        } else {
-          onGetData().then(() => {
-            dragStuff();
-          });
-        }
-      }
-
-      if (userPreferences.value)
-        getTableSettings().then(({data}) => {
-          if (data.value) {
-            const value = JSON.parse(data.value);
-            if (value.headers) {
-              changedHeaders.value.splice(0)
-              changedHeaders.value.push(...value.headers)
-            }
-            if (value.headerVisibility) {
-              headerVisibility.value = value.headerVisibility;
-            }
-          }
-          tableSetup();
-        });
-      else {
-        tableSetup();
-      }
+      getTableSettings();
+      // getTableSettings().then(({data}) => {
+      //     if (data.value) {
+      //       const value = JSON.parse(data.value);
+      //       if (value.headers) {
+      //         changedHeaders.value.splice(0)
+      //         changedHeaders.value.push(...value.headers)
+      //       }
+      //       if (value.headerVisibility) {
+      //         headerVisibility.value = value.headerVisibility;
+      //       }
+      //     }
+      //     tableSetup();
+      //   });
     };
 
     onMounted(mount);
@@ -649,6 +706,7 @@ export default defineComponent({
 
 
     return {
+      isMobile,
       checksDragHandler,
 
       // data
