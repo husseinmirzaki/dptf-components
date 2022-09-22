@@ -45,7 +45,7 @@ export default defineComponent({
     'pageTitle',
     'modelName',
     'onFieldsRead', 'onOrderRead', 'onReadTableCreation', 'onFormReadyRead',
-    'onFieldsAdd', 'onOrderAdd', 'onFormReadyAdd','onBuildFields','onReadBuildFields','onModes','onReadModes',
+    'onFieldsAdd', 'onOrderAdd', 'onFormReadyAdd','onBuildFields','onModalBuildFields','onReadBuildFields','onModes','onReadModes',
   ],
   components: {StateManager, SimpleReadOnlyFormOnline, AddAbleFormOnline},
 });
