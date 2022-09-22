@@ -113,6 +113,35 @@ export class Table {
      */
     filterForm: any = {};
 
+    jsonFilters: any = {};
+
+    orderedField: any = ref({});
+    filteredHeaders: any = ref([]);
+
+    addJsonFilter(key, data) {
+        if (!this.jsonFilters[key]) {
+            this.jsonFilters[key] = [];
+        } else {
+            this.jsonFilters[key].push(data);
+        }
+    }
+
+    applyFilter(key, filters) {
+        this.jsonFilters[key] = filters;
+        Object.keys(this.jsonFilters).forEach((key) => {
+            const index = this.filteredHeaders.value.indexOf(key);
+            if (this.jsonFilters[key] && Array.isArray(this.jsonFilters[key]) && this.jsonFilters[key].length > 0) {
+                if (index == -1) {
+                    this.filteredHeaders.value.push(key);
+                }
+            } else {
+                if (index > -1) {
+                    this.filteredHeaders.value.splice(index, 1);
+                }
+            }
+        });
+    }
+
     /**
      * define context menu items to be shown to users
      * when context menu is requested
@@ -472,6 +501,15 @@ export class Table {
 
             const qf = new URLSearchParams(filters);
 
+            qf.set('json_filter', JSON.stringify(this.jsonFilters));
+
+            console.log("this.orderedField.value.length", this.orderedField.value)
+            if (this.orderedField.value.name) {
+                qf.set('is_ord', '1');
+                qf.set('ord_field', this.orderedField.value.name);
+                qf.set('ord_dir', this.orderedField.value.order);
+            }
+
             if (qf.toString() != '') {
                 url += `&${qf.toString()}`
             }
@@ -484,7 +522,15 @@ export class Table {
 
         } else {
 
-            const tableData: any = {};
+            const tableData: any = {
+                "json_filter": JSON.stringify(this.jsonFilters),
+            };
+
+            if (this.orderedField.value.length > 0) {
+                tableData['is_ord'] = '1';
+                tableData['ord_field'] = this.orderedField.value.name;
+                tableData['ord_dir'] = this.orderedField.value.order;
+            }
 
             Object.keys(filters).forEach((key) => {
                 // if (filters[key])
@@ -507,7 +553,10 @@ export class Table {
         }
     }
 
-    refresh() {
+    refresh(resetPage = false) {
+        if (resetPage) {
+            this.currentPage.value = 1;
+        }
         return this.extra.onGetData();
     }
 
@@ -526,5 +575,23 @@ export class Table {
         } else {
             VueInstanceService.emit(`show-table-filter-${this.tableName}`, {fieldName: header});
         }
+    }
+
+    toggleOrder(header) {
+        if (this.orderedField.value['name'] != header) {
+            this.orderedField.value = {
+                name: header,
+            }
+        }
+
+        if (this.orderedField.value['order'] == 'asc')
+            this.orderedField.value['order'] = 'desc';
+        else if (this.orderedField.value['order'] == 'desc') {
+            this.orderedField.value = {};
+        }
+        else
+            this.orderedField.value['order'] = 'asc';
+        console.log(this.orderedField)
+        this.refresh();
     }
 }

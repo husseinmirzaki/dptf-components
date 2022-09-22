@@ -108,6 +108,7 @@
               :placeholder="placeholder"
               :modelValue="this.$props.modelValue"
               :type="$props.dateTimeType"
+              :format="$props.dateTimeType == 'datetime' ? 'jYYYY/jMM/jDD HH:mm':'jYYYY/jMM/jDD'"
               @update:modelValue="$emit('update:modelValue', fieldRef.outputValue[0])"
               @change="$emit('update:modelValue', fieldRef.outputValue[0])"
               ref="fieldRef"/>
