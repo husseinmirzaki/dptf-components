@@ -1,9 +1,6 @@
 import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
 import {CreateForm} from "@/custom/helpers/BaseForm";
 import {UserApiService} from "@/custom/services/UserApiService";
-import * as Yup from "yup";
-import {watch} from "vue";
-import {ExternalContactApiService} from "@/mail_box_custom/services/ExternalContactApiService";
 import {Actions} from "@/custom/store/enums/StoreEnums";
 import {VueInstanceService} from "@/Defaults";
 
