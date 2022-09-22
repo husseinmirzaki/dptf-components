@@ -1,7 +1,11 @@
 <template>
-  <th>
-    <div class="d-flex flex-row position-relative align-items-center justify-content-center">
-      <div v-if="!disableFilters" class="managed-items-container position-absolute">
+  <th class="custom-table-th">
+    <div class="custom-table-th-second d-flex flex-row position-relative align-items-center justify-content-start">
+      <div v-if="!disableFilters" class="managed-items-container position-absolute"
+         :class="{
+          'd-none': (!sortDirection && !isFiltered),
+          'd-flex':(!sortDirection || !isFiltered),
+         }">
         <div class="icon"
              @click="$emit('toggleOrder')"
              style="background-image: url(/media/icons/table/not-ordered.png); background-size: 17px 17px"
@@ -36,20 +40,22 @@ th:hover .filter-place-holder {
 }
 </style>
 <style lang="scss">
+$p_height: 40px;
 .table-filter-smaller {
   font-size: 11px;
 }
 
 .managed-items-container {
-  display: flex;
   position: absolute;
-  top: 50%;
-  left: -5px;
-  transform: translateY(-70%);
-  height: 15px;
+  top: 0;
+  left: 0;
+  height: $p_height;
+  //background-color: rgba(0, 0, 0, 0.19);
+  align-items: center;
+  justify-content: center;
 
   .icon {
-    display: none;
+    display: block;
     width: 20px;
     height: 20px;
     background-size: cover;
@@ -57,18 +63,34 @@ th:hover .filter-place-holder {
     background-repeat: no-repeat;
     transition: background-color ease 200ms;
     border-radius: 5px;
-
-    &:hover {
-      background-color: rgba(0, 0, 0, 0.19);
-    }
   }
 }
 
 th {
   &:hover {
-    .icon {
-      display: block;
+    .managed-items-container {
+      display: flex !important;
     }
+  }
+}
+
+th.custom-table-th {
+  &.pe-2 {
+    padding: 0 5px 0 0 !important;
+    vertical-align: middle;
+  }
+  padding: 0 5px 0 0 !important;
+
+  height: $p_height !important;
+  align-items: start;
+  p {
+    font-size: 15px;
+    font-weight: 300 !important;
+  }
+
+  .custom-table-th-second {
+    white-space: nowrap;
+    height: $p_height !important;
   }
 }
 </style>

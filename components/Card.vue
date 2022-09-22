@@ -6,7 +6,7 @@
        data-dragable="data-dragable" ref="cardRef"
        @mouseleave="mouseLeave">
     <slot name="card-header" :card-title="cardTitle" :card-description="cardDescription">
-      <div class="card-header align-items-center border-bottom-1 border-dark mt-0 px-2"
+      <div class="card-header align-items-center mt-0 px-2"
            :dragable="disableDrag ? 'no': 'dragable'"
            @mousedown.stop="dragMouseDown"
            :class="[headerClasses, {
