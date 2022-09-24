@@ -43,7 +43,7 @@ import {Table} from "@/custom/components/table/Table";
 
 export default {
   components: {Card, PromiseButton, FormBuilder},
-  props: ['modelName', 'showEditButton', 'onFields', 'onTableCreation', 'overrideOptions', 'onOrderField', 'onFormReady', 'onModes'],
+  props: ['modelName', 'showEditButton', 'onFields', 'onTableCreation', 'overrideOptions', 'onOrderField', 'onBuildFields', 'onFormReady', 'onModes'],
   setup(props) {
 
     const buildByModelName = new BuildByModelName(
@@ -51,6 +51,7 @@ export default {
         {
           overrideOptions: props.overrideOptions,
           onModes: props.onModes,
+          onBuildFields: props.onBuildFields,
           onFields: (field: FieldComponentPropsInterface) => {
             if (props.onFields) {
               field = props.onFields(field);

@@ -709,6 +709,8 @@ export class CreateForm<T extends FieldsInterface = any> {
         }
 
         Object.keys(data).forEach((e) => {
+
+            console.log("data to set", e, this.elementRefs, this.elementRefs[e]);
             try {
                 if (this.elementRefs[e])
                     (this.elementRefs[e] as any).setValue(data[e]);
