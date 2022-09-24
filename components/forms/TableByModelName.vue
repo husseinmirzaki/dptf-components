@@ -1,7 +1,6 @@
 <script lang="ts">
 
 import {defineComponent, h, ref, toRef} from "vue";
-import {FormsApiService} from "@/metronic_custom/services/forms/FormsApiService";
 import TableV1 from "@/custom/components/table/TableV1.vue";
 import FixedHeightLoader from "@/custom/components/forms/FixedHeightLoader.vue";
 import FixedHeightAccess from "@/custom/components/forms/FixedHeightAccess.vue";
@@ -88,19 +87,20 @@ export default defineComponent({
 
 
         onTBodyProps(item, header, index): any {
-
           const field = fields.find((_field) => _field.name == header);
-          if (field.field_type == "select" && !field['rel_model']) {
-            if (item[header])
-              return {
-                data: field.select_data.find((_item) => _item[0] == item[header])[1],
-              }
-          }
+          if (field) {
+            if (field.field_type == "select" && !field['rel_model']) {
+              if (item[header])
+                return {
+                  data: field.select_data.find((_item) => _item[0] == item[header])[1],
+                }
+            }
 
-          if (defaultTableOptions.onTBodyProps) {
-            const data: any = defaultTableOptions.onTBodyProps(item, header, index);
-            if (data) {
-              return data;
+            if (defaultTableOptions.onTBodyProps) {
+              const data: any = defaultTableOptions.onTBodyProps(item, header, index);
+              if (data) {
+                return data;
+              }
             }
           }
           return super.onTBodyProps(item, header, index);
