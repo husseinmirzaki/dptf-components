@@ -619,7 +619,6 @@ export default defineComponent({
     const setOptions = (
         options: Array<{ value: number | string; text: string }> | Array<string> | Array<number>
     ) => {
-
       if (options == null || options == undefined) {
         select2Instance.value?.val(null);
         select2Instance.value?.change();
