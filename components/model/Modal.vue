@@ -8,7 +8,7 @@
         <div class="modal-header" :class="{'p-2': thinFooter}">
           <h5 class="modal-title fw-light" id="exampleModalLabel">{{ innerModalTitle }}</h5>
           <div v-if="!sticky"
-              class="btn btn-sm btn-icon btn-active-icon-primary close" @click="close()"
+               class="btn btn-sm btn-icon btn-active-icon-primary close" @click="close()"
           >
             <span class="svg-icon svg-icon-2x">
               <inline-svg src="media/icons/duotune/arrows/arr061.svg"/>
@@ -20,7 +20,8 @@
           <slot name="modal-content" :modalId="modalId" :state="state"/>
         </div>
         <div class="modal-footer" :class="{'p-2': thinFooter}">
-          <button type="button" class="btn btn-light-primary font-weight-bold" :class="{'mt-4': !thinFooter}" v-if="!sticky"
+          <button type="button" class="btn btn-light-primary font-weight-bold" :class="{'mt-4': !thinFooter}"
+                  v-if="!sticky"
                   @click="close()">بستن
           </button>
           <slot name="modal-footer"/>
@@ -47,7 +48,6 @@ export default defineComponent({
     };
   },
   mounted() {
-    console.log(this.$refs.modalEl);
     (async () => {
       if (document.querySelector("#" + this.modalId)) {
         if (this.sticky)

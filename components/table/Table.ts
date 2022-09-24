@@ -451,7 +451,7 @@ export class Table {
                     return TableTDDate;
                 }
                 // matches the json iso formatted datetime
-                else if ((data.endsWith('Z') && data.search(/[:\-T]{2,}/) > -1) || data.split(/[:\-T]/).length > 2) {
+                else if ((data.endsWith('Z') && data.search(/[:\-T]{2,}/) > -1) || data.split(/\d+[:\-T]/).length > 2) {
                     return TableTDDateTime;
                 }
             } else if (typeof data === 'object') {

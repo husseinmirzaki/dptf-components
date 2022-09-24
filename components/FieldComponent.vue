@@ -555,6 +555,11 @@ export default defineComponent({
     });
 
     const setValue = (data) => {
+      if (field_type.value == "component") {
+        if (field.value && field.value.setData) {
+          field.value.setData(data);
+        }
+      }
       if (typeof data === 'boolean') {
         if (data != undefined)
           data = data ? 1 : 0;
@@ -619,7 +624,6 @@ export default defineComponent({
     const setOptions = (
         options: Array<{ value: number | string; text: string }> | Array<string> | Array<number>
     ) => {
-
       if (options == null || options == undefined) {
         select2Instance.value?.val(null);
         select2Instance.value?.change();
