@@ -173,6 +173,10 @@ export class Table {
 
     showPagination = true;
 
+    currentPage = ref(1)
+
+    count = ref(0)
+
     get showActionButtons() {
         return Configs.showTableActionButtons;
     }
@@ -475,9 +479,6 @@ export class Table {
     get canUseUrl() {
         return this.props.url.value != '';
     }
-
-    currentPage = ref(1)
-    count = ref(0)
 
     getFilters(): Record<string, any> {
         if (this.filterForm) {

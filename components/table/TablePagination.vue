@@ -97,3 +97,8 @@ export default defineComponent({
   }
 });
 </script>
+<style scoped>
+a {
+  font-weight: 400;
+}
+</style>

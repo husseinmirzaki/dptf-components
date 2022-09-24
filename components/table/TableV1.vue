@@ -166,7 +166,7 @@
                       />
                     </template>
                     <td style="width: 70px;white-space: nowrap"
-                          class="pe-2 text-nowrap text-center" v-if="defaultConfig.showActionButtons">
+                        class="pe-2 text-nowrap text-center" v-if="defaultConfig.showActionButtons">
                       <template v-for="(contextMenuItem, contextMenuIndex) in defaultConfig.getContextMenuItems(item)"
                                 :key="contextMenuItem">
                         <button class="btn btn-sm p-1"
@@ -549,7 +549,6 @@ export default defineComponent({
 
 
     watch(preferencesManager.value, (e) => {
-      console.log(e);
       buildPrimaryTableInfo(e);
       tableSetup();
     }, {deep: true});
@@ -582,15 +581,32 @@ export default defineComponent({
 
     const saveTableSettings = () => {
       preferencesManager.set({
+        defaultHeaders: defaultConfig.defaultHeaders,
         headers: headers.value,
         headerVisibility: headerVisibility.value,
       });
     }
 
     const buildPrimaryTableInfo = (value) => {
+      let newHeaders: any = [];
+
+
+      // check default headers exists in config
+      if (value.defaultHeaders) {
+        for (let i = 0; i < defaultConfig.defaultHeaders.length; i++) {
+          if (value.defaultHeaders.indexOf(defaultConfig.defaultHeaders[i]) == -1) {
+            newHeaders.push(defaultConfig.defaultHeaders[i]);
+          }
+        }
+      }
+
+
       if (value.headers) {
         changedHeaders.value.splice(0)
-        changedHeaders.value.push(...value.headers)
+        changedHeaders.value.push(
+            ...value.headers,
+            ...newHeaders
+        )
       } else {
         changedHeaders.value.splice(0)
         changedHeaders.value.push(...headers.value)

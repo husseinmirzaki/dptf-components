@@ -43,7 +43,7 @@ import {Table} from "@/custom/components/table/Table";
 
 export default {
   components: {Card, PromiseButton, FormBuilder},
-  props: ['modelName', 'showEditButton', 'onFields', 'onTableCreation', 'overrideOptions', 'onOrderField', 'onBuildFields', 'onFormReady', 'onModes'],
+  props: ['modelName', 'disableTitle', 'showEditButton', 'onFields', 'onTableCreation', 'overrideOptions', 'onOrderField', 'onBuildFields', 'onFormReady', 'onModes'],
   setup(props) {
 
     const buildByModelName = new BuildByModelName(
@@ -62,6 +62,10 @@ export default {
               field['field_type'] = 'component';
 
               class ExtendTable extends Table {
+
+                get showActionButtons(): boolean {
+                  return false;
+                }
 
                 get showContextMenuUpdate(): boolean {
                   return false;
@@ -84,7 +88,7 @@ export default {
                 filterModelName: field['rel_model'],
                 filterModelField: field,
                 sourceModelName: props.modelName,
-                title: field['label'],
+                title: !props.disableTitle ? field['label'] : undefined,
                 extendClass: ExtendTable,
               };
 

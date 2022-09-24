@@ -5,7 +5,7 @@
           :class="$attrs.class"
           :disable-drag="true"
           :card-title="pageTitle"
-
+          :disableTitle="disableTitle"
           :onFields="onFieldsRead"
           :onModes="onReadModes"
           :onBuildFields="onModalBuildFields"
@@ -44,7 +44,7 @@ export default defineComponent({
   props: [
     'pageTitle',
     'modelName',
-    'onFieldsRead', 'onOrderRead', 'onReadTableCreation', 'onFormReadyRead',
+    'onFieldsRead', 'onOrderRead', 'onReadTableCreation', 'onFormReadyRead', 'disableTitle',
     'onFieldsAdd', 'onOrderAdd', 'onFormReadyAdd','onBuildFields','onModalBuildFields','onReadBuildFields','onModes','onReadModes',
   ],
   components: {StateManager, SimpleReadOnlyFormOnline, AddAbleFormOnline},
