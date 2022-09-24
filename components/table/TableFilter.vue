@@ -120,7 +120,7 @@ export default {
       if (fieldName) {
         const data = props.defaultConfig.jsonFilters[fieldName];
         if (data && Array.isArray(data)) {
-          currentFilters.value = props.defaultConfig.jsonFilters[fieldName];
+          currentFilters.value = Object.assign([], props.defaultConfig.jsonFilters[fieldName]);
         } else {
           currentFilters.value = [];
         }
@@ -216,6 +216,7 @@ export default {
           if (event.fieldName) {
             const modelName = props.defaultConfig.modelName
             FieldsApiService.getFieldConfig(modelName, event.fieldName).then(({data}) => {
+              console.log(data);
               lastRequestedField = data;
               loadingField.value = false;
               getFilters();
@@ -238,7 +239,6 @@ export default {
           return [];
 
         const field_type = lastRequestedField.field_type;
-        console.log(field_type);
 
         if (!field_type || field_type == 'text')
           return STRING_COMP_SELECTS
