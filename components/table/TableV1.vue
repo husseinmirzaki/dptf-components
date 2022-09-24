@@ -55,7 +55,7 @@
             >
               <!--begin::Table head-->
               <thead>
-              <tr class="fw-bolder text-muted bg-light text-center" ref="headersRef">
+              <tr class="fw-bolder text-muted bg-light" ref="headersRef">
                 <th style="width: 70px" v-if="defaultConfig.checkAble" class="check-stuff">
                   <FieldComponent
                       v-model="checkAll"
@@ -134,7 +134,7 @@
               </tr>
               <template v-else-if="dList.length > 0">
                 <template v-for="(item, index) in dList" :key="index">
-                  <Component class="text-center"
+                  <Component class="text-start"
                              :is="defaultConfig.onTBodyRowComponent(item, index)"
                              v-bind="defaultConfig.onTBodyRowBinds(item, index)"
                              data-context-menu="true"
@@ -161,15 +161,16 @@
                     <template v-for="(header, headerIndex) in headers" :key="header">
                       <component
                           v-if="headerVisibility[header]"
-                          class="pe-2 text-nowrap"
                           :is="defaultConfig.onTBodyComponent(item, header, headerIndex, index)"
                           v-bind="defaultConfig.onTBodyProps(item, header, headerIndex, index)"
                       />
                     </template>
-                    <td style="width: 70px;white-space: nowrap" v-if="defaultConfig.showActionButtons">
+                    <td style="width: 70px;white-space: nowrap"
+                          class="pe-2 text-nowrap text-center" v-if="defaultConfig.showActionButtons">
                       <template v-for="(contextMenuItem, contextMenuIndex) in defaultConfig.getContextMenuItems(item)"
                                 :key="contextMenuItem">
                         <button class="btn btn-sm p-1"
+                                style="border-radius: 3px !important;"
                                 :class="[{
                           'ms-1': contextMenuIndex > 0,
                         }, [`btn-${contextMenuItem.state ? contextMenuItem.state : 'primary'}`]]"
