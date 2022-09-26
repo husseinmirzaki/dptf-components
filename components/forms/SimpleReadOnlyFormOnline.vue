@@ -88,7 +88,8 @@ export default {
                 filterModelName: field['rel_model'],
                 filterModelField: field,
                 sourceModelName: props.modelName,
-                title: !props.disableTitle ? field['label'] : undefined,
+                title: field['label'],
+                disableCard: props.disableTitle,
                 extendClass: ExtendTable,
               };
 
