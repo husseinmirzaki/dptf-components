@@ -172,7 +172,7 @@ export default {
       default: false,
     },
     "disableDrag": {
-      default: Configs['cardsAreDraggable'],
+      default: !Configs['cardsAreDraggable'],
     },
     "enableCollapse": {
       default: false,
