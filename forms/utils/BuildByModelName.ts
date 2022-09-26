@@ -5,7 +5,7 @@ import {FieldsApiService} from "@/custom/services/FieldsApiService";
 
 // تمام چیزی که این خط داره انجام میده اینه که به کامپایلر
 // میگه که ما یک ورودی میگیریم و هرچیزی رو ممکنه که خروجی بدیم
-type OnFieldFunction = (field: any) => any
+type OnFieldFunction = (field: any, formInstance: any|undefined) => any
 
 class BuildByModelName {
     formInstance: CreateFormExtend<any> | undefined;
@@ -75,7 +75,7 @@ class BuildByModelName {
         let fields: any = data;
 
         if (this.onBuildFields) {
-            fields = this.onBuildFields(data)
+            fields = this.onBuildFields(data, this)
         }
 
         fields.map((field) => {
@@ -96,7 +96,7 @@ class BuildByModelName {
             a['field_type'] == "textarea" && b['field_type'] != "textarea" ? -1 : 1);
 
         if (this.onFields) {
-            fields = fields.map((field) => this.onFields!(field));
+            fields = fields.map((field) => this.onFields!(field, this));
         }
 
         if (this.onOrderField) {
@@ -106,7 +106,7 @@ class BuildByModelName {
                 fieldsMapping[field.name] = field;
             });
 
-            fields = this.onOrderField(fields.map((field) => ({name: field.name, field}))).map((fieldName) => {
+            fields = this.onOrderField(fields.map((field) => ({name: field.name, field})), this).map((fieldName) => {
                 return fieldsMapping[fieldName];
             })
         }
@@ -120,7 +120,7 @@ class BuildByModelName {
 
             get modes(): Array<string> {
                 if (_this.onModes) {
-                    return _this.onModes(['basic']);
+                    return _this.onModes(['basic'], this);
                 }
                 return ['basic'];
             }
@@ -129,32 +129,32 @@ class BuildByModelName {
                 if (_this.onBeforeSubmit) {
                     return (async () => {
                         if (_this.onBeforeSubmit) {
-                            await _this.onBeforeSubmit([event, isCustom, onDone]);
+                            await _this.onBeforeSubmit([event, isCustom, onDone], this);
                         }
                         let submit = super.submit(event, isCustom, onDone);
                         if (_this.onAfterSubmit) {
-                            submit = _this.onAfterSubmit([submit, event, isCustom,onDone]);
+                            submit = _this.onAfterSubmit([submit, event, isCustom,onDone], this);
                         }
                         return submit;
                     })();
                 }
                 let submit = super.submit(event, isCustom, onDone);
                 if (_this.onAfterSubmit) {
-                    submit = _this.onAfterSubmit([submit, event, isCustom,onDone]);
+                    submit = _this.onAfterSubmit([submit, event, isCustom,onDone], this);
                 }
                 return submit;
             }
 
             createD(data: any): any {
                 if (_this.onBeforeCreate) {
-                    _this.onBeforeCreate(data);
+                    _this.onBeforeCreate(data, this);
                 }
                 const promise = super.createD(data);
                 if (_this.onAfterCreate) {
                     _this.onAfterCreate({
                         promise,
                         data
-                    })
+                    }, this)
                 }
                 return promise;
             }
@@ -162,14 +162,14 @@ class BuildByModelName {
 
             update(id: any, data: any): any {
                 if (_this.onBeforeUpdate) {
-                    _this.onBeforeUpdate(data);
+                    _this.onBeforeUpdate(data, this);
                 }
                 const promise = super.update(id, data);
                 if (_this.onAfterUpdate) {
                     _this.onAfterUpdate({
                         promise,
                         data
-                    })
+                    }, this)
                 }
                 return promise;
             }
@@ -181,6 +181,18 @@ class BuildByModelName {
 
         this.formInstance = new CreateFormExtend(fields).extend();
         this.formBuilt.value = true;
+    }
+
+    setValues(data: any) {
+        if (this.formBuilt.value) {
+            this.formInstance!.formInstance!.setValues(data);
+        }
+    }
+
+    resetForm() {
+        if (this.formBuilt.value) {
+            this.formInstance!.formInstance!.resetForm();
+        }
     }
 }
 

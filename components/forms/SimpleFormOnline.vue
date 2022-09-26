@@ -42,7 +42,10 @@
           text="ثبت"
           @submitDone="$emit('done', $event)"
           @clicked="onBeforeSendC(() => {$event($refs.form, buildByModelName.formInstance)})"/>
-      <button class="btn btn-danger ms-2" @click="$emit('cancel')" v-if="showCancelButton">لغو</button>
+      <button class="btn btn-danger ms-2" @click="$emit('cancel')" v-if="
+      showCancelButton||
+      buildByModelName.formInstance.update.value
+">لغو</button>
     </template>
   </Card>
 </template>

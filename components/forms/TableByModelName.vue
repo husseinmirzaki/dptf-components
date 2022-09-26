@@ -63,6 +63,10 @@ export default defineComponent({
           super(props, context, extra);
         }
 
+        get modelName(): any {
+          return props.filterModelName;
+        }
+
         get service(): any {
           return service;
         }
