@@ -1,6 +1,6 @@
 <template>
   <Card
-      :card-title="title"
+      :card-title="$attrs.cardTitle ? $attrs.cardTitle : title"
       :card-description="description"
       :icon="icon"
       :disable-card="disableCard"
@@ -200,9 +200,9 @@
           <!--end::Table container-->
         </div>
       </spinner>
-      <TableFilter :defaultConfig="defaultConfig"/>
     </template>
   </Card>
+  <TableFilter :defaultConfig="defaultConfig"/>
 
 </template>
 <style lang="scss">
