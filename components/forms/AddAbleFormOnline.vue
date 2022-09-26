@@ -1,7 +1,9 @@
 <template>
   <template v-for="model in Object.keys(modalsToDraw)" :key="model">
     <ModalFormOnline
+        :modalTitle="localModalTitle(model)"
         :on-fields="localModalField(model)"
+        :onBuildFields="localModalOnBuildFields(model)"
         :onFormReady="localModalFormReady(model)"
         :model-name="model" :ref="(el) => modalsToDraw[model] = el"/>
   </template>
@@ -26,6 +28,7 @@ import SimpleFormOnline from "@/custom/components/forms/SimpleFormOnline.vue";
 import {modelToServiceMap} from "@/ModelToServiceMap";
 import {defineComponent, Ref, ref, shallowRef, watch} from "vue";
 import ModalFormOnline from "@/custom/components/forms/ModalFormOnline.vue";
+import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
 
 export default defineComponent({
   components: {ModalFormOnline, SimpleFormOnline},
@@ -36,7 +39,7 @@ export default defineComponent({
 
     const watchFinished = ref(false);
     let lastSetTimeout: any = null;
-    const modalsToCreate: Record<string, any> = [];
+    const modalsToCreate: Record<string, any> = {};
     const modalsToDraw: Ref<Record<string, any>> = ref({});
 
     const onFormReadyC = (f) => {
@@ -74,7 +77,9 @@ export default defineComponent({
           f['onAddClick'] = () => {
             modalsToDraw.value[f['rel_model']].open();
           };
-          modalsToCreate[f['rel_model']] = 0;
+          modalsToCreate[f['rel_model']] = {
+            title: f['label']
+          };
         } else
           console.log("Add required service for", f['rel_model']);
       }
@@ -98,12 +103,43 @@ export default defineComponent({
       }
     }
 
+    const localModalOnBuildFields = (modalName) => {
+      return (fields: Array<FieldComponentPropsInterface>) => {
+        const notHiddenFields = fields.filter((e) => e.field_type != 'hidden').length;
+        if (notHiddenFields == 1) {
+          const notHiddenIndex = fields.findIndex((e) => e.field_type != 'hidden');
+          if (notHiddenIndex > -1) {
+            // fields[notHiddenIndex]['col_class'] = 'col-12'
+            modalsToCreate[modalName]['maximize'] = true;
+          }
+        }
+        return fields;
+      };
+    }
+
     const localModalField = (modal) => {
       if (props.onFormModalField) {
         return (field) => {
-          return props.onFormModalField(field, modalsToDraw, modal)
+          const onFormModalField = props.onFormModalField(field, modalsToDraw, modal);
+
+          if (modalsToCreate[modal]['maximize']) {
+            onFormModalField['col_class'] = 'col-12'
+          }
+
+          return onFormModalField
         }
       }
+      return (field) => {
+        if (modalsToCreate[modal]['maximize']) {
+          field['col_class'] = 'col-12'
+        }
+
+        return field
+      }
+    }
+
+    const localModalTitle = (modal) => {
+      return modalsToCreate[modal].title;
     }
 
     return {
@@ -113,6 +149,8 @@ export default defineComponent({
       formReady,
       localModalFormReady,
       localModalField,
+      localModalTitle,
+      localModalOnBuildFields,
       isFormReady,
       modalsToDraw,
     }
