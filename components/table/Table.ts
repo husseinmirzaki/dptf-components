@@ -454,6 +454,9 @@ export class Table {
                 else if (data.match(/^\d{4}-\d{1,2}-\d{1,2}$/)) {
                     return TableTDDate;
                 }
+                else if (data.match(/^\d{4}-\d{1,2}-\d{1,2}T\d{1,2}:\d{1,2}:\d{1,2}$/)) {
+                    return TableTDDateTime;
+                }
                 // matches the json iso formatted datetime
                 else if ((data.endsWith('Z') && data.search(/[:\-T]{2,}/) > -1) || data.split(/\d+[:\-T]/).length > 2) {
                     return TableTDDateTime;
