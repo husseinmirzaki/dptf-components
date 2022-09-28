@@ -1,25 +1,30 @@
 <template>
-  <template v-for="model in Object.keys(modalsToDraw)" :key="model">
-    <ModalFormOnline
-        :on-fields="localModalField(model)"
-        :onFormReady="localModalFormReady(model)"
-        :model-name="model" :ref="(el) => modalsToDraw[model] = el"/>
-  </template>
-  <SimpleFormOnline
-      :disable-drag="true"
-      @cancel="$emit('cancel')"
-      :on-form-ready="onFormReadyC"
-      :show-cancel-button="isFormReady(formReady)"
-      :onFields="onFieldsC"
-      :onBuildFields="onBuildFields"
-      :onBeforeSubmit="onBeforeSubmit"
-      :onAfterSubmit="onAfterSubmit"
-      v-bind="$attrs"
-  >
-    <template #multiForm>
-      <slot/>
+  <div
+      v-if="((modelMainName === 'WaterKhatEnteghal' && showTransferForm) || (modelMainName === 'WaterDistributionNetWork' && showNetworkForm))">
+    <template v-for="model in Object.keys(modalsToDraw)" :key="model">
+
+
+      <ModalFormOnline
+          :on-fields="localModalField(model)"
+          :onFormReady="localModalFormReady(model)"
+          :model-name="model" :ref="(el) => modalsToDraw[model] = el"/>
     </template>
-  </SimpleFormOnline>
+    <SimpleFormOnline
+        :disable-drag="true"
+        @cancel="$emit('cancel')"
+        :on-form-ready="onFormReadyC"
+        :show-cancel-button="isFormReady(formReady)"
+        :onFields="onFieldsC"
+        :onBuildFields="onBuildFields"
+        :onBeforeSubmit="onBeforeSubmit"
+        :onAfterSubmit="onAfterSubmit"
+        v-bind="$attrs"
+    >
+      <template #multiForm>
+        <slot/>
+      </template>
+    </SimpleFormOnline>
+  </div>
 </template>
 <script lang="ts">
 import SimpleFormOnline from "@/custom/components/forms/SimpleFormOnline.vue";
@@ -29,7 +34,7 @@ import ModalFormOnline from "@/custom/components/forms/ModalFormOnline.vue";
 
 export default defineComponent({
   components: {ModalFormOnline, SimpleFormOnline},
-  props: ['onFields', 'onFormModalField', 'onFormReady', 'onBuildFields', 'onModalFormReady', 'modelMainName', 'onBeforeSubmit', 'onAfterSubmit'],
+  props: ['onFields', 'onFormModalField', 'onFormReady', 'onBuildFields', 'onModalFormReady', 'modelMainName', 'onBeforeSubmit', 'onAfterSubmit', 'showTransferForm', 'showNetworkForm'],
   setup(props) {
     const formReady: Ref<boolean> = ref(false);
     let formInstance: any = shallowRef(null);
