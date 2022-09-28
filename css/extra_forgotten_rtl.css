@@ -147,6 +147,8 @@ span.apexcharts-text, span.apexcharts-title-text, span.apexcharts-legend-text {
     letter-spacing: 0!important;
 }
 
+
+/**  table  **/
 table td {
 	font-weight: 500 !important;
 	font-size: 13px !important;
