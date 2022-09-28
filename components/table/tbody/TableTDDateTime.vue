@@ -14,8 +14,10 @@ export default defineComponent({
   setup(props) {
     const data = toRef(props, 'data');
 
+    console.log(data.value)
+
     const converted = computed(() => {
-      if (/\d+:\d+:\d+$/.test(data.value)) {
+      if (/\d+\/\d+\/\d+ \d+:\d+:\d+$/.test(data.value)) {
         return data.value;
       }
       if (data.value) {

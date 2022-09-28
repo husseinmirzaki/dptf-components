@@ -1,6 +1,6 @@
 <template>
   <Card
-      :card-title="title"
+      :card-title="$attrs.cardTitle ? $attrs.cardTitle : title"
       :card-description="description"
       :icon="icon"
       :disable-card="disableCard"
@@ -200,9 +200,9 @@
           <!--end::Table container-->
         </div>
       </spinner>
-      <TableFilter :defaultConfig="defaultConfig"/>
     </template>
   </Card>
+  <TableFilter :defaultConfig="defaultConfig"/>
 
 </template>
 <style lang="scss">
@@ -366,6 +366,7 @@ import FilterContainer from "@/custom/components/table/header/filters/FilterCont
 import {mobileCheck} from "@/custom/helpers/MobileHelpers";
 import {UserPreferencesManager} from "@/custom/services/UserPreferencesV2Api";
 import TableFilter from "@/custom/components/table/TableFilter.vue";
+import {Configs} from "@/Configs";
 
 export default defineComponent({
   components: {
@@ -409,7 +410,7 @@ export default defineComponent({
       default: false,
     },
     disableDrag: {
-      default: false,
+      default: !Configs['cardsAreDraggable'],
     },
     userPreferences: {
       default: false,

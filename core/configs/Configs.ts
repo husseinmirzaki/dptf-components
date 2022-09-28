@@ -4,4 +4,5 @@ export default {
     name: 'intro'
   },
   showTableActionButtons: false,
+  cardsAreDraggable: true,
 };

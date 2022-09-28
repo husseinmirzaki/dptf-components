@@ -158,6 +158,7 @@ import CardMixin from "@/custom/mixins/CardMixin";
 import {Collapse} from "bootstrap";
 import {onMounted, onUnmounted, ref, toRef} from "vue";
 import {MenuComponent} from "@/assets/ts/components";
+import {Configs} from "@/Configs";
 
 export default {
   mixins: [CardMixin],
@@ -171,7 +172,7 @@ export default {
       default: false,
     },
     "disableDrag": {
-      default: false,
+      default: !Configs['cardsAreDraggable'],
     },
     "enableCollapse": {
       default: false,

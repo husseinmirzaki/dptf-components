@@ -16,6 +16,7 @@ export default defineComponent({
     'sourceModelName',
     'field',
     'title',
+    'description',
     'onSearchParams',
     'onConfig',
     'onAfterConfig',
@@ -61,6 +62,10 @@ export default defineComponent({
 
         constructor(props, context, extra) {
           super(props, context, extra);
+        }
+
+        get modelName(): any {
+          return props.filterModelName;
         }
 
         get service(): any {
@@ -152,7 +157,7 @@ export default defineComponent({
         return h(TableV1, {
           disableDrag: true,
           cardTitle: props.title,
-          cardDescription: '',
+          description: props.description ? props.description : '',
           disableDropdown: false,
           url,
           class: 'custom-field-class',

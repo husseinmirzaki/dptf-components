@@ -1,5 +1,5 @@
 <script lang="ts">
-import {ref, watch, h} from "vue";
+import {h, ref, watch} from "vue";
 import Modal from "@/custom/components/model/Modal.vue";
 import FormBuilder from "@/custom/components/FormBuilder.vue";
 import FormContainer from "@/custom/components/FormContainer.vue";
@@ -9,7 +9,7 @@ import FixedHeightLoader from "@/custom/components/forms/FixedHeightLoader.vue";
 import FixedHeightAccess from "@/custom/components/forms/FixedHeightAccess.vue";
 
 export default {
-  props: ['modelName', 'overrideOptions', 'onFields', 'onOrderField', 'onFormReady'],
+  props: ['modelName', 'overrideOptions', 'onFields', 'onOrderField', 'onBuildFields', 'onFormReady'],
   setup(props, context) {
     const modal = ref();
     const formRef = ref();
@@ -18,6 +18,7 @@ export default {
         props.modelName,
         {
           overrideOptions: props.overrideOptions,
+          onBuildFields: props.onBuildFields,
           onFields: props.onFields,
           onOrderField: props.onOrderField,
           isUsingModal: true,
@@ -52,6 +53,8 @@ export default {
           } else if (!buildByModelName.formFound.value) {
             return h(FixedHeightAccess);
           }
+
+          console.log("returning form container");
 
           return h(FormContainer, {
             validationSchema: buildByModelName.formInstance!.activeSchema,
