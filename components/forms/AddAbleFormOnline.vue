@@ -1,39 +1,20 @@
-<template>
-  <template v-for="model in Object.keys(modalsToDraw)" :key="model">
-    <ModalFormOnline
-        :modalTitle="localModalTitle(model)"
-        :on-fields="localModalField(model)"
-        :onBuildFields="localModalOnBuildFields(model)"
-        :onFormReady="localModalFormReady(model)"
-        :model-name="model" :ref="(el) => modalsToDraw[model] = el"/>
-  </template>
-  <SimpleFormOnline
-      :disable-drag="true"
-      @cancel="$emit('cancel')"
-      :on-form-ready="onFormReadyC"
-      :show-cancel-button="isFormReady(formReady)"
-      :onFields="onFieldsC"
-      :onBuildFields="onBuildFields"
-      :onBeforeSubmit="onBeforeSubmit"
-      :onAfterSubmit="onAfterSubmit"
-      v-bind="$attrs"
-  >
-    <template #multiForm>
-      <slot/>
-    </template>
-  </SimpleFormOnline>
-</template>
 <script lang="ts">
 import SimpleFormOnline from "@/custom/components/forms/SimpleFormOnline.vue";
 import {modelToServiceMap} from "@/ModelToServiceMap";
-import {defineComponent, Ref, ref, shallowRef, watch} from "vue";
+import {defineComponent, h, Ref, ref, shallowRef, watch} from "vue";
 import ModalFormOnline from "@/custom/components/forms/ModalFormOnline.vue";
 import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
 
 export default defineComponent({
   components: {ModalFormOnline, SimpleFormOnline},
-  props: ['onFields', 'onFormModalField', 'onFormReady', 'onBuildFields', 'onModalFormReady', 'modelMainName', 'onBeforeSubmit', 'onAfterSubmit'],
-  setup(props) {
+  props: [
+    'onFields', 'onFormModalField', 'onFormReady', 'onBuildFields',
+    'onModalBuildFields', 'onModalFormReady',
+    'modelMainName', 'modelName',
+    'onBeforeSubmit', 'onAfterSubmit',
+    'onOrderField', 'onModalOrderField', 'cardTitle'
+  ],
+  setup(props, context) {
     const formReady: Ref<boolean> = ref(false);
     let formInstance: any = shallowRef(null);
 
@@ -95,6 +76,14 @@ export default defineComponent({
       return f;
     }
 
+    const localOrderField = (modal) => {
+      return (f: Array<string>) => {
+        if (props.onModalOrderField)
+          return props.onModalOrderField(f, modal);
+        return f;
+      }
+    }
+
     const localModalFormReady = (modal) => {
       if (props.onModalFormReady) {
         return (formInstance) => {
@@ -104,7 +93,7 @@ export default defineComponent({
     }
 
     const localModalOnBuildFields = (modalName) => {
-      return (fields: Array<FieldComponentPropsInterface>) => {
+      return (fields: Array<FieldComponentPropsInterface>, instance) => {
         const notHiddenFields = fields.filter((e) => e.field_type != 'hidden').length;
         if (notHiddenFields == 1) {
           const notHiddenIndex = fields.findIndex((e) => e.field_type != 'hidden');
@@ -113,13 +102,34 @@ export default defineComponent({
             modalsToCreate[modalName]['maximize'] = true;
           }
         }
+
+        if (props.onModalBuildFields) {
+          props.onModalBuildFields(fields, instance, modalName, modalsToDraw);
+        }
+
         return fields;
       };
     }
 
     const localModalField = (modal) => {
+
       if (props.onFormModalField) {
         return (field) => {
+          console.log("modal fields", field);
+          if (field['rel_model'] && !field['select_url']) {
+            if (modelToServiceMap[field['rel_model']]) {
+              field['select_url'] = modelToServiceMap[field['rel_model']].selectUrl;
+              field['canAddItem'] = true;
+              field['onAddClick'] = () => {
+                modalsToDraw.value[field['rel_model']].open();
+              };
+              modalsToCreate[field['rel_model']] = {
+                title: field['label']
+              };
+            } else
+              console.log("Add required service for", field['rel_model']);
+          }
+
           const onFormModalField = props.onFormModalField(field, modalsToDraw, modal);
 
           if (modalsToCreate[modal]['maximize']) {
@@ -130,6 +140,19 @@ export default defineComponent({
         }
       }
       return (field) => {
+        if (field['rel_model'] && !field['select_url']) {
+          if (modelToServiceMap[field['rel_model']]) {
+            field['select_url'] = modelToServiceMap[field['rel_model']].selectUrl;
+            field['canAddItem'] = true;
+            field['onAddClick'] = () => {
+              modalsToDraw.value[field['rel_model']].open();
+            };
+            modalsToCreate[field['rel_model']] = {
+              title: field['label']
+            };
+          } else
+            console.log("Add required service for", field['rel_model']);
+        }
         if (modalsToCreate[modal]['maximize']) {
           field['col_class'] = 'col-12'
         }
@@ -142,17 +165,49 @@ export default defineComponent({
       return modalsToCreate[modal].title;
     }
 
-    return {
-      onFieldsC,
-      onFormReadyC,
-      formInstance,
-      formReady,
-      localModalFormReady,
-      localModalField,
-      localModalTitle,
-      localModalOnBuildFields,
-      isFormReady,
-      modalsToDraw,
+    return () => {
+      const modalNames = Object.keys(modalsToDraw.value);
+      const modals = modalNames.map((modal) => {
+        return h(
+            ModalFormOnline, {
+              key: modal,
+              modalTitle: localModalTitle(modal),
+              onFields: localModalField(modal),
+              onBuildFields: localModalOnBuildFields(modal),
+              onFormReady: localModalFormReady(modal),
+              onOrderField: localOrderField(modal),
+              modelName: modal,
+              ref: (el) => modalsToDraw.value[modal] = el,
+            }
+        )
+      });
+
+      const onlineForm = h(
+          SimpleFormOnline, {
+            cardTitle: props.cardTitle,
+            modelName: props.modelName || props.modelMainName,
+            onCancel: () => context.emit("cancel"),
+            onDone: () => context.emit("done"),
+            disableDrag: true,
+            onFormReady: onFormReadyC,
+            showCancelButton: isFormReady(),
+            onFields: onFieldsC,
+            onBuildFields: props.onBuildFields,
+            onAfterSubmit: props.onAfterSubmit,
+            onOrderField: props.onOrderField,
+          }, {
+            multiForm: () => {
+              if (context.slots && context.slots.default) {
+                return context.slots.default();
+              }
+            }
+          }
+      )
+
+      return [
+        ...modals,
+        onlineForm
+      ]
     }
   }
 });

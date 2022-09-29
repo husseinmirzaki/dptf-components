@@ -3,6 +3,7 @@ import {defineComponent, h} from "vue";
 import TableByModelName from "@/custom/components/forms/TableByModelName.vue";
 import AddAbleFormOnline from "@/custom/components/forms/AddAbleFormOnline.vue";
 import ShowModelHistoryButton from "@/custom/components/ShowModelHistoryButton.vue";
+import {VueInstanceService} from "@/Defaults";
 
 export default defineComponent({
   props: [
@@ -15,11 +16,16 @@ export default defineComponent({
     'onFormField',
     'onFormFormReady',
     'onModalFormReady',
+    'onFormBuildFields',
+    'onModalBuildFields',
+    'onFormFieldsOrder',
+    'onModalFieldsOrder',
     'disableTable',
     'disableForm',
   ],
   emits: ['formRefReady', 'update', 'done', 'cancel'],
   setup(props, context) {
+    let formInstance:any;
     return () => {
 
       const table = (!props.disableTable) ? h(TableByModelName, {
@@ -37,14 +43,26 @@ export default defineComponent({
 
       const form = (!props.disableForm) ? h(AddAbleFormOnline, {
         ref: (el) => context.emit('formRefReady', el),
-        onCancel: (e) => context.emit('cancel', e),
-        onDone: (e) => context.emit('done', e),
+        onCancel: (e) => {
+          formInstance.resetForm();
+          context.emit('cancel', e)
+        },
+        onDone: (e) => {
+          VueInstanceService.emit(`${props.tableModel}Table`, ['refresh']);
+          context.emit('done', e)
+        },
+        onBuildFields: props.onFormBuildFields,
         cardTitle: props.formCardTitle,
         onFields: props.onFormField,
         onFormModalField: props.onFormModalField,
+        onModalBuildFields: props.onModalBuildFields,
         modelName: props.formModel,
-        onFormReady: props.onFormFormReady,
-        onModalFormReady: props.onModalFormReady
+        onFormReady: (e) => {
+          formInstance = e;
+          return props.onFormFormReady(e);
+        },
+        onModalFormReady: props.onModalFormReady,
+        onOrderField: props.onFormFieldsOrder,
       }) : undefined
 
       return h('div', {

@@ -42,7 +42,10 @@ export class UserApiService extends ApiService {
     }
 
     public static delete(id) {
-        return ApiService.delete(`${this.baseUrl}${id}/`);
+        if (id.search('user') > -1) {
+            return ApiService.delete(`${id}`);
+        }
+        return ApiService.delete(`${this.baseUrl}${id}`);
     }
 
     public static create(data) {
@@ -112,12 +115,18 @@ export class UserApiService extends ApiService {
         });
     }
 
+    // todo: remove
     public static getUserRole() {
         return ApiService.get(`contractor_user/get_user_role/`)
     }
 
+    // todo: remove
     public static getUserPossibleRoles() {
         return ApiService.get(`contractor_user/get_user_possible_roles/`)
+    }
+
+    public static getCurrentUserRoles() {
+        return ApiService.get(`${this.baseUrl}get_user_possible_roles/`)
     }
 
 }

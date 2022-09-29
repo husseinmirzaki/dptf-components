@@ -60,9 +60,14 @@ export class ExtendClass {
 
     public removeHeader(header: string) {
         if (!this.configs['headersToRemove'])
-            this.configs['headersToRemove'] = {};
+            this.configs['headersToRemove'] = [];
 
         this.configs['headersToRemove'].push(header);
+        return this;
+    }
+
+    public setHeaders(headers: Array<string>) {
+        this.configs['set_headers'] = headers;
         return this;
     }
 
@@ -119,6 +124,11 @@ export class ExtendClass {
         class TableExtendClass extends Table {
 
             headers(list): Array<string> {
+
+                if (_this.configs['set_headers']) {
+                    return _this.configs['set_headers'];
+                }
+
                 const headers = super.headers(list);
 
                 if (_this.configs['headersToAdd'])
@@ -134,7 +144,7 @@ export class ExtendClass {
                     })
 
                 if (_this.configs['headersToRemove'])
-                    _this.configs['headersToAdd'].forEach((header) => {
+                    _this.configs['headersToRemove'].forEach((header) => {
                         const _headerIndex = headers.indexOf(header);
                         if (_headerIndex > -1) {
                             headers.splice(_headerIndex, 1);

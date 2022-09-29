@@ -54,8 +54,6 @@ export default {
             return h(FixedHeightAccess);
           }
 
-          console.log("returning form container");
-
           return h(FormContainer, {
             validationSchema: buildByModelName.formInstance!.activeSchema,
             ref: (el) => formRef.value = el,

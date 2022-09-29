@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import {addMethod, setLocale} from "yup";
 import {Router} from "vue-router";
 import {Actions} from "@/store/enums/StoreEnums";
+import {hasAnyPerm, hasAnyRole, PermissionService} from "@/custom/services/PermissionService";
 
 export default class VueInstanceService {
     public static pageIsLoading = ref(false);
