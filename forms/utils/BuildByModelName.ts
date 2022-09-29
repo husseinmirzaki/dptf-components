@@ -120,7 +120,8 @@ class BuildByModelName {
 
             get modes(): Array<string> {
                 if (_this.onModes) {
-                    return _this.onModes(['basic'], this);
+                    const onModes1 = _this.onModes(['basic'], this);
+                    return onModes1;
                 }
                 return ['basic'];
             }

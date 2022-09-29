@@ -11,7 +11,7 @@ export default defineComponent({
     'onFields', 'onFormModalField', 'onFormReady', 'onBuildFields',
     'onModalBuildFields', 'onModalFormReady',
     'modelMainName', 'modelName',
-    'onBeforeSubmit', 'onAfterSubmit',
+    'onBeforeSubmit', 'onAfterSubmit', 'onModes', 'onModalModes',
     'onOrderField', 'onModalOrderField', 'cardTitle'
   ],
   setup(props, context) {
@@ -43,7 +43,7 @@ export default defineComponent({
             title: f['label']
           };
         } else
-          console.log("Add required service for", f['rel_model']);
+          console.warn("Add required service for", f['rel_model']);
       }
 
       if (props.onFields) {
@@ -67,9 +67,16 @@ export default defineComponent({
       }
     }
 
+    const localModes = (modal) => {
+      if (props.onModalModes) {
+        return (f: Array<string>) => {
+          return props.onModalModes(f, modal);
+        }
+      }
+    }
+
     const localModalFormReady = (modal) => {
       if (props.onModalFormReady) {
-        console.log("onModalFormReady")
         return (formInstance) => {
           return props.onModalFormReady(formInstance, modalsToCreate, modal)
         }
@@ -98,9 +105,7 @@ export default defineComponent({
     const localModalField = (modal) => {
 
       if (props.onFormModalField) {
-        console.log("onFormModalField")
         return (field) => {
-          console.log("modal fields", field);
           if (field['rel_model'] && !field['select_url']) {
             if (modelToServiceMap[field['rel_model']]) {
               field['select_url'] = modelToServiceMap[field['rel_model']].selectUrl;
@@ -112,7 +117,7 @@ export default defineComponent({
                 title: field['label']
               };
             } else
-              console.log("Add required service for", field['rel_model']);
+              console.warn("Add required service for", field['rel_model']);
           }
 
           const onFormModalField = props.onFormModalField(field, modalsToCreate, modal);
@@ -136,7 +141,7 @@ export default defineComponent({
               title: field['label']
             };
           } else
-            console.log("Add required service for", field['rel_model']);
+            console.warn("Add required service for", field['rel_model']);
         }
         if (modalsToCreate[modal]['maximize']) {
           field['col_class'] = 'col-12'
@@ -161,6 +166,7 @@ export default defineComponent({
               onBuildFields: localModalOnBuildFields(modal),
               onFormReady: localModalFormReady(modal),
               onOrderField: localOrderField(modal),
+              onModes: localModes(modal),
               modelName: modal,
               ref: (el) => modalsToCreate[modal]['ref'] = el,
             }
@@ -180,6 +186,7 @@ export default defineComponent({
             onBuildFields: props.onBuildFields,
             onAfterSubmit: props.onAfterSubmit,
             onOrderField: props.onOrderField,
+            onModes: props.onModes,
           }, {
             multiForm: () => {
               if (context.slots && context.slots.default) {

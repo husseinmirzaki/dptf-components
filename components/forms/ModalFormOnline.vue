@@ -9,7 +9,7 @@ import FixedHeightLoader from "@/custom/components/forms/FixedHeightLoader.vue";
 import FixedHeightAccess from "@/custom/components/forms/FixedHeightAccess.vue";
 
 export default {
-  props: ['modelName', 'overrideOptions', 'onFields', 'onOrderField', 'onBuildFields', 'onFormReady'],
+  props: ['modelName', 'overrideOptions', 'onFields', 'onOrderField', 'onBuildFields', 'onFormReady', 'onModes'],
   setup(props, context) {
     const modal = ref();
     const formRef = ref();
@@ -21,6 +21,7 @@ export default {
           onBuildFields: props.onBuildFields,
           onFields: props.onFields,
           onOrderField: props.onOrderField,
+          onModes: props.onModes,
           isUsingModal: true,
         }
     );
