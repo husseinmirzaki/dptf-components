@@ -1,7 +1,7 @@
 <script lang="ts">
 import SimpleFormOnline from "@/custom/components/forms/SimpleFormOnline.vue";
 import {modelToServiceMap} from "@/ModelToServiceMap";
-import {defineComponent, h, Ref, ref, shallowRef, watch} from "vue";
+import {defineComponent, h, Ref, ref} from "vue";
 import ModalFormOnline from "@/custom/components/forms/ModalFormOnline.vue";
 import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
 
@@ -15,36 +15,17 @@ export default defineComponent({
     'onOrderField', 'onModalOrderField', 'cardTitle'
   ],
   setup(props, context) {
+    let formInstance: any;
     const formReady: Ref<boolean> = ref(false);
-    let formInstance: any = shallowRef(null);
-
-    const watchFinished = ref(false);
-    let lastSetTimeout: any = null;
     const modalsToCreate: Record<string, any> = {};
-    const modalsToDraw: Ref<Record<string, any>> = ref({});
 
     const onFormReadyC = (f) => {
-      formInstance.value = f;
+      formInstance = f;
       formReady.value = true;
       if (props.onFormReady) {
         props.onFormReady(f);
       }
     }
-
-    const isFormReady = () => {
-      if (formReady.value) {
-        return formInstance.value.formInstance.update.value
-      }
-      return false;
-    }
-
-    watch(watchFinished, (e) => {
-      if (e) {
-        Object.keys(modalsToCreate).forEach((key) => {
-          modalsToDraw.value[key] = ref();
-        });
-      }
-    });
 
     const onFieldsC = (f: any) => {
       // fixed classes for all fields
@@ -56,7 +37,7 @@ export default defineComponent({
           f['select_url'] = modelToServiceMap[f['rel_model']].selectUrl;
           f['canAddItem'] = true;
           f['onAddClick'] = () => {
-            modalsToDraw.value[f['rel_model']].open();
+            modalsToCreate[f['rel_model']].ref.open();
           };
           modalsToCreate[f['rel_model']] = {
             title: f['label']
@@ -66,28 +47,31 @@ export default defineComponent({
       }
 
       if (props.onFields) {
-        f = props.onFields(f);
+        const result = props.onFields(Object.assign({}, f));
+        if (result)
+          f = result;
       }
 
-      clearInterval(lastSetTimeout);
-      lastSetTimeout = setInterval(() => {
-        watchFinished.value = true;
-      }, 100);
       return f;
     }
 
     const localOrderField = (modal) => {
-      return (f: Array<string>) => {
-        if (props.onModalOrderField)
-          return props.onModalOrderField(f, modal);
-        return f;
+      if (props.onModalOrderField) {
+        return (f: Array<string>) => {
+          return props.onModalOrderField(f, modal).map((e) => {
+            if (typeof e == "string")
+              return e;
+            return e.name;
+          });
+        }
       }
     }
 
     const localModalFormReady = (modal) => {
       if (props.onModalFormReady) {
+        console.log("onModalFormReady")
         return (formInstance) => {
-          return props.onModalFormReady(formInstance, modalsToDraw, modal)
+          return props.onModalFormReady(formInstance, modalsToCreate, modal)
         }
       }
     }
@@ -104,7 +88,7 @@ export default defineComponent({
         }
 
         if (props.onModalBuildFields) {
-          props.onModalBuildFields(fields, instance, modalName, modalsToDraw);
+          props.onModalBuildFields(fields, instance, modalName, modalsToCreate);
         }
 
         return fields;
@@ -114,6 +98,7 @@ export default defineComponent({
     const localModalField = (modal) => {
 
       if (props.onFormModalField) {
+        console.log("onFormModalField")
         return (field) => {
           console.log("modal fields", field);
           if (field['rel_model'] && !field['select_url']) {
@@ -121,7 +106,7 @@ export default defineComponent({
               field['select_url'] = modelToServiceMap[field['rel_model']].selectUrl;
               field['canAddItem'] = true;
               field['onAddClick'] = () => {
-                modalsToDraw.value[field['rel_model']].open();
+                modalsToCreate[field['rel_model']].open();
               };
               modalsToCreate[field['rel_model']] = {
                 title: field['label']
@@ -130,7 +115,7 @@ export default defineComponent({
               console.log("Add required service for", field['rel_model']);
           }
 
-          const onFormModalField = props.onFormModalField(field, modalsToDraw, modal);
+          const onFormModalField = props.onFormModalField(field, modalsToCreate, modal);
 
           if (modalsToCreate[modal]['maximize']) {
             onFormModalField['col_class'] = 'col-12'
@@ -145,7 +130,7 @@ export default defineComponent({
             field['select_url'] = modelToServiceMap[field['rel_model']].selectUrl;
             field['canAddItem'] = true;
             field['onAddClick'] = () => {
-              modalsToDraw.value[field['rel_model']].open();
+              modalsToCreate[field['rel_model']].open();
             };
             modalsToCreate[field['rel_model']] = {
               title: field['label']
@@ -166,7 +151,7 @@ export default defineComponent({
     }
 
     return () => {
-      const modalNames = Object.keys(modalsToDraw.value);
+      const modalNames = Object.keys(modalsToCreate);
       const modals = modalNames.map((modal) => {
         return h(
             ModalFormOnline, {
@@ -177,7 +162,7 @@ export default defineComponent({
               onFormReady: localModalFormReady(modal),
               onOrderField: localOrderField(modal),
               modelName: modal,
-              ref: (el) => modalsToDraw.value[modal] = el,
+              ref: (el) => modalsToCreate[modal]['ref'] = el,
             }
         )
       });
@@ -190,7 +175,7 @@ export default defineComponent({
             onDone: () => context.emit("done"),
             disableDrag: true,
             onFormReady: onFormReadyC,
-            showCancelButton: isFormReady(),
+            showCancelButton: formReady.value && formInstance.formInstance.update.value,
             onFields: onFieldsC,
             onBuildFields: props.onBuildFields,
             onAfterSubmit: props.onAfterSubmit,

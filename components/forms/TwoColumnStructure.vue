@@ -59,9 +59,11 @@ export default defineComponent({
         modelName: props.formModel,
         onFormReady: (e) => {
           formInstance = e;
-          return props.onFormFormReady(e);
+          if (props.onFormFormReady)
+            props.onFormFormReady(e);
         },
         onModalFormReady: props.onModalFormReady,
+        onModalOrderField: props.onModalFieldsOrder,
         onOrderField: props.onFormFieldsOrder,
       }) : undefined
 
