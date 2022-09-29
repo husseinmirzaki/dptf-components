@@ -7,7 +7,8 @@
       :disable-drag="disableDrag"
       body-padding-class="m-0"
       :nav-items="navItems"
-      @selected-nav-item="$emit('selectedNavItem', $event)">
+      @selected-nav-item="$emit('selectedNavItem', $event)"
+      v-bind="$attrs">
     <template #card-title-content>
       <slot name="card-title-content"/>
     </template>
@@ -203,7 +204,6 @@
     </template>
   </Card>
   <TableFilter :defaultConfig="defaultConfig"/>
-
 </template>
 <style lang="scss">
 @media (max-width: 972px) {
