@@ -8,3 +8,15 @@ export function fixFieldSelectUrl(f: FieldComponentPropsInterface) {
     }
 
 }
+
+export function fieldFieldSelect(field: FieldComponentPropsInterface, onDone: any = undefined) {
+    if (field['rel_model'] && !field['select_url']) {
+        if (modelToServiceMap[field['rel_model']]) {
+            field['select_url'] = modelToServiceMap[field['rel_model']].selectUrl;
+            if (onDone)
+                field = onDone(field);
+        } else
+            console.warn("Add required service for", field['rel_model']);
+    }
+    return field;
+}

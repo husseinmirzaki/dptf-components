@@ -4,6 +4,7 @@ import {modelToServiceMap} from "@/ModelToServiceMap";
 import {defineComponent, h, Ref, ref} from "vue";
 import ModalFormOnline from "@/custom/components/forms/ModalFormOnline.vue";
 import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
+import {fieldFieldSelect} from "@/custom/components/forms/utils/fixers";
 
 export default defineComponent({
   components: {ModalFormOnline, SimpleFormOnline},
@@ -106,19 +107,17 @@ export default defineComponent({
 
       if (props.onFormModalField) {
         return (field) => {
-          if (field['rel_model'] && !field['select_url']) {
-            if (modelToServiceMap[field['rel_model']]) {
-              field['select_url'] = modelToServiceMap[field['rel_model']].selectUrl;
-              field['canAddItem'] = true;
-              field['onAddClick'] = () => {
-                modalsToCreate[field['rel_model']].open();
-              };
-              modalsToCreate[field['rel_model']] = {
-                title: field['label']
-              };
-            } else
-              console.warn("Add required service for", field['rel_model']);
-          }
+
+          field = fieldFieldSelect(field, (f) => {
+            field['canAddItem'] = true;
+            field['onAddClick'] = () => {
+              modalsToCreate[field['rel_model']].open();
+            };
+            modalsToCreate[field['rel_model']] = {
+              title: field['label']
+            };
+            return field;
+          });
 
           const onFormModalField = props.onFormModalField(field, modalsToCreate, modal);
 
@@ -130,19 +129,18 @@ export default defineComponent({
         }
       }
       return (field) => {
-        if (field['rel_model'] && !field['select_url']) {
-          if (modelToServiceMap[field['rel_model']]) {
-            field['select_url'] = modelToServiceMap[field['rel_model']].selectUrl;
-            field['canAddItem'] = true;
-            field['onAddClick'] = () => {
-              modalsToCreate[field['rel_model']].open();
-            };
-            modalsToCreate[field['rel_model']] = {
-              title: field['label']
-            };
-          } else
-            console.warn("Add required service for", field['rel_model']);
-        }
+
+        field = fieldFieldSelect(field, (f) => {
+          field['canAddItem'] = true;
+          field['onAddClick'] = () => {
+            modalsToCreate[field['rel_model']].open();
+          };
+          modalsToCreate[field['rel_model']] = {
+            title: field['label']
+          };
+          return field;
+        });
+
         if (modalsToCreate[modal]['maximize']) {
           field['col_class'] = 'col-12'
         }
