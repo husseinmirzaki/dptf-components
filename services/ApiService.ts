@@ -170,11 +170,14 @@ class ApiService {
 
                 } else if (result.response.status >= 500 && result.response.status < 600) {
                     // tell user its server error
-                    VueInstanceService.showErrorMessage(
-                        "مشکلی در اتصال به سرور رخ داد",
-                        "مشکل اتصال",
-                        0
-                    );
+                    if (!VueInstanceService.ignoreServerError)
+                        VueInstanceService.showErrorMessage(
+                            "مشکلی در اتصال به سرور رخ داد",
+                            "مشکل اتصال",
+                            0
+                        );
+                    else
+                        VueInstanceService.ignoreServerError = false;
                     reject(result);
                 } else {
                     reject(result);
@@ -222,10 +225,16 @@ class ApiService {
     }
 
     static wrap(func: () => Promise<any>) {
+        const promise = new Promise((resolve, reject) => {
+            this.handleTokenRefresh(func, resolve, reject);
+        });
+
+        promise.then(() => {
+            VueInstanceService.ignoreServerError = false;
+        })
+
         return this.hre(
-            new Promise((resolve, reject) => {
-                this.handleTokenRefresh(func, resolve, reject);
-            })
+            promise
         )
     }
 
@@ -416,7 +425,7 @@ class ApiService {
         });
     }
 
-    public static list(customUrl: string | undefined=undefined) {
+    public static list(customUrl: string | undefined = undefined) {
         if (customUrl)
             return this.get(customUrl);
         return this.get(this.url);
@@ -427,6 +436,7 @@ class ApiService {
     }
 
     public static deleteOne(id) {
+        VueInstanceService.ignoreServerError = true;
         return this.delete(`${this.baseUrl}${id}/`);
     }
 

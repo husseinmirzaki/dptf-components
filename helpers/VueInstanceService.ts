@@ -12,6 +12,8 @@ export default class VueInstanceService {
 
     public static vue: App;
 
+    public static ignoreServerError = false;
+
     public static init(instance: App) {
         VueInstanceService.vue = instance;
         setLocale({

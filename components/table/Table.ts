@@ -225,6 +225,13 @@ export class Table {
                 if (e.value) {
                     this.service.deleteOne(this.getDeleteItemId(data)).then(() => {
                         this.onDataDeleted(data)
+                    }, (e) => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'توجه کنید',
+                            text: 'داده ای که می خواهید آنرا پاک کنید در بخش های دیگری استفاده شده لطفا اول آن موارد را پاک کنید',
+                            confirmButtonText: 'حذف شود',
+                        });
                     });
                 }
             } else {
@@ -453,8 +460,7 @@ export class Table {
                     return TableTDBool;
                 else if (data.match(/^\d{4}-\d{1,2}-\d{1,2}$/)) {
                     return TableTDDate;
-                }
-                else if (data.match(/^\d{4}-\d{1,2}-\d{1,2}T\d{1,2}:\d{1,2}:\d{1,2}$/)) {
+                } else if (data.match(/^\d{4}-\d{1,2}-\d{1,2}T\d{1,2}:\d{1,2}:\d{1,2}$/)) {
                     return TableTDDateTime;
                 }
                 // matches the json iso formatted datetime
@@ -592,8 +598,7 @@ export class Table {
             this.orderedField.value['order'] = 'desc';
         else if (this.orderedField.value['order'] == 'desc') {
             this.orderedField.value = {};
-        }
-        else
+        } else
             this.orderedField.value['order'] = 'asc';
         console.log(this.orderedField)
         this.refresh();

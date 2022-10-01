@@ -39,5 +39,6 @@ export function selectFormDataV2(formInstance: any, serverData: any) {
 
         }
     });
+    console.log(serverData);
     return serverData
 }
