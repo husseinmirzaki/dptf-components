@@ -23,16 +23,15 @@ export default defineComponent({
     'disableTable',
     'disableForm',
   ],
-  emits: ['formRefReady', 'update', 'done', 'cancel'],
+  emits: ['formRefReady', 'update', 'done', 'cancel', 'view'],
   setup(props, context) {
-    let formInstance:any;
+    let formInstance: any;
     return () => {
 
       const table = (!props.disableTable) ? h(TableByModelName, {
         extendClass: props.tableExtendClass,
-        onUpdate: (e) => {
-          context.emit('update', e)
-        },
+        onUpdate: (data) => context.emit('update', data, formInstance),
+        onView: (data) => context.emit('view', data, formInstance),
         title: props.tableCardTitle,
         filterModelName: props.tableModel,
       }, {
