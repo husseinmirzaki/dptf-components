@@ -42,7 +42,7 @@ export function hasPerm(permission: string | Array<string>) {
 export function hasAnyPerm(permission: string | Array<string>) {
     if (Array.isArray(permission)) {
         for (let i = 0; i < permission.length; i++) {
-            if (!hasPerm(permission[i])) {
+            if (hasPerm(permission[i])) {
                 return true;
             }
         }
