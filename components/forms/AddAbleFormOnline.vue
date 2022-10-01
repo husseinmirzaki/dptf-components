@@ -187,6 +187,7 @@ export default defineComponent({
             onAfterSubmit: props.onAfterSubmit,
             onOrderField: props.onOrderField,
             onModes: props.onModes,
+            onBeforeSubmit: props.onBeforeSubmit,
           }, {
             multiForm: () => {
               if (context.slots && context.slots.default) {
