@@ -62,7 +62,7 @@ export default {
   props: [
       'modelName', 'overrideOptions', 'showCancelButton',
     'onBuildFields', 'onFields', 'onOrderField', 'onFormReady',
-    'onBeforeSend', 'onModes','onBeforeSubmit', 'onAfterSubmit'
+    'onBeforeSend', 'onModes','onBeforeSubmit', 'onAfterSubmit', 'onSend'
   ],
   setup(props, context) {
 
@@ -117,8 +117,6 @@ export default {
 
     const onBeforeSendC = (e) => {
 
-      console.log("console.log", e);
-
       buildByModelName.formInstance!.formInstance.fields.forEach((field) => {
         if (field['is_json_field']) {
           const value = buildByModelName.formInstance!.obj[field['name']];
@@ -132,7 +130,11 @@ export default {
         props.onBeforeSend(buildByModelName);
       }
 
-      e();
+      if(props.onSend) {
+        props.onSend(e,  buildByModelName);
+      } else  {
+        e();
+      }
     }
 
     return {

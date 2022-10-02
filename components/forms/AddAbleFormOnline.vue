@@ -13,7 +13,8 @@ export default defineComponent({
     'onModalBuildFields', 'onModalFormReady',
     'modelMainName', 'modelName',
     'onBeforeSubmit', 'onAfterSubmit', 'onModes', 'onModalModes',
-    'onOrderField', 'onModalOrderField', 'cardTitle'
+    'onOrderField', 'onModalOrderField', 'cardTitle',
+      'onFormSend',
   ],
   setup(props, context) {
     let formInstance: any;
@@ -184,6 +185,7 @@ export default defineComponent({
             onBuildFields: props.onBuildFields,
             onAfterSubmit: props.onAfterSubmit,
             onOrderField: props.onOrderField,
+            onSend: props.onFormSend,
             onModes: props.onModes,
             onBeforeSubmit: props.onBeforeSubmit,
           }, {
