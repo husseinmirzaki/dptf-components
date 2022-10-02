@@ -90,6 +90,7 @@ export default {
     // current data
     const currentData = ref();
     const currentComp = ref();
+    const reRendered = ref(0);
 
     // element refs
     let filterContainer;
@@ -128,7 +129,18 @@ export default {
     }
 
     const showFilters = () => {
-      filterContainer.style.display = 'block';
+      if (!filterContainer) {
+        reRendered.value++;
+        nextTick(() => {
+          if (filterContainer)
+            filterContainer.style.display = 'block';
+          else
+            nextTick(() => {
+              filterContainer.style.display = 'block';
+            })
+        })
+      } else
+        filterContainer.style.display = 'block';
     }
 
     const hideFilters = () => {
@@ -234,6 +246,12 @@ export default {
 
 
     return () => {
+
+      if (reRendered.value !== 0) {
+        reRendered.value = 0;
+        return;
+      }
+
       const CURRENT_COMP_SELECT = (() => {
         if (!lastRequestedField)
           return [];
@@ -427,7 +445,7 @@ export default {
           ]
       ));
 
-      const container = h(
+      return h(
           'div',
           {
             onClick: () => {
@@ -454,8 +472,6 @@ export default {
               )
           )
       );
-
-      return container;
     }
   }
 }

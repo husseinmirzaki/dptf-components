@@ -19,11 +19,15 @@
       </div>
       <template v-if="formBuilt">
         <FormContainer
+            v-if="!isReadOnly"
             :validation-schema="buildByModelName.formInstance.activeSchema"
             ref="form"
         >
           <FormBuilder :fields="buildByModelName.formInstance.activeFields"/>
         </FormContainer>
+        <template v-else>
+          <FormBuilder :fields="buildByModelName.formInstance.activeFields"/>
+        </template>
         <slot name="multiForm"/>
       </template>
 
@@ -33,11 +37,13 @@
             v-if="$attrs['disable-card']"
             @submitDone="$emit('done')"
             @clicked="onBeforeSendC(() => {$event($refs.form, buildByModelName.formInstance)})"/>
-        <button class="btn btn-danger ms-2" @click="$emit('cancel')" v-if="showCancelButton && $attrs['disable-card']">لغو</button>
+        <button class="btn btn-danger ms-2" @click="$emit('cancel')" v-if="showCancelButton && $attrs['disable-card']">
+          لغو
+        </button>
       </div>
 
     </template>
-    <template #card-footer v-if="formBuilt">
+    <template #card-footer v-if="formBuilt && !isReadOnly">
       <PromiseButton
           text="ثبت"
           @submitDone="$emit('done', $event)"
@@ -45,7 +51,8 @@
       <button class="btn btn-danger ms-2" @click="$emit('cancel')" v-if="
       showCancelButton||
       buildByModelName.formInstance.update.value
-">لغو</button>
+">لغو
+      </button>
     </template>
   </Card>
 </template>
@@ -60,9 +67,9 @@ import {BuildByModelName} from "@/custom/forms/utils/BuildByModelName";
 export default {
   components: {Card, PromiseButton, FormContainer, FormBuilder},
   props: [
-      'modelName', 'overrideOptions', 'showCancelButton',
+    'modelName', 'overrideOptions', 'showCancelButton',
     'onBuildFields', 'onFields', 'onOrderField', 'onFormReady',
-    'onBeforeSend', 'onModes','onBeforeSubmit', 'onAfterSubmit', 'onSend'
+    'onBeforeSend', 'onModes', 'onBeforeSubmit', 'onAfterSubmit', 'onSend', 'isReadOnly'
   ],
   setup(props, context) {
 
@@ -130,9 +137,9 @@ export default {
         props.onBeforeSend(buildByModelName);
       }
 
-      if(props.onSend) {
-        props.onSend(e,  buildByModelName);
-      } else  {
+      if (props.onSend) {
+        props.onSend(e, buildByModelName);
+      } else {
         e();
       }
     }
