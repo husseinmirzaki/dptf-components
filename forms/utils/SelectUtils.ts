@@ -13,9 +13,14 @@ export function selectFormDataV2(formInstance: any, serverData: any) {
                     else if (serverInfo.title)
                         return {value: serverInfo.id, text: serverInfo.title};
                     else if (serverInfo.first_name)
-                        return {value: serverInfo.id, text: serverInfo.first_name + " " + serverInfo.last_name};
+                        if (serverInfo.first_name == "")
+                            return {value: serverInfo.id, text: serverInfo.username};
+                        else
+                            return {value: serverInfo.id, text: serverInfo.first_name + " " + serverInfo.last_name};
                     else if (serverInfo.number)
                         return {value: serverInfo.id, text: serverInfo.number};
+                    else if (serverInfo.username)
+                        return {value: serverInfo.id, text: serverInfo.username};
                 })
             }
         } else if (e.field_type == "select" && !e.select_multiple) {
@@ -29,12 +34,20 @@ export function selectFormDataV2(formInstance: any, serverData: any) {
                 else if (serverInfo.title)
                     serverData[e.name] = [{value: serverInfo.id, text: serverInfo.title}];
                 else if (serverInfo.first_name)
-                    serverData[e.name] = [{
-                        value: serverInfo.id,
-                        text: serverInfo.first_name + " " + serverInfo.last_name
-                    }];
+                    if (serverInfo.first_name == "")
+                        serverData[e.name] = [{
+                            value: serverInfo.id,
+                            text: serverInfo.username
+                        }];
+                    else
+                        serverData[e.name] = [{
+                            value: serverInfo.id,
+                            text: serverInfo.first_name + " " + serverInfo.last_name
+                        }];
                 else if (serverInfo.number)
                     serverData[e.name] = [{value: serverInfo.id, text: serverInfo.number}];
+                else if (serverInfo.username)
+                    serverData[e.name] = [{value: serverInfo.id, text: serverInfo.username}];
             }
 
         }
