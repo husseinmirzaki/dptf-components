@@ -160,7 +160,7 @@ export default defineComponent({
         return h(
             ModalFormOnline, {
               key: modal,
-              modalTitle: localModalTitle(modal),
+              modalTitle: " ",
               onFields: localModalField(modal),
               onBuildFields: localModalOnBuildFields(modal),
               onFormReady: localModalFormReady(modal),
