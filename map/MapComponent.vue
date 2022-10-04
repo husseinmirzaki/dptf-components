@@ -70,6 +70,7 @@ export default defineComponent({
     boundary: {
       default: () => ({})
     },
+    defaultActiveState: String,
   },
   setup(props, context) {
     const mapRef = ref();
@@ -78,7 +79,7 @@ export default defineComponent({
     const mapExtensionsRef = ref();
     const state = toRef(props, 'state');
     const innerState = ref(state.value);
-    const activeState = ref();
+    const activeState = ref(props.defaultActiveState);
     const satellite = ref(false);
     const mapCenter = ref(props.mapXY);
     const activeWindow = ref();
@@ -244,8 +245,11 @@ export default defineComponent({
 
           const layers: any = [];
 
-          if (this.$slots.default)
-            layers.push(...this.$slots.default!().filter((slot) => !slot || !slot['type'] || !slot['name']))
+          if (this.$slots.default) {
+            layers.push(...this.$slots.default!().filter((slot) => {
+              return slot && (slot['type'] != null && slot['type']['name'] != null);
+            }))
+          }
 
           if (this.readOnly) {
             layers.push(
@@ -340,8 +344,6 @@ export default defineComponent({
             );
           }
 
-
-          console.log("layers", this.outerLayers);
 
           return layers
         }
