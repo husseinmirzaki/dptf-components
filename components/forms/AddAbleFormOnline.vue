@@ -1,7 +1,7 @@
 <script lang="ts">
 import SimpleFormOnline from "@/custom/components/forms/SimpleFormOnline.vue";
 import {modelToServiceMap} from "@/ModelToServiceMap";
-import {defineComponent, h, Ref, ref} from "vue";
+import {defineComponent, h, reactive, Ref, ref} from "vue";
 import ModalFormOnline from "@/custom/components/forms/ModalFormOnline.vue";
 import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
 import {fieldFieldSelect} from "@/custom/components/forms/utils/fixers";
@@ -14,12 +14,12 @@ export default defineComponent({
     'modelMainName', 'modelName',
     'onBeforeSubmit', 'onAfterSubmit', 'onModes', 'onModalModes',
     'onOrderField', 'onModalOrderField', 'cardTitle',
-      'onFormSend',
+    'onFormSend',
   ],
   setup(props, context) {
     let formInstance: any;
     const formReady: Ref<boolean> = ref(false);
-    const modalsToCreate: Record<string, any> = {};
+    const modalsToCreate: Record<string, any> = reactive({});
 
     const onFormReadyC = (f) => {
       formInstance = f;
@@ -41,9 +41,10 @@ export default defineComponent({
           f['onAddClick'] = () => {
             modalsToCreate[f['rel_model']].ref.open();
           };
-          modalsToCreate[f['rel_model']] = {
-            title: f['label']
-          };
+          if (!modalsToCreate[f['rel_model']]) {
+            modalsToCreate[f['rel_model']] = {};
+          }
+          modalsToCreate[f['rel_model']]['title'] = f['label'];
         } else
           console.warn("Add required service for", f['rel_model']);
       }
@@ -167,7 +168,9 @@ export default defineComponent({
               onOrderField: localOrderField(modal),
               onModes: localModes(modal),
               modelName: modal,
-              ref: (el) => modalsToCreate[modal]['ref'] = el,
+              ref: (el) => {
+                modalsToCreate[modal]['ref'] = el
+              },
             }
         )
       });
