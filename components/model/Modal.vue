@@ -105,6 +105,7 @@ export default defineComponent({
         VueInstanceService.emit(`${event}.bs.modal`, {
           modalId: this.modalId,
           event: e,
+          data: this.event,
         });
         this.$emit(event, {event: e, data: this.event});
       }

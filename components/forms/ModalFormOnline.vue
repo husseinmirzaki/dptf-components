@@ -68,9 +68,9 @@ export default {
         },
         'modal-footer': () => {
           return h(PromiseButton, {
-            onSubmitDone: () => {
+            onSubmitDone: (e) => {
               buildByModelName.formInstance!.formInstance.resetForm();
-              modal.value.close();
+              modal.value.close(e);
               context.emit('done')
             },
             onClicked: (event) => {
