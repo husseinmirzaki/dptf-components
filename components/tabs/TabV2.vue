@@ -1,10 +1,11 @@
 <template>
   <div class="tab-item-v2" :data-item-name="indexUniqueName" :class="{
     active: parent && index == parent.activeItem,
-    iconOnly: iconOnly
+    iconOnly: iconOnly,
+    disable: disable,
   }"
        data-kt-stepper-element="nav"
-       @click="$emit('change', log(index))">
+       @click="disable ? undefined : $emit('change', log(index))">
     <slot>
       <template v-if="iconOnly">
         <div class="d-flex flex-column align-items-center">
@@ -36,7 +37,7 @@
 import {onMounted, ref, toRef, watch} from "vue";
 
 export default {
-  props: ['title', 'active', 'parent', 'name', 'svgIcon', 'iconOnly'],
+  props: ['title', 'active', 'parent', 'name', 'svgIcon', 'iconOnly', 'disable'],
   setup(props) {
     const index = ref(0);
     const indexUniqueName = ref('');
@@ -170,5 +171,8 @@ $active-color: #0d8ddc;
       border-bottom: 1px solid $active-color;
     }
   }
+}
+.disable .stepper-title {
+  color: #a6a6a6 !important;
 }
 </style>
