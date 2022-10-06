@@ -11,6 +11,7 @@ export default defineComponent({
     'tableCardTitle',
     'formCardTitle',
     'tableModel',
+    'onTableSearchParams',
     'formModel',
     'onFormModalField',
     'onFormField',
@@ -34,6 +35,7 @@ export default defineComponent({
         onView: (data) => context.emit('view', data, formInstance),
         title: props.tableCardTitle,
         filterModelName: props.tableModel,
+        onSearchParams: props.onTableSearchParams,
       }, {
         'toolbar0': () => h(ShowModelHistoryButton, {
           modelName: props.tableModel
@@ -42,14 +44,14 @@ export default defineComponent({
 
       const form = (!props.disableForm) ? h(AddAbleFormOnline, {
         ref: (el) => context.emit('formRefReady', el),
-        onCancel: (e) => {
+        onCancel: (e, b) => {
           formInstance.resetForm();
-          context.emit('cancel', e)
+          context.emit('cancel', e, b)
         },
-        onDone: (e) => {
+        onDone: (e, b) => {
           VueInstanceService.emit(`${props.tableModel}Table`, ['refresh']);
           formInstance.resetForm();
-          context.emit('done', e)
+          context.emit('done', e, b)
         },
         onBuildFields: props.onFormBuildFields,
         cardTitle: props.formCardTitle,

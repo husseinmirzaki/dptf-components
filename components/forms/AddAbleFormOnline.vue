@@ -1,10 +1,12 @@
 <script lang="ts">
 import SimpleFormOnline from "@/custom/components/forms/SimpleFormOnline.vue";
 import {modelToServiceMap} from "@/ModelToServiceMap";
-import {defineComponent, h, Ref, ref} from "vue";
+import {defineComponent, h, reactive, Ref, ref} from "vue";
 import ModalFormOnline from "@/custom/components/forms/ModalFormOnline.vue";
 import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
 import {fieldFieldSelect} from "@/custom/components/forms/utils/fixers";
+import {VueInstanceService} from "@/Defaults";
+import {buildSelectOption} from "@/custom/forms/utils/SelectUtils";
 
 export default defineComponent({
   components: {ModalFormOnline, SimpleFormOnline},
@@ -14,12 +16,12 @@ export default defineComponent({
     'modelMainName', 'modelName',
     'onBeforeSubmit', 'onAfterSubmit', 'onModes', 'onModalModes',
     'onOrderField', 'onModalOrderField', 'cardTitle',
-      'onFormSend',
+    'onFormSend',
   ],
   setup(props, context) {
     let formInstance: any;
     const formReady: Ref<boolean> = ref(false);
-    const modalsToCreate: Record<string, any> = {};
+    const modalsToCreate: Record<string, any> = reactive({});
 
     const onFormReadyC = (f) => {
       formInstance = f;
@@ -29,7 +31,7 @@ export default defineComponent({
       }
     }
 
-    const onFieldsC = (f: any) => {
+    const onFieldsC = (f: any, b) => {
       // fixed classes for all fields
       f['col_class'] = 'col-xl-4 col-lg-4 col-md-6 col-sm-12 mt-2';
 
@@ -40,10 +42,19 @@ export default defineComponent({
           f['canAddItem'] = true;
           f['onAddClick'] = () => {
             modalsToCreate[f['rel_model']].ref.open();
+            const myFunction = (e) => {
+              if (e && e.data && e.data.data) {
+                const {data: info} = e.data;
+                b.formInstance.formInstance.elementRefs[f['name']].setValue([buildSelectOption(info)]);
+              }
+              VueInstanceService.off('closed.bs.modal', myFunction);
+            }
+            VueInstanceService.on('closed.bs.modal', myFunction)
           };
-          modalsToCreate[f['rel_model']] = {
-            title: f['label']
-          };
+          if (!modalsToCreate[f['rel_model']]) {
+            modalsToCreate[f['rel_model']] = {};
+          }
+          modalsToCreate[f['rel_model']]['title'] = f['label'];
         } else
           console.warn("Add required service for", f['rel_model']);
       }
@@ -88,7 +99,7 @@ export default defineComponent({
     const localModalOnBuildFields = (modalName) => {
       return (fields: Array<FieldComponentPropsInterface>, instance) => {
         const notHiddenFields = fields.filter((e) => e.field_type != 'hidden').length;
-        if (notHiddenFields == 1) {
+        if (notHiddenFields <= 2) {
           const notHiddenIndex = fields.findIndex((e) => e.field_type != 'hidden');
           if (notHiddenIndex > -1) {
             // fields[notHiddenIndex]['col_class'] = 'col-12'
@@ -160,14 +171,16 @@ export default defineComponent({
         return h(
             ModalFormOnline, {
               key: modal,
-              modalTitle: localModalTitle(modal),
+              modalTitle: " ",
               onFields: localModalField(modal),
               onBuildFields: localModalOnBuildFields(modal),
               onFormReady: localModalFormReady(modal),
               onOrderField: localOrderField(modal),
               onModes: localModes(modal),
               modelName: modal,
-              ref: (el) => modalsToCreate[modal]['ref'] = el,
+              ref: (el) => {
+                modalsToCreate[modal]['ref'] = el
+              },
             }
         )
       });
@@ -176,8 +189,8 @@ export default defineComponent({
           SimpleFormOnline, {
             cardTitle: props.cardTitle,
             modelName: props.modelName || props.modelMainName,
-            onCancel: () => context.emit("cancel"),
-            onDone: () => context.emit("done"),
+            onCancel: (e) => context.emit("cancel", e, formInstance),
+            onDone: (e) => context.emit("done", e, formInstance),
             disableDrag: true,
             onFormReady: onFormReadyC,
             showCancelButton: formReady.value && formInstance.formInstance.update.value,
@@ -188,12 +201,14 @@ export default defineComponent({
             onSend: props.onFormSend,
             onModes: props.onModes,
             onBeforeSubmit: props.onBeforeSubmit,
+            ...context.attrs
           }, {
             multiForm: () => {
               if (context.slots && context.slots.default) {
                 return context.slots.default();
               }
-            }
+            },
+            ...context.slots
           }
       )
 
