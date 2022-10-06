@@ -171,7 +171,7 @@ export default defineComponent({
         return h(
             ModalFormOnline, {
               key: modal,
-              modalTitle: localModalTitle(modal),
+              modalTitle: " ",
               onFields: localModalField(modal),
               onBuildFields: localModalOnBuildFields(modal),
               onFormReady: localModalFormReady(modal),
@@ -201,12 +201,14 @@ export default defineComponent({
             onSend: props.onFormSend,
             onModes: props.onModes,
             onBeforeSubmit: props.onBeforeSubmit,
+            ...context.attrs
           }, {
             multiForm: () => {
               if (context.slots && context.slots.default) {
                 return context.slots.default();
               }
-            }
+            },
+            ...context.slots
           }
       )
 

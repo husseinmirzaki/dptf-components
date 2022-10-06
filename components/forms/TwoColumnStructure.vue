@@ -50,6 +50,7 @@ export default defineComponent({
         },
         onDone: (e, b) => {
           VueInstanceService.emit(`${props.tableModel}Table`, ['refresh']);
+          formInstance.resetForm();
           context.emit('done', e, b)
         },
         onBuildFields: props.onFormBuildFields,
