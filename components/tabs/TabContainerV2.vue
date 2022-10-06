@@ -2,7 +2,7 @@
   <div class="d-flex justify-content-center align-items-center tab-items-container" ref="container">
     <slot name="tabs" v-if="show" :setActiveItem="setActiveItem"/>
   </div>
-  <div class="d-flex justify-content-center align-items-center w-100 h-100 pb-7 tab-content-container"
+  <div class="d-flex justify-content-center align-items-center w-100 pb-7 tab-content-container"
        ref="tabContainerBody">
     <slot name="tab-container" :tabNames="tabNames" :activeItem="activeItem" :routerMode="routerMode"
           :bodyHeight="bodyHeight">
@@ -93,7 +93,6 @@ export default {
     }
 
     const introduce = (tabName) => {
-
       clearTimeout(lastIntroduceActivity);
       lastIntroduceActivity = setTimeout(() => {
         if (!props.disableDragging)
@@ -111,7 +110,10 @@ export default {
       const current = childCounter;
 
       if (tabName) {
-        tabNames.value.push(props.routerPrefix + "_" + tabName);
+        if (!props.routerMode)
+            tabNames.value.push(tabName);
+        else
+          tabNames.value.push(props.routerPrefix + "_" + tabName);
       } else {
         tabNames.value.push(`${props.routerPrefix}_tab_${current}`);
       }
