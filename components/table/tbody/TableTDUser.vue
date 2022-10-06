@@ -1,16 +1,15 @@
 <template>
   <table-t-d>
-    <div
-        class="cursor-pointer symbol symbol-40px"
-        title="User profile">
-      <img src="media/avatars/150-26.jpg" alt="metronic">
+    <div class="cursor-pointer symbol symbol-40px">
+      <img src="media/avatars/150-26.jpg" alt="metronic" @click="$viewerApi({
+      images: ['media/avatars/150-26.jpg'],
+      })">
     </div>
   </table-t-d>
 </template>
 <script lang="ts">
-import {computed, defineComponent, toRef} from "vue";
+import {defineComponent, toRef} from "vue";
 import TableTD from "@/custom/components/table/tbody/TableTD.vue";
-import {gregorianToJalali} from "@/custom/components/DateUtils";
 
 export default defineComponent({
   components: {TableTD},

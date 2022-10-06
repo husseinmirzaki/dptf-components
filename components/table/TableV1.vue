@@ -605,18 +605,20 @@ export default defineComponent({
       if (value.headers) {
         changedHeaders.value.splice(0)
         changedHeaders.value.push(
-            ...value.headers,
-            ...newHeaders
+            ...newHeaders,
+            ...value.headers
         )
       } else {
         changedHeaders.value.splice(0)
-        changedHeaders.value.push(...headers.value)
+        changedHeaders.value.push(...headers.value, ...newHeaders)
       }
       if (value.headerVisibility) {
         headerVisibility.value = value.headerVisibility;
+        newHeaders.forEach((e) => headerVisibility.value[e] = true)
       } else {
         headerVisibility.value = {}
         headers.value.forEach((e) => headerVisibility.value[e] = true)
+        newHeaders.forEach((e) => headerVisibility.value[e] = true)
       }
     }
 
