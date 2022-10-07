@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-item-v2" :data-item-name="indexUniqueName" :class="{
+  <div class="tab-item-v2" dir="rtl" :data-item-name="indexUniqueName" :class="{
     active: parent && index == parent.activeItem,
     iconOnly: iconOnly,
     disable: disable,

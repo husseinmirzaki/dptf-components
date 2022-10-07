@@ -5,6 +5,14 @@ following exports in it so the code will work properly
 You can copy the `Defaults.ts.ex`  and  use it swell for
 reference
 
+## required "node" version `>=14.14.0` and `<15` also  "npm" version `>=6.14.8` and `<7`
+you can download it from [link](https://nodejs.org/download/release/v14.14.0/)
+
+## required packages
+```shell
+npm install v-viewer@3.0.10 sweetalert2@9.10.12 sortablejs@1.15.0 select2@4.0.7-rc.0 jquery@3.6.0 jquery-extend@2.0.3 vue3-persian-datetime-picker@1.2.2
+```
+
 ## Exports
 ### ApiService
 This class is responsible to making api calls the class which

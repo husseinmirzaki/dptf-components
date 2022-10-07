@@ -298,9 +298,7 @@ export default defineComponent({
     })
 
     watch(checkAll, (e) => {
-      console.log("checkall", checkedDataList.value)
       Object.keys(checkedDataList.value).forEach((e) => {
-        console.log("checkall", e)
         checkedDataList.value[e] = checkAll.value;
       });
     });
@@ -449,7 +447,6 @@ export default defineComponent({
                 changedHeaders.value.splice(0);
                 changedHeaders.value.push(...l.reverse());
                 defaultConfig.defaultHeaders = l;
-
                 saveTableSettings();
               });
             },
@@ -469,11 +466,10 @@ export default defineComponent({
                 for (let i = 0; i < items.length; i++) {
                   l.push(items[i].getAttribute('name'));
                 }
-                // console.log(l);
                 changedHeaders.value.splice(0);
                 changedHeaders.value.push(...l);
                 defaultConfig.defaultHeaders = l;
-                // saveTableSettings();
+                saveTableSettings();
               });
             },
           }
@@ -817,7 +813,6 @@ export default defineComponent({
             {},
             {
               default: () => {
-                console.log(headersToIterate);
                 return h(
                     'div',
                     {
