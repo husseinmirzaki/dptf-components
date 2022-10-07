@@ -1,4 +1,6 @@
 import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
+import {util} from "prismjs";
+
 
 export function buildSelectOption(data) {
     if (data.name)
@@ -11,11 +13,13 @@ export function buildSelectOption(data) {
         return {value: data.id, text: data.first_name + " " + data.last_name};
     else if (data.number)
         return {value: data.id, text: data.number};
+    return data;
 }
 
 export function selectFormDataV2(formInstance: any, serverData: any) {
     serverData = Object.assign({}, serverData);
     formInstance.activeFields.value.forEach((e: FieldComponentPropsInterface) => {
+        console.log(e.field_type, e.label)
         if (e.field_type == "select" && e.select_multiple) {
             if (serverData[e.name]) {
                 serverData[e.name] = serverData[e.name].map(buildSelectOption)
@@ -23,6 +27,8 @@ export function selectFormDataV2(formInstance: any, serverData: any) {
         } else if (e.field_type == "select" && !e.select_multiple) {
             if (serverData[e.name]) {
                 const serverInfo = serverData[e.name];
+                if (typeof serverInfo == "boolean" || typeof serverInfo == 'string' || typeof serverInfo == 'number')
+                    return;
                 serverData[e.name] = [buildSelectOption(serverInfo)];
             }
 

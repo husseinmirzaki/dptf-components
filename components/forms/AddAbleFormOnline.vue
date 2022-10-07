@@ -5,7 +5,7 @@ import {defineComponent, h, reactive, Ref, ref} from "vue";
 import ModalFormOnline from "@/custom/components/forms/ModalFormOnline.vue";
 import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
 import {fieldFieldSelect} from "@/custom/components/forms/utils/fixers";
-import {VueInstanceService} from "@/Defaults";
+import {Configs, VueInstanceService} from "@/Defaults";
 import {buildSelectOption} from "@/custom/forms/utils/SelectUtils";
 
 export default defineComponent({
@@ -16,7 +16,7 @@ export default defineComponent({
     'modelMainName', 'modelName',
     'onBeforeSubmit', 'onAfterSubmit', 'onModes', 'onModalModes',
     'onOrderField', 'onModalOrderField', 'cardTitle',
-    'onFormSend',
+    'onFormSend','formAsModal',
   ],
   setup(props, context) {
     let formInstance: any;
@@ -171,7 +171,7 @@ export default defineComponent({
         return h(
             ModalFormOnline, {
               key: modal,
-              modalTitle: " ",
+              modalTitle: Configs['addAbleFormOnlineHideInnerModalTitle'] ? " " :localModalTitle,
               onFields: localModalField(modal),
               onBuildFields: localModalOnBuildFields(modal),
               onFormReady: localModalFormReady(modal),
@@ -187,6 +187,12 @@ export default defineComponent({
 
       const onlineForm = h(
           SimpleFormOnline, {
+            ref: (el) => {
+              context.expose({
+                simpleFormOnline: el,
+              })
+            },
+            formAsModal: props.formAsModal,
             cardTitle: props.cardTitle,
             modelName: props.modelName || props.modelMainName,
             onCancel: (e) => context.emit("cancel", e, formInstance),

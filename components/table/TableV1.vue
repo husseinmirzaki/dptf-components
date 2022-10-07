@@ -296,6 +296,7 @@ table {
     color: black;
     border-left: 1px solid #e9ebf1;
     min-width: 130px;
+    max-width: 200px;
     padding: 6px !important;
 
     &.check-stuff:first-child {
@@ -314,6 +315,7 @@ table {
     border-bottom: 1px solid #dddee3;
     box-shadow: none;
     color: #5e5e5e;
+    white-space: nowrap;
 
     &:last-child {
       border-left: none;
