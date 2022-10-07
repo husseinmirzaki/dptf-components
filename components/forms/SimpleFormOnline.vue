@@ -41,21 +41,7 @@ export default {
         {
           overrideOptions: props.overrideOptions,
           onModes: props.onModes,
-          onFields: (a: FieldComponentPropsInterface, b, c) => {
-            if (props.onFields)
-              a = props.onFields(a, b, c);
-
-            if (a.field_type == 'select' && a.rel_model) {
-              if (!a.select_options)
-                a.select_options = {};
-              if (!a.select_options.dropdownParent) {
-                //
-              }
-            }
-
-
-            return a;
-          },
+          onFields: props.onFields,
           onOrderField: props.onOrderField,
           onBuildFields: props.onBuildFields,
           onBeforeSubmit: props.onBeforeSubmit,
