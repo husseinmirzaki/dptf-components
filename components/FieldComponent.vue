@@ -128,6 +128,7 @@
             <input
                 class="form-check-input"
                 type="checkbox"
+                :name="name"
                 :checked="this.$props.modelValue"
                 @change="$emit('update:modelValue', fieldRef.checked)"
                 ref="fieldRef">

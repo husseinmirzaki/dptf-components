@@ -85,7 +85,12 @@ tbody .table-row-container {
 </style>
 <style lang="scss" scoped>
 table {
+  direction: ltr;
+}
+
+table {
   th {
+    direction: rtl !important;
     color: black;
     border-left: 1px solid #e9ebf1;
     min-width: 130px;
@@ -102,6 +107,7 @@ table {
   }
 
   td {
+    direction: rtl !important;
     z-index: 1;
     height: 35px;
     //border-left: 1px solid #dddee3;
@@ -145,9 +151,7 @@ table {
 }
 </style>
 <script lang="ts">
-import {computed, defineComponent, h, nextTick, onMounted, ref, toRef, watch, withModifiers} from "vue";
-import DropdownV1 from "@/custom/components/DropdownV1.vue";
-import TableTD from "@/custom/components/table/tbody/TableTD.vue";
+import {computed, defineComponent, h, onMounted, ref, toRef, watch, withModifiers} from "vue";
 import {Table} from "@/custom/components/table/Table";
 import TablePagination from "@/custom/components/table/TablePagination.vue";
 import Card from "@/custom/components/Card.vue";
@@ -157,25 +161,13 @@ import FieldComponent from "@/custom/components/FieldComponent.vue";
 import {DragHandler, SimpleDrag} from "@/custom/components/table/TableDrag";
 import DropdownV2 from "@/custom/components/DropdownV2.vue";
 import {MenuComponent} from "@/assets/ts/components";
-import FilterContainer from "@/custom/components/table/header/filters/FilterContainer.vue";
 import {mobileCheck} from "@/custom/helpers/MobileHelpers";
 import {UserPreferencesManager} from "@/custom/services/UserPreferencesV2Api";
-import TableFilter from "@/custom/components/table/TableFilter.vue";
 import {Configs} from "@/Configs";
 import {DEFAULT_BUTTONS} from "@/custom/helpers/RenderFunctionHelpers";
+import Sortable from 'sortablejs';
 
 export default defineComponent({
-  components: {
-    TableFilter,
-    FilterContainer,
-    DropdownV2,
-    FieldComponent,
-    Spinner,
-    Card,
-    TablePagination,
-    TableTD,
-    DropdownV1
-  },
   props: {
     url: {
       default: () => {
@@ -227,6 +219,7 @@ export default defineComponent({
     }
   },
   setup(props, context) {
+
     const isMobile = mobileCheck();
     const conf = toRef(props, 'conf');
     const list = toRef(props, 'list');
@@ -234,6 +227,7 @@ export default defineComponent({
 
     let headersRef: any = {};
     let tableRef: any = {};
+    let filtersRef: any = {};
 
     const dList = ref(list.value);
 
@@ -271,6 +265,7 @@ export default defineComponent({
         "onGetData": onGetData
       });
     });
+
     watch(conf, () => {
       defaultConfig = initializeConfig();
 
@@ -420,25 +415,6 @@ export default defineComponent({
 
     buildPrimaryTableInfo({});
 
-    const dragStuff = () => {
-      nextTick(() => {
-        setTimeout(() => {
-          drag!.findElements();
-          drag!.addMouseEvents();
-          watch(headerVisibility, () => {
-            nextTick(() => {
-              drag!.findElements();
-              drag!.addMouseEvents();
-              saveTableSettings();
-            })
-          }, {
-            deep: true,
-          });
-        }, 100)
-      })
-    }
-
-
     const tableSetup = () => {
       if (Object.keys(headerVisibility.value).length == 0) {
         headers.value.forEach((header) => {
@@ -446,40 +422,62 @@ export default defineComponent({
         })
       }
       if (!url.value || url.value == '') {
-        dragStuff();
+        // dragStuff();
       } else {
         onGetData().then(() => {
-          dragStuff();
+          // dragStuff();
         });
       }
     }
 
     const mount = () => {
       MenuComponent.reinitialization();
-      drag = new SimpleDrag(tableRef);
-      drag!.exclude_all_clone = '(animation)|(opacity)|(transition)|(position)';
-      drag!.exclude_one_clone = '(animation)|(opacity)|(transition)|(position)';
-      drag!.onItemDropped = (element) => {
-        const l: Array<string> = [];
-        console.log(headersRef.children.length);
-        for (let i = 0; i < headersRef.children.length; i++) {
-          l.push(headersRef.children[i].getAttribute('header-name'));
-        }
-        changedHeaders.value.splice(0);
-        changedHeaders.value.push(...l);
-        defaultConfig.defaultHeaders = l;
-        setTimeout(() => {
-          if (drag) {
-            drag.findElements();
-            drag.addMouseEvents();
-          }
-        }, 350)
 
-        onGetData().then(() => {
-          console.log("asked for data");
-          saveTableSettings();
-        });
-      }
+      Sortable.create(
+          headersRef, {
+            group: defaultConfig.tableName,
+            draggable: '.custom-table-th',
+            direction: 'horizontal',
+            animation: 180,
+            filter: '[ignore-drags]',
+            onUpdate: () => {
+              setTimeout(() => {
+                const l: Array<string> = [];
+                for (let i = 0; i < headersRef.children.length; i++) {
+                  l.push(headersRef.children[i].getAttribute('header-name'));
+                }
+                changedHeaders.value.splice(0);
+                changedHeaders.value.push(...l.reverse());
+                defaultConfig.defaultHeaders = l;
+
+                saveTableSettings();
+              });
+            },
+          }
+      )
+
+      Sortable.create(
+          filtersRef, {
+            group: defaultConfig.tableName,
+            draggable: '.field',
+            direction: 'vertical',
+            animation: 180,
+            onUpdate: () => {
+              setTimeout(() => {
+                const l: Array<string> = [];
+                const items = filtersRef.querySelectorAll('input[name]');
+                for (let i = 0; i < items.length; i++) {
+                  l.push(items[i].getAttribute('name'));
+                }
+                // console.log(l);
+                changedHeaders.value.splice(0);
+                changedHeaders.value.push(...l);
+                defaultConfig.defaultHeaders = l;
+                // saveTableSettings();
+              });
+            },
+          }
+      )
 
       getTableSettings();
       // getTableSettings().then(({data}) => {
@@ -563,7 +561,8 @@ export default defineComponent({
       const checkBoxes = defaultConfig.checkAble ? h(
           'th',
           {
-            class: 'check-stuff'
+            class: 'check-stuff',
+            'ignore-drags': 1,
           },
           h(
               FieldComponent,
@@ -602,6 +601,7 @@ export default defineComponent({
           defaultConfig.onTHeadComponent('table-action', -1),
           {
             disableFilters: 1,
+            'ignore-drags': 1,
             'header-name': 'table-action',
             group: defaultConfig.tableName,
             ...defaultConfig.onTHeadProps('table-action', -1),
@@ -610,6 +610,11 @@ export default defineComponent({
 
       return h(
           'thead',
+          {
+            onUpdate: withModifiers(() => {
+              //
+            }, ['stop', 'prevent']),
+          },
           h(
               'tr',
               {
@@ -617,12 +622,12 @@ export default defineComponent({
                 class: "fw-bolder text-muted bg-light",
               },
               [
-                // checkboxes
-                checkBoxes,
-                // actual headers
-                ...actualHeaders,
                 // action buttons
-                actionButtons
+                actionButtons,
+                // actual headers
+                ...actualHeaders.reverse(),
+                // checkboxes
+                checkBoxes
               ]
           )
       );
@@ -651,15 +656,6 @@ export default defineComponent({
                 key: item['id'] ? item['id'] : index,
                 'data-context-menu': 'true',
                 onContextmenu: () => contextMenu(item),
-                onDrop: withModifiers((e) => {
-                  defaultConfig.context.emit('trDrop', [e, item, index])
-                }, ['prevent']),
-                onDragover: withModifiers((e) => {
-                  //
-                }, ['prevent']),
-                onDragenter: withModifiers((e) => {
-                  //
-                }, ['prevent']),
                 onMouseenter: () => {
                   checkCheckFieldData(`check_${item['id']}`)
                 },
@@ -673,12 +669,6 @@ export default defineComponent({
                   const checkBox = defaultConfig.checkAble ? h(
                       'td',
                       {
-                        onMousedown: withModifiers(() => {
-                          checksDragHandler.isMouseDown.value = true;
-                        }, ['prevent']),
-                        onMouseup: withModifiers(() => {
-                          checksDragHandler.isMouseDown.value = false;
-                        }, ['prevent']),
                         onMousemove: () => {
                           checkCheckFieldData(`check_${item['id']}`);
                         },
@@ -735,10 +725,10 @@ export default defineComponent({
                   ) : undefined;
 
                   return [
-                    checkBox,
-                    ...dataTds,
-                    actionButtons
-                  ]
+                    actionButtons,
+                    ...dataTds.reverse(),
+                    checkBox
+                  ];
 
                 }
               }
@@ -758,14 +748,14 @@ export default defineComponent({
           'div',
           {
             ref: (el) => tableRef = el,
-            class: "table-responsive"
+            class: "table-responsive table-container"
           },
           // table
           h(
               'table',
               {
                 class: [
-                  'table table-bordered align-middle gs-4 gy-4 table-hover table table-v2-custom',
+                  'table table-bordered align-middle ge-4 gy-4 table-hover table table-v2-custom',
                   {
                     'mb-0': !defaultConfig.showPagination,
                   }
@@ -821,21 +811,35 @@ export default defineComponent({
       }
 
       if (!props.disableDropdown) {
+        const headersToIterate = changedHeaders.value.length > 0 ? changedHeaders.value : headers.value;
         slots['dropDown'] = h(
             DropdownV2,
             {},
             {
               default: () => {
-                Object.keys(headerVisibility.value).map((header, index) => h(
-                    FieldComponent,
+                console.log(headersToIterate);
+                return h(
+                    'div',
                     {
-                      key: header,
-                      modelValue: headerVisibility.value[header],
-                      placeholder: defaultConfig.onTHeadProps(header, index).header,
-                      field_type: "checkbox",
-                      'onUpdate:ModelValue': (e) => headerVisibility.value[header] = e,
-                    }
-                ));
+                      onUpdate: withModifiers(() => {
+                        //
+                      }, ['stop', 'prevent']),
+                      class: 'items-container',
+                      ref: (el) => filtersRef = el,
+                    },
+                    headersToIterate.map((header, index) => h(
+                            FieldComponent,
+                            {
+                              key: header,
+                              name: header,
+                              modelValue: headerVisibility.value[header],
+                              placeholder: defaultConfig.onTHeadProps(header, index).header,
+                              field_type: "checkbox",
+                              'onUpdate:modelValue': (e) => headerVisibility.value[header] = e,
+                            }
+                        )
+                    )
+                );
               }
             }
         )
