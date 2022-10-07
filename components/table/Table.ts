@@ -396,9 +396,13 @@ export class Table {
         }
 
         return {
-            class: {
-                'ps-3': index === 0,
-            },
+            class: [
+                'align-middle pe-2 text-nowrap',
+                {
+
+                    'ps-3': index === 0,
+                }
+            ],
             header: translate,
         };
     }
