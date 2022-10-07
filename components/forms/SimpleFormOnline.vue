@@ -9,6 +9,7 @@ import FixedHeightAccess from "@/custom/components/forms/FixedHeightAccess.vue";
 import FixedHeightLoader from "@/custom/components/forms/FixedHeightLoader.vue";
 import {DEFAULT_BUTTONS} from "@/custom/helpers/RenderFunctionHelpers";
 import Modal from "@/custom/components/model/Modal.vue";
+import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
 
 export default {
   components: {Card, PromiseButton, FormContainer, FormBuilder},
@@ -40,7 +41,21 @@ export default {
         {
           overrideOptions: props.overrideOptions,
           onModes: props.onModes,
-          onFields: props.onFields,
+          onFields: (a: FieldComponentPropsInterface, b, c) => {
+            if (props.onFields)
+              a = props.onFields(a, b, c);
+
+            if (a.field_type == 'select' && a.rel_model) {
+              if (!a.select_options)
+                a.select_options = {};
+              if (!a.select_options.dropdownParent) {
+                //
+              }
+            }
+
+
+            return a;
+          },
           onOrderField: props.onOrderField,
           onBuildFields: props.onBuildFields,
           onBeforeSubmit: props.onBeforeSubmit,

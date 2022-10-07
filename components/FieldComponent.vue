@@ -495,7 +495,7 @@ export default defineComponent({
 
         if (modalParent != null) {
           // using first child to support better scrolling behaviour
-          select_options.value["dropdownParent"] = modalParent;
+          select_options.value["dropdownParent"] = $(modalParent);
         }
         if (select_filter_id.value) {
           const v = select_filter_id.value as any;
@@ -517,9 +517,9 @@ export default defineComponent({
         }
 
         if (modal_id.value) {
-          select_options.value["dropdownParent"] = document.querySelector(
+          select_options.value["dropdownParent"] = $(document.querySelector(
               `${modal_id.value}`
-          );
+          ));
         }
 
         const urlFunc = () => {
