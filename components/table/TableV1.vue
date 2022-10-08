@@ -430,6 +430,7 @@ export default defineComponent({
 
     const mount = () => {
       MenuComponent.reinitialization();
+      console.log(headersRef);
 
       Sortable.create(
           headersRef, {
@@ -453,27 +454,28 @@ export default defineComponent({
           }
       )
 
-      Sortable.create(
-          filtersRef, {
-            group: defaultConfig.tableName,
-            draggable: '.field',
-            direction: 'vertical',
-            animation: 180,
-            onUpdate: () => {
-              setTimeout(() => {
-                const l: Array<string> = [];
-                const items = filtersRef.querySelectorAll('input[name]');
-                for (let i = 0; i < items.length; i++) {
-                  l.push(items[i].getAttribute('name'));
-                }
-                changedHeaders.value.splice(0);
-                changedHeaders.value.push(...l);
-                defaultConfig.defaultHeaders = l;
-                saveTableSettings();
-              });
-            },
-          }
-      )
+      if (!props.disableDropdown)
+        Sortable.create(
+            filtersRef, {
+              group: defaultConfig.tableName,
+              draggable: '.field',
+              direction: 'vertical',
+              animation: 180,
+              onUpdate: () => {
+                setTimeout(() => {
+                  const l: Array<string> = [];
+                  const items = filtersRef.querySelectorAll('input[name]');
+                  for (let i = 0; i < items.length; i++) {
+                    l.push(items[i].getAttribute('name'));
+                  }
+                  changedHeaders.value.splice(0);
+                  changedHeaders.value.push(...l);
+                  defaultConfig.defaultHeaders = l;
+                  saveTableSettings();
+                });
+              },
+            }
+        )
 
       getTableSettings();
       // getTableSettings().then(({data}) => {
