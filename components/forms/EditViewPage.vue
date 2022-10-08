@@ -27,7 +27,6 @@
           :onFields="onFieldsAdd"
           :onOrderField="onOrderAdd"
           :onFormReady="onFormReadyAdd"
-          :show-cancel-button="true"
           @cancel="$refs.sMananger.activeState = 'view'"
           @done="$refs.sMananger.activeState = 'view'"
       />
