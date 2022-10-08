@@ -109,15 +109,18 @@ export default {
       if (props.isReadOnly)
         return formBuilder();
 
-      return h(
-          FormContainer, {
-            validationSchema: buildByModelName.formInstance?.activeSchema,
-            ref: (el) => formInstance = el,
-          },
-          {
-            default: formBuilder
-          }
-      )
+      return [
+        h(
+            FormContainer, {
+              validationSchema: buildByModelName.formInstance?.activeSchema,
+              ref: (el) => formInstance = el,
+            },
+            {
+              default: formBuilder
+            }
+        ),
+        context.slots['multiForm'] ? context.slots['multiForm']() : undefined,
+      ]
 
     }
     const cardFooter = () => {
