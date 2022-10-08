@@ -307,6 +307,14 @@ export default defineComponent({
       onGetData();
     });
 
+
+    // watch(headerVisibility, () => {
+    //   saveTableSettings();
+    // }, {
+    //   deep: true,
+    // });
+
+
     const checkedAnyItems = computed(() => {
       let oneIsChecked = false;
       const keys = Object.keys(checkedDataList.value);
@@ -321,6 +329,7 @@ export default defineComponent({
     });
 
     const onGetData = () => {
+      console.debug("here");
       return new Promise<void>((resolve) => {
         if (defaultConfig.canUseUrl) {
           defaultConfig.onGetData().then((e) => {
@@ -340,7 +349,7 @@ export default defineComponent({
 
     watch(preferencesManager.value, (e) => {
       buildPrimaryTableInfo(e);
-      tableSetup();
+      tableSetup(false);
     }, {deep: true});
 
     const headers = computed(() => {
@@ -361,6 +370,7 @@ export default defineComponent({
       }
     }
 
+    let lastWatch: any;
     const getTableSettings = () => {
       preferencesManager.get().then(() => {
         tableSetup();
@@ -371,26 +381,23 @@ export default defineComponent({
 
     const saveTableSettings = () => {
       preferencesManager.set({
-        defaultHeaders: defaultConfig.defaultHeaders,
-        headers: headers.value,
-        headerVisibility: headerVisibility.value,
+        defaultHeaders: Object.assign({}, defaultConfig.defaultHeaders),
+        headers: Object.assign([], headers.value),
+        headerVisibility: Object.assign({}, headerVisibility.value),
       });
     }
 
     const buildPrimaryTableInfo = (value) => {
       let newHeaders: any = [];
 
-
       // check default headers exists in config
-      if (value.defaultHeaders) {
+      if (value.defaultHeaders && value.defaultHeaders.indexOf) {
         for (let i = 0; i < defaultConfig.defaultHeaders.length; i++) {
           if (value.defaultHeaders.indexOf(defaultConfig.defaultHeaders[i]) == -1) {
             newHeaders.push(defaultConfig.defaultHeaders[i]);
           }
         }
       }
-
-
       if (value.headers) {
         changedHeaders.value.splice(0)
         changedHeaders.value.push(
@@ -413,18 +420,29 @@ export default defineComponent({
 
     buildPrimaryTableInfo({});
 
-    const tableSetup = () => {
+    let watchHeaderVisibility = false;
+    watch(headerVisibility, () => {
+      if (watchHeaderVisibility)
+        saveTableSettings();
+    }, {
+      deep: true,
+    });
+
+    const tableSetup = (getData = true) => {
+      watchHeaderVisibility = false;
       if (Object.keys(headerVisibility.value).length == 0) {
         headers.value.forEach((header) => {
           headerVisibility.value[header] = true;
         })
       }
+      watchHeaderVisibility = true;
       if (!url.value || url.value == '') {
         // dragStuff();
       } else {
-        onGetData().then(() => {
-          // dragStuff();
-        });
+        if (getData)
+          onGetData().then(() => {
+            // dragStuff();
+          });
       }
     }
 
@@ -595,7 +613,7 @@ export default defineComponent({
               }
           );
 
-      const actionButtons = h(
+      const actionButtons = defaultConfig.showActionButtons ? h(
           defaultConfig.onTHeadComponent('table-action', -1),
           {
             disableFilters: 1,
@@ -604,7 +622,7 @@ export default defineComponent({
             group: defaultConfig.tableName,
             ...defaultConfig.onTHeadProps('table-action', -1),
           }
-      )
+      ) : undefined;
 
       return h(
           'thead',
