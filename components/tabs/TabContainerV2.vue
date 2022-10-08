@@ -1,14 +1,21 @@
 <template>
-  <div dir="ltr" class="d-flex justify-content-center align-items-center tab-items-container" ref="container">
-    <slot name="tabs" v-if="show" :setActiveItem="setActiveItem"/>
-  </div>
-  <div class="d-flex justify-content-center align-items-center w-100 pb-7 tab-content-container"
-       ref="tabContainerBody">
-    <slot name="tab-container" :tabNames="tabNames" :activeItem="activeItem" :routerMode="routerMode"
-          :bodyHeight="bodyHeight">
-      <router-view v-if="routerMode"/>
-      <slot v-else :name="tabNames[activeItem]"/>
-    </slot>
+  <div :class="{
+    'd-flex': vertical,
+  }">
+    <div dir="ltr" class="d-flex tab-items-container" :class="{
+    'flex-column justify-content-start align-items-end is-vertical': vertical,
+    'justify-content-center align-items-center': !vertical,
+  }" ref="container">
+      <slot name="tabs" v-if="show" :setActiveItem="setActiveItem" />
+    </div>
+    <div class="d-flex justify-content-center align-items-center w-100 pb-7 tab-content-container"
+         ref="tabContainerBody">
+      <slot name="tab-container" :tabNames="tabNames" :activeItem="activeItem" :routerMode="routerMode"
+            :bodyHeight="bodyHeight">
+        <router-view v-if="routerMode"/>
+        <slot v-else :name="tabNames[activeItem]"/>
+      </slot>
+    </div>
   </div>
 </template>
 <script>
@@ -35,6 +42,9 @@ export default {
       default: false,
     },
     disablePreferences: {
+      default: false,
+    },
+    vertical: {
       default: false,
     }
   },

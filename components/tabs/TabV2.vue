@@ -15,10 +15,6 @@
             <inline-svg :src="svgIcon"/>
           </span>
           </div>
-
-          <span class="stepper-title title" v-if="title">
-            {{ title }}
-          </span>
         </div>
       </template>
       <template v-if="!iconOnly">
@@ -104,7 +100,6 @@ $active-color: #0d8ddc;
     left: 0;
     width: 100%;
     height: 100%;
-    border-bottom: 1px solid #3a86f9;
   }
 
   span.svg-icon svg {
@@ -171,6 +166,10 @@ $active-color: #0d8ddc;
       border-bottom: 1px solid $active-color;
     }
   }
+}
+.is-vertical .tab-item-v2:after {
+      border-bottom: none !important;
+      border-right: 1px solid $active-color;
 }
 .disable .stepper-title {
   color: #a6a6a6 !important;
