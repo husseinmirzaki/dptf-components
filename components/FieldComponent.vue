@@ -206,6 +206,7 @@
             ref="fieldRef"
         >
           <input type="text"
+                 :readonly="read_only"
                  @keyup="formatCurrency($refs.fieldRef.$el.nextElementSibling)"
                  :class="[defaultInputClasses, input_class]"
                  v-model="currency"
