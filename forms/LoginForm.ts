@@ -33,7 +33,7 @@ export default class LoginForm extends CreateForm {
                                 return null;
                             }
                         }).then((e) => {
-                            if (e.value != null) {
+                            if (e.isConfirmed && e.value != null) {
                                 this.finalize_login(e.value, resolve, reject)
                             } else {
                                 resolve(e);

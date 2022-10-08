@@ -165,6 +165,7 @@ import {mobileCheck} from "@/custom/helpers/MobileHelpers";
 import {UserPreferencesManager} from "@/custom/services/UserPreferencesV2Api";
 import {Configs} from "@/Configs";
 import {DEFAULT_BUTTONS} from "@/custom/helpers/RenderFunctionHelpers";
+import TableFilter from "@/custom/components/table/TableFilter.vue";
 import Sortable from 'sortablejs';
 
 export default defineComponent({
@@ -877,7 +878,10 @@ export default defineComponent({
       });
 
 
-      return card;
+      return [
+        card,
+        h(TableFilter, {defaultConfig: defaultConfig})
+      ];
     }
 
 
