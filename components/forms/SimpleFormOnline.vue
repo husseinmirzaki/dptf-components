@@ -9,7 +9,6 @@ import FixedHeightAccess from "@/custom/components/forms/FixedHeightAccess.vue";
 import FixedHeightLoader from "@/custom/components/forms/FixedHeightLoader.vue";
 import {DEFAULT_BUTTONS} from "@/custom/helpers/RenderFunctionHelpers";
 import Modal from "@/custom/components/model/Modal.vue";
-import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
 
 export default {
   components: {Card, PromiseButton, FormContainer, FormBuilder},
