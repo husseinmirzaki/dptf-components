@@ -226,9 +226,9 @@ export default defineComponent({
     const list = toRef(props, 'list');
     const url = toRef(props, 'url');
 
-    let headersRef: any = {};
-    let tableRef: any = {};
-    let filtersRef: any = {};
+    let headersRef: any;
+    let tableRef: any;
+    let filtersRef: any;
 
     const dList = ref(list.value);
 
@@ -449,31 +449,31 @@ export default defineComponent({
 
     const mount = () => {
       MenuComponent.reinitialization();
-      console.log(headersRef);
 
-      Sortable.create(
-          headersRef, {
-            group: defaultConfig.tableName,
-            draggable: '.custom-table-th',
-            direction: 'horizontal',
-            animation: 180,
-            filter: '[ignore-drags]',
-            onUpdate: () => {
-              setTimeout(() => {
-                const l: Array<string> = [];
-                for (let i = 0; i < headersRef.children.length; i++) {
-                  l.push(headersRef.children[i].getAttribute('header-name'));
-                }
-                changedHeaders.value.splice(0);
-                changedHeaders.value.push(...l.reverse());
-                defaultConfig.defaultHeaders = l;
-                saveTableSettings();
-              });
-            },
-          }
-      )
+      if (headersRef)
+        Sortable.create(
+            headersRef, {
+              group: defaultConfig.tableName,
+              draggable: '.custom-table-th',
+              direction: 'horizontal',
+              animation: 180,
+              filter: '[ignore-drags]',
+              onUpdate: () => {
+                setTimeout(() => {
+                  const l: Array<string> = [];
+                  for (let i = 0; i < headersRef.children.length; i++) {
+                    l.push(headersRef.children[i].getAttribute('header-name'));
+                  }
+                  changedHeaders.value.splice(0);
+                  changedHeaders.value.push(...l.reverse());
+                  defaultConfig.defaultHeaders = l;
+                  saveTableSettings();
+                });
+              },
+            }
+        )
 
-      if (!props.disableDropdown)
+      if (!props.disableDropdown && filtersRef)
         Sortable.create(
             filtersRef, {
               group: defaultConfig.tableName,
