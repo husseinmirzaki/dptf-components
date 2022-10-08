@@ -1,8 +1,8 @@
 <template>
-  <div class="d-flex justify-content-center align-items-center tab-items-container" ref="container">
+  <div dir="ltr" class="d-flex justify-content-center align-items-center tab-items-container" ref="container">
     <slot name="tabs" v-if="show" :setActiveItem="setActiveItem"/>
   </div>
-  <div class="d-flex justify-content-center align-items-center w-100 h-100 pb-7 tab-content-container"
+  <div class="d-flex justify-content-center align-items-center w-100 pb-7 tab-content-container"
        ref="tabContainerBody">
     <slot name="tab-container" :tabNames="tabNames" :activeItem="activeItem" :routerMode="routerMode"
           :bodyHeight="bodyHeight">
@@ -18,6 +18,7 @@ import {SimpleDrag} from "@/custom/components/table/TableDrag";
 import {UserPreferencesManager} from "@/custom/services/UserPreferencesV2Api";
 import {findClassInParent} from "@/custom/helpers/DomHelpers";
 import {useRoute} from "vue-router";
+import Sortable from 'sortablejs';
 
 export default {
   props: {
@@ -88,12 +89,31 @@ export default {
         items[i].setAttribute("group", "tabs-container");
       }
 
-      dragInstance.findElements();
-      dragInstance.addMouseEvents();
+      Sortable.create(
+          container.value, {
+            group: "tabs-container",
+            draggable: '.tab-item-v2',
+            direction: 'horizontal',
+            animation: 180,
+            onUpdate: () => {
+              setTimeout(() => {
+                const items = selectItems();
+                const newOrder = {};
+                for (let i = 0; i < items.length; i++) {
+                  newOrder[i] = items[i].getAttribute('data-item-name');
+                }
+                if (!props.disablePreferences)
+                  preferencesManager.set(newOrder);
+              });
+            },
+          }
+      )
+
+      // dragInstance.findElements();
+      // dragInstance.addMouseEvents();
     }
 
     const introduce = (tabName) => {
-
       clearTimeout(lastIntroduceActivity);
       lastIntroduceActivity = setTimeout(() => {
         if (!props.disableDragging)
@@ -111,7 +131,10 @@ export default {
       const current = childCounter;
 
       if (tabName) {
-        tabNames.value.push(props.routerPrefix + "_" + tabName);
+        if (!props.routerMode)
+          tabNames.value.push(tabName);
+        else
+          tabNames.value.push(props.routerPrefix + "_" + tabName);
       } else {
         tabNames.value.push(`${props.routerPrefix}_tab_${current}`);
       }
@@ -160,7 +183,6 @@ export default {
         return;
       const myStyle = getComputedStyle(tabContainerBody.value);
       const style = getComputedStyle(cardBodyParent);
-      console.log(myStyle.height, style.height);
       const cardBodyHeight = Number(style.height.replace('px', ''));
       const myHeight = Number(myStyle.height.replace('px', ''));
       const extraHeight =
@@ -173,18 +195,6 @@ export default {
       updateBodyHeight();
       tabNames.value = [];
       show.value = true;
-      if (!props.disableDragging) {
-        dragInstance = new SimpleDrag(container.value);
-        dragInstance.onItemDropped = (element) => {
-          const items = selectItems();
-          const newOrder = {};
-          for (let i = 0; i < items.length; i++) {
-            newOrder[i] = items[i].getAttribute('data-item-name');
-          }
-          if (!props.disablePreferences)
-            preferencesManager.set(newOrder);
-        }
-      }
     })
 
     return {

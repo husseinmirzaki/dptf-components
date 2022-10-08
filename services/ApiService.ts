@@ -425,23 +425,31 @@ class ApiService {
         });
     }
 
-    public static list(customUrl: string | undefined = undefined) {
+    public static list(customUrl: string | undefined = undefined, params: any = undefined) {
         if (customUrl)
             return this.get(customUrl);
-        return this.get(this.url);
+        return this.get(this.url, params ? {
+            params
+        } : undefined);
     }
 
-    public static getOne(id) {
-        return this.get(this.baseUrl + `${id}/`)
+    public static getOne(id, params: any = undefined) {
+        return this.get(this.baseUrl + `${id}/`, params ? {
+            params
+        } : undefined)
     }
 
-    public static deleteOne(id) {
+    public static deleteOne(id, params: any = undefined) {
         VueInstanceService.ignoreServerError = true;
-        return this.delete(`${this.baseUrl}${id}/`);
+        return this.delete(`${this.baseUrl}${id}/`, params ? {
+            params
+        } : undefined);
     }
 
-    public static deleteAll() {
-        return this.delete(`${this.baseUrl}/all/`);
+    public static deleteAll(params: any = undefined) {
+        return this.delete(`${this.baseUrl}/all/`, params ? {
+            params
+        } : undefined);
     }
 
     public static buildCreateOneUrl() {

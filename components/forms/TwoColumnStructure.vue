@@ -3,7 +3,7 @@ import {defineComponent, h} from "vue";
 import TableByModelName from "@/custom/components/forms/TableByModelName.vue";
 import AddAbleFormOnline from "@/custom/components/forms/AddAbleFormOnline.vue";
 import ShowModelHistoryButton from "@/custom/components/ShowModelHistoryButton.vue";
-import {VueInstanceService} from "@/Defaults";
+import {Configs, VueInstanceService} from "@/Defaults";
 
 export default defineComponent({
   props: [
@@ -11,6 +11,7 @@ export default defineComponent({
     'tableCardTitle',
     'formCardTitle',
     'tableModel',
+    'onTableSearchParams',
     'formModel',
     'onFormModalField',
     'onFormField',
@@ -22,10 +23,12 @@ export default defineComponent({
     'onModalFieldsOrder',
     'disableTable',
     'disableForm',
+    'formAsModal'
   ],
   emits: ['formRefReady', 'update', 'done', 'cancel', 'view'],
   setup(props, context) {
     let formInstance: any;
+    let formRef: any;
     return () => {
 
       const table = (!props.disableTable) ? h(TableByModelName, {
@@ -34,21 +37,25 @@ export default defineComponent({
         onView: (data) => context.emit('view', data, formInstance),
         title: props.tableCardTitle,
         filterModelName: props.tableModel,
+        onSearchParams: props.onTableSearchParams,
       }, {
-        'toolbar0': () => h(ShowModelHistoryButton, {
+        'toolbar0': () => Configs['showModelHistoryButton'] ? h(ShowModelHistoryButton, {
           modelName: props.tableModel
-        }),
+        }) : undefined,
+        ...context.slots
       }) : undefined
 
       const form = (!props.disableForm) ? h(AddAbleFormOnline, {
         ref: (el) => context.emit('formRefReady', el),
-        onCancel: (e) => {
+        formAsModal: props.formAsModal,
+        onCancel: (e, b) => {
           formInstance.resetForm();
-          context.emit('cancel', e)
+          context.emit('cancel', e, b)
         },
-        onDone: (e) => {
+        onDone: (e, b) => {
           VueInstanceService.emit(`${props.tableModel}Table`, ['refresh']);
-          context.emit('done', e)
+          formInstance.resetForm();
+          context.emit('done', e, b)
         },
         onBuildFields: props.onFormBuildFields,
         cardTitle: props.formCardTitle,
@@ -71,17 +78,17 @@ export default defineComponent({
       }, [
         h('div', {
               class: {
-                'col-xl-6 col-lg-12 mb-3 mb-xl-0': !props.disableForm,
-                'col-xl-12 col-lg-12 mb-3 mb-xl-0': props.disableForm,
+                'col-xl-6 col-lg-12 mb-3 mb-xl-0': !props.disableForm && !props.formAsModal,
+                'col-xl-12 col-lg-12 mb-3 mb-xl-0': props.disableForm || props.formAsModal,
               },
             }, table,
         ),
-        h('div', {
+        !props.formAsModal ? h('div', {
           class: {
             'col-xl-6 col-lg-12': !props.disableTable,
             'col-xl-12 col-lg-12': props.disableTable,
           },
-        }, form)
+        }, form) : form
       ]);
     }
   }

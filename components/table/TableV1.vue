@@ -1,210 +1,3 @@
-<template>
-  <Card
-      :card-title="$attrs.cardTitle ? $attrs.cardTitle : title"
-      :card-description="description"
-      :icon="icon"
-      :disable-card="disableCard"
-      :disable-drag="disableDrag"
-      body-padding-class="m-0"
-      :nav-items="navItems"
-      @selected-nav-item="$emit('selectedNavItem', $event)"
-      v-bind="$attrs">
-    <template #card-title-content>
-      <slot name="card-title-content"/>
-    </template>
-    <template v-slot:dropDown v-if="!disableDropdown">
-      <DropdownV2>
-        <!--        <div class="pb-1" v-if="defaultConfig.filterForm.formInstance">-->
-        <!--          <button @click="filterShow = !filterShow" class="btn btn-sm btn-primary btn-icon ms-2">-->
-        <!--            <i class="fas fa-filter"></i>-->
-        <!--          </button>-->
-        <!--          <button @click="defaultConfig.filterForm.formInstance.resetForm()"-->
-        <!--                  class="btn btn-sm btn-primary btn-icon ms-2">-->
-        <!--            <i class="fas fa-undo"></i>-->
-        <!--          </button>-->
-        <!--        </div>-->
-        <!--begin::Menu separator-->
-        <!--        <div class="separator mt-2 opacity-75" v-if="defaultConfig.filterForm.formInstance"></div>-->
-        <!--end::Menu separator-->
-        <template v-for="header in Object.keys(headerVisibility)" :key="header">
-          <FieldComponent
-              v-model="headerVisibility[header]"
-              :name="header"
-              :placeholder="defaultConfig.onTHeadProps(header).header"
-              field_type="checkbox"/>
-        </template>
-      </DropdownV2>
-    </template>
-    <template v-if="$slots.toolbar0" v-slot:toolbar0>
-      <slot name="toolbar0"/>
-    </template>
-    <template v-if="$slots.toolbar1" v-slot:toolbar1>
-      <slot name="toolbar1"/>
-    </template>
-    <template v-if="$slots.toolbar2" v-slot:toolbar2>
-      <slot name="toolbar2"/>
-    </template>
-    <template v-slot:card-body>
-      <spinner :loading="defaultConfig.isLoading.value">
-        <div class="card-body m-0 p-0" :class="[$attrs.bodyClass]">
-          <!--begin::Table container-->
-          <div class="table-responsive">
-            <!--begin::Table-->
-            <table ref="tableRef"
-                   class="table table-bordered align-middle gs-4 gy-4 table-hover table table-v2-custom"
-                   :class="{'mb-0': !defaultConfig.showPagination}"
-            >
-              <!--begin::Table head-->
-              <thead>
-              <tr class="fw-bolder text-muted bg-light" ref="headersRef">
-                <th style="width: 70px" v-if="defaultConfig.checkAble" class="check-stuff">
-                  <FieldComponent
-                      v-model="checkAll"
-                      col_class=""
-                      input_container_class="test"
-                      default-input-classes=""
-                      :show_errors="false"
-                      field_type="checkbox"/>
-                </th>
-                <template v-if="changedHeaders.length > 0">
-                  <template v-for="(header, index) in changedHeaders" :key="header">
-                    <component
-                        v-if="headerVisibility[header]"
-                        @show-filter="defaultConfig.onShowFilter(header, index)"
-                        @toggle-order="defaultConfig.toggleOrder(header)"
-                        moveable="moveable"
-                        :is-filtered="defaultConfig.filteredHeaders.value.indexOf(header) > -1"
-                        :sort-direction="defaultConfig.orderedField.value['name'] === header ? defaultConfig.orderedField.value['order'] : undefined"
-                        :header-name="header"
-                        class="align-middle pe-2 text-nowrap"
-                        :group="defaultConfig.tableName"
-                        :is="defaultConfig.onTHeadComponent(header, index)"
-                        v-bind="defaultConfig.onTHeadProps(header, index)">
-                      <template #extra-part-0>
-
-                        <filter-container
-                            @move.prevent.stop @drag.prevent.stop @mousedown.stop
-                            v-if="defaultConfig.getFieldByName(header) && headerVisibility[header]"
-                            :field="defaultConfig.getFieldByName(header)"/>
-
-                      </template>
-                    </component>
-                  </template>
-                </template>
-                <template v-else v-for="(header, index) in headers" :key="header">
-                  <component
-                      v-if="headerVisibility[header]"
-                      moveable="moveable"
-                      :header-name="header"
-                      class="pe-2 text-nowrap"
-                      :group="defaultConfig.tableName"
-                      :is="defaultConfig.onTHeadComponent(header, index)"
-                      v-bind="defaultConfig.onTHeadProps(header, index)">
-                    <template #extra-part-0>
-                      <filter-container v-if="defaultConfig.getFieldByName(header) && headerVisibility[header]"
-                                        :field="defaultConfig.getFieldByName(header)"/>
-                    </template>
-                  </component>
-                </template>
-                <template v-if="defaultConfig.showActionButtons">
-                  <component
-                      :disable-filters="1"
-                      header-name="table-action"
-                      class="pe-2 text-nowrap"
-                      :group="defaultConfig.tableName"
-                      :is="defaultConfig.onTHeadComponent('table-action', index)"
-                      v-bind="defaultConfig.onTHeadProps('table-action', index)">
-                  </component>
-                </template>
-              </tr>
-              </thead>
-              <!--end::Table head-->
-
-              <!--begin::Table body-->
-              <tbody>
-              <tr v-if="defaultConfig.filterForm && filterShow" class="filters-container">
-                <td v-for="header in headers" :key="header" class="p-0">
-                </td>
-              </tr>
-              <tr v-if="!dList || dList.length == 0">
-                <td :colspan="headers.length + 1" class="text-center">
-                  <slot name="empty">
-                    داده ای برای نمایش موجود نمی‌باشد
-                  </slot>
-                </td>
-              </tr>
-              <template v-else-if="dList.length > 0">
-                <template v-for="(item, index) in dList" :key="index">
-                  <Component class="text-start"
-                             :is="defaultConfig.onTBodyRowComponent(item, index)"
-                             v-bind="defaultConfig.onTBodyRowBinds(item, index)"
-                             data-context-menu="true"
-                             @contextmenu="contextMenu(item)"
-                             @drop.prevent="defaultConfig.context.emit('trDrop', [$event, item, index])"
-                             @dragenter.prevent
-                             @dragover.prevent
-                             @mouseenter="checkCheckFieldData(`check_${item.id}`)"
-                             @click="$emit('on-row-selected', item)">
-                    <td style="width: 70px" v-if="defaultConfig.checkAble"
-                        @mousedown.prevent="checksDragHandler.isMouseDown.value = true"
-                        @mouseup.prevent="checksDragHandler.isMouseDown.value = false"
-                        @mousemove="checkCheckFieldData(`check_${item.id}`)"
-                        @mouseenter="checkCheckFieldData(`check_${item.id}`)"
-                        @click="checkedDataList[`check_${item.id}`] = !checkedDataList[`check_${item.id}`]">
-                      <FieldComponent
-                          v-model="checkedDataList[`check_${item.id}`]"
-                          col_class=""
-                          input_container_class="test"
-                          default-input-classes=""
-                          :show_errors="false"
-                          field_type="checkbox"/>
-                    </td>
-                    <template v-for="(header, headerIndex) in headers" :key="header">
-                      <component
-                          v-if="headerVisibility[header]"
-                          :is="defaultConfig.onTBodyComponent(item, header, headerIndex, index)"
-                          v-bind="defaultConfig.onTBodyProps(item, header, headerIndex, index)"
-                      />
-                    </template>
-                    <td style="width: 70px;white-space: nowrap"
-                        class="pe-2 text-nowrap text-center" v-if="defaultConfig.showActionButtons">
-                      <template v-for="(contextMenuItem, contextMenuIndex) in defaultConfig.getContextMenuItems(item)"
-                                :key="contextMenuItem">
-                        <button class="btn btn-sm p-1"
-                                style="border-radius: 3px !important;"
-                                :class="[{
-                          'ms-1': contextMenuIndex > 0,
-                        }, [`btn-${contextMenuItem.state ? contextMenuItem.state : 'primary'}`]]"
-                                @click="contextMenuItem.onClick(item)">
-                          {{ contextMenuItem.text }}
-                        </button>
-                      </template>
-                    </td>
-                  </Component>
-                </template>
-              </template>
-              <!--              <tr v-else-if="noHeaderSelected">-->
-              <!--                <td :colspan="headers.length" class="text-center">-->
-              <!--                    حداقل یک ستون را برای نمایش انتخاب کنید-->
-              <!--                </td>-->
-              <!--              </tr>-->
-              </tbody>
-              <!--end::Table body-->
-            </table>
-            <!--end::Table-->
-          </div>
-          <table-pagination
-              v-if="defaultConfig.showPagination"
-              @page-selected="onPage"
-              :current-page="defaultConfig.currentPage"
-              :count="defaultConfig.count"/>
-          <!--end::Table container-->
-        </div>
-      </spinner>
-    </template>
-  </Card>
-  <TableFilter :defaultConfig="defaultConfig"/>
-</template>
 <style lang="scss">
 @media (max-width: 972px) {
   .table-v2-custom {
@@ -292,10 +85,16 @@ tbody .table-row-container {
 </style>
 <style lang="scss" scoped>
 table {
+  direction: ltr;
+}
+
+table {
   th {
+    direction: rtl !important;
     color: black;
     border-left: 1px solid #e9ebf1;
     min-width: 130px;
+    max-width: 200px;
     padding: 6px !important;
 
     &.check-stuff:first-child {
@@ -308,12 +107,14 @@ table {
   }
 
   td {
+    direction: rtl !important;
     z-index: 1;
     height: 35px;
     //border-left: 1px solid #dddee3;
     border-bottom: 1px solid #dddee3;
     box-shadow: none;
     color: #5e5e5e;
+    white-space: nowrap;
 
     &:last-child {
       border-left: none;
@@ -350,9 +151,7 @@ table {
 }
 </style>
 <script lang="ts">
-import {computed, defineComponent, nextTick, onMounted, ref, toRef, watch} from "vue";
-import DropdownV1 from "@/custom/components/DropdownV1.vue";
-import TableTD from "@/custom/components/table/tbody/TableTD.vue";
+import {computed, defineComponent, h, onMounted, ref, toRef, watch, withModifiers} from "vue";
 import {Table} from "@/custom/components/table/Table";
 import TablePagination from "@/custom/components/table/TablePagination.vue";
 import Card from "@/custom/components/Card.vue";
@@ -362,24 +161,14 @@ import FieldComponent from "@/custom/components/FieldComponent.vue";
 import {DragHandler, SimpleDrag} from "@/custom/components/table/TableDrag";
 import DropdownV2 from "@/custom/components/DropdownV2.vue";
 import {MenuComponent} from "@/assets/ts/components";
-import FilterContainer from "@/custom/components/table/header/filters/FilterContainer.vue";
 import {mobileCheck} from "@/custom/helpers/MobileHelpers";
 import {UserPreferencesManager} from "@/custom/services/UserPreferencesV2Api";
-import TableFilter from "@/custom/components/table/TableFilter.vue";
 import {Configs} from "@/Configs";
+import {DEFAULT_BUTTONS} from "@/custom/helpers/RenderFunctionHelpers";
+import TableFilter from "@/custom/components/table/TableFilter.vue";
+import Sortable from 'sortablejs';
 
 export default defineComponent({
-  components: {
-    TableFilter,
-    FilterContainer,
-    DropdownV2,
-    FieldComponent,
-    Spinner,
-    Card,
-    TablePagination,
-    TableTD,
-    DropdownV1
-  },
   props: {
     url: {
       default: () => {
@@ -431,13 +220,15 @@ export default defineComponent({
     }
   },
   setup(props, context) {
+
     const isMobile = mobileCheck();
     const conf = toRef(props, 'conf');
     const list = toRef(props, 'list');
     const url = toRef(props, 'url');
 
-    const headersRef = ref();
-    const tableRef = ref();
+    let headersRef: any;
+    let tableRef: any;
+    let filtersRef: any;
 
     const dList = ref(list.value);
 
@@ -475,6 +266,7 @@ export default defineComponent({
         "onGetData": onGetData
       });
     });
+
     watch(conf, () => {
       defaultConfig = initializeConfig();
 
@@ -507,9 +299,7 @@ export default defineComponent({
     })
 
     watch(checkAll, (e) => {
-      console.log("checkall", checkedDataList.value)
       Object.keys(checkedDataList.value).forEach((e) => {
-        console.log("checkall", e)
         checkedDataList.value[e] = checkAll.value;
       });
     });
@@ -517,6 +307,14 @@ export default defineComponent({
     watch(url, () => {
       onGetData();
     });
+
+
+    // watch(headerVisibility, () => {
+    //   saveTableSettings();
+    // }, {
+    //   deep: true,
+    // });
+
 
     const checkedAnyItems = computed(() => {
       let oneIsChecked = false;
@@ -532,6 +330,7 @@ export default defineComponent({
     });
 
     const onGetData = () => {
+      console.debug("here");
       return new Promise<void>((resolve) => {
         if (defaultConfig.canUseUrl) {
           defaultConfig.onGetData().then((e) => {
@@ -551,7 +350,7 @@ export default defineComponent({
 
     watch(preferencesManager.value, (e) => {
       buildPrimaryTableInfo(e);
-      tableSetup();
+      tableSetup(false);
     }, {deep: true});
 
     const headers = computed(() => {
@@ -572,6 +371,7 @@ export default defineComponent({
       }
     }
 
+    let lastWatch: any;
     const getTableSettings = () => {
       preferencesManager.get().then(() => {
         tableSetup();
@@ -582,105 +382,119 @@ export default defineComponent({
 
     const saveTableSettings = () => {
       preferencesManager.set({
-        defaultHeaders: defaultConfig.defaultHeaders,
-        headers: headers.value,
-        headerVisibility: headerVisibility.value,
+        defaultHeaders: Object.assign({}, defaultConfig.defaultHeaders),
+        headers: Object.assign([], headers.value),
+        headerVisibility: Object.assign({}, headerVisibility.value),
       });
     }
 
     const buildPrimaryTableInfo = (value) => {
       let newHeaders: any = [];
 
-
       // check default headers exists in config
-      if (value.defaultHeaders) {
+      if (value.defaultHeaders && value.defaultHeaders.indexOf) {
         for (let i = 0; i < defaultConfig.defaultHeaders.length; i++) {
           if (value.defaultHeaders.indexOf(defaultConfig.defaultHeaders[i]) == -1) {
             newHeaders.push(defaultConfig.defaultHeaders[i]);
           }
         }
       }
-
-
       if (value.headers) {
         changedHeaders.value.splice(0)
         changedHeaders.value.push(
-            ...value.headers,
-            ...newHeaders
+            ...newHeaders,
+            ...value.headers
         )
       } else {
         changedHeaders.value.splice(0)
-        changedHeaders.value.push(...headers.value)
+        changedHeaders.value.push(...headers.value, ...newHeaders)
       }
       if (value.headerVisibility) {
         headerVisibility.value = value.headerVisibility;
+        newHeaders.forEach((e) => headerVisibility.value[e] = true)
       } else {
         headerVisibility.value = {}
         headers.value.forEach((e) => headerVisibility.value[e] = true)
+        newHeaders.forEach((e) => headerVisibility.value[e] = true)
       }
     }
 
     buildPrimaryTableInfo({});
 
-    const dragStuff = () => {
-      nextTick(() => {
-        setTimeout(() => {
-          drag!.findElements();
-          drag!.addMouseEvents();
-          watch(headerVisibility, () => {
-            nextTick(() => {
-              drag!.findElements();
-              drag!.addMouseEvents();
-              saveTableSettings();
-            })
-          }, {
-            deep: true,
-          });
-        }, 100)
-      })
-    }
+    let watchHeaderVisibility = false;
+    watch(headerVisibility, () => {
+      if (watchHeaderVisibility)
+        saveTableSettings();
+    }, {
+      deep: true,
+    });
 
-
-    const tableSetup = () => {
+    const tableSetup = (getData = true) => {
+      watchHeaderVisibility = false;
       if (Object.keys(headerVisibility.value).length == 0) {
         headers.value.forEach((header) => {
           headerVisibility.value[header] = true;
         })
       }
+      watchHeaderVisibility = true;
       if (!url.value || url.value == '') {
-        dragStuff();
+        // dragStuff();
       } else {
-        onGetData().then(() => {
-          dragStuff();
-        });
+        if (getData)
+          onGetData().then(() => {
+            // dragStuff();
+          });
       }
     }
 
     const mount = () => {
       MenuComponent.reinitialization();
-      drag = new SimpleDrag(tableRef.value);
-      drag!.exclude_all_clone = '(animation)|(opacity)|(transition)|(position)';
-      drag!.exclude_one_clone = '(animation)|(opacity)|(transition)|(position)';
-      drag!.onItemDropped = (element) => {
-        const l: Array<string> = [];
-        console.log(headersRef.value.children.length);
-        for (let i = 0; i < headersRef.value.children.length; i++) {
-          l.push(headersRef.value.children[i].getAttribute('header-name'));
-        }
-        changedHeaders.value.splice(0);
-        changedHeaders.value.push(...l);
-        defaultConfig.defaultHeaders = l;
-        setTimeout(() => {
-          if (drag) {
-            drag.findElements();
-            drag.addMouseEvents();
-          }
-        }, 350)
 
-        onGetData().then(() => {
-          saveTableSettings();
-        });
-      }
+      if (headersRef)
+        Sortable.create(
+            headersRef, {
+              group: defaultConfig.tableName,
+              draggable: '.custom-table-th',
+              direction: 'horizontal',
+              animation: 180,
+              filter: '[ignore-drags]',
+              onUpdate: () => {
+                setTimeout(() => {
+                  const l: Array<string> = [];
+                  for (let i = 0; i < headersRef.children.length; i++) {
+                    l.push(headersRef.children[i].getAttribute('header-name'));
+                  }
+                  changedHeaders.value.splice(0);
+                  changedHeaders.value.push(...l.reverse());
+                  defaultConfig.defaultHeaders = l;
+                  saveTableSettings();
+                });
+              },
+            }
+        )
+
+      if (!props.disableDropdown && filtersRef)
+        Sortable.create(
+            filtersRef, {
+              group: defaultConfig.tableName,
+              draggable: '.field',
+              direction: 'vertical',
+              animation: 180,
+              onUpdate: () => {
+                setTimeout(() => {
+                  const l: Array<string> = [];
+                  const items = filtersRef.querySelectorAll('input[name]');
+                  for (let i = 0; i < items.length; i++) {
+                    l.push(items[i].getAttribute('name'));
+                  }
+                  changedHeaders.value.splice(0);
+                  changedHeaders.value.push(...l);
+                  defaultConfig.defaultHeaders = l;
+                  saveTableSettings();
+                });
+              },
+            }
+        )
 
       getTableSettings();
       // getTableSettings().then(({data}) => {
@@ -726,7 +540,7 @@ export default defineComponent({
     });
 
 
-    return {
+    context.expose({
       isMobile,
       checksDragHandler,
 
@@ -754,7 +568,323 @@ export default defineComponent({
       contextMenu,
       checkCheckFieldData,
       refresh: onGetData,
-    };
+    })
+
+    const buildTHead = () => {
+      // headers might be changed
+      // so consider that as well
+      const headersToIterate = changedHeaders.value.length > 0 ? changedHeaders.value : headers.value;
+
+      const checkBoxes = defaultConfig.checkAble ? h(
+          'th',
+          {
+            class: 'check-stuff',
+            'ignore-drags': 1,
+          },
+          h(
+              FieldComponent,
+              {
+                modelValue: checkAll.value,
+                col_class: "",
+                input_container_class: "test",
+                defaultInputClasses: "",
+                show_errors: false,
+                field_type: "checkbox",
+              }
+          )
+      ) : undefined;
+
+      const actualHeaders = headersToIterate
+          .filter((header) => headerVisibility.value[header])
+          .map((header, index) => {
+                return h(
+                    defaultConfig.onTHeadComponent(header, index),
+                    {
+                      key: header,
+                      onShowFilter: () => defaultConfig.onShowFilter(header, index),
+                      onToggleOrder: () => defaultConfig.toggleOrder(header),
+                      moveable: 'moveable',
+                      isFiltered: defaultConfig.filteredHeaders.value.indexOf(header) > -1,
+                      sortDirection: defaultConfig.orderedField.value['name'] === header ? defaultConfig.orderedField.value['order'] : undefined,
+                      'header-name': header,
+                      group: defaultConfig.tableName,
+                      ...defaultConfig.onTHeadProps(header, index),
+                    },
+                )
+              }
+          );
+
+      const actionButtons = defaultConfig.showActionButtons ? h(
+          defaultConfig.onTHeadComponent('table-action', -1),
+          {
+            disableFilters: 1,
+            'ignore-drags': 1,
+            'header-name': 'table-action',
+            group: defaultConfig.tableName,
+            ...defaultConfig.onTHeadProps('table-action', -1),
+          }
+      ) : undefined;
+
+      return h(
+          'thead',
+          {
+            onUpdate: withModifiers(() => {
+              //
+            }, ['stop', 'prevent']),
+          },
+          h(
+              'tr',
+              {
+                ref: (el) => headersRef = el,
+                class: "fw-bolder text-muted bg-light",
+              },
+              [
+                // action buttons
+                actionButtons,
+                // actual headers
+                ...actualHeaders.reverse(),
+                // checkboxes
+                checkBoxes
+              ]
+          )
+      );
+    }
+
+    const buildTBody = () => {
+      const headersToIterate = changedHeaders.value.length > 0 ? changedHeaders.value : headers.value;
+      let tr: any;
+      if (!dList.value || dList.value.length == 0) {
+        tr = h(
+            'tr',
+            {},
+            h(
+                'td',
+                {
+                  colspan: headersToIterate.filter((header) => headerVisibility.value[header]).length,
+                },
+                context.slots['empty'] ? context.slots['empty']() : "داده ای برای نمایش موجود نمی‌باشد ?"
+            )
+        )
+      } else {
+        tr = dList.value.map((item, index) => {
+          return h(
+              defaultConfig.onTBodyRowComponent(item, index),
+              {
+                key: item['id'] ? item['id'] : index,
+                'data-context-menu': 'true',
+                onContextmenu: () => contextMenu(item),
+                onMouseenter: () => {
+                  checkCheckFieldData(`check_${item['id']}`)
+                },
+                onClick: () => {
+                  context.emit('on-row-selected', item)
+                },
+                ...defaultConfig.onTBodyRowBinds(item, index),
+              },
+              {
+                default: () => {
+                  const checkBox = defaultConfig.checkAble ? h(
+                      'td',
+                      {
+                        onMousemove: () => {
+                          checkCheckFieldData(`check_${item['id']}`);
+                        },
+                        onMouseenter: () => {
+                          checkCheckFieldData(`check_${item['id']}`);
+                        },
+                        onClick: () => checkedDataList[`check_${item['id']}`] = !checkedDataList[`check_${item['id']}`],
+                      },
+                      h(
+                          FieldComponent,
+                          {
+                            modelValue: checkedDataList[`check_${item['id']}`],
+                            col_class: '',
+                            input_container_class: '',
+                            defaultInputClasses: '',
+                            show_errors: false,
+                            field_type: "checkbox",
+                          }
+                      )
+                  ) : undefined;
+
+                  const dataTds = headersToIterate.filter((header) => headerVisibility.value[header]).map((header, headerIndex) => {
+                    return h(
+                        defaultConfig.onTBodyComponent(item, header, headerIndex, index),
+                        {
+                          key: String(item['id'] ? item['id'] : index) + header + headerIndex,
+                          ...defaultConfig.onTBodyProps(item, header, headerIndex, index),
+                        }
+                    )
+                  });
+
+                  const actionButtons = defaultConfig.showActionButtons ? h(
+                      'td',
+                      {
+                        class: "pe-2 text-nowrap text-center",
+                      },
+                      defaultConfig.getContextMenuItems(item).map((contextMenuItem, contextMenuIndex) => {
+                        return DEFAULT_BUTTONS.default(
+                            {
+                              class: [
+                                `btn-sm p-1 btn-${contextMenuItem.state ? contextMenuItem.state : 'primary'}`,
+                                {
+                                  'ms-1': contextMenuIndex > 0,
+                                }
+                              ],
+                              onClick: () => {
+                                if (contextMenuItem.onClick)
+                                  contextMenuItem.onClick(item)
+                              },
+                            },
+                            contextMenuItem.text,
+                        )
+                      }),
+                  ) : undefined;
+
+                  return [
+                    actionButtons,
+                    ...dataTds.reverse(),
+                    checkBox
+                  ];
+
+                }
+              }
+          );
+        });
+      }
+
+      return h(
+          'tbody',
+          {},
+          tr,
+      );
+    }
+
+    const buildTable = () => {
+      return h(
+          'div',
+          {
+            ref: (el) => tableRef = el,
+            class: "table-responsive table-container"
+          },
+          // table
+          h(
+              'table',
+              {
+                class: [
+                  'table table-bordered align-middle ge-4 gy-4 table-hover table table-v2-custom',
+                  {
+                    'mb-0': !defaultConfig.showPagination,
+                  }
+                ]
+              }, [
+                buildTHead(),
+                buildTBody()
+              ]
+          )
+      )
+    }
+
+    const buildCardBody = () => {
+      return h(
+          Spinner,
+          {
+            loading: defaultConfig.isLoading.value,
+          },
+          {
+            default: () => {
+              const table = buildTable();
+
+              const cardBody = h(
+                  'div',
+                  {
+                    class: [
+                      'card-body m-0 p-0',
+                      context.attrs['bodyClass']
+                    ]
+                  },
+                  [
+                    table,
+                    defaultConfig.showPagination ? h(
+                        TablePagination,
+                        {
+                          currentPage: defaultConfig.currentPage.value,
+                          count: defaultConfig.count.value,
+                          onPageSelected: onPage,
+                        }
+                    ) : undefined,
+                  ]
+              );
+              return cardBody;
+            }
+          }
+      );
+    }
+
+    return () => {
+
+      const slots: Record<string, any> = {
+        ...context.slots,
+      }
+
+      if (!props.disableDropdown) {
+        const headersToIterate = changedHeaders.value.length > 0 ? changedHeaders.value : headers.value;
+        slots['dropDown'] = h(
+            DropdownV2,
+            {},
+            {
+              default: () => {
+                return h(
+                    'div',
+                    {
+                      onUpdate: withModifiers(() => {
+                        //
+                      }, ['stop', 'prevent']),
+                      class: 'items-container',
+                      ref: (el) => filtersRef = el,
+                    },
+                    headersToIterate.map((header, index) => h(
+                            FieldComponent,
+                            {
+                              key: header,
+                              name: header,
+                              modelValue: headerVisibility.value[header],
+                              placeholder: defaultConfig.onTHeadProps(header, index).header,
+                              field_type: "checkbox",
+                              'onUpdate:modelValue': (e) => headerVisibility.value[header] = e,
+                            }
+                        )
+                    )
+                );
+              }
+            }
+        )
+      }
+
+      slots['card-body'] = buildCardBody;
+
+      const card = h(Card, {
+        cardTitle: context.attrs['cardTitle'] ? context.attrs.cardTitle : props.title,
+        cardDescription: props.description,
+        icon: props.icon,
+        disableCard: props.disableCard,
+        disableDrag: props.disableDrag,
+        navItems: props.navItems,
+        bodyPaddingClass: "m-0",
+        onSelectedNavItem: (e) => context.emit('selectedNavItem', e),
+        ...context.attrs,
+      }, {
+        ...slots,
+      });
+
+
+      return [
+        card,
+        h(TableFilter, {defaultConfig: defaultConfig})
+      ];
+    }
+
+
   },
 });
 </script>

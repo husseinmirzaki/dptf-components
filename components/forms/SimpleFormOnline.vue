@@ -1,75 +1,22 @@
-<template>
-  <Card>
-    <template #card-content>
-      <div style="height: 450px; width: 100%" class="d-flex align-items-center justify-content-center"
-           v-if="!formBuilt">
-        <template v-if="formFound">
-          درحال اجرا
-          <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-        </template>
-        <div class="d-flex flex-column justify-content-center align-items-center text-center" v-else>
-          <span class="svg-icon svg-icon-danger">
-            <inline-svg src="media/icons/duotune/arrows/arr061.svg" style="width: 150px; height: 150px"/>
-          </span>
-          <h4>
-            متاسفانه فرم موردنظر پیدا نشد <br/>
-            ویا شما به فرم موردنظر دسترسی ندارید
-          </h4>
-        </div>
-      </div>
-      <template v-if="formBuilt">
-        <FormContainer
-            v-if="!isReadOnly"
-            :validation-schema="buildByModelName.formInstance.activeSchema"
-            ref="form"
-        >
-          <FormBuilder :fields="buildByModelName.formInstance.activeFields"/>
-        </FormContainer>
-        <template v-else>
-          <FormBuilder :fields="buildByModelName.formInstance.activeFields"/>
-        </template>
-        <slot name="multiForm"/>
-      </template>
-
-      <div class="d-flex">
-        <PromiseButton
-            text="ثبت"
-            v-if="$attrs['disable-card']"
-            @submitDone="$emit('done')"
-            @clicked="onBeforeSendC(() => {$event($refs.form, buildByModelName.formInstance)})"/>
-        <button class="btn btn-danger ms-2" @click="$emit('cancel')" v-if="showCancelButton && $attrs['disable-card']">
-          لغو
-        </button>
-      </div>
-
-    </template>
-    <template #card-footer v-if="formBuilt && !isReadOnly">
-      <PromiseButton
-          text="ثبت"
-          @submitDone="$emit('done', $event)"
-          @clicked="onBeforeSendC(() => {$event($refs.form, buildByModelName.formInstance)})"/>
-      <button class="btn btn-danger ms-2" @click="$emit('cancel')" v-if="
-      showCancelButton||
-      buildByModelName.formInstance.update.value
-">لغو
-      </button>
-    </template>
-  </Card>
-</template>
 <script lang="ts">
-import {nextTick, watch} from "vue";
+import {h, nextTick, watch} from "vue";
 import Card from "@/custom/components/Card.vue";
 import FormBuilder from "@/custom/components/FormBuilder.vue";
 import FormContainer from "@/custom/components/FormContainer.vue";
 import PromiseButton from "@/custom/components/PromiseButton.vue";
 import {BuildByModelName} from "@/custom/forms/utils/BuildByModelName";
+import FixedHeightAccess from "@/custom/components/forms/FixedHeightAccess.vue";
+import FixedHeightLoader from "@/custom/components/forms/FixedHeightLoader.vue";
+import {DEFAULT_BUTTONS} from "@/custom/helpers/RenderFunctionHelpers";
+import Modal from "@/custom/components/model/Modal.vue";
 
 export default {
   components: {Card, PromiseButton, FormContainer, FormBuilder},
   props: [
     'modelName', 'overrideOptions', 'showCancelButton',
     'onBuildFields', 'onFields', 'onOrderField', 'onFormReady',
-    'onBeforeSend', 'onModes', 'onBeforeSubmit', 'onAfterSubmit', 'onSend', 'isReadOnly'
+    'onBeforeSend', 'onModes', 'onBeforeSubmit', 'onAfterSubmit',
+    'onSend', 'isReadOnly', 'formAsModal'
   ],
   setup(props, context) {
 
@@ -144,11 +91,86 @@ export default {
       }
     }
 
-    return {
-      formFound: buildByModelName.formFound,
-      formBuilt: buildByModelName.formBuilt,
-      buildByModelName,
-      onBeforeSendC,
+    let formInstance: any;
+    let modalInstance: any;
+    const cardContent = () => {
+      if (!buildByModelName.formBuilt.value) {
+        if (buildByModelName.formFound.value)
+          return h(FixedHeightLoader);
+        return h(FixedHeightAccess);
+      }
+
+      const formBuilder = () => {
+        return h(FormBuilder, {
+          fields: buildByModelName.formInstance?.activeFields
+        });
+      }
+
+      if (props.isReadOnly)
+        return formBuilder();
+
+      return h(
+          FormContainer, {
+            validationSchema: buildByModelName.formInstance?.activeSchema,
+            ref: (el) => formInstance = el,
+          },
+          {
+            default: formBuilder
+          }
+      )
+
+    }
+    const cardFooter = () => {
+      if (!(buildByModelName.formBuilt.value && !props.isReadOnly))
+        return;
+
+      const promiseButton = h(PromiseButton, {
+        text: "ثبت",
+        onSubmitDone: (e) => {
+          context.emit('done', e);
+          if (props.formAsModal) {
+            modalInstance.close();
+          }
+        },
+        onClicked: (event) => {
+          onBeforeSendC(() => {
+            event(formInstance, buildByModelName.formInstance)
+          });
+        }
+      });
+
+      if (!(props.showCancelButton || buildByModelName.formInstance?.update.value) || props.formAsModal)
+        return promiseButton;
+
+      const cancelButton = DEFAULT_BUTTONS.danger({
+        onClick: () => {
+          context.emit('cancel')
+        }
+      }, "لغو")
+
+      return [
+        promiseButton,
+        cancelButton
+      ]
+    }
+    return () => {
+      return !props.formAsModal ? h(Card, {}, {
+        'card-content': cardContent,
+        'card-footer': cardFooter,
+      }) : h(Modal, {
+        modalTitle: context.attrs['cardTitle'],
+        thinFooter: true,
+        onClose: () => context.emit('cancel'),
+        ref: (el) => {
+          modalInstance = el;
+          context.expose({
+            modal: el,
+          })
+        },
+      }, {
+        'modal-content': cardContent,
+        'modal-footer': cardFooter,
+      });
     }
   }
 }
