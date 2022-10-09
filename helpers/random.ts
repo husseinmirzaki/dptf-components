@@ -1,3 +1,7 @@
+export function randomInt(from, to) {
+    return Math.round(Number((Math.random() * (to - from)) + from))
+}
+
 export function random(times = 2, dot = true) {
     const s = () => {
         // console.log("dot", dot);
