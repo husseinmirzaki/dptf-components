@@ -421,7 +421,7 @@ export class Table {
 
     onTBodyProps(item, header, index, rowIndex: string | number | undefined = undefined): any {
         let itemElement = Object.assign(item);
-        if (header.search('.') > -1) {
+        if (header.search(/\./) > -1) {
             const s = header.split('.');
             for (const i in s) {
                 if (itemElement[s[i]]) {
@@ -431,6 +431,13 @@ export class Table {
                     break;
                 }
             }
+        } else if (item[header]) {
+            if (item[header].title)
+                itemElement = item[header].title;
+            else if (item[header].number)
+                itemElement = item[header].title;
+            else
+                itemElement = item[header];
         } else {
             itemElement = item[header];
         }
