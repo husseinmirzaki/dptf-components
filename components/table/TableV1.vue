@@ -691,6 +691,7 @@ export default defineComponent({
             h(
                 'td',
                 {
+                  dir: 'rtl',
                   colspan: headersToIterate.filter((header) => headerVisibility.value[header]).length,
                 },
                 context.slots['empty'] ? context.slots['empty']() : "داده ای برای نمایش موجود نمی‌باشد ?"
