@@ -29,6 +29,21 @@ export default defineComponent({
   setup(props, context) {
     let formInstance: any;
     let formRef: any;
+
+    const passModalInstance = (slots:Record<string, any>) => {
+      slots = {
+        ...slots
+      }
+
+      if (slots['modalButton']) {
+        slots['toolbar0'] = () => {
+          return slots['modalButton']({formRef});
+        }
+      }
+
+      return slots;
+    }
+
     return () => {
 
       const table = (!props.disableTable) ? h(TableByModelName, {
@@ -42,11 +57,14 @@ export default defineComponent({
         'toolbar0': () => Configs['showModelHistoryButton'] ? h(ShowModelHistoryButton, {
           modelName: props.tableModel
         }) : undefined,
-        ...context.slots
+        ...passModalInstance(context.slots)
       }) : undefined
 
       const form = (!props.disableForm) ? h(AddAbleFormOnline, {
-        ref: (el) => context.emit('formRefReady', el),
+        ref: (el) => {
+          formRef = el;
+          context.emit('formRefReady', el)
+        },
         formAsModal: props.formAsModal,
         onCancel: (e, b) => {
           formInstance.resetForm();

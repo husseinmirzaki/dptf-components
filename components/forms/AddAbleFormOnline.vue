@@ -171,7 +171,7 @@ export default defineComponent({
         return h(
             ModalFormOnline, {
               key: modal,
-              modalTitle: Configs['addAbleFormOnlineHideInnerModalTitle'] ? " " :localModalTitle,
+              modalTitle: Configs['addAbleFormOnlineHideInnerModalTitle'] ? " " :localModalTitle(modal),
               onFields: localModalField(modal),
               onBuildFields: localModalOnBuildFields(modal),
               onFormReady: localModalFormReady(modal),
