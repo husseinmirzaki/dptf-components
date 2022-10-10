@@ -276,9 +276,9 @@ export class Table {
         VueInstanceService.on(this.tableName, (e) => {
             // console.log("called an event for table", this.tableName, e);
             if (e[0] == 'refresh') {
-                this.refresh();
+                // this.refresh();
             } else {
-                this.onTableEvent(e)
+                // this.onTableEvent(e)
             }
         });
         if (this.filterForm) {

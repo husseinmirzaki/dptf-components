@@ -14,11 +14,13 @@
       pb-3
     "
        data-kt-menu="true"
+       v-bind="$attrs"
   >
     <!--begin::Menu item-->
     <div class="menu-item px-3">
       <div class="menu-content fs-6 text-dark fw-bolder px-3 py-4">
         {{ title }}
+      <span class="text-muted  fs-9 ms-3" v-if="description">{{description}}</span>
       </div>
     </div>
     <!--end::Menu item-->
@@ -64,13 +66,13 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {randomId} from "@/custom/helpers/random";
-import MenuItemModel from "@/custom/models/MenuItemModel";
 
 export default defineComponent({
   props: {
     title: {
       default: "ابزار"
     },
+    description: [String],
     dropdownId: {
       type: String,
       default: () => {
