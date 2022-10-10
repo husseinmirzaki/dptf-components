@@ -8,6 +8,7 @@ import {FieldsApiService} from "@/custom/services/FieldsApiService";
 type OnFieldFunction = (field: any, formInstance: any|undefined) => any
 
 class BuildByModelName {
+    formClass: any;
     formInstance: CreateFormExtend<any> | undefined;
     formFound: Ref<boolean> = ref(true);
     formBuilt: Ref<boolean> = ref(false);
@@ -57,11 +58,11 @@ class BuildByModelName {
         this.onAfterUpdate = defaultOptions['onAfterUpdate'];
     }
 
-    getFields() {
+    getFields(buildExtend=true) {
         const promise = FieldsApiService.getFieldsConfig(this.modelName);
 
         promise.then(({data}) => {
-            this.buildFields(data);
+            this.buildFields(data, buildExtend);
         }, ({response}) => {
             if (response.status >= 400 && response.status < 500) {
                 this.formFound.value = false;
@@ -71,7 +72,7 @@ class BuildByModelName {
         return promise;
     }
 
-    buildFields(data: any) {
+    buildFields(data: any, buildExtend = true) {
         let fields: any = data;
 
         if (this.onBuildFields) {
@@ -117,6 +118,10 @@ class BuildByModelName {
         const _this = this;
 
         class CreateFormExtend extends CreateForm {
+
+            constructor() {
+                super(fields);
+            }
 
             get modes(): Array<string> {
                 if (_this.onModes) {
@@ -180,7 +185,9 @@ class BuildByModelName {
             }
         }
 
-        this.formInstance = new CreateFormExtend(fields).extend();
+        this.formClass = CreateFormExtend;
+        if (buildExtend)
+            this.formInstance = new CreateFormExtend().extend();
         this.formBuilt.value = true;
     }
 
