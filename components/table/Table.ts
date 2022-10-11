@@ -434,6 +434,8 @@ export class Table {
         } else if (item[header]) {
             if (item[header].title)
                 itemElement = item[header].title;
+            else if (item[header].first_name && item[header].last_name)
+                itemElement = `${item[header].first_name} ${item[header].last_name}`;
             else if (item[header].number)
                 itemElement = item[header].title;
             else
@@ -480,7 +482,7 @@ export class Table {
                 }
             } else if (typeof data === 'object') {
                 if (Array.isArray(data) && data.length > 0) {
-                    if (data[0]['avatar'] || data[0]['full_name'] || data[0]['last_name']) {
+                    if (data[0]['avatar'] || data[0]['first_name'] != null || data[0]['last_name'] != null) {
                         return TableTDUserMulti;
                     }
                 } else if (data.length === 0) {
