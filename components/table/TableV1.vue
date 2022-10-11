@@ -159,7 +159,18 @@ table {
 }
 </style>
 <script lang="ts">
-import {computed, defineComponent, h, nextTick, onMounted, ref, toRef, watch, withModifiers} from "vue";
+import {
+  computed,
+  defineComponent,
+  h,
+  nextTick,
+  onMounted,
+  ref,
+  resolveComponent,
+  toRef,
+  watch,
+  withModifiers
+} from "vue";
 import {Table} from "@/custom/components/table/Table";
 import TablePagination from "@/custom/components/table/TablePagination.vue";
 import Card from "@/custom/components/Card.vue";
@@ -317,14 +328,6 @@ export default defineComponent({
       onGetData();
     });
 
-
-    // watch(headerVisibility, () => {
-    //   saveTableSettings();
-    // }, {
-    //   deep: true,
-    // });
-
-
     const checkedAnyItems = computed(() => {
       let oneIsChecked = false;
       const keys = Object.keys(checkedDataList.value);
@@ -352,7 +355,7 @@ export default defineComponent({
 
     let defaultConfig: Table = initializeConfig();
 
-    const preferencesManager = new UserPreferencesManager(`table_v1_${defaultConfig.tableName}`);
+    const preferencesManager = new UserPreferencesManager(`${defaultConfig.preferencesPrefixKey}${defaultConfig.tableName}`);
 
     preferencesManager.get();
 
@@ -380,7 +383,6 @@ export default defineComponent({
       }
     }
 
-    let lastWatch: any;
     const getTableSettings = () => {
       preferencesManager.get().then(() => {
         tableSetup();
@@ -866,6 +868,38 @@ export default defineComponent({
             DropdownV2,
             {},
             {
+              icons: () => {
+                return h(
+                    'div',
+                    {
+                      class: 'me-n4'
+                    },
+                    h(
+                        'button',
+                        {
+                          type: 'button',
+                          class: 'btn btn-sm btn-icon btn-color-primary btn-active-light-primary',
+                          onClick: () => defaultConfig.requestExport(),
+                        },
+                        h(
+                            'span',
+                            {
+                              class: 'svg-icon svg-icon-2',
+                            },
+                            h(
+                                resolveComponent('ElTooltip'),
+                                {
+                                  content: 'خروجی اکسل',
+                                },
+                                h(
+                                    resolveComponent('inline-svg'),
+                                    {src: 'media/icons/duotune/files/fil021.svg',}
+                                )
+                            )
+                        )
+                    )
+                )
+              },
               default: () => {
                 return h(
                     'div',

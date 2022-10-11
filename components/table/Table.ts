@@ -18,6 +18,7 @@ import FieldComponentPropsInterface from "@/custom/components/FieldComponentProp
 
 export class Table {
     defaultTableName = '';
+    preferencesPrefixKey = 'table_v1_'
 
     get modelName() {
         return '';
@@ -399,7 +400,10 @@ export class Table {
             class: [
                 'align-middle pe-2 text-nowrap',
                 {
-
+                    'min-w-150px': translate.length <= 20,
+                    'min-w-250px': translate.length > 20 && translate.length < 50,
+                    'min-w-300px': translate.length >= 50 && translate.length < 60,
+                    'min-w-400px': translate.length >= 60,
                     'ps-3': index === 0,
                 }
             ],
@@ -526,17 +530,30 @@ export class Table {
 
             qf.set('json_filter', JSON.stringify(this.jsonFilters));
 
-            console.log("this.orderedField.value.length", this.orderedField.value)
             if (this.orderedField.value.name) {
                 qf.set('is_ord', '1');
                 qf.set('ord_field', this.orderedField.value.name);
                 qf.set('ord_dir', this.orderedField.value.order);
             }
 
+            if (this.isRequestingExport) {
+                qf.set('export_table_name', this.tableName);
+                qf.set('export_table_conf_name', `${this.preferencesPrefixKey}${this.tableName}`);
+                qf.set('export_current_query', '1');
+            }
+
             if (qf.toString() != '') {
                 url += `&${qf.toString()}`
             }
 
+            if (this.isRequestingExport) {
+                return ApiService.get(url, {
+                    responseType: 'blob',
+                }).then((e) => {
+                    this.downloadExportedFile(e);
+                    this.isLoading.value = false
+                }, () => this.isLoading.value = false);
+            }
             return ApiService.get(url).then(({data}) => {
                 this.isLoading.value = false;
                 this.count.value = data.count;
@@ -555,6 +572,12 @@ export class Table {
                 tableData['ord_dir'] = this.orderedField.value.order;
             }
 
+            if (this.isRequestingExport) {
+                tableData['export_table_name'] = this.tableName
+                tableData['export_table_conf_name'] = `${this.preferencesPrefixKey}${this.tableName}`
+                tableData['export_current_query'] = 1
+            }
+
             Object.keys(filters).forEach((key) => {
                 // if (filters[key])
                 tableData[key] = filters[key];
@@ -565,6 +588,14 @@ export class Table {
             // } else if (!url.endsWith('?')) {
             //     url += `?page=${this.currentPage.value}`;
             // }
+
+
+            if (this.isRequestingExport) {
+                return ApiService.get(url).then((e) => {
+                    this.downloadExportedFile(e);
+                    this.isLoading.value = false
+                }, () => this.isLoading.value = false);
+            }
 
             return ApiService.post(url, {
                 data: tableData,
@@ -615,5 +646,25 @@ export class Table {
             this.orderedField.value['order'] = 'asc';
         console.log(this.orderedField)
         this.refresh();
+    }
+
+    isRequestingExport = false;
+
+    requestExport() {
+        this.isRequestingExport = true;
+        this.onGetData()
+        this.isRequestingExport = false;
+    }
+
+    downloadExportedFile(e: any) {
+        const url = window.URL.createObjectURL(e.data);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        // the filename you want
+        a.download = 'todo-1.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
     }
 }

@@ -18,10 +18,14 @@
   >
     <!--begin::Menu item-->
     <div class="menu-item px-3">
-      <div class="menu-content fs-6 text-dark fw-bolder px-3 py-4">
-        {{ title }}
-      <span class="text-muted  fs-9 ms-3" v-if="description">{{description}}</span>
+      <div class="menu-content fs-6 text-dark fw-bolder px-3 py-4 d-flex align-items-center justify-content-between">
+        <div class="d-flex">
+          {{ title }}
+          <span class="text-muted  fs-9 ms-3" v-if="description">{{ description }}</span>
+        </div>
+        <slot name="icons"/>
       </div>
+
     </div>
     <!--end::Menu item-->
 
@@ -52,8 +56,9 @@
 
 .show + .overlay {
   display: block;
-  z-index:  1051;
+  z-index: 1051;
 }
+
 @keyframes show-animation {
   from {
     opacity: 0;
