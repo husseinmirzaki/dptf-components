@@ -43,6 +43,14 @@ tbody .table-row-container {
 
 }
 
+[item-data-id].notify-longer {
+  transition: background-color 6s ease;
+}
+
+[item-data-id].notify {
+  background-color: #c76969;
+}
+
 // //these part is used to make filters look better
 //$height: 42px;
 //.table-v2-custom {
@@ -151,7 +159,18 @@ table {
 }
 </style>
 <script lang="ts">
-import {computed, defineComponent, h, onMounted, ref, toRef, watch, withModifiers} from "vue";
+import {
+  computed,
+  defineComponent,
+  h,
+  nextTick,
+  onMounted,
+  ref,
+  resolveComponent,
+  toRef,
+  watch,
+  withModifiers
+} from "vue";
 import {Table} from "@/custom/components/table/Table";
 import TablePagination from "@/custom/components/table/TablePagination.vue";
 import Card from "@/custom/components/Card.vue";
@@ -167,6 +186,7 @@ import {Configs} from "@/Configs";
 import {DEFAULT_BUTTONS} from "@/custom/helpers/RenderFunctionHelpers";
 import TableFilter from "@/custom/components/table/TableFilter.vue";
 import Sortable from 'sortablejs';
+import {VueInstanceService} from "@/Defaults";
 
 export default defineComponent({
   props: {
@@ -230,7 +250,7 @@ export default defineComponent({
     let tableRef: any;
     let filtersRef: any;
 
-    const dList = ref(list.value);
+    const dList: any = ref(list.value);
 
     const checkAll = ref(false);
     const changedHeaders = ref<Array<any>>([]);
@@ -308,14 +328,6 @@ export default defineComponent({
       onGetData();
     });
 
-
-    // watch(headerVisibility, () => {
-    //   saveTableSettings();
-    // }, {
-    //   deep: true,
-    // });
-
-
     const checkedAnyItems = computed(() => {
       let oneIsChecked = false;
       const keys = Object.keys(checkedDataList.value);
@@ -343,7 +355,7 @@ export default defineComponent({
 
     let defaultConfig: Table = initializeConfig();
 
-    const preferencesManager = new UserPreferencesManager(`table_v1_${defaultConfig.tableName}`);
+    const preferencesManager = new UserPreferencesManager(`${defaultConfig.preferencesPrefixKey}${defaultConfig.tableName}`);
 
     preferencesManager.get();
 
@@ -371,7 +383,6 @@ export default defineComponent({
       }
     }
 
-    let lastWatch: any;
     const getTableSettings = () => {
       preferencesManager.get().then(() => {
         tableSetup();
@@ -497,6 +508,28 @@ export default defineComponent({
         )
 
       getTableSettings();
+      let lastTimeoutNotify: any;
+      let lastTimeoutNotifyLonger: any;
+      VueInstanceService.on(defaultConfig.tableName, (e) => {
+        if (e[0] == 'refresh-one') {
+          const _data: any = e[1];
+          const found = dList.value.findIndex((item) => item['id'] && item['id'] == _data['id']);
+          if (found > -1) {
+            dList.value.splice(found, 1, _data)
+            nextTick(() => {
+              const a = document.querySelector(`[item-data-id="${_data['id']}"]`)
+              if (a) {
+                a.classList.add('notify-longer');
+                a.classList.add('notify');
+                clearTimeout(lastTimeoutNotify)
+                clearTimeout(lastTimeoutNotifyLonger)
+                lastTimeoutNotify = setTimeout(() => a.classList.remove('notify'), 6000);
+                lastTimeoutNotifyLonger = setTimeout(() => a.classList.remove('notify-longer'), 12000);
+              }
+            })
+          }
+        }
+      });
       // getTableSettings().then(({data}) => {
       //     if (data.value) {
       //       const value = JSON.parse(data.value);
@@ -660,6 +693,7 @@ export default defineComponent({
             h(
                 'td',
                 {
+                  dir: 'rtl',
                   colspan: headersToIterate.filter((header) => headerVisibility.value[header]).length,
                 },
                 context.slots['empty'] ? context.slots['empty']() : "داده ای برای نمایش موجود نمی‌باشد ?"
@@ -672,6 +706,7 @@ export default defineComponent({
               {
                 key: item['id'] ? item['id'] : index,
                 'data-context-menu': 'true',
+                'item-data-id': item['id'] ? item['id'] : index,
                 onContextmenu: () => contextMenu(item),
                 onMouseenter: () => {
                   checkCheckFieldData(`check_${item['id']}`)
@@ -833,6 +868,38 @@ export default defineComponent({
             DropdownV2,
             {},
             {
+              icons: () => {
+                return h(
+                    'div',
+                    {
+                      class: 'me-n4'
+                    },
+                    h(
+                        'button',
+                        {
+                          type: 'button',
+                          class: 'btn btn-sm btn-icon btn-color-primary btn-active-light-primary',
+                          onClick: () => defaultConfig.requestExport(),
+                        },
+                        h(
+                            'span',
+                            {
+                              class: 'svg-icon svg-icon-2',
+                            },
+                            h(
+                                resolveComponent('ElTooltip'),
+                                {
+                                  content: 'خروجی اکسل',
+                                },
+                                h(
+                                    resolveComponent('inline-svg'),
+                                    {src: 'media/icons/duotune/files/fil021.svg',}
+                                )
+                            )
+                        )
+                    )
+                )
+              },
               default: () => {
                 return h(
                     'div',

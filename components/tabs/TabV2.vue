@@ -15,20 +15,22 @@
             <inline-svg :src="svgIcon"/>
           </span>
           </div>
-
-          <span class="stepper-title title" v-if="title">
-            {{ title }}
-          </span>
         </div>
       </template>
       <template v-if="!iconOnly">
-        <span class="svg-icon svg-icon-2x" v-if="svgIcon"
-              :class="{'svg-icon-primary': parent && index == parent.activeItem}">
-          <inline-svg :src="svgIcon"/>
-        </span>
+        <div class="d-flex justify-content-between">
         <span class="stepper-title" v-if="title">
         {{ title }}
       </span>
+          <div class="d-flex">
+<span class="d-flex badge px-3 py-2 mt-1 align-items-center justify-content-center fw-light " :class="`badge-${badgeColor}`" v-if="badge">{{badge}}</span>
+
+        <span class="svg-icon svg-icon-2x mx-4" v-if="svgIcon"
+              :class="{'svg-icon-success': parent && index == parent.activeItem}">
+          <inline-svg :src="svgIcon"/>
+        </span>
+            </div>
+        </div>
       </template>
     </slot>
   </div>
@@ -37,7 +39,7 @@
 import {onMounted, ref, toRef, watch} from "vue";
 
 export default {
-  props: ['title', 'active', 'parent', 'name', 'svgIcon', 'iconOnly', 'disable'],
+  props: ['title', 'active', 'parent', 'name', 'svgIcon', 'iconOnly', 'disable', 'badge', "badgeColor"],
   setup(props) {
     const index = ref(0);
     const indexUniqueName = ref('');
@@ -104,7 +106,6 @@ $active-color: #0d8ddc;
     left: 0;
     width: 100%;
     height: 100%;
-    border-bottom: 1px solid #3a86f9;
   }
 
   span.svg-icon svg {
@@ -171,6 +172,10 @@ $active-color: #0d8ddc;
       border-bottom: 1px solid $active-color;
     }
   }
+}
+.is-vertical .tab-item-v2:after {
+      border-bottom: none !important;
+      border-right: 1px solid $active-color;
 }
 .disable .stepper-title {
   color: #a6a6a6 !important;

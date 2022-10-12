@@ -277,6 +277,10 @@ class ApiService {
             if (params["params"]) {
                 conf["params"] = params["params"];
             }
+
+            if (params["responseType"]) {
+                conf["responseType"] = params["responseType"];
+            }
         } else {
             conf['headers'] = this.getAuthHeaders()
         }
