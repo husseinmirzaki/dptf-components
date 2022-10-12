@@ -30,7 +30,7 @@ export default defineComponent({
     let formInstance: any;
     let formRef: any;
 
-    const passModalInstance = (slots:Record<string, any>) => {
+    const passModalInstance = (slots: Record<string, any>) => {
       slots = {
         ...slots
       }
@@ -48,8 +48,8 @@ export default defineComponent({
 
       const table = (!props.disableTable) ? h(TableByModelName, {
         extendClass: props.tableExtendClass,
-        onUpdate: (data) => context.emit('update', data, formInstance),
-        onView: (data) => context.emit('view', data, formInstance),
+        onUpdate: (data) => context.emit('update', data, formInstance, formRef),
+        onView: (data) => context.emit('view', data, formInstance, formRef),
         title: props.tableCardTitle,
         filterModelName: props.tableModel,
         onSearchParams: props.onTableSearchParams,
@@ -68,12 +68,12 @@ export default defineComponent({
         formAsModal: props.formAsModal,
         onCancel: (e, b) => {
           formInstance.resetForm();
-          context.emit('cancel', e, b)
+          context.emit('cancel', e, b, formRef)
         },
         onDone: (e, b) => {
           VueInstanceService.emit(`${props.tableModel}Table`, ['refresh']);
           formInstance.resetForm();
-          context.emit('done', e, b)
+          context.emit('done', e, b, formRef)
         },
         onBuildFields: props.onFormBuildFields,
         cardTitle: props.formCardTitle,
