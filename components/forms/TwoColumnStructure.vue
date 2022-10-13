@@ -23,7 +23,8 @@ export default defineComponent({
     'onModalFieldsOrder',
     'disableTable',
     'disableForm',
-    'formAsModal'
+    'formAsModal',
+    'onModes'
   ],
   emits: ['formRefReady', 'update', 'done', 'cancel', 'view'],
   setup(props, context) {
@@ -89,6 +90,7 @@ export default defineComponent({
         onModalFormReady: props.onModalFormReady,
         onModalOrderField: props.onModalFieldsOrder,
         onOrderField: props.onFormFieldsOrder,
+        onModes: props.onModes
       }) : undefined
 
       return h('div', {
