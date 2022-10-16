@@ -1,6 +1,6 @@
 <template>
   <!--begin::Modal - New Address-->
-  <div class="modal fade" :id="modalId" tabindex="-1" aria-hidden="true" ref="modalEl">
+  <div class="modal fade" :id="modalId" aria-hidden="true" ref="modalEl">
     <!--begin::Modal dialog-->
     <div class="modal-dialog modal-dialog-centered" :class="modalSizeClass">
       <!--begin::Modal content-->
