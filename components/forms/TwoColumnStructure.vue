@@ -11,6 +11,7 @@ export default defineComponent({
     'tableCardTitle',
     'formCardTitle',
     'tableModel',
+    'filterModelId',
     'onTableSearchParams',
     'formModel',
     'onFormModalField',
@@ -30,7 +31,7 @@ export default defineComponent({
     let formInstance: any;
     let formRef: any;
 
-    const passModalInstance = (slots:Record<string, any>) => {
+    const passModalInstance = (slots: Record<string, any>) => {
       slots = {
         ...slots
       }
@@ -52,6 +53,7 @@ export default defineComponent({
         onView: (data) => context.emit('view', data, formInstance),
         title: props.tableCardTitle,
         filterModelName: props.tableModel,
+        filterModelId: props.filterModelId,
         onSearchParams: props.onTableSearchParams,
       }, {
         'toolbar0': () => Configs['showModelHistoryButton'] ? h(ShowModelHistoryButton, {
