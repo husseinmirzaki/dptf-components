@@ -28,7 +28,7 @@
           :onOrderField="onOrderAdd"
           :onFormReady="onFormReadyAdd"
           @cancel="$refs.sMananger.activeState = 'view'"
-          @done="$refs.sMananger.activeState = 'view'"
+          @done="$refs.sMananger.activeState = 'view';$emit('done', $event)"
       />
     </template>
   </StateManager>

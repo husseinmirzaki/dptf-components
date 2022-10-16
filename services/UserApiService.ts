@@ -18,7 +18,7 @@ export class UserApiService extends ApiService {
     }
 
     public static register(data) {
-        return ApiService.post("user/register/", {
+        return ApiService.post("user/auth/register/", {
             data: data,
             dont_set_header: true,
         });

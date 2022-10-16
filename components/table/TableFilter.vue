@@ -51,16 +51,19 @@ export default {
   setup(props) {
 
     const BOOLEAN_COMP_SELECTS = [
+      [null, 'انتخاب کنید'],
       [1, 'بلی'],
       [0, 'خیر'],
     ]
 
     const FOREIGN_COMP_SELECTS = [
+      [null, 'انتخاب کنید'],
       [1, 'مساوی'],
       [2, 'بجز'],
     ]
 
     const STRING_COMP_SELECTS = [
+      [null, 'انتخاب کنید'],
       [1, 'مساوی'],
       [2, 'بجر'],
       [3, 'شامل'],
@@ -69,6 +72,7 @@ export default {
     ]
 
     const DATE_COMP_SELECTS = [
+      [null, 'انتخاب کنید'],
       [1, 'مساوی'],
       [2, 'بجر'],
       [3, 'بزرگتر'],
@@ -78,6 +82,7 @@ export default {
     ]
 
     const INTEGER_COMP_SELECTS = [
+      [null, 'انتخاب کنید'],
       [1, 'مساوی'],
       [2, 'بجر'],
       [3, 'بزرگتر'],
@@ -307,6 +312,7 @@ export default {
             )
         )
       } else {
+        console.log("here", lastRequestedField);
         const fieldProps = {
           placeholder: lastRequestedField['label'],
           modelValue: currentData.value,
