@@ -279,7 +279,7 @@ export class Table {
             if (e[0] == 'refresh') {
                 this.refresh();
             } else {
-                // this.onTableEvent(e)
+                this.onTableEvent(e)
             }
         });
         if (this.filterForm) {
