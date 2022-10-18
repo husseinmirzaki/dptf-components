@@ -16,7 +16,7 @@ export default defineComponent({
     'modelMainName', 'modelName',
     'onBeforeSubmit', 'onAfterSubmit', 'onModes', 'onModalModes',
     'onOrderField', 'onModalOrderField', 'cardTitle',
-    'onFormSend','formAsModal',
+    'onFormSend', 'formAsModal',
   ],
   setup(props, context) {
     let formInstance: any;
@@ -171,7 +171,7 @@ export default defineComponent({
         return h(
             ModalFormOnline, {
               key: modal,
-              modalTitle: Configs['addAbleFormOnlineHideInnerModalTitle'] ? " " :localModalTitle,
+              modalTitle: Configs['addAbleFormOnlineHideInnerModalTitle'] ? " " : localModalTitle(modal),
               onFields: localModalField(modal),
               onBuildFields: localModalOnBuildFields(modal),
               onFormReady: localModalFormReady(modal),
@@ -219,8 +219,9 @@ export default defineComponent({
       )
 
       return [
+        props.formAsModal ? onlineForm : undefined,
         ...modals,
-        onlineForm
+        !props.formAsModal ? onlineForm : undefined,
       ]
     }
   }

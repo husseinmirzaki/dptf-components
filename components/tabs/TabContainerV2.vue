@@ -2,7 +2,7 @@
   <div :class="{
     'd-flex': vertical,
   }">
-    <div dir="ltr" class="d-flex tab-items-container" :class="{
+    <div dir="ltr" class="d-flex tab-items-container w-100" :class="{
     'flex-column justify-content-start align-items-end is-vertical': vertical,
     'justify-content-center align-items-center': !vertical,
   }" ref="container">
@@ -12,8 +12,8 @@
          ref="tabContainerBody">
       <slot name="tab-container" :tabNames="tabNames" :activeItem="activeItem" :routerMode="routerMode"
             :bodyHeight="bodyHeight">
-        <router-view v-if="routerMode"/>
-        <slot v-else :name="tabNames[activeItem]"/>
+        <router-view v-if="routerMode && !disableRouterView" />
+        <slot v-else-if="!disableRouterView" :name="tabNames[activeItem]"/>
       </slot>
     </div>
   </div>
@@ -45,6 +45,9 @@ export default {
       default: false,
     },
     vertical: {
+      default: false,
+    },
+    disableRouterView: {
       default: false,
     }
   },
@@ -227,7 +230,11 @@ export default {
 }
 </script>
 <style lang="scss">
-.tab-item {
-
+.tab-items-container{
+  &.is-vertical{
+    .tab-item-v2{
+      width: 165% !important;
+    }
+  }
 }
 </style>

@@ -130,7 +130,7 @@ export default {
       const promiseButton = h(PromiseButton, {
         text: "ثبت",
         onSubmitDone: (e) => {
-          context.emit('done', e);
+          context.emit('done', e, buildByModelName);
           if (props.formAsModal) {
             modalInstance.close();
           }

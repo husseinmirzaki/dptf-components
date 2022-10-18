@@ -11,6 +11,8 @@ export default defineComponent({
     'tableCardTitle',
     'formCardTitle',
     'tableModel',
+    'tableFilterField',
+    'filterModelId',
     'onTableSearchParams',
     'formModel',
     'onFormModalField',
@@ -21,41 +23,63 @@ export default defineComponent({
     'onModalBuildFields',
     'onFormFieldsOrder',
     'onModalFieldsOrder',
+    'onFormBeforeSubmit',
     'disableTable',
     'disableForm',
-    'formAsModal'
+    'formAsModal',
+    'onModes'
   ],
   emits: ['formRefReady', 'update', 'done', 'cancel', 'view'],
   setup(props, context) {
     let formInstance: any;
     let formRef: any;
+
+    const passModalInstance = (slots: Record<string, any>) => {
+      slots = {
+        ...slots
+      }
+
+      if (slots['modalButton']) {
+        slots['toolbar0'] = () => {
+          return slots['modalButton']({formRef});
+        }
+      }
+
+      return slots;
+    }
+
     return () => {
 
       const table = (!props.disableTable) ? h(TableByModelName, {
         extendClass: props.tableExtendClass,
-        onUpdate: (data) => context.emit('update', data, formInstance),
-        onView: (data) => context.emit('view', data, formInstance),
+        onUpdate: (data) => context.emit('update', data, formInstance, formRef),
+        onView: (data) => context.emit('view', data, formInstance, formRef),
         title: props.tableCardTitle,
         filterModelName: props.tableModel,
+        filterModelField: props.tableFilterField,
+        filterModelId: props.filterModelId,
         onSearchParams: props.onTableSearchParams,
       }, {
         'toolbar0': () => Configs['showModelHistoryButton'] ? h(ShowModelHistoryButton, {
           modelName: props.tableModel
         }) : undefined,
-        ...context.slots
+        ...passModalInstance(context.slots)
       }) : undefined
 
       const form = (!props.disableForm) ? h(AddAbleFormOnline, {
-        ref: (el) => context.emit('formRefReady', el),
+        ref: (el) => {
+          formRef = el;
+          context.emit('formRefReady', el)
+        },
         formAsModal: props.formAsModal,
         onCancel: (e, b) => {
           formInstance.resetForm();
-          context.emit('cancel', e, b)
+          context.emit('cancel', e, formInstance, formRef)
         },
         onDone: (e, b) => {
           VueInstanceService.emit(`${props.tableModel}Table`, ['refresh']);
           formInstance.resetForm();
-          context.emit('done', e, b)
+          context.emit('done', e, b, formRef)
         },
         onBuildFields: props.onFormBuildFields,
         cardTitle: props.formCardTitle,
@@ -71,6 +95,8 @@ export default defineComponent({
         onModalFormReady: props.onModalFormReady,
         onModalOrderField: props.onModalFieldsOrder,
         onOrderField: props.onFormFieldsOrder,
+        onBeforeSubmit:props.onFormBeforeSubmit,
+        onModes: props.onModes
       }) : undefined
 
       return h('div', {

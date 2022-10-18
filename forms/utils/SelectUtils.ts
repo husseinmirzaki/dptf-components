@@ -13,13 +13,16 @@ export function buildSelectOption(data) {
         return {value: data.id, text: data.first_name + " " + data.last_name};
     else if (data.number)
         return {value: data.id, text: data.number};
+    else if (data.type_animal)
+        return {value: data.id, text: data.type_animal};
     return data;
 }
 
 export function selectFormDataV2(formInstance: any, serverData: any) {
     serverData = Object.assign({}, serverData);
+    console.log('jigar - serverData', serverData)
     formInstance.activeFields.value.forEach((e: FieldComponentPropsInterface) => {
-        console.log(e.field_type, e.label)
+        console.log('jigar - e', e)
         if (e.field_type == "select" && e.select_multiple) {
             if (serverData[e.name]) {
                 serverData[e.name] = serverData[e.name].map(buildSelectOption)
