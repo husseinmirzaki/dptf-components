@@ -20,6 +20,26 @@
   }
 }
 
+
+.with-action-buttons {
+  th {
+    padding: 3px;
+    position: sticky;
+    left: 0;
+    background: white !important;
+    top: 0;
+    z-index: 1;
+    width: 25vw;
+  }
+
+  th:first-child, td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background: white !important;
+  }
+}
+
 th:first-child {
   .filter-place-holder .fixed-filter-container {
     right: auto !important;
@@ -810,6 +830,7 @@ export default defineComponent({
                   'table table-bordered align-middle ge-4 gy-4 table-hover table table-v2-custom',
                   {
                     'mb-0': !defaultConfig.showPagination,
+                    'with-action-buttons': defaultConfig.showActionButtons
                   }
                 ]
               }, [
