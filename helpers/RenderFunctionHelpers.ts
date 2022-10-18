@@ -161,6 +161,5 @@ export function setPageTitleUtil(title: string) {
 }
 
 export function considerSlot(context: any, key: string, data: any = undefined) {
-    context
     return context.slots[key] ? context.slots[key](data) : undefined;
 }
