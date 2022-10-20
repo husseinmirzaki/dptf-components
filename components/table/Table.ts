@@ -309,6 +309,7 @@ export class Table {
         if (this.showContextMenuView) {
             items.push({
                 state: "primary",
+                faIcon: "far fa-eye",
                 text: this.viewContextMenuText,
                 onClick: (data) => {
                     this.onViewClicked(data);
@@ -319,6 +320,7 @@ export class Table {
         if (this.showContextMenuUpdate) {
             items.push({
                 state: "warning",
+                faIcon: "fas fa-pen",
                 text: this.updateContextMenuText,
                 onClick: (data) => {
                     this.onEditClicked(data);
@@ -329,6 +331,7 @@ export class Table {
         if (this.showContextMenuDelete) {
             items.push({
                 state: "danger",
+                faIcon: "far fa-trash-alt",
                 text: this.deleteContextMenuText,
                 onClick: (data) => {
                     this.onDeleteClicked(data);

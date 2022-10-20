@@ -796,7 +796,21 @@ export default defineComponent({
                                   contextMenuItem.onClick(item)
                               },
                             },
-                            contextMenuItem.text,
+                            [
+                              //<i v-if="item.icon" :class="item.icon"></i>
+                              contextMenuItem.faIcon ? h('i', {class: contextMenuItem.faIcon}) : undefined,
+                              contextMenuItem.svgIcon ? h(
+                                  'span', {
+                                    class: [
+                                      'svg-icon me-4',
+                                      `svg-icon-${contextMenuItem.state ? contextMenuItem.state : 'primary'}`,
+                                      contextMenuItem.svgIcon.spanClass
+                                    ],
+                                  },
+                                  h(resolveComponent('inline-svg'), {src: contextMenuItem.svgIcon.src}),
+                              ) : undefined,
+                              contextMenuItem.text,
+                            ]
                         )
                       }),
                   ) : undefined;
