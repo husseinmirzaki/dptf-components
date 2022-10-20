@@ -1,5 +1,5 @@
 <template>
-  <table-t-d style="direction: ltr;" v-if="!noTd" :key="randomKey()">
+  <table-t-d style="direction: ltr;" v-if="!noTd">
     <div v-if="bool_data">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="green"/>
@@ -17,7 +17,7 @@
     </div>
   </table-t-d>
   <template v-else >
-    <div v-if="bool_data" :key="randomKey()">
+    <div v-if="bool_data">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="green"/>
         <path
@@ -26,7 +26,7 @@
       </svg>
     </div>
     <div v-else>
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" :key="randomKey()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="red"/>
         <rect x="7" y="15.3137" width="12" height="2" rx="1" transform="rotate(-45 7 15.3137)" fill="red"/>
         <rect x="8.41422" y="7" width="12" height="2" rx="1" transform="rotate(45 8.41422 7)" fill="red"/>
@@ -37,7 +37,6 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import TableTD from "@/custom/components/table/tbody/TableTD.vue";
-import {randomId} from "@/custom/helpers/random";
 
 export default defineComponent({
   components: {TableTD},
@@ -53,7 +52,6 @@ export default defineComponent({
 
     return {
       bool_data,
-      randomKey: randomId
     }
   }
 });

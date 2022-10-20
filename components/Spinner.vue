@@ -31,57 +31,16 @@ export default defineComponent({
           .catch(() => localLoading.value = false);
     });
 
-    // watch(localLoading, (e) => {
-    //   if (e) addLoader();
-    //   else removeLoader();
-    // });
-
-    onMounted(() => {
-      addLoader();
-    });
-
-    const addLoader = () => {
-      if (spinnerContainer.value && localLoading.value) {
-        nextTick(() => {
-          const loaderString = "" +
-              "      <div class=\"d-flex align-items-center align-content-center justify-content-center the-spinner\">\n" +
-              "        <span class=\"spinner-border text-primary\" role=\"status\"></span>\n" +
-              "      </div>\n";
-          const loader = document.createElement('div');
-          loader.innerHTML = loaderString;
-
-          const child = spinnerContainer.value.children[0];
-          const computedStyleMap = child.computedStyleMap();
-
-          child.classList.add('position-relative');
-          (loader.children[0] as HTMLElement).style.borderRadius = computedStyleMap.get('border-radius').toString();
-          return child.append(loader.children[0]);
-        })
-      }
-    }
-
     return () => {
-      const s = context!.slots!.default!()
-
-      if (!localLoading.value)
-        return s;
-
       return h(
           'div',
           {
             class: 'position-relative'
           },
           [
-            h(
+            localLoading.value ? h(
                 'div',
                 {
-                  // ref: (el: any) => {
-                  //   if (s[0].el) {
-                  //     console.log(s[0].el)
-                  //     const computedStyleMap = s[0].el.computedStyleMap();
-                  //     el.style.borderRadius = computedStyleMap.get('border-radius').toString();
-                  //   }
-                  // },
                   class: "d-flex align-items-center align-content-center justify-content-center the-spinner"
                 },
                 h(
@@ -91,8 +50,8 @@ export default defineComponent({
                       role: 'status',
                     }
                 )
-            ),
-            s
+            ): undefined,
+            context!.slots!.default!()
           ]
       )
 

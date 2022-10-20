@@ -724,7 +724,7 @@ export default defineComponent({
           return h(
               defaultConfig.onTBodyRowComponent(item, index),
               {
-                key: item['id'] ? 'tr_' + item['id'] : 'td_'+index,
+                key: item['id'] ? 'tr_' + item['id'] : 'tr_index_' + index,
                 'data-context-menu': 'true',
                 'item-data-id': item['id'] ? item['id'] : index,
                 onContextmenu: () => contextMenu(item),
@@ -763,11 +763,16 @@ export default defineComponent({
                   ) : undefined;
 
                   const dataTds = headersToIterate.filter((header) => headerVisibility.value[header]).map((header, headerIndex) => {
+                    const props = defaultConfig.onTBodyProps(item, header, headerIndex, index);
+                    let key = String(item['id'] ? 'td_' + item['id'] : 'td_' + index) + header + headerIndex;
+                    if (props['data']) {
+                      key += String(props['data'])
+                    }
                     return h(
                         defaultConfig.onTBodyComponent(item, header, headerIndex, index),
                         {
-                          key: String(item['id'] ? 'td_'+item['id'] : 'td_'+index) + header + headerIndex,
-                          ...defaultConfig.onTBodyProps(item, header, headerIndex, index),
+                          key: key,
+                          ...props,
                         }
                     )
                   });
