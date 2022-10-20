@@ -1,10 +1,4 @@
-<template>
-  <div ref="spinnerContainer" class="spinner">
-    <slot/>
-  </div>
-</template>
 <style>
-
 .the-spinner {
   position: absolute;
   background-color: rgba(0, 0, 0, 0.5);
@@ -16,11 +10,11 @@
 
 </style>
 <script lang="ts">
-import {computed, defineComponent, nextTick, onMounted, ref, toRefs, watch} from "vue";
+import {defineComponent, h, nextTick, onMounted, ref, toRefs, watch} from "vue";
 
 export default defineComponent({
   props: ['promise', 'loading'],
-  setup(props) {
+  setup(props, context) {
     const spinnerContainer = ref();
     const {promise, loading} = toRefs(props);
     const localLoading = ref(!!loading.value);
@@ -37,10 +31,10 @@ export default defineComponent({
           .catch(() => localLoading.value = false);
     });
 
-    watch(localLoading, (e) => {
-      if (e) addLoader();
-      else removeLoader();
-    });
+    // watch(localLoading, (e) => {
+    //   if (e) addLoader();
+    //   else removeLoader();
+    // });
 
     onMounted(() => {
       addLoader();
@@ -66,23 +60,42 @@ export default defineComponent({
       }
     }
 
-    const removeLoader = () => {
-      if (spinnerContainer.value) {
-        nextTick(() => {
-          nextTick(() => {
-            setTimeout(() => {
-              spinnerContainer.value.classList.remove('position-relative');
-              spinnerContainer.value.querySelectorAll('.the-spinner').forEach((e) => {
-                if (e) e.remove();
-              });
-            }, 500);
-          });
-        });
-      }
-    }
+    return () => {
+      const s = context!.slots!.default!()
 
-    return {
-      spinnerContainer,
+      if (!localLoading.value)
+        return s;
+
+      return h(
+          'div',
+          {
+            class: 'position-relative'
+          },
+          [
+            h(
+                'div',
+                {
+                  // ref: (el: any) => {
+                  //   if (s[0].el) {
+                  //     console.log(s[0].el)
+                  //     const computedStyleMap = s[0].el.computedStyleMap();
+                  //     el.style.borderRadius = computedStyleMap.get('border-radius').toString();
+                  //   }
+                  // },
+                  class: "d-flex align-items-center align-content-center justify-content-center the-spinner"
+                },
+                h(
+                    'span',
+                    {
+                      class: 'spinner-border text-primary',
+                      role: 'status',
+                    }
+                )
+            ),
+            s
+          ]
+      )
+
     }
   }
 });

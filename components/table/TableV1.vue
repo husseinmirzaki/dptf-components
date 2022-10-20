@@ -716,7 +716,7 @@ export default defineComponent({
                   dir: 'rtl',
                   colspan: headersToIterate.filter((header) => headerVisibility.value[header]).length,
                 },
-                context.slots['empty'] ? context.slots['empty']() : "داده ای برای نمایش موجود نمی‌باشد ?"
+                context.slots['empty'] ? context.slots['empty']() : "داده ای برای نمایش موجود نمی‌باشد ؟"
             )
         )
       } else {
@@ -724,7 +724,7 @@ export default defineComponent({
           return h(
               defaultConfig.onTBodyRowComponent(item, index),
               {
-                key: item['id'] ? item['id'] : index,
+                key: item['id'] ? 'tr_' + item['id'] : 'td_'+index,
                 'data-context-menu': 'true',
                 'item-data-id': item['id'] ? item['id'] : index,
                 onContextmenu: () => contextMenu(item),
@@ -766,7 +766,7 @@ export default defineComponent({
                     return h(
                         defaultConfig.onTBodyComponent(item, header, headerIndex, index),
                         {
-                          key: String(item['id'] ? item['id'] : index) + header + headerIndex,
+                          key: String(item['id'] ? 'td_'+item['id'] : 'td_'+index) + header + headerIndex,
                           ...defaultConfig.onTBodyProps(item, header, headerIndex, index),
                         }
                     )
