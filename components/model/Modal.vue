@@ -7,19 +7,20 @@
       <div class="modal-content">
         <div class="modal-header" :class="{'p-2': thinFooter}">
           <h5 class="modal-title fw-light" id="exampleModalLabel">{{ innerModalTitle }}</h5>
-          <div v-if="!sticky"
-               class="btn btn-sm btn-icon btn-active-icon-primary close" @click="close()"
+          <div v-if="!sticky" class="btn btn-sm btn-icon btn-active-icon-primary close" @click="close()"
           >
             <span class="svg-icon svg-icon-2x">
               <inline-svg src="media/icons/duotune/arrows/arr061.svg"/>
             </span>
           </div>
+          <slot name="modal-header"/>
         </div>
 
         <div class="modal-body" :class="[modalBodyClassExtra]">
           <slot name="modal-content" :modalId="modalId" :state="state"/>
         </div>
         <div class="modal-footer" :class="{'p-2': thinFooter}">
+          <slot name="modal-before-footer"/>
           <button type="button" class="btn btn-light-primary font-weight-bold" :class="{'mt-4': !thinFooter}"
                   v-if="!sticky"
                   @click="close()">بستن

@@ -32,7 +32,8 @@ export default defineComponent({
   emits: ['formRefReady', 'update', 'done', 'cancel', 'view'],
   setup(props, context) {
     let formInstance: any;
-    let formRef: any;
+    let expose: any = {}
+    context.expose(expose);
 
     const passModalInstance = (slots: Record<string, any>) => {
       slots = {
@@ -41,7 +42,8 @@ export default defineComponent({
 
       if (slots['modalButton']) {
         slots['toolbar0'] = () => {
-          return slots['modalButton']({formRef});
+          console.log(slots);
+          return slots['modalButton'](expose);
         }
       }
 
@@ -52,8 +54,8 @@ export default defineComponent({
 
       const table = (!props.disableTable) ? h(TableByModelName, {
         extendClass: props.tableExtendClass,
-        onUpdate: (data) => context.emit('update', data, formInstance, formRef),
-        onView: (data) => context.emit('view', data, formInstance, formRef),
+        onUpdate: (data) => context.emit('update', data, formInstance, expose['formRef']),
+        onView: (data) => context.emit('view', data, formInstance, expose['formRef']),
         title: props.tableCardTitle,
         filterModelName: props.tableModel,
         filterModelField: props.tableFilterField,
@@ -68,18 +70,18 @@ export default defineComponent({
 
       const form = (!props.disableForm) ? h(AddAbleFormOnline, {
         ref: (el) => {
-          formRef = el;
+          expose['formRef'] = el;
           context.emit('formRefReady', el)
         },
         formAsModal: props.formAsModal,
         onCancel: (e, b) => {
           formInstance.resetForm();
-          context.emit('cancel', e, formInstance, formRef)
+          context.emit('cancel', e, formInstance, expose['formRef'])
         },
         onDone: (e, b) => {
           VueInstanceService.emit(`${props.tableModel}Table`, ['refresh']);
           formInstance.resetForm();
-          context.emit('done', e, b, formRef)
+          context.emit('done', e, b, expose['formRef'])
         },
         onBuildFields: props.onFormBuildFields,
         cardTitle: props.formCardTitle,

@@ -5,8 +5,8 @@
       <div class="add-icon-item" v-if="canAddItem">
         <el-tooltip content="اضافه کردن">
             <span class="svg-icon svg-icon-3 svg-icon-primary" @click="onAddClick">
-            <inline-svg src="media/icons/duotune/arrows/arr013.svg"/>
-          </span>
+              <inline-svg src="media/icons/duotune/arrows/arr013.svg"/>
+            </span>
         </el-tooltip>
       </div>
       <label

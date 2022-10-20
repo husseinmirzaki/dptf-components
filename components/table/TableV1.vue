@@ -186,6 +186,7 @@ import {
   nextTick,
   onMounted,
   ref,
+  render,
   resolveComponent,
   toRef,
   watch,
@@ -880,14 +881,24 @@ export default defineComponent({
                   },
                   [
                     table,
-                    defaultConfig.showPagination ? h(
-                        TablePagination,
-                        {
-                          currentPage: defaultConfig.currentPage.value,
-                          count: defaultConfig.count.value,
-                          onPageSelected: onPage,
+                    defaultConfig.showPagination ? (() => {
+                      const paginator = h(
+                          TablePagination,
+                          {
+                            currentPage: defaultConfig.currentPage.value,
+                            count: defaultConfig.count.value,
+                            onPageSelected: onPage,
+                          }
+                      );
+                      if (defaultConfig.teleportPaginationToSelector != '') {
+                        const elementToTeleportTo = document.querySelector(defaultConfig.teleportPaginationToSelector)
+                        if (elementToTeleportTo) {
+                          render(paginator, elementToTeleportTo);
+                          return undefined;
                         }
-                    ) : undefined,
+                      }
+                      return paginator
+                    })() : undefined,
                   ]
               );
               return cardBody;
@@ -980,9 +991,7 @@ export default defineComponent({
         bodyPaddingClass: "m-0",
         onSelectedNavItem: (e) => context.emit('selectedNavItem', e),
         ...context.attrs,
-      }, {
-        ...slots,
-      });
+      }, slots);
 
 
       return [

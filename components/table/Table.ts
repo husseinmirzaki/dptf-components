@@ -171,6 +171,7 @@ export class Table {
     isLoading: Ref<boolean> = ref(false);
 
     basePushAddress = '';
+    teleportPaginationToSelector = '';
 
     showPagination = true;
 
