@@ -7,13 +7,13 @@
       <div class="modal-content">
         <div class="modal-header" :class="{'p-2': thinFooter}">
           <h5 class="modal-title fw-light" id="exampleModalLabel">{{ innerModalTitle }}</h5>
+          <slot name="modal-header"/>
           <div v-if="!sticky" class="btn btn-sm btn-icon btn-active-icon-primary close" @click="close()"
           >
             <span class="svg-icon svg-icon-2x">
               <inline-svg src="media/icons/duotune/arrows/arr061.svg"/>
             </span>
           </div>
-          <slot name="modal-header"/>
         </div>
 
         <div class="modal-body" :class="[modalBodyClassExtra]">

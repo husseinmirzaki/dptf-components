@@ -15,6 +15,7 @@ import TableTDColor from "@/custom/components/table/tbody/TableTDColor.vue";
 import TableTr from "@/custom/components/table/TableTr.vue";
 import TableTDDate from "@/custom/components/table/tbody/TableTDDate.vue";
 import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
+import TableTDCurrency from "@/custom/components/table/tbody/TableTDCurrency.vue";
 
 export class Table {
     defaultTableName = '';
@@ -445,7 +446,7 @@ export class Table {
             else if (item[header].first_name && item[header].last_name)
                 itemElement = `${item[header].first_name} ${item[header].last_name}`;
             else if (item[header].number)
-                itemElement = item[header].title;
+                itemElement = item[header].number;
             else
                 itemElement = item[header];
         } else {
@@ -468,6 +469,11 @@ export class Table {
 
         if (this.tBodyComponents[header]) {
             return this.tBodyComponents[header];
+        }
+
+        const lowerHeader = header.toLowerCase();
+        if (lowerHeader.search(/(cost)|(price)/) > -1) {
+            return TableTDCurrency
         }
 
         const data = item[header];
