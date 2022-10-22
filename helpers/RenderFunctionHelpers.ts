@@ -73,6 +73,7 @@ export const DEFAULT_BUTTONS = {
     "primary": (props: any, children: any) => DEFAULT_BUTTONS.default(props, children, "btn-primary"),
     "secondary": (props: any, children: any) => DEFAULT_BUTTONS.default(props, children, "btn-secondary"),
     "danger": (props: any, children: any) => DEFAULT_BUTTONS.default(props, children, "btn-danger"),
+    "success": (props: any, children: any) => DEFAULT_BUTTONS.default(props, children, "btn-success"),
     "icon": (buttonProps: any, iconProps: any) => {
         return DEFAULT_BUTTONS.default(buttonProps, icon(iconProps))
     },

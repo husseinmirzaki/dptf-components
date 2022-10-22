@@ -426,7 +426,7 @@ export class CreateForm<T extends FieldsInterface = any> {
                         // we expect number fieldType to return
                         // a number so number validation schema
                         // is used
-                        addValidationToModes(e.name, Yup.number().required().label(text));
+                        addValidationToModes(e.name, Yup.number().transform((e) => isNaN(e) ? undefined : e).required().label(text));
                     } else {
                         // strings can be anything so, we will only check
                         // for any condition only if field is required
