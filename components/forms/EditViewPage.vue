@@ -5,7 +5,7 @@
           :class="$attrs.class"
           :disable-drag="true"
           :card-title="pageTitle"
-
+          :disableTitle="disableTitle"
           :onFields="onFieldsRead"
           :onModes="onReadModes"
           :onBuildFields="onModalBuildFields"
@@ -27,9 +27,8 @@
           :onFields="onFieldsAdd"
           :onOrderField="onOrderAdd"
           :onFormReady="onFormReadyAdd"
-          :show-cancel-button="true"
           @cancel="$refs.sMananger.activeState = 'view'"
-          @done="$refs.sMananger.activeState = 'view'"
+          @done="$refs.sMananger.activeState = 'view';$emit('done', $event)"
       />
     </template>
   </StateManager>
@@ -44,7 +43,7 @@ export default defineComponent({
   props: [
     'pageTitle',
     'modelName',
-    'onFieldsRead', 'onOrderRead', 'onReadTableCreation', 'onFormReadyRead',
+    'onFieldsRead', 'onOrderRead', 'onReadTableCreation', 'onFormReadyRead', 'disableTitle',
     'onFieldsAdd', 'onOrderAdd', 'onFormReadyAdd','onBuildFields','onModalBuildFields','onReadBuildFields','onModes','onReadModes',
   ],
   components: {StateManager, SimpleReadOnlyFormOnline, AddAbleFormOnline},

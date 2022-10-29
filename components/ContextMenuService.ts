@@ -2,9 +2,14 @@ import {Ref, ref} from "vue";
 
 export class ContextMenuItem {
     icon?: string;
+    faIcon?: string;
+    svgIcon?: {
+        spanClass?: any,
+        src?: string,
+    };
     text?: string;
     onClick?: (e) => void;
-    state?: "primary"|"secondary"|"danger"|"info"|"warning"
+    state?: "primary" | "success" | "secondary" | "danger" | "info" | "warning"
 }
 
 export class ContextMenuService {

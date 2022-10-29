@@ -1,11 +1,13 @@
 <template>
   <table-t-d>
-    <div class="user-profile-stack">
+    <div class="user-profile-stack"  @click="$viewerApi({
+      images: firstThree.map((e) => e.avatar ? e.avatar : 'media/avatars/150-26.jpg'),
+      })">
       <div
           v-for="(user,index) in firstThree" :key="index"
           class="cursor-pointer symbol symbol-40px user-profile"
           title="User profile">
-        <img src="media/avatars/150-26.jpg" alt="metronic">
+        <img :src="user.avatar ? user.avatar : 'media/avatars/150-26.jpg'" alt="metronic">
       </div>
     </div>
   </table-t-d>

@@ -1,5 +1,5 @@
 <script lang="ts">
-import {ref, watch, h} from "vue";
+import {h, ref, watch} from "vue";
 import Modal from "@/custom/components/model/Modal.vue";
 import FormBuilder from "@/custom/components/FormBuilder.vue";
 import FormContainer from "@/custom/components/FormContainer.vue";
@@ -9,7 +9,7 @@ import FixedHeightLoader from "@/custom/components/forms/FixedHeightLoader.vue";
 import FixedHeightAccess from "@/custom/components/forms/FixedHeightAccess.vue";
 
 export default {
-  props: ['modelName', 'overrideOptions', 'onFields', 'onOrderField', 'onFormReady'],
+  props: ['modelName', 'overrideOptions', 'onFields', 'onOrderField', 'onBuildFields', 'onFormReady', 'onModes'],
   setup(props, context) {
     const modal = ref();
     const formRef = ref();
@@ -18,8 +18,10 @@ export default {
         props.modelName,
         {
           overrideOptions: props.overrideOptions,
+          onBuildFields: props.onBuildFields,
           onFields: props.onFields,
           onOrderField: props.onOrderField,
+          onModes: props.onModes,
           isUsingModal: true,
         }
     );
@@ -66,9 +68,9 @@ export default {
         },
         'modal-footer': () => {
           return h(PromiseButton, {
-            onSubmitDone: () => {
+            onSubmitDone: (e) => {
               buildByModelName.formInstance!.formInstance.resetForm();
-              modal.value.close();
+              modal.value.close(e);
               context.emit('done')
             },
             onClicked: (event) => {

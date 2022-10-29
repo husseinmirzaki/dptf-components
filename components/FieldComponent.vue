@@ -5,8 +5,8 @@
       <div class="add-icon-item" v-if="canAddItem">
         <el-tooltip content="اضافه کردن">
             <span class="svg-icon svg-icon-3 svg-icon-primary" @click="onAddClick">
-            <inline-svg src="media/icons/duotune/arrows/arr013.svg"/>
-          </span>
+              <inline-svg src="media/icons/duotune/arrows/arr013.svg"/>
+            </span>
         </el-tooltip>
       </div>
       <label
@@ -83,7 +83,7 @@
         <Field
             :class="[defaultInputClasses, input_class]"
             :id="field_id"
-            :readonly="read_only"
+            :readonly="processedReadOnly()"
             :placeholder="placeholder"
             :as="field_type"
             :name="name"
@@ -103,8 +103,8 @@
         >
           <DatePicker
               :name="name"
-              :readonly="read_only"
-              :disabled="read_only"
+              :readonly="processedReadOnly()"
+              :disabled="processedReadOnly()"
               :placeholder="placeholder"
               :modelValue="this.$props.modelValue"
               :type="$props.dateTimeType"
@@ -128,6 +128,7 @@
             <input
                 class="form-check-input"
                 type="checkbox"
+                :name="name"
                 :checked="this.$props.modelValue"
                 @change="$emit('update:modelValue', fieldRef.checked)"
                 ref="fieldRef">
@@ -149,7 +150,7 @@
               :id="field_id"
               :class="[defaultInputClasses, input_class]"
               :is="selected_component"
-              :readonly="read_only"
+              :readonly="processedReadOnly()"
               :placeholder="placeholder"
               :name="name"
               :modelValue="this.$props.modelValue"
@@ -161,7 +162,7 @@
       <template v-else-if="field_type === 'file'">
         <Field
             :class="[defaultInputClasses, input_class]"
-            :readonly="read_only"
+            :readonly="processedReadOnly()"
             :placeholder="placeholder"
             :type="field_type"
             :name="name"
@@ -198,7 +199,7 @@
       <template v-else-if="field_type === 'currency'">
         <Field
             :class="[defaultInputClasses, input_class]"
-            :readonly="read_only"
+            :readonly="processedReadOnly()"
             :placeholder="placeholder"
             type="text"
             :name="name"
@@ -206,6 +207,7 @@
             ref="fieldRef"
         >
           <input type="text"
+                 :readonly="processedReadOnly()"
                  @keyup="formatCurrency($refs.fieldRef.$el.nextElementSibling)"
                  :class="[defaultInputClasses, input_class]"
                  v-model="currency"
@@ -215,7 +217,7 @@
       <template v-else>
         <Field
             :class="[defaultInputClasses, input_class]"
-            :readonly="read_only"
+            :readonly="processedReadOnly()"
             :placeholder="placeholder"
             :type="field_type"
             :name="name"
@@ -235,7 +237,7 @@
   </div>
 </template>
 <script lang="ts">
-import {computed, defineComponent, nextTick, onMounted, ref, toRef, watch} from "vue";
+import {computed, defineComponent, isRef, nextTick, onMounted, ref, toRef, watch} from "vue";
 import {ErrorMessage, Field} from "vee-validate";
 import {$, select2} from "@/custom/helpers/select2_decelaration";
 import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
@@ -247,6 +249,7 @@ import {VueInstanceService} from "@/Defaults";
 import AutoComplete from "@/custom/components/forms/AutoComplete.vue";
 import {deformatNumber, formatCurrency} from "@/custom/components/FieldComponentCurrency.js"
 import Select2AlternativeField from "@/custom/components/Select2AlternativeField.vue";
+import {read} from "@popperjs/core";
 
 export default defineComponent({
   name: "field-component",
@@ -389,7 +392,6 @@ export default defineComponent({
     },
   },
   setup(props, context) {
-
     const col_class = toRef(props, "col_class");
     const one_line = toRef(props, "one_line");
     const field_type = toRef(props, "field_type");
@@ -494,7 +496,7 @@ export default defineComponent({
 
         if (modalParent != null) {
           // using first child to support better scrolling behaviour
-          select_options.value["dropdownParent"] = modalParent;
+          select_options.value["dropdownParent"] = $(modalParent);
         }
         if (select_filter_id.value) {
           const v = select_filter_id.value as any;
@@ -516,9 +518,9 @@ export default defineComponent({
         }
 
         if (modal_id.value) {
-          select_options.value["dropdownParent"] = document.querySelector(
+          select_options.value["dropdownParent"] = $(document.querySelector(
               `${modal_id.value}`
-          );
+          ));
         }
 
         const urlFunc = () => {
@@ -677,7 +679,10 @@ export default defineComponent({
       col_class_c,
       one_line_field_classes_c,
       one_line_label_classes_c,
-    };
+      processedReadOnly: () => {
+        return isRef(read_only) ? read_only.value : read_only;
+      }
+    }
     return sendToUser;
   },
 });

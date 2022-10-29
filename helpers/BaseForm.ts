@@ -280,9 +280,9 @@ export class CreateForm<T extends FieldsInterface = any> {
         const r = this.refs[mode].value ? this.refs[mode].value : this.refs[mode];
 
         Object.keys(r).forEach((e1) => {
-            if (r[e1] instanceof FileList) {
+            const field = this.fields.find((field) => field.name == e1);
+            if (field && (r[e1] instanceof FileList || field.isFile)) {
                 for (let i = 0; i < r[e1].length; i++) {
-                    const field = this.fields.find((field) => field.name == e1);
                     if (field) {
                         if (!files[field.name] && is_array.indexOf(field.name) > -1)
                             files[field.name] = [];
@@ -426,7 +426,7 @@ export class CreateForm<T extends FieldsInterface = any> {
                         // we expect number fieldType to return
                         // a number so number validation schema
                         // is used
-                        addValidationToModes(e.name, Yup.number().required().label(text));
+                        addValidationToModes(e.name, Yup.number().transform((e) => isNaN(e) ? undefined : e).required().label(text));
                     } else {
                         // strings can be anything so, we will only check
                         // for any condition only if field is required
@@ -524,6 +524,7 @@ export class CreateForm<T extends FieldsInterface = any> {
         // if any file is selected then it means that we should
         // use FormData otherwise a JsonObject is used
         if (this.extractFiles().length > 0) {
+            console.log("sending files");
             // in case we need to Return FormData
             // we should know which field is an
             // array to do so we use multiple
@@ -721,8 +722,8 @@ export class CreateForm<T extends FieldsInterface = any> {
     }
 
     setDefaults() {
-        this.modeFields[this.theActiveMode].forEach((field)=>{
-            if (field.defaultValue){
+        this.modeFields[this.theActiveMode].forEach((field) => {
+            if (field.defaultValue) {
                 this.elementRefs[field.name].setValue(field.defaultValue)
             }
         })

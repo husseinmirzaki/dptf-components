@@ -170,11 +170,14 @@ class ApiService {
 
                 } else if (result.response.status >= 500 && result.response.status < 600) {
                     // tell user its server error
-                    VueInstanceService.showErrorMessage(
-                        "مشکلی در اتصال به سرور رخ داد",
-                        "مشکل اتصال",
-                        0
-                    );
+                    if (!VueInstanceService.ignoreServerError)
+                        VueInstanceService.showErrorMessage(
+                            "مشکلی در اتصال به سرور رخ داد",
+                            "مشکل اتصال",
+                            0
+                        );
+                    else
+                        VueInstanceService.ignoreServerError = false;
                     reject(result);
                 } else {
                     reject(result);
@@ -222,10 +225,16 @@ class ApiService {
     }
 
     static wrap(func: () => Promise<any>) {
+        const promise = new Promise((resolve, reject) => {
+            this.handleTokenRefresh(func, resolve, reject);
+        });
+
+        promise.then(() => {
+            VueInstanceService.ignoreServerError = false;
+        })
+
         return this.hre(
-            new Promise((resolve, reject) => {
-                this.handleTokenRefresh(func, resolve, reject);
-            })
+            promise
         )
     }
 
@@ -267,6 +276,10 @@ class ApiService {
 
             if (params["params"]) {
                 conf["params"] = params["params"];
+            }
+
+            if (params["responseType"]) {
+                conf["responseType"] = params["responseType"];
             }
         } else {
             conf['headers'] = this.getAuthHeaders()
@@ -416,22 +429,31 @@ class ApiService {
         });
     }
 
-    public static list(customUrl: string | undefined=undefined) {
+    public static list(customUrl: string | undefined = undefined, params: any = undefined) {
         if (customUrl)
             return this.get(customUrl);
-        return this.get(this.url);
+        return this.get(this.url, params ? {
+            params
+        } : undefined);
     }
 
-    public static getOne(id) {
-        return this.get(this.baseUrl + `${id}/`)
+    public static getOne(id, params: any = undefined) {
+        return this.get(this.baseUrl + `${id}/`, params ? {
+            params
+        } : undefined)
     }
 
-    public static deleteOne(id) {
-        return this.delete(`${this.baseUrl}${id}/`);
+    public static deleteOne(id, params: any = undefined) {
+        VueInstanceService.ignoreServerError = true;
+        return this.delete(`${this.baseUrl}${id}/`, params ? {
+            params
+        } : undefined);
     }
 
-    public static deleteAll() {
-        return this.delete(`${this.baseUrl}/all/`);
+    public static deleteAll(params: any = undefined) {
+        return this.delete(`${this.baseUrl}/all/`, params ? {
+            params
+        } : undefined);
     }
 
     public static buildCreateOneUrl() {

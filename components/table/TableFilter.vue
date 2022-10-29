@@ -51,16 +51,19 @@ export default {
   setup(props) {
 
     const BOOLEAN_COMP_SELECTS = [
+      [null, 'انتخاب کنید'],
       [1, 'بلی'],
       [0, 'خیر'],
     ]
 
     const FOREIGN_COMP_SELECTS = [
+      [null, 'انتخاب کنید'],
       [1, 'مساوی'],
       [2, 'بجز'],
     ]
 
     const STRING_COMP_SELECTS = [
+      [null, 'انتخاب کنید'],
       [1, 'مساوی'],
       [2, 'بجر'],
       [3, 'شامل'],
@@ -69,6 +72,7 @@ export default {
     ]
 
     const DATE_COMP_SELECTS = [
+      [null, 'انتخاب کنید'],
       [1, 'مساوی'],
       [2, 'بجر'],
       [3, 'بزرگتر'],
@@ -78,6 +82,7 @@ export default {
     ]
 
     const INTEGER_COMP_SELECTS = [
+      [null, 'انتخاب کنید'],
       [1, 'مساوی'],
       [2, 'بجر'],
       [3, 'بزرگتر'],
@@ -90,6 +95,7 @@ export default {
     // current data
     const currentData = ref();
     const currentComp = ref();
+    const reRendered = ref(0);
 
     // element refs
     let filterContainer;
@@ -128,7 +134,18 @@ export default {
     }
 
     const showFilters = () => {
-      filterContainer.style.display = 'block';
+      if (!filterContainer) {
+        reRendered.value++;
+        nextTick(() => {
+          if (filterContainer)
+            filterContainer.style.display = 'block';
+          else
+            nextTick(() => {
+              filterContainer.style.display = 'block';
+            })
+        })
+      } else
+        filterContainer.style.display = 'block';
     }
 
     const hideFilters = () => {
@@ -234,6 +251,12 @@ export default {
 
 
     return () => {
+
+      if (reRendered.value !== 0) {
+        reRendered.value = 0;
+        return;
+      }
+
       const CURRENT_COMP_SELECT = (() => {
         if (!lastRequestedField)
           return [];
@@ -289,6 +312,7 @@ export default {
             )
         )
       } else {
+        console.log("here", lastRequestedField);
         const fieldProps = {
           placeholder: lastRequestedField['label'],
           modelValue: currentData.value,
@@ -427,7 +451,7 @@ export default {
           ]
       ));
 
-      const container = h(
+      return h(
           'div',
           {
             onClick: () => {
@@ -454,8 +478,6 @@ export default {
               )
           )
       );
-
-      return container;
     }
   }
 }

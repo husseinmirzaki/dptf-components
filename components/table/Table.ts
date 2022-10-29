@@ -15,9 +15,11 @@ import TableTDColor from "@/custom/components/table/tbody/TableTDColor.vue";
 import TableTr from "@/custom/components/table/TableTr.vue";
 import TableTDDate from "@/custom/components/table/tbody/TableTDDate.vue";
 import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
+import TableTDCurrency from "@/custom/components/table/tbody/TableTDCurrency.vue";
 
 export class Table {
     defaultTableName = '';
+    preferencesPrefixKey = 'table_v1_'
 
     get modelName() {
         return '';
@@ -170,8 +172,13 @@ export class Table {
     isLoading: Ref<boolean> = ref(false);
 
     basePushAddress = '';
+    teleportPaginationToSelector = '';
 
     showPagination = true;
+
+    currentPage = ref(1)
+
+    count = ref(0)
 
     get showActionButtons() {
         return Configs.showTableActionButtons;
@@ -221,6 +228,13 @@ export class Table {
                 if (e.value) {
                     this.service.deleteOne(this.getDeleteItemId(data)).then(() => {
                         this.onDataDeleted(data)
+                    }, (e) => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'توجه کنید',
+                            text: 'داده ای که می خواهید آنرا پاک کنید در بخش های دیگری استفاده شده لطفا اول آن موارد را پاک کنید',
+                            confirmButtonText: 'حذف شود',
+                        });
                     });
                 }
             } else {
@@ -297,6 +311,7 @@ export class Table {
         if (this.showContextMenuView) {
             items.push({
                 state: "primary",
+                faIcon: "far fa-eye",
                 text: this.viewContextMenuText,
                 onClick: (data) => {
                     this.onViewClicked(data);
@@ -307,6 +322,7 @@ export class Table {
         if (this.showContextMenuUpdate) {
             items.push({
                 state: "warning",
+                faIcon: "fas fa-pen",
                 text: this.updateContextMenuText,
                 onClick: (data) => {
                     this.onEditClicked(data);
@@ -317,6 +333,7 @@ export class Table {
         if (this.showContextMenuDelete) {
             items.push({
                 state: "danger",
+                faIcon: "far fa-trash-alt",
                 text: this.deleteContextMenuText,
                 onClick: (data) => {
                     this.onDeleteClicked(data);
@@ -385,9 +402,16 @@ export class Table {
         }
 
         return {
-            class: {
-                'ps-3': index === 0,
-            },
+            class: [
+                'align-middle pe-2 text-nowrap',
+                {
+                    'min-w-150px': translate.length <= 20,
+                    'min-w-250px': translate.length > 20 && translate.length < 50,
+                    'min-w-300px': translate.length >= 50 && translate.length < 60,
+                    'min-w-400px': translate.length >= 60,
+                    'ps-3': index === 0,
+                }
+            ],
             header: translate,
         };
     }
@@ -406,7 +430,7 @@ export class Table {
 
     onTBodyProps(item, header, index, rowIndex: string | number | undefined = undefined): any {
         let itemElement = Object.assign(item);
-        if (header.search('.') > -1) {
+        if (header.search(/\./) > -1) {
             const s = header.split('.');
             for (const i in s) {
                 if (itemElement[s[i]]) {
@@ -416,6 +440,15 @@ export class Table {
                     break;
                 }
             }
+        } else if (item[header]) {
+            if (item[header].title)
+                itemElement = item[header].title;
+            else if (item[header].first_name && item[header].last_name)
+                itemElement = `${item[header].first_name} ${item[header].last_name}`;
+            else if (item[header].number)
+                itemElement = item[header].number;
+            else
+                itemElement = item[header];
         } else {
             itemElement = item[header];
         }
@@ -438,6 +471,11 @@ export class Table {
             return this.tBodyComponents[header];
         }
 
+        const lowerHeader = header.toLowerCase();
+        if (lowerHeader.search(/(cost)|(price)/) > -1) {
+            return TableTDCurrency
+        }
+
         const data = item[header];
         if (data != null) {
             if (typeof data === 'boolean') {
@@ -449,6 +487,8 @@ export class Table {
                     return TableTDBool;
                 else if (data.match(/^\d{4}-\d{1,2}-\d{1,2}$/)) {
                     return TableTDDate;
+                } else if (data.match(/^\d{4}-\d{1,2}-\d{1,2}T\d{1,2}:\d{1,2}:\d{1,2}$/)) {
+                    return TableTDDateTime;
                 }
                 // matches the json iso formatted datetime
                 else if ((data.endsWith('Z') && data.search(/[:\-T]{2,}/) > -1) || data.split(/\d+[:\-T]/).length > 2) {
@@ -456,7 +496,7 @@ export class Table {
                 }
             } else if (typeof data === 'object') {
                 if (Array.isArray(data) && data.length > 0) {
-                    if (data[0]['avatar'] || data[0]['full_name'] || data[0]['last_name']) {
+                    if (data[0]['avatar'] || data[0]['first_name'] != null || data[0]['last_name'] != null) {
                         return TableTDUserMulti;
                     }
                 } else if (data.length === 0) {
@@ -475,9 +515,6 @@ export class Table {
     get canUseUrl() {
         return this.props.url.value != '';
     }
-
-    currentPage = ref(1)
-    count = ref(0)
 
     getFilters(): Record<string, any> {
         if (this.filterForm) {
@@ -503,17 +540,30 @@ export class Table {
 
             qf.set('json_filter', JSON.stringify(this.jsonFilters));
 
-            console.log("this.orderedField.value.length", this.orderedField.value)
             if (this.orderedField.value.name) {
                 qf.set('is_ord', '1');
                 qf.set('ord_field', this.orderedField.value.name);
                 qf.set('ord_dir', this.orderedField.value.order);
             }
 
+            if (this.isRequestingExport) {
+                qf.set('export_table_name', this.tableName);
+                qf.set('export_table_conf_name', `${this.preferencesPrefixKey}${this.tableName}`);
+                qf.set('export_current_query', '1');
+            }
+
             if (qf.toString() != '') {
                 url += `&${qf.toString()}`
             }
 
+            if (this.isRequestingExport) {
+                return ApiService.get(url, {
+                    responseType: 'blob',
+                }).then((e) => {
+                    this.downloadExportedFile(e);
+                    this.isLoading.value = false
+                }, () => this.isLoading.value = false);
+            }
             return ApiService.get(url).then(({data}) => {
                 this.isLoading.value = false;
                 this.count.value = data.count;
@@ -532,6 +582,12 @@ export class Table {
                 tableData['ord_dir'] = this.orderedField.value.order;
             }
 
+            if (this.isRequestingExport) {
+                tableData['export_table_name'] = this.tableName
+                tableData['export_table_conf_name'] = `${this.preferencesPrefixKey}${this.tableName}`
+                tableData['export_current_query'] = 1
+            }
+
             Object.keys(filters).forEach((key) => {
                 // if (filters[key])
                 tableData[key] = filters[key];
@@ -542,6 +598,14 @@ export class Table {
             // } else if (!url.endsWith('?')) {
             //     url += `?page=${this.currentPage.value}`;
             // }
+
+
+            if (this.isRequestingExport) {
+                return ApiService.get(url).then((e) => {
+                    this.downloadExportedFile(e);
+                    this.isLoading.value = false
+                }, () => this.isLoading.value = false);
+            }
 
             return ApiService.post(url, {
                 data: tableData,
@@ -588,10 +652,29 @@ export class Table {
             this.orderedField.value['order'] = 'desc';
         else if (this.orderedField.value['order'] == 'desc') {
             this.orderedField.value = {};
-        }
-        else
+        } else
             this.orderedField.value['order'] = 'asc';
         console.log(this.orderedField)
         this.refresh();
+    }
+
+    isRequestingExport = false;
+
+    requestExport() {
+        this.isRequestingExport = true;
+        this.onGetData()
+        this.isRequestingExport = false;
+    }
+
+    downloadExportedFile(e: any) {
+        const url = window.URL.createObjectURL(e.data);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        // the filename you want
+        a.download = 'todo-1.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
     }
 }

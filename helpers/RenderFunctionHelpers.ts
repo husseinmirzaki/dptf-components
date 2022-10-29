@@ -1,5 +1,6 @@
-import {h} from "vue";
+import {h, onMounted, resolveComponent} from "vue";
 import InlineSvg from "vue-inline-svg";
+import {VueInstanceService} from "@/Defaults";
 
 function addClass(klass, add: string) {
     if (klass) {
@@ -71,6 +72,8 @@ export const DEFAULT_BUTTONS = {
     "default": (props: any, children: any, type = "") => button(props, children, type),
     "primary": (props: any, children: any) => DEFAULT_BUTTONS.default(props, children, "btn-primary"),
     "secondary": (props: any, children: any) => DEFAULT_BUTTONS.default(props, children, "btn-secondary"),
+    "danger": (props: any, children: any) => DEFAULT_BUTTONS.default(props, children, "btn-danger"),
+    "success": (props: any, children: any) => DEFAULT_BUTTONS.default(props, children, "btn-success"),
     "icon": (buttonProps: any, iconProps: any) => {
         return DEFAULT_BUTTONS.default(buttonProps, icon(iconProps))
     },
@@ -130,16 +133,34 @@ function row(options, children) {
 export const DEFAULT_COLS = {
     "row": (options, children) => row(options, children),
     "col": (options, children) => col(options, children),
-    "col1": (children) => col({class:'col-2'}, children),
-    "col2": (children) => col({class:'col-2'}, children),
-    "col3": (children) => col({class:'col-3'}, children),
-    "col4": (children) => col({class:'col-4'}, children),
-    "col5": (children) => col({class:'col-5'}, children),
-    "col6": (children) => col({class:'col-6'}, children),
-    "col7": (children) => col({class:'col-7'}, children),
-    "col8": (children) => col({class:'col-8'}, children),
-    "col9": (children) => col({class:'col-9'}, children),
-    "col10": (children) => col({class:'col-10'}, children),
-    "col11": (children) => col({class:'col-11'}, children),
-    "col12": (children) => col({class:'col-12'}, children),
+    "col1": (children) => col({class: 'col-2'}, children),
+    "col2": (children) => col({class: 'col-2'}, children),
+    "col3": (children) => col({class: 'col-3'}, children),
+    "col4": (children) => col({class: 'col-4'}, children),
+    "col5": (children) => col({class: 'col-5'}, children),
+    "col6": (children) => col({class: 'col-6'}, children),
+    "col7": (children) => col({class: 'col-7'}, children),
+    "col8": (children) => col({class: 'col-8'}, children),
+    "col9": (children) => col({class: 'col-9'}, children),
+    "col10": (children) => col({class: 'col-10'}, children),
+    "col11": (children) => col({class: 'col-11'}, children),
+    "col12": (children) => col({class: 'col-12'}, children),
+}
+
+export function routerView() {
+    return {
+        setup() {
+            return () => h(resolveComponent('router-view'))
+        }
+    }
+}
+
+export function setPageTitleUtil(title: string) {
+    onMounted(() => {
+        VueInstanceService.setPageTitle(title);
+    });
+}
+
+export function considerSlot(context: any, key: string, data: any = undefined) {
+    return context.slots[key] ? context.slots[key](data) : undefined;
 }

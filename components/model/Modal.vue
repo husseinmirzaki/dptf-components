@@ -1,14 +1,14 @@
 <template>
   <!--begin::Modal - New Address-->
-  <div class="modal fade" :id="modalId" tabindex="-1" aria-hidden="true" ref="modalEl">
+  <div class="modal fade" :id="modalId" aria-hidden="true" ref="modalEl">
     <!--begin::Modal dialog-->
     <div class="modal-dialog modal-dialog-centered" :class="modalSizeClass">
       <!--begin::Modal content-->
       <div class="modal-content">
         <div class="modal-header" :class="{'p-2': thinFooter}">
           <h5 class="modal-title fw-light" id="exampleModalLabel">{{ innerModalTitle }}</h5>
-          <div v-if="!sticky"
-               class="btn btn-sm btn-icon btn-active-icon-primary close" @click="close()"
+          <slot name="modal-header"/>
+          <div v-if="!sticky" class="btn btn-sm btn-icon btn-active-icon-primary close" @click="close()"
           >
             <span class="svg-icon svg-icon-2x">
               <inline-svg src="media/icons/duotune/arrows/arr061.svg"/>
@@ -20,6 +20,7 @@
           <slot name="modal-content" :modalId="modalId" :state="state"/>
         </div>
         <div class="modal-footer" :class="{'p-2': thinFooter}">
+          <slot name="modal-before-footer"/>
           <button type="button" class="btn btn-light-primary font-weight-bold" :class="{'mt-4': !thinFooter}"
                   v-if="!sticky"
                   @click="close()">بستن
@@ -105,6 +106,7 @@ export default defineComponent({
         VueInstanceService.emit(`${event}.bs.modal`, {
           modalId: this.modalId,
           event: e,
+          data: this.event,
         });
         this.$emit(event, {event: e, data: this.event});
       }

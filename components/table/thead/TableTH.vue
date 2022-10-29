@@ -87,6 +87,10 @@ th.custom-table-th {
     font-weight: 300 !important;
   }
 
+  &:hover {
+    background: #e3e2e2;
+  }
+
   .custom-table-th-second {
     white-space: nowrap;
     height: $p_height !important;

@@ -1,10 +1,4 @@
-<template>
-  <div ref="spinnerContainer" class="spinner">
-    <slot/>
-  </div>
-</template>
 <style>
-
 .the-spinner {
   position: absolute;
   background-color: rgba(0, 0, 0, 0.5);
@@ -16,11 +10,11 @@
 
 </style>
 <script lang="ts">
-import {computed, defineComponent, nextTick, onMounted, ref, toRefs, watch} from "vue";
+import {defineComponent, h, nextTick, onMounted, ref, toRefs, watch} from "vue";
 
 export default defineComponent({
   props: ['promise', 'loading'],
-  setup(props) {
+  setup(props, context) {
     const spinnerContainer = ref();
     const {promise, loading} = toRefs(props);
     const localLoading = ref(!!loading.value);
@@ -37,52 +31,30 @@ export default defineComponent({
           .catch(() => localLoading.value = false);
     });
 
-    watch(localLoading, (e) => {
-      if (e) addLoader();
-      else removeLoader();
-    });
+    return () => {
+      return h(
+          'div',
+          {
+            class: 'position-relative'
+          },
+          [
+            localLoading.value ? h(
+                'div',
+                {
+                  class: "d-flex align-items-center align-content-center justify-content-center the-spinner"
+                },
+                h(
+                    'span',
+                    {
+                      class: 'spinner-border text-primary',
+                      role: 'status',
+                    }
+                )
+            ): undefined,
+            context!.slots!.default!()
+          ]
+      )
 
-    onMounted(() => {
-      addLoader();
-    });
-
-    const addLoader = () => {
-      if (spinnerContainer.value && localLoading.value) {
-        nextTick(() => {
-          const loaderString = "" +
-              "      <div class=\"d-flex align-items-center align-content-center justify-content-center the-spinner\">\n" +
-              "        <span class=\"spinner-border text-primary\" role=\"status\"></span>\n" +
-              "      </div>\n";
-          const loader = document.createElement('div');
-          loader.innerHTML = loaderString;
-
-          const child = spinnerContainer.value.children[0];
-          const computedStyleMap = child.computedStyleMap();
-
-          child.classList.add('position-relative');
-          (loader.children[0] as HTMLElement).style.borderRadius = computedStyleMap.get('border-radius').toString();
-          return child.append(loader.children[0]);
-        })
-      }
-    }
-
-    const removeLoader = () => {
-      if (spinnerContainer.value) {
-        nextTick(() => {
-          nextTick(() => {
-            setTimeout(() => {
-              spinnerContainer.value.classList.remove('position-relative');
-              spinnerContainer.value.querySelectorAll('.the-spinner').forEach((e) => {
-                if (e) e.remove();
-              });
-            }, 500);
-          });
-        });
-      }
-    }
-
-    return {
-      spinnerContainer,
     }
   }
 });

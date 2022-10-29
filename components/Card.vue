@@ -30,8 +30,8 @@
             <h3 class="card-title justify-content-center align-items-start flex-column my-0" :class="{'ms-1': backButtonRoute}">
               <slot name="card-title">
               <span class="fw-bold fs-4 mb-2 text-dark">
-                <inline-svg v-if="cardIconWidth" :style="`width: ${cardIconWidth}px`" :src="$props.icon"/>
-                <inline-svg v-else :src="$props.icon"/>
+                <inline-svg v-if="!hideCardIcon && cardIconWidth" :style="`width: ${cardIconWidth}px`" :src="$props.icon"/>
+                <inline-svg v-else-if="!hideCardIcon" :src="$props.icon"/>
                 {{ cardTitle }}
               </span>
               </slot>
@@ -158,6 +158,7 @@ import CardMixin from "@/custom/mixins/CardMixin";
 import {Collapse} from "bootstrap";
 import {onMounted, onUnmounted, ref, toRef} from "vue";
 import {MenuComponent} from "@/assets/ts/components";
+import {Configs} from "@/Configs";
 
 export default {
   mixins: [CardMixin],
@@ -171,7 +172,10 @@ export default {
       default: false,
     },
     "disableDrag": {
-      default: false,
+      default: !Configs['cardsAreDraggable'],
+    },
+    hideCardIcon: {
+      default: Configs['cardsHideCardIcon'],
     },
     "enableCollapse": {
       default: false,
