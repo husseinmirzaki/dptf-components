@@ -885,6 +885,7 @@ export default defineComponent({
                       const paginator = h(
                           TablePagination,
                           {
+                            key: defaultConfig.defaultTableName + `_pagination_${defaultConfig.count.value}`,
                             currentPage: defaultConfig.currentPage.value,
                             count: defaultConfig.count.value,
                             onPageSelected: onPage,
