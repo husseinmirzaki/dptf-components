@@ -280,6 +280,8 @@ export class Table {
             // console.log("called an event for table", this.tableName, e);
             if (e[0] == 'refresh') {
                 this.refresh();
+            } else if (e[0] == 'export') {
+                this.requestExport();
             } else {
                 this.onTableEvent(e)
             }
@@ -317,7 +319,7 @@ export class Table {
                     this.onViewClicked(data);
                 }
             });
-        }
+        }9
 
         if (this.showContextMenuUpdate) {
             items.push({
