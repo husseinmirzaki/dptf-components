@@ -44,8 +44,8 @@ export interface UserAuthInfo {
 export default class AuthModule extends VuexModule implements UserAuthInfo {
     errors: Array<any> = [];
     user = {} as User;
-    isAuthenticated = !!JwtService.getToken() || (
-        process.env.VUE_APP_IS_LOGGED_IN && process.env.VUE_APP_IS_LOGGED_IN == 1
+    isAuthenticated: any = !!JwtService.getToken() || (
+        process.env.VUE_APP_IS_LOGGED_IN && (process.env.VUE_APP_IS_LOGGED_IN as any) == 1
     );
 
     forgottenUser = '';
@@ -285,7 +285,7 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
      */
     @Action
     [Actions.VERIFY_AUTH]() {
-        if (process.env.NODE_ENV == 'development' && process.env.VUE_APP_IS_LOGGED_IN == 1) {
+        if (process.env.NODE_ENV == 'development' && (process.env.VUE_APP_IS_LOGGED_IN as any) == 1) {
             return
         }
 
