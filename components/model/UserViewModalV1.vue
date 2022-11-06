@@ -8,25 +8,20 @@
           <template v-for="(user, index) in users" :key="index">
             <!--begin::User-->
             <div
-                class="
-                    d-flex
-                    flex-stack
-                    py-5
-                    border-bottom border-gray-300 border-bottom-dashed
-                  "
+              class="d-flex flex-stack py-5 border-bottom border-gray-300 border-bottom-dashed"
             >
               <!--begin::Details-->
               <div class="d-flex align-items-center">
                 <!--begin::Avatar-->
                 <div class="symbol symbol-35px symbol-circle">
-                  <img v-if="user.avatar" alt="Pic" :src="user.avatar"/>
+                  <img v-if="user.avatar" alt="Pic" :src="user.avatar" />
                   <span
-                      v-else
-                      :class="`bg-light-${user.state} text-${user.state}`"
-                      class="symbol-label fw-bold"
+                    v-else
+                    :class="`bg-light-${user.state} text-${user.state}`"
+                    class="symbol-label fw-bold"
                   >
-                        {{ user.name.charAt(0) }}
-                      </span>
+                    {{ user.name.charAt(0) }}
+                  </span>
                 </div>
                 <!--end::Avatar-->
 
@@ -34,20 +29,14 @@
                 <div class="ms-6">
                   <!--begin::Name-->
                   <a
-                      href="#"
-                      class="
-                          d-flex
-                          align-items-center
-                          fs-5
-                          fw-bolder
-                          text-dark text-hover-primary
-                        "
+                    href="#"
+                    class="d-flex align-items-center fs-5 fw-bolder text-dark text-hover-primary"
                   >
                     {{ user.name }}
 
                     <span class="badge badge-light fs-8 fw-bold ms-2">
-                          {{ user.position }}
-                        </span>
+                      {{ user.position }}
+                    </span>
                   </a>
                   <!--end::Name-->
 
@@ -63,9 +52,7 @@
               <div class="d-flex">
                 <!--begin::Sales-->
                 <div class="text-end">
-                  <div class="fs-5 fw-bolder text-dark">
-                    ${{ user.sales }}
-                  </div>
+                  <div class="fs-5 fw-bolder text-dark">${{ user.sales }}</div>
 
                   <div class="fs-7 text-muted">Sales</div>
                 </div>
@@ -94,18 +81,16 @@
 
         <!--begin::Switch-->
         <label
-            class="form-check form-switch form-check-custom form-check-solid"
+          class="form-check form-switch form-check-custom form-check-solid"
         >
           <input
-              class="form-check-input"
-              type="checkbox"
-              value=""
-              checked="checked"
+            class="form-check-input"
+            type="checkbox"
+            value=""
+            checked="checked"
           />
 
-          <span class="form-check-label fw-bold text-gray-400">
-                Allowed
-              </span>
+          <span class="form-check-label fw-bold text-gray-400"> Allowed </span>
         </label>
         <!--end::Switch-->
       </div>
@@ -114,23 +99,23 @@
   </modal>
 </template>
 <script lang="ts">
-import {defineComponent, ref, watch} from "vue";
-import Modal from "@/custom/components/model/Modal.vue";
+import { defineComponent, ref, watch } from 'vue';
+import Modal from '@/custom/components/model/Modal.vue';
 
 export class UserViewModalService {
   static userId = ref(0);
 }
 
 export default defineComponent({
-  components: {Modal},
+  components: { Modal },
   setup() {
     const modal = ref();
     watch(UserViewModalService.userId, () => {
       //
     });
     return {
-      modal
-    }
-  }
+      modal,
+    };
+  },
 });
 </script>

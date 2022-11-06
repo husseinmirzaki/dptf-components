@@ -1,23 +1,23 @@
 <template>
   <div
-      class="tab-pane fade "
-      :class="{
-          'active show':  active
-      }"
-      :id="tabId"
-      role="tabpanel"
+    class="tab-pane fade"
+    :class="{
+      'active show': active,
+    }"
+    :id="tabId"
+    role="tabpanel"
   >
-    <slot/>
+    <slot />
   </div>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
-import {randomId} from "@/custom/helpers/random";
+import { defineComponent } from 'vue';
+import { randomId } from '@/custom/helpers/random';
 
 export default defineComponent({
   props: {
     active: {
-      default: false
+      default: false,
     },
     tabId: {
       type: String,
@@ -25,6 +25,6 @@ export default defineComponent({
         return `id-tab-${randomId(4)}`;
       },
     },
-  }
+  },
 });
 </script>

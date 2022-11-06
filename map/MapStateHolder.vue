@@ -9,8 +9,8 @@
 }
 </style>
 <script lang="ts">
-import {defineComponent, h} from "vue";
-import {LControl} from "@vue-leaflet/vue-leaflet"
+import { defineComponent, h } from 'vue';
+import { LControl } from '@vue-leaflet/vue-leaflet';
 
 export default defineComponent({
   props: {
@@ -19,13 +19,21 @@ export default defineComponent({
     },
   },
   render() {
-    return h(LControl, {position: 'bottomleft'}, {
-      default: () => [
-        h('div', {
-          class: 'lat-lng-holder'
-        }, this.state)
-      ]
-    });
-  }
-})
+    return h(
+      LControl,
+      { position: 'bottomleft' },
+      {
+        default: () => [
+          h(
+            'div',
+            {
+              class: 'lat-lng-holder',
+            },
+            this.state
+          ),
+        ],
+      }
+    );
+  },
+});
 </script>

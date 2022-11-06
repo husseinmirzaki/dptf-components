@@ -1,5 +1,5 @@
 <script lang="ts">
-import {ref} from "vue";
+import { ref } from 'vue';
 
 export default {
   props: ['states'],
@@ -7,14 +7,14 @@ export default {
     const activeState = ref(props.states[0]);
     const setState = (state) => {
       activeState.value = state;
-    }
+    };
     context.expose({
       activeState,
-      setState
-    })
+      setState,
+    });
     return () => {
-      return context.slots[activeState.value]()
-    }
-  }
-}
+      return context.slots[activeState.value]();
+    };
+  },
+};
 </script>

@@ -1,6 +1,6 @@
 export default class {
-    title?: string ;
-    description?: string;
-    colorClass?: string;
-    onClick?: (TimeLineItem) => void;
+  title?: string;
+  description?: string;
+  colorClass?: string;
+  onClick?: (TimeLineItem) => void;
 }

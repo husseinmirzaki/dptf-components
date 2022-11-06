@@ -1,14 +1,14 @@
 <template>
   <table-t-d class="form-related-field-container">
-    <FieldBuilder v-bind="$attrs"/>
+    <FieldBuilder v-bind="$attrs" />
   </table-t-d>
 </template>
 <script>
-import TableTD from "@/custom/components/table/tbody/TableTD";
-import FieldBuilder from "@/custom/components/FieldBuilder";
+import TableTD from '@/custom/components/table/tbody/TableTD';
+import FieldBuilder from '@/custom/components/FieldBuilder';
 export default {
-  components: {FieldBuilder, TableTD}
-}
+  components: { FieldBuilder, TableTD },
+};
 </script>
 <style scoped>
 table td.form-related-field-container {

@@ -1,19 +1,28 @@
 <template>
-  <div class="parent custom-auto-complete" :class="{focus: isFocused}">
+  <div class="parent custom-auto-complete" :class="{ focus: isFocused }">
     <input
-        class="form-control"
-        type="text"
-        :value="fieldText"
-        :placeholder="placeholder"
-        @keyup="fieldData = $event.target.value"
-        @keyup.down="oneDown"
-        @keyup.up="oneUp"
-        @keyup.enter="selectOne"
-        @keyup.esc="isFocused=false"
-        @focusin="isFocused=true">
+      class="form-control"
+      type="text"
+      :value="fieldText"
+      :placeholder="placeholder"
+      @keyup="fieldData = $event.target.value"
+      @keyup.down="oneDown"
+      @keyup.up="oneUp"
+      @keyup.enter="selectOne"
+      @keyup.esc="isFocused = false"
+      @focusin="isFocused = true"
+    />
     <div class="item-viewer" ref="itemContainer">
-      <div class="item" v-for="info in data" :key="info.id" :data-id="info.id"
-           @click="$event.target.classList.add('active');selectOne()">
+      <div
+        class="item"
+        v-for="info in data"
+        :key="info.id"
+        :data-id="info.id"
+        @click="
+          $event.target.classList.add('active');
+          selectOne();
+        "
+      >
         {{ info.text }}
       </div>
     </div>
@@ -41,7 +50,7 @@
     > .item-viewer {
       animation: 250ms ease-in-out opacity-animation;
       display: flex;
-      border-color: #B5B5C3;
+      border-color: #b5b5c3;
     }
   }
 }
@@ -54,7 +63,7 @@
   top: 100%;
   flex-direction: column;
   background-color: #fff;
-  border: 1px solid #E4E6EF;
+  border: 1px solid #e4e6ef;
   border-top: none;
   box-shadow: inset 0 -1px 2px rgb(0 0 0 / 8%);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -66,16 +75,17 @@
     background-color: #fff;
     transition: background-color 120ms ease-in-out;
 
-    &:hover, &.active {
+    &:hover,
+    &.active {
       background-color: #e8e8e8;
     }
   }
 }
 </style>
 <script lang="ts">
-import {onBeforeUnmount, onMounted, Ref, ref, toRef, watch} from "vue";
-import {ApiService} from "@/Defaults";
-import {findClassInParent} from "@/custom/helpers/DomHelpers";
+import { onBeforeUnmount, onMounted, Ref, ref, toRef, watch } from 'vue';
+import { ApiService } from '@/Defaults';
+import { findClassInParent } from '@/custom/helpers/DomHelpers';
 
 interface AutoCompleteOptions {
   url?: string;
@@ -96,13 +106,13 @@ export default {
     const options = toRef(props, 'options');
     const modeValue = toRef(props, 'modeValue');
 
-    let textValue = "";
-    let textText = "";
+    let textValue = '';
+    let textText = '';
 
-    if (typeof modeValue.value === "string") {
+    if (typeof modeValue.value === 'string') {
       textValue = modeValue.value;
       textText = modeValue.value;
-    } else if (typeof modeValue.value === "object") {
+    } else if (typeof modeValue.value === 'object') {
       textValue = modeValue.value.id;
       textText = modeValue.value.text;
     }
@@ -118,25 +128,25 @@ export default {
 
     let changeTriggerTimeout: any;
 
-    Object.assign(defaultOptions.value, options.value)
+    Object.assign(defaultOptions.value, options.value);
 
     const sendInformation = (text) => {
       if (defaultOptions.value.url) {
-        const textData = new URLSearchParams({search: text});
+        const textData = new URLSearchParams({ search: text });
         let url = defaultOptions.value.url;
 
         if (url.search(/\?/) == -1) {
-          url += "?" + textData;
+          url += '?' + textData;
         } else if (url.search(/\?/)) {
-          url += "&" + textData;
+          url += '&' + textData;
         }
 
-        ApiService.get<AutoCompleteResults>(url).then(({data: info}) => {
+        ApiService.get<AutoCompleteResults>(url).then(({ data: info }) => {
           data.value.splice(0);
           data.value.push(...info.results);
         });
       }
-    }
+    };
 
     const selectOne = () => {
       if (itemContainer.value) {
@@ -148,11 +158,11 @@ export default {
         }
       }
       isFocused.value = false;
-    }
+    };
 
     const oneDown = () => {
       if (itemContainer.value) {
-        const activeOne = itemContainer.value.querySelector('.active')
+        const activeOne = itemContainer.value.querySelector('.active');
         if (activeOne) {
           activeOne.classList.remove('active');
           if (activeOne.nextElementSibling)
@@ -162,11 +172,11 @@ export default {
             itemContainer.value.children[0].classList.add('active');
         }
       }
-    }
+    };
 
     const oneUp = () => {
       if (itemContainer.value) {
-        const activeOne = itemContainer.value.querySelector('.active')
+        const activeOne = itemContainer.value.querySelector('.active');
         if (activeOne) {
           activeOne.classList.remove('active');
           if (activeOne.previousElementSibling)
@@ -176,13 +186,13 @@ export default {
             itemContainer.value.children[0].classList.add('active');
         }
       }
-    }
+    };
 
     watch(isFocused, (e) => {
       if (e) {
         sendInformation(fieldData.value);
       }
-    })
+    });
 
     watch(fieldData, (textData) => {
       inputDate.value = textData;
@@ -199,15 +209,15 @@ export default {
       if (!findClassInParent(e.target, 'custom-auto-complete')) {
         isFocused.value = false;
       }
-    }
+    };
 
     onMounted(() => {
       document.addEventListener('click', globalOnClick);
-    })
+    });
 
     onBeforeUnmount(() => {
       document.removeEventListener('click', globalOnClick);
-    })
+    });
 
     return {
       // data
@@ -224,7 +234,7 @@ export default {
       oneUp,
       oneDown,
       selectOne,
-    }
+    };
   },
-}
+};
 </script>

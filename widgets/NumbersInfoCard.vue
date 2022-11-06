@@ -2,7 +2,7 @@
   <info-card class="text-center">
     <!--End : Effect to Number-->
     <div dir="ltr" class="d-flex justify-content-center align-content-center">
-      <div class="numbers" style="color: #FFFFFF">
+      <div class="numbers" style="color: #ffffff">
         <span>{{ $attrs['number'] }}</span>
       </div>
     </div>
@@ -10,8 +10,8 @@
   </info-card>
 </template>
 <script>
-import InfoCard from "@/custom/widgets/InfoCard";
+import InfoCard from '@/custom/widgets/InfoCard';
 export default {
-  components: {InfoCard}
-}
+  components: { InfoCard },
+};
 </script>

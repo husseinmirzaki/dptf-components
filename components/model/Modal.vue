@@ -5,27 +5,37 @@
     <div class="modal-dialog modal-dialog-centered" :class="modalSizeClass">
       <!--begin::Modal content-->
       <div class="modal-content">
-        <div class="modal-header" :class="{'p-2': thinFooter}">
-          <h5 class="modal-title fw-light" id="exampleModalLabel">{{ innerModalTitle }}</h5>
-          <slot name="modal-header"/>
-          <div v-if="!sticky" class="btn btn-sm btn-icon btn-active-icon-primary close" @click="close()"
+        <div class="modal-header" :class="{ 'p-2': thinFooter }">
+          <h5 class="modal-title fw-light" id="exampleModalLabel">
+            {{ innerModalTitle }}
+          </h5>
+          <slot name="modal-header" />
+          <div
+            v-if="!sticky"
+            class="btn btn-sm btn-icon btn-active-icon-primary close"
+            @click="close()"
           >
             <span class="svg-icon svg-icon-2x">
-              <inline-svg src="media/icons/duotune/arrows/arr061.svg"/>
+              <inline-svg src="media/icons/duotune/arrows/arr061.svg" />
             </span>
           </div>
         </div>
 
         <div class="modal-body" :class="[modalBodyClassExtra]">
-          <slot name="modal-content" :modalId="modalId" :state="state"/>
+          <slot name="modal-content" :modalId="modalId" :state="state" />
         </div>
-        <div class="modal-footer" :class="{'p-2': thinFooter}">
-          <slot name="modal-before-footer"/>
-          <button type="button" class="btn btn-light-primary font-weight-bold" :class="{'mt-4': !thinFooter}"
-                  v-if="!sticky"
-                  @click="close()">بستن
+        <div class="modal-footer" :class="{ 'p-2': thinFooter }">
+          <slot name="modal-before-footer" />
+          <button
+            type="button"
+            class="btn btn-light-primary font-weight-bold"
+            :class="{ 'mt-4': !thinFooter }"
+            v-if="!sticky"
+            @click="close()"
+          >
+            بستن
           </button>
-          <slot name="modal-footer"/>
+          <slot name="modal-footer" />
         </div>
       </div>
     </div>
@@ -33,13 +43,13 @@
   <!--end::Modal - New Address-->
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
-import {randomId} from "@/custom/helpers/random";
-import Modal from "bootstrap/js/dist/modal";
-import {VueInstanceService} from "@/Defaults";
+import { defineComponent } from 'vue';
+import { randomId } from '@/custom/helpers/random';
+import Modal from 'bootstrap/js/dist/modal';
+import { VueInstanceService } from '@/Defaults';
 
 export default defineComponent({
-  name: "modal",
+  name: 'modal',
   data() {
     return {
       state: 'closed',
@@ -50,20 +60,31 @@ export default defineComponent({
   },
   mounted() {
     (async () => {
-      if (document.querySelector("#" + this.modalId)) {
+      if (document.querySelector('#' + this.modalId)) {
         if (this.sticky)
-          this.modal = new Modal("#" + this.modalId, {
+          this.modal = new Modal('#' + this.modalId, {
             backdrop: 'static',
-            keyboard: false
+            keyboard: false,
           });
-        else
-          this.modal = new Modal("#" + this.modalId);
-        (this.$refs.modalEl as any).addEventListener('show.bs.modal', this.emitEvent('open'));
-        (this.$refs.modalEl as any).addEventListener('shown.bs.modal', this.emitEvent('opened'));
-        (this.$refs.modalEl as any).addEventListener('hide.bs.modal', this.emitEvent('close'));
-        (this.$refs.modalEl as any).addEventListener('hidden.bs.modal', this.emitEvent('closed'));
+        else this.modal = new Modal('#' + this.modalId);
+        (this.$refs.modalEl as any).addEventListener(
+          'show.bs.modal',
+          this.emitEvent('open')
+        );
+        (this.$refs.modalEl as any).addEventListener(
+          'shown.bs.modal',
+          this.emitEvent('opened')
+        );
+        (this.$refs.modalEl as any).addEventListener(
+          'hide.bs.modal',
+          this.emitEvent('close')
+        );
+        (this.$refs.modalEl as any).addEventListener(
+          'hidden.bs.modal',
+          this.emitEvent('closed')
+        );
       }
-    })()
+    })();
   },
   unmounted() {
     if (this.modal) {
@@ -74,15 +95,15 @@ export default defineComponent({
         //
       }
     }
-    const modalE = document.querySelector("#" + this.modalId);
+    const modalE = document.querySelector('#' + this.modalId);
     if (modalE) modalE.remove();
   },
   props: {
     sticky: {
-      default: false
+      default: false,
     },
     modalBodyClassExtra: {
-      default: "",
+      default: '',
     },
     modalId: {
       default: () => {
@@ -90,10 +111,10 @@ export default defineComponent({
       },
     },
     modalTitle: {
-      default: "موضوع مدال",
+      default: 'موضوع مدال',
     },
     modalSizeClass: {
-      default: "mw-700px",
+      default: 'mw-700px',
     },
     thinFooter: {
       default: false,
@@ -108,8 +129,8 @@ export default defineComponent({
           event: e,
           data: this.event,
         });
-        this.$emit(event, {event: e, data: this.event});
-      }
+        this.$emit(event, { event: e, data: this.event });
+      };
     },
     open: function (event) {
       this.event = event;
@@ -121,12 +142,12 @@ export default defineComponent({
     },
     setTitle: function (title) {
       this.innerModalTitle = title;
-    }
+    },
   },
   watch: {
     modalTitle: function (e) {
       this.innerModalTitle = e;
-    }
+    },
   },
 });
 </script>

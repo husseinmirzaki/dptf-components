@@ -1,9 +1,9 @@
 <template>
   <div class="row">
-    <template v-for="(field) in fieldsC" :key="field.options.name">
-      <field-builder :field="field"/>
+    <template v-for="field in fieldsC" :key="field.options.name">
+      <field-builder :field="field" />
     </template>
-    <slot name="more-fields"/>
+    <slot name="more-fields" />
   </div>
 </template>
 <script type="ts">

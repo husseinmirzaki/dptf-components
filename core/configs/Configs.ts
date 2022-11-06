@@ -1,7 +1,7 @@
 export default {
   tablePerPage: 10,
   defaultAfterLogin: {
-    name: 'intro'
+    name: 'intro',
   },
   showTableActionButtons: false,
   cardsAreDraggable: true,

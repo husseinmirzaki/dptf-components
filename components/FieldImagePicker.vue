@@ -1,13 +1,12 @@
 <script lang="ts">
-
-import {defineComponent, h, onUnmounted, ref, resolveComponent} from "vue";
-import Cropper from "cropperjs"
-import {DEFAULT_COLS} from "@/custom/helpers/RenderFunctionHelpers";
+import { defineComponent, h, onUnmounted, ref, resolveComponent } from 'vue';
+import Cropper from 'cropperjs';
+import { DEFAULT_COLS } from '@/custom/helpers/RenderFunctionHelpers';
 
 export default defineComponent({
   setup(props, context) {
     let lastRequest: any;
-    const selectedFile = ref(false)
+    const selectedFile = ref(false);
     const build = (fileRef) => {
       if (fileRef) {
         const cropper = new Cropper(fileRef, {
@@ -17,15 +16,21 @@ export default defineComponent({
             clearTimeout(lastRequest);
             lastRequest = setTimeout(() => {
               const canvas = cropper.getCroppedCanvas();
-              canvas.toBlob(function (blob: any) {
-                context.emit('update:modelValue', [new File([blob], "fileName.jpg", { type: "image/png" })]);
-              }, "image/png", 1);
-            }, 500)
-          }
+              canvas.toBlob(
+                function (blob: any) {
+                  context.emit('update:modelValue', [
+                    new File([blob], 'fileName.jpg', { type: 'image/png' }),
+                  ]);
+                },
+                'image/png',
+                1
+              );
+            }, 500);
+          },
         });
         onUnmounted(() => cropper.destroy());
       }
-    }
+    };
     let lastFileInputInstance: any;
 
     function readURL() {
@@ -42,85 +47,77 @@ export default defineComponent({
     }
 
     return () => {
-
       const layers: any = [
-        h(
-            'input',
-            {
-              ref: (e) => lastFileInputInstance = e,
-              class: 'd-none',
-              type: "file",
-              accept: "image/*",
-              onChange: () => {
-                readURL();
-              },
-            }
-        )
+        h('input', {
+          ref: (e) => (lastFileInputInstance = e),
+          class: 'd-none',
+          type: 'file',
+          accept: 'image/*',
+          onChange: () => {
+            readURL();
+          },
+        }),
       ];
 
       if (!selectedFile.value) {
-        layers.push(h(
+        layers.push(
+          h(
             'div',
             {
               class: 'd-flex align-items-center justify-content-center',
               style: {
-                height: '100px !important'
+                height: '100px !important',
               },
               onClick: () => {
                 lastFileInputInstance.click();
-              }
+              },
             },
-            "یک تصویر انتخاب کنید"
-        ));
+            'یک تصویر انتخاب کنید'
+          )
+        );
       } else {
         layers.push(
-            DEFAULT_COLS.col12(
-                h(
-                    'img',
-                    {
-                      style: {
-                        maxHeight: '250px',
-                      },
-                      ref: build,
-                      src: lastFileInputInstance.getAttribute('src'),
-                    }
-                )
-            )
+          DEFAULT_COLS.col12(
+            h('img', {
+              style: {
+                maxHeight: '250px',
+              },
+              ref: build,
+              src: lastFileInputInstance.getAttribute('src'),
+            })
+          )
         );
 
         layers.push(
+          h(
+            'div',
+            {
+              class: 'btn btn-sm btn-icon btn-danger close-button',
+              onClick: () => {
+                selectedFile.value = false;
+                context.emit('update:modelValue', undefined);
+              },
+            },
             h(
-                'div',
-                {
-                  class: 'btn btn-sm btn-icon btn-danger close-button',
-                  onClick: () => {
-                    selectedFile.value = false;
-                    context.emit('update:modelValue', undefined);
-                  },
-                },
-                h(
-                    'span',
-                    {
-                      class: 'svg-icon svg-icon-1',
-                    },
-                    h(
-                        resolveComponent('inline-svg'),
-                        {
-                          src: 'media/icons/duotune/arrows/arr061.svg',
-                        }
-                    ),
-                ),
-            ),
+              'span',
+              {
+                class: 'svg-icon svg-icon-1',
+              },
+              h(resolveComponent('inline-svg'), {
+                src: 'media/icons/duotune/arrows/arr061.svg',
+              })
+            )
+          )
         );
       }
 
-      return h('div', {class: "field-image-cropper"}, layers);
-    }
-  }
+      return h('div', { class: 'field-image-cropper' }, layers);
+    };
+  },
 });
 </script>
 <style>
-@import "~cropperjs/dist/cropper.min.css";
+@import '~cropperjs/dist/cropper.min.css';
 </style>
 <style lang="scss">
 .field-image-cropper {

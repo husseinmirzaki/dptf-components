@@ -1,18 +1,30 @@
 <template>
-  <a href="#" class="btn w-100 d-flex justify-content-start align-items-center the-nav-buttons" :class="{active}">
-    <i v-if="iconClass" :class="iconClass" class="fs-4 me-2" style="width: 18px"></i>
+  <a
+    href="#"
+    class="btn w-100 d-flex justify-content-start align-items-center the-nav-buttons"
+    :class="{ active }"
+  >
+    <i
+      v-if="iconClass"
+      :class="iconClass"
+      class="fs-4 me-2"
+      style="width: 18px"
+    ></i>
     <i v-else class="fas fa-envelope-open-text fs-4 me-2"></i>
     <b v-if="bold">
-      <slot/>
+      <slot />
     </b>
-    <slot v-else/>
+    <slot v-else />
 
     <span class="position-absolute">
-
-      <span v-if="badgeText" class="badge other-badge" :class="{
-        'badge-danger': color,
-        'text-dark': !color,
-      }">
+      <span
+        v-if="badgeText"
+        class="badge other-badge"
+        :class="{
+          'badge-danger': color,
+          'text-dark': !color,
+        }"
+      >
         <template v-if="bold">
           <b>{{ badgeText }}</b>
         </template>
@@ -22,16 +34,26 @@
       </span>
 
       <span
-          class="main-badge badge" :class="{
-          'badge-primary': color && badgeNumber && (Number(badgeNumber) > 0 && Number(badgeNumber) < 3),
-          'badge-warning': color && badgeNumber && (Number(badgeNumber) > 2 && Number(badgeNumber) < 6),
-          'badge-danger': color && badgeNumber && (Number(badgeNumber) > 5),
+        class="main-badge badge"
+        :class="{
+          'badge-primary':
+            color &&
+            badgeNumber &&
+            Number(badgeNumber) > 0 &&
+            Number(badgeNumber) < 3,
+          'badge-warning':
+            color &&
+            badgeNumber &&
+            Number(badgeNumber) > 2 &&
+            Number(badgeNumber) < 6,
+          'badge-danger': color && badgeNumber && Number(badgeNumber) > 5,
           'badge-dark': !color,
         }"
-          v-if="badgeNumber">{{ badgeNumber }}</span>
+        v-if="badgeNumber"
+        >{{ badgeNumber }}</span
+      >
     </span>
   </a>
-
 </template>
 <style scoped>
 b {
@@ -41,21 +63,26 @@ b {
 <script>
 export default {
   props: {
-    "active": {
+    active: {
       default: false,
-    }, "badgeNumber": {
+    },
+    badgeNumber: {
       default: 0,
-    }, "iconClass": {
-      default: "",
-    }, "badgeText": {
-      default: "",
-    }, "color": {
+    },
+    iconClass: {
+      default: '',
+    },
+    badgeText: {
+      default: '',
+    },
+    color: {
       default: true,
-    }, "bold": {
+    },
+    bold: {
       default: false,
-    }
-  }
-}
+    },
+  },
+};
 </script>
 <style lang="scss">
 .the-nav-buttons {

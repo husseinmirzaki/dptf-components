@@ -1,13 +1,25 @@
 <template>
   <table-t-d>
-    <div class="user-profile-stack"  @click="$viewerApi({
-      images: firstThree.map((e) => e.avatar ? e.avatar : 'media/avatars/150-26.jpg'),
-      })">
+    <div
+      class="user-profile-stack"
+      @click="
+        $viewerApi({
+          images: firstThree.map((e) =>
+            e.avatar ? e.avatar : 'media/avatars/150-26.jpg'
+          ),
+        })
+      "
+    >
       <div
-          v-for="(user,index) in firstThree" :key="index"
-          class="cursor-pointer symbol symbol-40px user-profile"
-          title="User profile">
-        <img :src="user.avatar ? user.avatar : 'media/avatars/150-26.jpg'" alt="metronic">
+        v-for="(user, index) in firstThree"
+        :key="index"
+        class="cursor-pointer symbol symbol-40px user-profile"
+        title="User profile"
+      >
+        <img
+          :src="user.avatar ? user.avatar : 'media/avatars/150-26.jpg'"
+          alt="metronic"
+        />
       </div>
     </div>
   </table-t-d>
@@ -35,27 +47,25 @@
 .user-profile:last-child {
   transform: translateX(-50%);
 }
-
 </style>
 <script lang="ts">
-import {computed, defineComponent, toRef} from "vue";
-import TableTD from "@/custom/components/table/tbody/TableTD.vue";
+import { computed, defineComponent, toRef } from 'vue';
+import TableTD from '@/custom/components/table/tbody/TableTD.vue';
 
 export default defineComponent({
-  components: {TableTD},
+  components: { TableTD },
   props: ['data'],
   setup(props) {
     const data = toRef(props, 'data');
     const firstThree = computed(() => {
-      if (data.value)
-        return data.value.slice(0, 3);
+      if (data.value) return data.value.slice(0, 3);
 
-      return data.value
-    })
+      return data.value;
+    });
 
     return {
       firstThree,
-    }
-  }
+    };
+  },
 });
 </script>

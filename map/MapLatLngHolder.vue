@@ -17,9 +17,9 @@
 }
 </style>
 <script lang="ts">
-import {defineComponent, h} from "vue";
-import {LControl} from "@vue-leaflet/vue-leaflet"
-import {VueInstanceService} from "@/Defaults";
+import { defineComponent, h } from 'vue';
+import { LControl } from '@vue-leaflet/vue-leaflet';
+import { VueInstanceService } from '@/Defaults';
 
 export default defineComponent({
   props: {
@@ -28,19 +28,27 @@ export default defineComponent({
     },
   },
   render() {
-    return h(LControl, {}, {
-      default: () => [
-        h('div', {
-          class: 'lat-lng-holder', onClick: (e) => {
-            navigator.clipboard.writeText(JSON.stringify(this.xy));
-            VueInstanceService.showSuccessMessage('مختصات کپی شد')
-          }
-        }, {
-          default: () => JSON.stringify(this.xy)
-        })
-      ]
-    })
-        ;
-  }
-})
+    return h(
+      LControl,
+      {},
+      {
+        default: () => [
+          h(
+            'div',
+            {
+              class: 'lat-lng-holder',
+              onClick: (e) => {
+                navigator.clipboard.writeText(JSON.stringify(this.xy));
+                VueInstanceService.showSuccessMessage('مختصات کپی شد');
+              },
+            },
+            {
+              default: () => JSON.stringify(this.xy),
+            }
+          ),
+        ],
+      }
+    );
+  },
+});
 </script>

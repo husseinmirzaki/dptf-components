@@ -1,16 +1,14 @@
 <script lang="ts">
-import {defineComponent, h, ref, toRef} from "vue";
-import {buildEmitter} from "@/custom/map/utils/emitter";
+import { defineComponent, h, ref, toRef } from 'vue';
+import { buildEmitter } from '@/custom/map/utils/emitter';
 
 class Extensions {
-
   getRef(extension) {
     return this[extension].component['proxy'];
   }
 
   get(extension, property = null) {
-    if (!property)
-      return this.getRef(extension);
+    if (!property) return this.getRef(extension);
     return this.getRef(extension)[property];
   }
 }
@@ -32,13 +30,17 @@ export default defineComponent({
         parent.value.plugins.register(componentName, e);
       });
       return _slots;
-    }
+    };
 
     return () => {
-      return h('div', {}, {
-        default: () => slots(),
-      });
-    }
-  }
+      return h(
+        'div',
+        {},
+        {
+          default: () => slots(),
+        }
+      );
+    };
+  },
 });
 </script>

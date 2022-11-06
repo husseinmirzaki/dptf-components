@@ -1,4 +1,4 @@
-import { randomId } from "@/custom/helpers/random";
+import { randomId } from '@/custom/helpers/random';
 
 export default {
   props: {

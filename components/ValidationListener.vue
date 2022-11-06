@@ -3,9 +3,9 @@
 </template>
 
 <script>
-import {toRef, watch} from "vue";
+import { toRef, watch } from 'vue';
 
-export default  {
+export default {
   props: ['data'],
   setup(props, context) {
     let lastPopulation = new Date();
@@ -13,6 +13,6 @@ export default  {
     watch(data, () => {
       context.emit('submit');
     });
-  }
-}
+  },
+};
 </script>

@@ -1,21 +1,26 @@
 <template>
   <div class="row">
     <div class="col-12">
-      <CkEditor :editor="editorClass" @ready="onReady" :config="editorConfig"
-                @update:modelValue="$emit('update:modelValue', $event)" :modelValue="modelValue"/>
+      <CkEditor
+        :editor="editorClass"
+        @ready="onReady"
+        :config="editorConfig"
+        @update:modelValue="$emit('update:modelValue', $event)"
+        :modelValue="modelValue"
+      />
     </div>
   </div>
 </template>
 <style lang="scss">
 .ck-editor {
-  .ck-toolbar, .ck-content {
-  min-height: 50px;
+  .ck-toolbar,
+  .ck-content {
+    min-height: 50px;
     border-radius: 0 !important;
   }
 }
 </style>
 <script>
-
 import CKEditor from '@ckeditor/ckeditor5-vue';
 
 import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
@@ -37,7 +42,7 @@ import List from '@ckeditor/ckeditor5-list/src/list';
 import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice';
 import Indent from '@ckeditor/ckeditor5-indent/src/indent';
 import Alignment from '@ckeditor/ckeditor5-alignment/src/alignment';
-import CkEditorReferencePlugin from "@/custom/components/ck-editor-plugins/CkEditorReferencePlugin.js";
+import CkEditorReferencePlugin from '@/custom/components/ck-editor-plugins/CkEditorReferencePlugin.js';
 
 export default {
   components: {
@@ -52,7 +57,7 @@ export default {
       editorConfig: {
         emitter: this.$emit,
         alignment: {
-          options: ['left', 'right', 'center', 'justify']
+          options: ['left', 'right', 'center', 'justify'],
         },
         language: 'fa',
         plugins: [
@@ -77,27 +82,30 @@ export default {
         ],
         toolbar: {
           table: {
-            contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
+            contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells'],
           },
           items: [
-            'alignment', '|',
+            'alignment',
+            '|',
             'bulletedList',
             'numberedList',
             'insertTable',
-            'indent', '|',
+            'indent',
+            '|',
             'insertReference',
             'bold',
             'superscript',
             'subscript',
             'strikethrough',
             'underline',
-            'italic', '|',
+            'italic',
+            '|',
             'undo',
-            'redo'
-          ]
-        }
-      }
-    }
+            'redo',
+          ],
+        },
+      },
+    };
   },
   methods: {
     onReady(editor) {
@@ -108,7 +116,7 @@ export default {
       //     editor.ui.view.toolbar.element,
       //     editor.ui.getEditableElement()
       // );
-    }
-  }
-}
+    },
+  },
+};
 </script>

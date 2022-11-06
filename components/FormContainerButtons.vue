@@ -1,45 +1,45 @@
 <template>
   <!--begin::CancelButton-->
   <button
-      v-if="showCancelButton"
-      @click="$emit('reset')"
-      type="reset"
-      class="btn btn-warning me-0 ms-3 mt-4"
+    v-if="showCancelButton"
+    @click="$emit('reset')"
+    type="reset"
+    class="btn btn-warning me-0 ms-3 mt-4"
   >
     لغو
   </button>
   <!--end::CancelButton-->
-  <slot name="extra-buttons"/>
+  <slot name="extra-buttons" />
   <!--begin::LoadingButton-->
   <PromiseButton
-      class="btn btn-primary mt-4 text-left"
-      :class="[submitButtonClass]"
-      type="submit"
-      ref="loadingButton"
-      :text="submitButtonText"
+    class="btn btn-primary mt-4 text-left"
+    :class="[submitButtonClass]"
+    type="submit"
+    ref="loadingButton"
+    :text="submitButtonText"
   >
   </PromiseButton>
   <!--end::LoadingButton-->
 </template>
 <script lang="ts">
-import {defineComponent, ref} from "vue";
-import LoadingButton from "@/custom/components/LoadingButton.vue";
-import PromiseButton from "@/custom/components/PromiseButton.vue";
+import { defineComponent, ref } from 'vue';
+import LoadingButton from '@/custom/components/LoadingButton.vue';
+import PromiseButton from '@/custom/components/PromiseButton.vue';
 
 export default defineComponent({
-  components: {PromiseButton},
+  components: { PromiseButton },
   inheritAttrs: false,
   props: {
-    "showCancelButton": {
+    showCancelButton: {
       type: Boolean,
     },
-    "submitButtonText": {
+    submitButtonText: {
       type: String,
     },
-    "submitButtonClass": {
+    submitButtonClass: {
       type: String,
     },
-    "mt": {
+    mt: {
       type: Boolean,
     },
   },

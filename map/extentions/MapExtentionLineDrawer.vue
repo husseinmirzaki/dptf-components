@@ -1,10 +1,20 @@
 <script lang="ts">
-import {defineComponent, h, nextTick, onMounted, onUnmounted, Ref, ref, toRef, watch} from "vue";
-import {LMarker, LIcon} from "@vue-leaflet/vue-leaflet"
-import MapLine from "@/custom/map/MapLine.vue";
-import {buildEmitter} from "@/custom/map/utils/emitter";
-import {ContextMenuService} from "@/custom/components/ContextMenuService";
-import Swal from "sweetalert2/dist/sweetalert2.js";
+import {
+  defineComponent,
+  h,
+  nextTick,
+  onMounted,
+  onUnmounted,
+  Ref,
+  ref,
+  toRef,
+  watch,
+} from 'vue';
+import { LMarker, LIcon } from '@vue-leaflet/vue-leaflet';
+import MapLine from '@/custom/map/MapLine.vue';
+import { buildEmitter } from '@/custom/map/utils/emitter';
+import { ContextMenuService } from '@/custom/components/ContextMenuService';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
 
 interface LineInfo {
   strokeColor: string;
@@ -13,7 +23,6 @@ interface LineInfo {
 }
 
 class DotDrawer {
-
   ld: LineDrawer;
 
   get lines() {
@@ -76,18 +85,18 @@ class DotDrawer {
         contextMenuEvent.originalEvent._alreadyFilled = true;
         ContextMenuService.set([
           {
-            text: "اضافه کردن نقطه",
+            text: 'اضافه کردن نقطه',
             onClick: () => {
               this.ld.mapToolsWindowLine.orderedList.addAfter('', index);
 
               this.ld.forceUpdateMapLinesData();
-            }
+            },
           },
           {
-            text: "حذف",
+            text: 'حذف',
             onClick: () => {
               this.removeItem(index);
-            }
+            },
           },
         ]);
       }
@@ -98,48 +107,55 @@ class DotDrawer {
 
   private async onClick(index) {
     // this.ld.openDefaultWindow();
-    const element = this.ld.mapToolsWindowLineRaw.el.querySelector(`.custom-index-class-${index}`);
-    if (element)
-      element.focus();
+    const element = this.ld.mapToolsWindowLineRaw.el.querySelector(
+      `.custom-index-class-${index}`
+    );
+    if (element) element.focus();
   }
 
   drawDots() {
     this.ld.lines.forEach((latLng: Array<number>, index: number) => {
       const _key = `${latLng[0]},${latLng[1]}`;
 
-      const marker = h(LMarker, {
-        // add index to avoid collision on updates
-        key: _key + '-' + index,
-        latLng: latLng,
-        onContextmenu: (contextMenuEvent) => {
-          this.onContextMenu(contextMenuEvent, index);
+      const marker = h(
+        LMarker,
+        {
+          // add index to avoid collision on updates
+          key: _key + '-' + index,
+          latLng: latLng,
+          onContextmenu: (contextMenuEvent) => {
+            this.onContextMenu(contextMenuEvent, index);
+          },
+          onClick: () => {
+            this.onClick(index);
+          },
         },
-        onClick: () => {
-          this.onClick(index)
-        }
-      }, h(LIcon, {
-        iconUrl: '/media/icons/duotune/abstract/abs050.svg',
-        iconSize: [25, 25]
-      }));
+        h(LIcon, {
+          iconUrl: '/media/icons/duotune/abstract/abs050.svg',
+          iconSize: [25, 25],
+        })
+      );
 
       this.ld.icons.value[_key] = marker;
-    })
+    });
 
     // remove non-existing ones
-    Object.keys(this.ld.icons.value).filter((_key) => {
-      const s = _key.split(',');
-      return this.lines.findIndex((item) => {
-        return item[0] == Number(s[0]) && item[1] == Number(s[1])
-      }) == -1;
-    }).forEach((_key) => {
-      delete this.ld.icons.value[_key];
-    });
+    Object.keys(this.ld.icons.value)
+      .filter((_key) => {
+        const s = _key.split(',');
+        return (
+          this.lines.findIndex((item) => {
+            return item[0] == Number(s[0]) && item[1] == Number(s[1]);
+          }) == -1
+        );
+      })
+      .forEach((_key) => {
+        delete this.ld.icons.value[_key];
+      });
   }
-
 }
 
 class LineDrawer {
-
   dotDrawer: DotDrawer;
 
   props: any;
@@ -192,14 +208,14 @@ class LineDrawer {
   }
 
   setActiveInput(index) {
-    const element = this.mapToolsWindowLineRaw.el.querySelector(`.custom-index-class-${index}`);
-    if (element)
-      element.focus();
+    const element = this.mapToolsWindowLineRaw.el.querySelector(
+      `.custom-index-class-${index}`
+    );
+    if (element) element.focus();
   }
 
   removeLineKey(key) {
-    if (this._lines[key])
-      delete this._lines[key];
+    if (this._lines[key]) delete this._lines[key];
   }
 
   closeActiveWindow() {
@@ -207,22 +223,20 @@ class LineDrawer {
   }
 
   forceUpdateMapLinesData() {
-    this.mapToolsWindowLine.emitTo(
-        'updateData',
-        [this.mapToolsWindowLine.orderedList.orderedList()]
-    );
+    this.mapToolsWindowLine.emitTo('updateData', [
+      this.mapToolsWindowLine.orderedList.orderedList(),
+    ]);
   }
 
   onMapToolsWindowEvent() {
-
     const ad = (s) => {
-      return s + (s > 0 ? -0.25 : 0.25)
-    }
+      return s + (s > 0 ? -0.25 : 0.25);
+    };
 
     return (name, event) => {
       let _index = -1;
       switch (name) {
-        case "focusin":
+        case 'focusin':
           this.activeIndex = _index = event[0];
           this.layers.value['marker'] = h(LMarker, {
             draggable: true,
@@ -232,55 +246,60 @@ class LineDrawer {
               this.dotDrawer.drawDots();
             },
             key: `${this.lines[_index][0]}${this.lines[_index][1]}`,
-            latLng: this.lines[_index]
+            latLng: this.lines[_index],
           });
           break;
-        case "update":
+        case 'update':
           _index = event[0];
 
-          if (this.lines[_index] != event[1])
-            this.lines[_index] = event[1];
+          if (this.lines[_index] != event[1]) this.lines[_index] = event[1];
 
           this.dotDrawer.drawDots();
           break;
-        case "updateData":
+        case 'updateData':
           var index = event[0].indexOf('' as any);
           if (index > -1) {
             if (event[0].length > 2) {
               if (index == 0) {
-                event[0][0] = [ad(event[0][1][0]), ad(event[0][1][1])]
+                event[0][0] = [ad(event[0][1][0]), ad(event[0][1][1])];
                 nextTick(() => {
                   this.setActiveInput(0);
                 });
               } else if (index == event[0].length - 1) {
                 var fo = event[0].length - 2;
-                event[0][event[0].length - 1] = [ad(event[0][fo][0]), ad(event[0][fo][1])]
+                event[0][event[0].length - 1] = [
+                  ad(event[0][fo][0]),
+                  ad(event[0][fo][1]),
+                ];
                 nextTick(() => {
                   this.setActiveInput(event[0].length - 1);
-                })
+                });
               } else {
-                event[0][index] = [ad(event[0][index + 1][0]), ad(event[0][index + 1][1])]
+                event[0][index] = [
+                  ad(event[0][index + 1][0]),
+                  ad(event[0][index + 1][1]),
+                ];
                 nextTick(() => {
                   this.setActiveInput(index);
-                })
+                });
               }
             } else if (event[0].length == 2) {
               if (index == 0) {
-                event[0][0] = [ad(event[0][1][0]), ad(event[0][1][1])]
+                event[0][0] = [ad(event[0][1][0]), ad(event[0][1][1])];
                 nextTick(() => {
                   this.setActiveInput(0);
-                })
+                });
               } else if (index == 1) {
-                event[0][1] = [ad(event[0][0][0]), ad(event[0][0][1])]
+                event[0][1] = [ad(event[0][0][0]), ad(event[0][0][1])];
                 nextTick(() => {
                   this.setActiveInput(1);
-                })
+                });
               }
             } else {
               event[0][0] = this.plugins.value.get('LMap').proxy.center;
               nextTick(() => {
                 this.setActiveInput(0);
-              })
+              });
             }
           }
           this.lines = event[0];
@@ -299,12 +318,13 @@ class LineDrawer {
 
           break;
       }
-    }
+    };
   }
 
   setLineDataOnWindow() {
     this.mapToolsWindowLine.orderedList.setInitial(this.lines);
-    this.mapToolsWindowLine.emitsTo['MapExtensionLineDrawer'] = this.onMapToolsWindowEvent();
+    this.mapToolsWindowLine.emitsTo['MapExtensionLineDrawer'] =
+      this.onMapToolsWindowEvent();
   }
 
   openDefaultWindow(forceReset = false) {
@@ -323,19 +343,18 @@ class LineDrawer {
       }
     });
   }
-
 }
 
 export default defineComponent({
-  name: "MapExtensionLineDrawer",
+  name: 'MapExtensionLineDrawer',
   props: {
     plugins: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   setup(props, context) {
-    const {emitTo, emitsTo} = buildEmitter();
+    const { emitTo, emitsTo } = buildEmitter();
     const activeWindow = toRef(props.plugins.getMain().proxy, 'activeWindow');
 
     /**
@@ -343,16 +362,16 @@ export default defineComponent({
      * to user
      */
     const lines: Ref<Record<string, LineInfo>> = ref({
-      "line-1": {
-        strokeColor: "#000",
+      'line-1': {
+        strokeColor: '#000',
         lines: [
           [35.632744348010625, 51.43146514892579],
           [35.55010533588552, 51.22650146484375],
           [35.18278813800229, 50.86395263671875],
         ],
       },
-      "line-2": {
-        strokeColor: "#000",
+      'line-2': {
+        strokeColor: '#000',
         lines: [
           [35.632744348010625, 51.43146514892575],
           [35.55010533588552, 51.22650146484379],
@@ -370,7 +389,7 @@ export default defineComponent({
       if (!e) {
         lineDrawer.clear();
       }
-    })
+    });
 
     const sumOfLines = (points: Array<Array<number>>) => {
       let sum = '';
@@ -378,47 +397,46 @@ export default defineComponent({
         sum += `${points[i][0]}${points[i][1]}`;
       }
       return sum;
-    }
+    };
 
     const buildLine = (key) => {
       const line = lines.value[key];
 
       return h(MapLine, {
-        strokeColor: line['strokeColor'], lines: line.lines, key: sumOfLines(line.lines), onEdit: () => {
+        strokeColor: line['strokeColor'],
+        lines: line.lines,
+        key: sumOfLines(line.lines),
+        onEdit: () => {
           lineDrawer.icons.value = {};
           lineDrawer.layers.value = {};
           lineDrawer.currentKey = key;
           lineDrawer.activeIndex = '';
           lineDrawer.openDefaultWindow(true);
-        }
+        },
       });
-
-    }
+    };
 
     const globalKeyDown = (e) => {
       if (e.code == 'Escape') {
         delete extraLayers.value['marker'];
-        const element = (document.querySelector('input:focus') as any);
-        if (element)
-          element?.blur();
+        const element = document.querySelector('input:focus') as any;
+        if (element) element?.blur();
       }
       if (e.code == 'Delete') {
-        if (!extraLayers.value['marker'])
-          return;
+        if (!extraLayers.value['marker']) return;
 
         lineDrawer.dotDrawer.removeItem(lineDrawer.activeIndex);
         delete extraLayers.value['marker'];
       }
-    }
+    };
 
     onMounted(() => {
       document.addEventListener('keydown', globalKeyDown);
-    })
+    });
 
     onUnmounted(() => {
       document.removeEventListener('keydown', globalKeyDown);
-    })
-
+    });
 
     return {
       // data
@@ -430,18 +448,22 @@ export default defineComponent({
       // functions
       emitTo,
       buildLine,
-    }
+    };
   },
   render() {
-    return h('div', {}, {
-      default: () => {
-        return [
-          ...Object.values(this.extraLayers),
-          ...Object.keys(this.lines).map(this.buildLine),
-          ...Object.values(this.dots),
-        ];
+    return h(
+      'div',
+      {},
+      {
+        default: () => {
+          return [
+            ...Object.values(this.extraLayers),
+            ...Object.keys(this.lines).map(this.buildLine),
+            ...Object.values(this.dots),
+          ];
+        },
       }
-    });
-  }
+    );
+  },
 });
 </script>

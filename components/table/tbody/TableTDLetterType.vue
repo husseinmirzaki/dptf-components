@@ -6,8 +6,8 @@
   </td>
 </template>
 <script lang="ts">
-import {computed, defineComponent, toRef} from "vue";
-import TableTDMixin from "@/custom/mixins/TableTDMixin";
+import { computed, defineComponent, toRef } from 'vue';
+import TableTDMixin from '@/custom/mixins/TableTDMixin';
 
 export default defineComponent({
   props: ['data'],
@@ -28,8 +28,7 @@ export default defineComponent({
     });
     return {
       type,
-    }
-
-  }
+    };
+  },
 });
 </script>
