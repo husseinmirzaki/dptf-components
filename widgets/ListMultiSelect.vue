@@ -14,24 +14,24 @@
   />
 </template>
 <script>
-import FieldComponent from '@/custom/components/FieldComponent';
-import { ref, watch } from 'vue';
+import FieldComponent from "@/custom/components/FieldComponent";
+import { ref, watch } from "vue";
 
 export function listMultiSelectIdExtractor(data, onlyTrue) {
   if (data && data.length > 0) {
     if (data[0]) {
-      return 'all';
+      return "all";
     } else {
       const idList = [];
       Object.keys(data[1]).forEach((key) => {
         if (data[1][key] || !onlyTrue) {
-          idList.push(key.split('_')[1]);
+          idList.push(key.split("_")[1]);
         }
       });
-      return idList.join(',');
+      return idList.join(",");
     }
   }
-  return '';
+  return "";
 }
 
 export default {
@@ -44,7 +44,7 @@ export default {
       default: true,
     },
     selectAllText: {
-      default: 'همه',
+      default: "همه",
     },
   },
   setup(props, context) {
@@ -59,16 +59,16 @@ export default {
         for (let i = 0; i < keys.length; i++) {
           if (selectedData.value[keys[i]]) {
             considerAll.value = false;
-            console.log('all not false');
+            console.log("all not false");
             allFalse = false;
             break;
           }
         }
         if (allFalse) {
-          console.log('all false');
+          console.log("all false");
           considerAll.value = true;
         }
-        context.emit('change', [considerAll.value, selectedData.value]);
+        context.emit("change", [considerAll.value, selectedData.value]);
       },
       {
         deep: true,
@@ -81,7 +81,7 @@ export default {
           selectedData.value[keys[i]] = false;
         }
       }
-      context.emit('change', [considerAll.value, selectedData.value]);
+      context.emit("change", [considerAll.value, selectedData.value]);
     });
     return {
       considerAll,

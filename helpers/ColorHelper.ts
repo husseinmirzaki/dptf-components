@@ -61,12 +61,12 @@ export function increaseBrightness(color, amount) {
   const rgb = hslToRgb(hsl.h, hsl.s, hsl.l);
 
   const v = rgb.b | (rgb.g << 8) | (rgb.r << 16);
-  return '#' + v.toString(16);
+  return "#" + v.toString(16);
 }
 
 export function lightenDarkenColor(col, amt) {
   let usePound = false;
-  if (col[0] == '#') {
+  if (col[0] == "#") {
     col = col.slice(1);
     usePound = true;
   }
@@ -88,5 +88,5 @@ export function lightenDarkenColor(col, amt) {
   if (g > 255) g = 255;
   else if (g < 0) g = 0;
 
-  return (usePound ? '#' : '') + (g | (b << 8) | (r << 16)).toString(16);
+  return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16);
 }

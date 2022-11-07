@@ -61,14 +61,14 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onUnmounted, ref, toRef, watch } from 'vue';
-import { ApiService, Configs } from '@/Defaults';
+import { defineComponent, onUnmounted, ref, toRef, watch } from "vue";
+import { ApiService, Configs } from "@/Defaults";
 
 export default defineComponent({
   props: {
     config: {
       default: {
-        identifier: 'id',
+        identifier: "id",
         headers: [],
         headerTranslates: [],
       },
@@ -83,14 +83,14 @@ export default defineComponent({
     },
     modelValue: Object,
   },
-  emits: ['update:modelValue'],
+  emits: ["update:modelValue"],
   setup(props, context) {
     const items: any = ref([]);
     let page = 1;
     const loading = ref(false);
     const finished = ref(!props.url);
     const searching = ref(false);
-    const searchText = ref('');
+    const searchText = ref("");
 
     let _selectedItem: any;
     if (props.multiple) {
@@ -120,7 +120,7 @@ export default defineComponent({
 
     if (props.filters) {
       watch(
-        toRef(props, 'filters'),
+        toRef(props, "filters"),
         () => {
           getData();
         },
@@ -131,7 +131,7 @@ export default defineComponent({
     }
 
     if (props.url) {
-      watch(toRef(props, 'url'), () => {
+      watch(toRef(props, "url"), () => {
         getData();
       });
     }
@@ -146,11 +146,11 @@ export default defineComponent({
           urlParams.set(key, props.filters![key]);
         });
 
-      if (searchText.value != '' && searchText.value.length > 3) {
-        urlParams.set('search', searchText.value);
+      if (searchText.value != "" && searchText.value.length > 3) {
+        urlParams.set("search", searchText.value);
       }
 
-      urlParams.set('page', String(page));
+      urlParams.set("page", String(page));
 
       const promise = ApiService.get(props.url!, { params: urlParams });
       promise.then(() => {
@@ -171,7 +171,7 @@ export default defineComponent({
     if (props.url) getData();
 
     const globalKeydown = (e) => {
-      if (e.code == 'Escape' || e.key == 'Escape' || e.keyCode == 27) {
+      if (e.code == "Escape" || e.key == "Escape" || e.keyCode == 27) {
         searching.value = false;
       }
     };
@@ -181,7 +181,7 @@ export default defineComponent({
         if (selectedItem.value != item[props.config.identifier])
           selectedItem.value = item[props.config.identifier];
         else selectedItem.value = -1;
-        context.emit('update:modelValue', selectedItem.value);
+        context.emit("update:modelValue", selectedItem.value);
         return;
       }
 
@@ -193,7 +193,7 @@ export default defineComponent({
         selectedItem.value.splice(index, 1);
       }
 
-      context.emit('update:modelValue', selectedItem.value);
+      context.emit("update:modelValue", selectedItem.value);
     };
 
     const itemIsActive = (item) => {
@@ -207,7 +207,7 @@ export default defineComponent({
       item: any,
       header: string | number | ((x: any) => any)
     ) => {
-      if (typeof header == 'function') {
+      if (typeof header == "function") {
         return header(item);
       }
 
@@ -215,14 +215,14 @@ export default defineComponent({
     };
 
     onUnmounted(() => {
-      document.removeEventListener('keydown', globalKeydown);
+      document.removeEventListener("keydown", globalKeydown);
     });
 
     watch(searching, () => {
       if (searching.value) {
-        document.addEventListener('keydown', globalKeydown);
+        document.addEventListener("keydown", globalKeydown);
       } else {
-        document.removeEventListener('keydown', globalKeydown);
+        document.removeEventListener("keydown", globalKeydown);
       }
     });
 

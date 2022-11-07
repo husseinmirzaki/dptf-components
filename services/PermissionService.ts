@@ -1,5 +1,5 @@
-import { Ref, ref, watch } from 'vue';
-import { UserApiService } from '@/custom/services/UserApiService';
+import { Ref, ref, watch } from "vue";
+import { UserApiService } from "@/custom/services/UserApiService";
 
 export class PermissionService {
   public static isCheckingForRole: Ref<boolean> = ref(false);

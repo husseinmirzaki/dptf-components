@@ -1,4 +1,4 @@
-import { Ref } from 'vue';
+import { Ref } from "vue";
 
 export default interface FieldComponentPropsInterface {
   defaultInputClasses?: string;
@@ -17,23 +17,23 @@ export default interface FieldComponentPropsInterface {
   select_multiple?: boolean;
   multiple?: boolean;
   select_tag?: boolean;
-  'show-help'?: string;
+  "show-help"?: string;
   read_only?: boolean | Ref<boolean>;
   label?: string;
   field_type?:
     | string
-    | 'text'
-    | 'component'
-    | 'hidden'
-    | 'file'
-    | 'select'
-    | 'select-v2'
-    | 'textarea'
-    | 'p-date-time'
-    | 'checkbox'
-    | 'separator'
-    | 'auto-complete'
-    | 'currency';
+    | "text"
+    | "component"
+    | "hidden"
+    | "file"
+    | "select"
+    | "select-v2"
+    | "textarea"
+    | "p-date-time"
+    | "checkbox"
+    | "separator"
+    | "auto-complete"
+    | "currency";
   field_container_classes?: string;
   file_accept?: string;
   placeholder?: string;
@@ -42,12 +42,12 @@ export default interface FieldComponentPropsInterface {
   // eslint-disable-next-line @typescript-eslint/ban-types
   select_options?: object;
   selected_component?: any;
-  dateTimeType?: 'date' | 'date-time';
+  dateTimeType?: "date" | "date-time";
   validation?: Record<string, any>;
   select_data?: Array<Record<string, any>>;
-  'v-model'?: Ref;
-  'v-model-key'?: string;
-  'update:modelValue'?: (event) => void;
+  "v-model"?: Ref;
+  "v-model-key"?: string;
+  "update:modelValue"?: (event) => void;
   outerAccess?: (elementRef) => void;
   isFile?: boolean;
   excludeOnModes?: Array<string>;
@@ -74,23 +74,23 @@ export interface FieldComponentPropsInterfaceNonRequired {
   select_multiple?: boolean;
   multiple?: boolean;
   select_tag?: boolean;
-  'show-help'?: string;
+  "show-help"?: string;
   read_only?: boolean;
   label?: string;
   field_type?:
     | string
-    | 'text'
-    | 'component'
-    | 'hidden'
-    | 'file'
-    | 'select'
-    | 'select-v2'
-    | 'textarea'
-    | 'p-date-time'
-    | 'checkbox'
-    | 'separator'
-    | 'auto-complete'
-    | 'currency';
+    | "text"
+    | "component"
+    | "hidden"
+    | "file"
+    | "select"
+    | "select-v2"
+    | "textarea"
+    | "p-date-time"
+    | "checkbox"
+    | "separator"
+    | "auto-complete"
+    | "currency";
   field_container_classes?: string;
   file_accept?: string;
   placeholder?: string;
@@ -101,9 +101,9 @@ export interface FieldComponentPropsInterfaceNonRequired {
   selected_component?: any;
   validation?: Record<string, any>;
   select_data?: Array<Record<string, any>>;
-  'v-model'?: Ref;
-  'v-model-key'?: string;
-  'update:modelValue'?: (event) => void;
+  "v-model"?: Ref;
+  "v-model-key"?: string;
+  "update:modelValue"?: (event) => void;
   outerAccess?: (elementRef) => void;
   excludeOnModes?: Array<string>;
   onlyOnModes?: Array<string>;

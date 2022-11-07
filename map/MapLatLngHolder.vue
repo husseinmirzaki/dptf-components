@@ -17,9 +17,9 @@
 }
 </style>
 <script lang="ts">
-import { defineComponent, h } from 'vue';
-import { LControl } from '@vue-leaflet/vue-leaflet';
-import { VueInstanceService } from '@/Defaults';
+import { defineComponent, h } from "vue";
+import { LControl } from "@vue-leaflet/vue-leaflet";
+import { VueInstanceService } from "@/Defaults";
 
 export default defineComponent({
   props: {
@@ -34,12 +34,12 @@ export default defineComponent({
       {
         default: () => [
           h(
-            'div',
+            "div",
             {
-              class: 'lat-lng-holder',
+              class: "lat-lng-holder",
               onClick: (e) => {
                 navigator.clipboard.writeText(JSON.stringify(this.xy));
-                VueInstanceService.showSuccessMessage('مختصات کپی شد');
+                VueInstanceService.showSuccessMessage("مختصات کپی شد");
               },
             },
             {

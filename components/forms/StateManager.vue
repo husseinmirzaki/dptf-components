@@ -1,8 +1,8 @@
 <script lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 
 export default {
-  props: ['states'],
+  props: ["states"],
   setup(props, context) {
     const activeState = ref(props.states[0]);
     const setState = (state) => {

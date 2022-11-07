@@ -1,11 +1,11 @@
-import { ApiService } from '@/Defaults';
-import { VueInstanceService } from '@/Defaults';
+import { ApiService } from "@/Defaults";
+import { VueInstanceService } from "@/Defaults";
 
 export class UserApiService extends ApiService {
-  static baseUrl = 'user/';
+  static baseUrl = "user/";
 
   public static getMe() {
-    return ApiService.get(this.baseUrl + 'me/');
+    return ApiService.get(this.baseUrl + "me/");
   }
 
   public static getUser(id) {
@@ -13,11 +13,11 @@ export class UserApiService extends ApiService {
   }
 
   public static get userSelectionUrl() {
-    return this.baseUrl + 'select/';
+    return this.baseUrl + "select/";
   }
 
   public static register(data) {
-    return ApiService.post('user/auth/register/', {
+    return ApiService.post("user/auth/register/", {
       data: data,
       dont_set_header: true,
     });
@@ -41,7 +41,7 @@ export class UserApiService extends ApiService {
   }
 
   public static delete(id) {
-    if (id.search('user') > -1) {
+    if (id.search("user") > -1) {
       return ApiService.delete(`${id}`);
     }
     return ApiService.delete(`${this.baseUrl}${id}`);
@@ -82,7 +82,7 @@ export class UserApiService extends ApiService {
       },
     }).then((e) => {
       VueInstanceService.showSuccessMessage(
-        'امضاء کاربر با موفقیت بروزرسانی شد'
+        "امضاء کاربر با موفقیت بروزرسانی شد"
       );
       return e;
     });
@@ -96,14 +96,14 @@ export class UserApiService extends ApiService {
       },
     }).then((e) => {
       VueInstanceService.showSuccessMessage(
-        'تصویر پروفایل کاربر با موفقیت بروزرسانی شد'
+        "تصویر پروفایل کاربر با موفقیت بروزرسانی شد"
       );
       return e;
     });
   }
 
   public static userToText(ids) {
-    return ApiService.post(this.baseUrl + 'user_to_text/', {
+    return ApiService.post(this.baseUrl + "user_to_text/", {
       data: {
         users: ids,
       },
@@ -111,7 +111,7 @@ export class UserApiService extends ApiService {
   }
 
   public static usersToText(ids) {
-    return ApiService.post(this.baseUrl + 'users_to_text/', {
+    return ApiService.post(this.baseUrl + "users_to_text/", {
       data: {
         users: ids,
       },

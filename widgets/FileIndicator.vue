@@ -64,7 +64,7 @@ span {
 }
 </style>
 <script lang="ts">
-import { computed, toRef } from 'vue';
+import { computed, toRef } from "vue";
 
 export default {
   props: {
@@ -73,14 +73,14 @@ export default {
     },
   },
   setup(props) {
-    const file = toRef(props, 'file');
+    const file = toRef(props, "file");
     const isZip = computed(() => {
       if (file.value) {
         switch (file.value.type) {
-          case '':
-            return file.value.name.endsWith('.rar');
-          case 'application/x-zip-compressed':
-          case 'application/x-gzip':
+          case "":
+            return file.value.name.endsWith(".rar");
+          case "application/x-zip-compressed":
+          case "application/x-gzip":
             return true;
         }
       }

@@ -1,7 +1,7 @@
-import { ApiService } from '@/Defaults';
+import { ApiService } from "@/Defaults";
 
 export class TokenService {
-  static baseUrl = 'token/';
+  static baseUrl = "token/";
 
   static login(username: string, password: string) {
     return ApiService.post(`${ApiService.base_url}${TokenService.baseUrl}`, {

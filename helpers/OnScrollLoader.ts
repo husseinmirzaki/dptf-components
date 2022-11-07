@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { ref } from "vue";
 
 export function onScrollLoader() {
   const elements = ref([]);
@@ -8,7 +8,7 @@ export function onScrollLoader() {
 
   const onPage = (e) => {
     const lastChild = elements.value[elements.value.length - 1][
-      'element'
+      "element"
     ] as HTMLElement;
     if (window.innerHeight > lastChild.getBoundingClientRect().top) {
       getDataController();

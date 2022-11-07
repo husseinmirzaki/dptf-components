@@ -282,25 +282,25 @@ import {
   ref,
   toRef,
   watch,
-} from 'vue';
-import { ErrorMessage, Field } from 'vee-validate';
-import { $, select2 } from '@/custom/helpers/select2_decelaration';
-import FieldComponentPropsInterface from '@/custom/components/FieldComponentPropsInterface';
-import { Actions } from '@/custom/store/enums/StoreEnums';
-import Vue3PersianDatetimePicker from 'vue3-persian-datetime-picker';
-import { gregorianToJalali } from '@/custom/components/DateUtils';
-import { findClassInParent } from '@/custom/helpers/DomHelpers';
-import { VueInstanceService } from '@/Defaults';
-import AutoComplete from '@/custom/components/forms/AutoComplete.vue';
+} from "vue";
+import { ErrorMessage, Field } from "vee-validate";
+import { $, select2 } from "@/custom/helpers/select2_decelaration";
+import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
+import { Actions } from "@/custom/store/enums/StoreEnums";
+import Vue3PersianDatetimePicker from "vue3-persian-datetime-picker";
+import { gregorianToJalali } from "@/custom/components/DateUtils";
+import { findClassInParent } from "@/custom/helpers/DomHelpers";
+import { VueInstanceService } from "@/Defaults";
+import AutoComplete from "@/custom/components/forms/AutoComplete.vue";
 import {
   deformatNumber,
   formatCurrency,
-} from '@/custom/components/FieldComponentCurrency.js';
-import Select2AlternativeField from '@/custom/components/Select2AlternativeField.vue';
-import { read } from '@popperjs/core';
+} from "@/custom/components/FieldComponentCurrency.js";
+import Select2AlternativeField from "@/custom/components/Select2AlternativeField.vue";
+import { read } from "@popperjs/core";
 
 export default defineComponent({
-  name: 'field-component',
+  name: "field-component",
   inheritAttrs: false,
   components: {
     Select2AlternativeField,
@@ -311,7 +311,7 @@ export default defineComponent({
   },
   props: {
     defaultInputClasses: {
-      default: 'form-control h-auto py-3 px-2 rounded-lg',
+      default: "form-control h-auto py-3 px-2 rounded-lg",
     },
     canAddItem: {
       default: false,
@@ -326,7 +326,7 @@ export default defineComponent({
     },
     dateTimeType: {
       type: String,
-      default: 'date',
+      default: "date",
     },
     showHelp: {
       type: String,
@@ -341,10 +341,10 @@ export default defineComponent({
       default: null,
     },
     select_filter_key: {
-      default: 'filter-on',
+      default: "filter-on",
     },
     input_class: {
-      default: '',
+      default: "",
       type: String,
     },
     input_container_class: {
@@ -352,23 +352,23 @@ export default defineComponent({
       type: String,
     },
     label_class: {
-      default: '',
+      default: "",
       type: String,
     },
     col_class: {
-      default: 'col-md-12',
+      default: "col-md-12",
       type: String,
     },
     one_line_field_classes: {
-      default: 'col-lg-8 fv-row',
+      default: "col-lg-8 fv-row",
       type: String,
     },
     field_container_classes: {
-      default: '',
+      default: "",
       type: String,
     },
     one_line_label_classes: {
-      default: 'col-lg-4 col-form-label',
+      default: "col-lg-4 col-form-label",
       type: String,
     },
     modelValue: {
@@ -412,7 +412,7 @@ export default defineComponent({
     },
     field_type: {
       type: String,
-      default: 'text',
+      default: "text",
     },
     file_accept: {
       type: String,
@@ -440,24 +440,24 @@ export default defineComponent({
     },
   },
   setup(props, context) {
-    const col_class = toRef(props, 'col_class');
-    const one_line = toRef(props, 'one_line');
-    const field_type = toRef(props, 'field_type');
-    const one_line_field_classes = toRef(props, 'one_line_field_classes');
-    const one_line_label_classes = toRef(props, 'one_line_label_classes');
-    const show_errors = toRef(props, 'show_errors');
-    const select_url = toRef(props, 'select_url');
-    const multiple = toRef(props, 'multiple');
-    const read_only = toRef(props, 'read_only');
-    const select_tag = toRef(props, 'select_tag');
-    const select_options = toRef(props, 'select_options');
-    const select_filter_key = toRef(props, 'select_filter_key');
-    const select_filter_id = toRef(props, 'select_filter_id');
-    const outerAccess = toRef(props, 'outerAccess');
-    const modal_id = toRef(props, 'modal_id');
-    const file_accept = toRef(props, 'file_accept');
-    const placeholder = toRef(props, 'placeholder');
-    const modelValue = toRef(props, 'modelValue');
+    const col_class = toRef(props, "col_class");
+    const one_line = toRef(props, "one_line");
+    const field_type = toRef(props, "field_type");
+    const one_line_field_classes = toRef(props, "one_line_field_classes");
+    const one_line_label_classes = toRef(props, "one_line_label_classes");
+    const show_errors = toRef(props, "show_errors");
+    const select_url = toRef(props, "select_url");
+    const multiple = toRef(props, "multiple");
+    const read_only = toRef(props, "read_only");
+    const select_tag = toRef(props, "select_tag");
+    const select_options = toRef(props, "select_options");
+    const select_filter_key = toRef(props, "select_filter_key");
+    const select_filter_id = toRef(props, "select_filter_id");
+    const outerAccess = toRef(props, "outerAccess");
+    const modal_id = toRef(props, "modal_id");
+    const file_accept = toRef(props, "file_accept");
+    const placeholder = toRef(props, "placeholder");
+    const modelValue = toRef(props, "modelValue");
 
     const field = ref<any>(null);
     const root = ref<any>(null);
@@ -465,22 +465,22 @@ export default defineComponent({
 
     const currency = ref(modelValue.value);
 
-    if (field_type.value == 'currency') {
+    if (field_type.value == "currency") {
       watch(currency, () => {
-        context.emit('update:modelValue', deformatNumber(currency.value));
+        context.emit("update:modelValue", deformatNumber(currency.value));
       });
     }
 
     watch(modelValue, (e) => {
       showError.value = true;
       if (
-        field_type.value == 'select' &&
+        field_type.value == "select" &&
         !modelValue.value &&
         select2Instance.value
       ) {
         // select2Instance.value.val('').change();
       } else if (
-        field_type.value == 'checkbox' &&
+        field_type.value == "checkbox" &&
         !modelValue.value &&
         field.value
       ) {
@@ -496,14 +496,14 @@ export default defineComponent({
       if (one_line.value) {
         return one_line_field_classes.value;
       }
-      return '';
+      return "";
     });
 
     const one_line_label_classes_c = computed(() => {
       if (one_line.value) {
         return one_line_label_classes.value;
       }
-      return '';
+      return "";
     });
 
     const col_class_c = computed(() => {
@@ -516,62 +516,62 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      if (field_type.value == 'currency') {
+      if (field_type.value == "currency") {
         formatCurrency(field.value.$el.nextElementSibling);
       }
 
-      if (field_type.value == 'hidden') {
-        root.value.style.display = 'none';
+      if (field_type.value == "hidden") {
+        root.value.style.display = "none";
       }
 
       if (outerAccess.value) {
         outerAccess.value(sendToUser);
       }
 
-      if (field.value && context.attrs['id']) {
-        field.value.$el.setAttribute('id', context.attrs['id']);
+      if (field.value && context.attrs["id"]) {
+        field.value.$el.setAttribute("id", context.attrs["id"]);
       }
 
       watch(read_only, (e) => {
         if (select2Instance.value) {
-          select2Instance.value.prop('disabled', read_only.value);
+          select2Instance.value.prop("disabled", read_only.value);
         } else {
           if (e) {
-            field.value.$el.setAttribute('readonly', 'readonly');
+            field.value.$el.setAttribute("readonly", "readonly");
           } else {
-            field.value.$el.removeAttribute('readonly');
+            field.value.$el.removeAttribute("readonly");
           }
         }
       });
 
-      if (field_type.value === 'select') {
-        const modalParent = findClassInParent(root.value, 'modal-body');
+      if (field_type.value === "select") {
+        const modalParent = findClassInParent(root.value, "modal-body");
 
         if (modalParent != null) {
           // using first child to support better scrolling behaviour
-          select_options.value['dropdownParent'] = $(modalParent);
+          select_options.value["dropdownParent"] = $(modalParent);
         }
         if (select_filter_id.value) {
           const v = select_filter_id.value as any;
-          select_options.value['onParams'] = (_data) => {
+          select_options.value["onParams"] = (_data) => {
             _data[select_filter_key.value] = $(v).val();
           };
         }
 
         if (select_tag.value) {
-          select_options.value['tags'] = true;
+          select_options.value["tags"] = true;
         }
 
         if (read_only.value) {
-          select_options.value['disabled'] = 'readonly';
+          select_options.value["disabled"] = "readonly";
         }
 
-        if (placeholder.value != '') {
-          select_options.value['placeholder'] = placeholder.value;
+        if (placeholder.value != "") {
+          select_options.value["placeholder"] = placeholder.value;
         }
 
         if (modal_id.value) {
-          select_options.value['dropdownParent'] = $(
+          select_options.value["dropdownParent"] = $(
             document.querySelector(`${modal_id.value}`)
           );
         }
@@ -595,28 +595,28 @@ export default defineComponent({
 
         select2Instance.value?.change((e) => {
           const _data = $(e.target).val();
-          context.emit('update:modelValue', _data);
+          context.emit("update:modelValue", _data);
         });
-      } else if (field_type.value === 'file') {
+      } else if (field_type.value === "file") {
         if (multiple.value) {
-          field.value.$el.setAttribute('multiple', 'multiple');
+          field.value.$el.setAttribute("multiple", "multiple");
         }
         if (file_accept.value) {
-          field.value.$el.setAttribute('accept', file_accept.value);
+          field.value.$el.setAttribute("accept", file_accept.value);
         }
       }
     });
 
     const setValue = (data) => {
-      if (field_type.value == 'component') {
+      if (field_type.value == "component") {
         if (field.value && field.value.setData) {
           field.value.setData(data);
         }
       }
-      if (typeof data === 'boolean') {
+      if (typeof data === "boolean") {
         if (data != undefined) data = data ? 1 : 0;
       }
-      if (field_type.value === 'select') {
+      if (field_type.value === "select") {
         nextTick(() => {
           setOptions(data);
         });
@@ -624,27 +624,27 @@ export default defineComponent({
       }
       if (!data) {
         switch (field_type.value) {
-          case 'checkbox':
-            context.emit('update:modelValue', false);
+          case "checkbox":
+            context.emit("update:modelValue", false);
             return;
-          case 'p-date-time':
-            field.value.$el.value = '';
-            context.emit('update:modelValue', '');
+          case "p-date-time":
+            field.value.$el.value = "";
+            context.emit("update:modelValue", "");
             return;
         }
       }
 
-      if (field_type.value === 'checkbox') {
+      if (field_type.value === "checkbox") {
         field.value.checked = data;
-        context.emit('update:modelValue', data);
+        context.emit("update:modelValue", data);
       }
 
-      if (field_type.value === 'p-date-time') {
+      if (field_type.value === "p-date-time") {
         if (
-          typeof data == 'string' &&
+          typeof data == "string" &&
           data.match(/^\d{4}\/\d{1,2}\/\d{1,2}$/)
         ) {
-          context.emit('update:modelValue', data);
+          context.emit("update:modelValue", data);
           return;
         }
 
@@ -655,28 +655,28 @@ export default defineComponent({
           date.getDate()
         );
         context.emit(
-          'update:modelValue',
+          "update:modelValue",
           `${persian[0]}/${persian[1]}/${persian[2]}`
         );
       } else {
         if (field.value) {
           if (field.value.$el) {
-            if (field_type.value == 'currency') {
+            if (field_type.value == "currency") {
               field.value.$el.value = data;
               field.value.$el.nextElementSibling.value = data;
 
               nextTick(() => {
                 formatCurrency(field.value.$el.nextElementSibling);
                 field.value.$el.nextElementSibling.dispatchEvent(
-                  new Event('change')
+                  new Event("change")
                 );
-                field.value.$el.dispatchEvent(new Event('change'));
+                field.value.$el.dispatchEvent(new Event("change"));
                 currency.value = field.value.$el.nextElementSibling.value;
               });
             } else {
               field.value.$el.value = data;
               nextTick(() => {
-                field.value.$el.dispatchEvent(new Event('change'));
+                field.value.$el.dispatchEvent(new Event("change"));
               });
             }
           }
@@ -696,18 +696,18 @@ export default defineComponent({
         return;
       }
 
-      if (options.length > 0 && options[0] && !options[0]['text']) {
+      if (options.length > 0 && options[0] && !options[0]["text"]) {
         select2Instance.value?.val(options);
       } else if (!Array.isArray(options)) {
         select2Instance.value?.val(String(options));
       } else
         options.forEach((data) => {
           if (!data) return;
-          if (data['text'] && data['value'])
+          if (data["text"] && data["value"])
             select2Instance.value?.append(
               new Option(
-                String(data['text']),
-                String(data['value']),
+                String(data["text"]),
+                String(data["value"]),
                 true,
                 true
               )
@@ -718,7 +718,7 @@ export default defineComponent({
 
     const empty = () => {
       if (select2Instance.value) {
-        select2Instance.value.val('').change();
+        select2Instance.value.val("").change();
       }
     };
 
@@ -760,19 +760,19 @@ export class FieldComponentProps {
   options: FieldComponentPropsInterface;
 
   get hasVModelKey(): boolean {
-    return !!this.options['v-model'] && !!this.options['v-model-key'];
+    return !!this.options["v-model"] && !!this.options["v-model-key"];
   }
 
   get hasVModel(): boolean {
-    return !!this.options['v-model'];
+    return !!this.options["v-model"];
   }
 
   get vBind(): FieldComponentPropsInterface {
     const a = {
       ...this.options,
     };
-    delete a['v-model'];
-    delete a['v-model-key'];
+    delete a["v-model"];
+    delete a["v-model-key"];
     return a;
   }
 
@@ -788,7 +788,7 @@ export function fieldC(
 }
 </script>
 <style scoped lang="scss">
-input[type='color'] {
+input[type="color"] {
   height: 40px !important;
 }
 

@@ -1,9 +1,9 @@
-import FieldComponentPropsInterface from '@/custom/components/FieldComponentPropsInterface';
-import { CreateForm } from '@/custom/helpers/BaseForm';
-import { TokenService } from '@/custom/services/TokenService';
-import { Actions, Mutations } from '@/custom/store/enums/StoreEnums';
-import { Configs, VueInstanceService } from '@/Defaults';
-import Swal from 'sweetalert2/dist/sweetalert2.js';
+import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
+import { CreateForm } from "@/custom/helpers/BaseForm";
+import { TokenService } from "@/custom/services/TokenService";
+import { Actions, Mutations } from "@/custom/store/enums/StoreEnums";
+import { Configs, VueInstanceService } from "@/Defaults";
+import Swal from "sweetalert2/dist/sweetalert2.js";
 
 export default class LoginForm extends CreateForm {
   getService(): any {
@@ -14,26 +14,26 @@ export default class LoginForm extends CreateForm {
     return new Promise((resolve, reject) => {
       const dispatch = VueInstanceService.store.dispatch(
         Actions.LOGIN,
-        this.refs['basic'].value
+        this.refs["basic"].value
       );
       dispatch.then(
         (data) => {
           if (!data.access && !data.refresh) {
             if (!data.token_needed) {
-              this.finalize_login('21212', resolve, reject);
+              this.finalize_login("21212", resolve, reject);
             } else {
               VueInstanceService.showSuccessMessage(
-                'کد تایید برای شما ارسال شد'
+                "کد تایید برای شما ارسال شد"
               );
               Swal.fire({
-                icon: 'question',
-                title: 'کد تایید را وارد کنید',
+                icon: "question",
+                title: "کد تایید را وارد کنید",
                 html: '<input id="swal-input-code" class="swal2-input">',
                 focusConfirm: true,
-                confirmButtonText: 'ارسال',
+                confirmButtonText: "ارسال",
                 preConfirm: () => {
                   const element: any =
-                    document.getElementById('swal-input-code');
+                    document.getElementById("swal-input-code");
                   if (element) return element.value;
                   return null;
                 },
@@ -49,7 +49,7 @@ export default class LoginForm extends CreateForm {
             VueInstanceService.store.commit(Mutations.SET_AUTH, data);
             VueInstanceService.store.dispatch(Actions.GET_ME).then(
               () => {
-                VueInstanceService.router.push(Configs['defaultAfterLogin']);
+                VueInstanceService.router.push(Configs["defaultAfterLogin"]);
               },
               () => {
                 VueInstanceService.store.commit(Mutations.PURGE_AUTH);
@@ -73,7 +73,7 @@ export default class LoginForm extends CreateForm {
       .then(
         (e) => {
           resolve(null);
-          VueInstanceService.router.push(Configs['defaultAfterLogin']);
+          VueInstanceService.router.push(Configs["defaultAfterLogin"]);
         },
         (e) => {
           // console.log("finalize login failed", e);
@@ -90,18 +90,18 @@ export default class LoginForm extends CreateForm {
     return [
       {
         show_errors: false,
-        defaultInputClasses: '',
-        name: 'username',
-        placeholder: 'نام کاربری',
-        col_class: '',
+        defaultInputClasses: "",
+        name: "username",
+        placeholder: "نام کاربری",
+        col_class: "",
       },
       {
         show_errors: false,
-        defaultInputClasses: '',
-        name: 'password',
-        placeholder: 'کلمه عبور',
-        field_type: 'password',
-        col_class: '',
+        defaultInputClasses: "",
+        name: "password",
+        placeholder: "کلمه عبور",
+        field_type: "password",
+        col_class: "",
       },
     ];
   }

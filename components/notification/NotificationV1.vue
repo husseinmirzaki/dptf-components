@@ -22,8 +22,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import Card from '@/custom/components/Card.vue';
+import { defineComponent } from "vue";
+import Card from "@/custom/components/Card.vue";
 
 export interface NotificationV1Interface {
   id?: string;

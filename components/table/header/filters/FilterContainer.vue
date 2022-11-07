@@ -106,9 +106,9 @@
 }
 </style>
 <script>
-import FieldBuilder from '@/custom/components/FieldBuilder';
-import { computed, onMounted, ref, watch } from 'vue';
-import { findClassInParent, randomId } from '@/custom/helpers/random';
+import FieldBuilder from "@/custom/components/FieldBuilder";
+import { computed, onMounted, ref, watch } from "vue";
+import { findClassInParent, randomId } from "@/custom/helpers/random";
 
 export default {
   components: { FieldBuilder },
@@ -118,22 +118,22 @@ export default {
     const filterField = ref();
     const floatingFilter = ref();
     const show = ref(false);
-    const key = context.attrs.field.options['v-model-key'];
+    const key = context.attrs.field.options["v-model-key"];
     let setPositionInterval = null;
     const windowClickListener = (e) => {
-      const htmlElement = findClassInParent(e.target, 'floating-filter');
+      const htmlElement = findClassInParent(e.target, "floating-filter");
       if (!htmlElement || htmlElement != floatingFilter.value) {
         show.value = false;
       }
     };
 
-    const valueIsEmpty = ref(!context.attrs.field.options['v-model'][key]);
+    const valueIsEmpty = ref(!context.attrs.field.options["v-model"][key]);
     const parentId = `id_${randomId(2)}`;
     const condition = ref(0);
     context.attrs.field.options.modal_id = `#${parentId}`;
 
     watch(
-      context.attrs.field.options['v-model'],
+      context.attrs.field.options["v-model"],
       (newValue, oldValue) => {
         valueIsEmpty.value =
           newValue[key] === undefined ||
@@ -152,14 +152,14 @@ export default {
       }
       if (show.value) {
         setPositionInterval = setInterval(() => {
-          console.log('test');
+          console.log("test");
           calcPosition();
         }, 200);
-        document.addEventListener('click', windowClickListener, {
+        document.addEventListener("click", windowClickListener, {
           passive: true,
         });
       } else {
-        document.removeEventListener('click', windowClickListener, {
+        document.removeEventListener("click", windowClickListener, {
           passive: true,
         });
       }
@@ -167,9 +167,9 @@ export default {
 
     const calcPosition = () => {
       const boundingClientRect = root.value.getBoundingClientRect();
-      filterContainer.value.style.left = boundingClientRect.left + 'px';
+      filterContainer.value.style.left = boundingClientRect.left + "px";
       filterContainer.value.style.top =
-        boundingClientRect.height + boundingClientRect.top + 'px';
+        boundingClientRect.height + boundingClientRect.top + "px";
     };
 
     const toggle = () => {

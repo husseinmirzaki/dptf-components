@@ -99,8 +99,8 @@
   </modal>
 </template>
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue';
-import Modal from '@/custom/components/model/Modal.vue';
+import { defineComponent, ref, watch } from "vue";
+import Modal from "@/custom/components/model/Modal.vue";
 
 export class UserViewModalService {
   static userId = ref(0);

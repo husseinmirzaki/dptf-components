@@ -14,19 +14,19 @@
   </button>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import { VueInstanceService } from '@/Defaults';
-import { Actions } from '@/custom/store/enums/StoreEnums';
+import { defineComponent, ref } from "vue";
+import { VueInstanceService } from "@/Defaults";
+import { Actions } from "@/custom/store/enums/StoreEnums";
 
 export default defineComponent({
-  name: 'promise-button',
+  name: "promise-button",
   props: {
     text: {
-      default: 'ارسال',
+      default: "ارسال",
       type: String,
     },
     loadingText: {
-      default: 'درحال ارسال ...',
+      default: "درحال ارسال ...",
       type: String,
     },
     promise: {
@@ -34,7 +34,7 @@ export default defineComponent({
     },
     successMessage: {
       type: String,
-      default: 'با موفقیت انجام شد',
+      default: "با موفقیت انجام شد",
     },
   },
   setup(props, context) {
@@ -45,7 +45,7 @@ export default defineComponent({
       //Disable button
       submitButton.value.disabled = true;
       // Activate indicator
-      submitButton.value.setAttribute('data-kt-indicator', 'on');
+      submitButton.value.setAttribute("data-kt-indicator", "on");
     };
 
     const stopLoading = () => {
@@ -53,7 +53,7 @@ export default defineComponent({
       //Disable button
       submitButton.value.disabled = false;
       // Activate indicator
-      submitButton.value.removeAttribute('data-kt-indicator');
+      submitButton.value.removeAttribute("data-kt-indicator");
     };
 
     const loading = (promise: Promise<any>) => {
@@ -81,7 +81,7 @@ export default defineComponent({
             try {
               const response = await formExtend.formInstance.submit();
               setTimeout(() => {
-                context.emit('submitDone', response);
+                context.emit("submitDone", response);
                 VueInstanceService.showSuccessMessage(props.successMessage);
               }, 500);
             } catch (e) {
@@ -92,7 +92,7 @@ export default defineComponent({
           })()
         );
       };
-      context.emit('clicked', delegation);
+      context.emit("clicked", delegation);
     };
 
     return {

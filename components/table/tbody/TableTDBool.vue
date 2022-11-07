@@ -125,18 +125,18 @@
   </template>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
-import TableTD from '@/custom/components/table/tbody/TableTD.vue';
+import { defineComponent } from "vue";
+import TableTD from "@/custom/components/table/tbody/TableTD.vue";
 
 export default defineComponent({
   components: { TableTD },
-  props: ['data', 'noTd'],
+  props: ["data", "noTd"],
   setup(props) {
     // eslint-disable-next-line vue/no-setup-props-destructure
     let bool_data = props.data;
 
-    if (bool_data == 'بلی') bool_data = true;
-    else if (bool_data == 'خیر') bool_data = false;
+    if (bool_data == "بلی") bool_data = true;
+    else if (bool_data == "خیر") bool_data = false;
 
     return {
       bool_data,

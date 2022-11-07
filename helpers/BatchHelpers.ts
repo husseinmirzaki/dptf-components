@@ -1,26 +1,26 @@
-import { ApiService } from '@/Defaults';
-import Swal from 'sweetalert2/dist/sweetalert2.js';
-import { UserApiService } from '@/custom/services/UserApiService';
+import { ApiService } from "@/Defaults";
+import Swal from "sweetalert2/dist/sweetalert2.js";
+import { UserApiService } from "@/custom/services/UserApiService";
 
 export class BatchDeleteHelper {
   public static service = ApiService;
-  public static title = 'حدف داده های انتخابی';
-  public static message = 'در صورت تایید کلیه داده های انتخاب شده حذف میشود';
-  public static deleteAllWarningTitle = 'هشدار حذف تمام داده ها';
+  public static title = "حدف داده های انتخابی";
+  public static message = "در صورت تایید کلیه داده های انتخاب شده حذف میشود";
+  public static deleteAllWarningTitle = "هشدار حذف تمام داده ها";
   public static deleteAllWarningMessage =
-    'تمام داده های موجود در این جدول بشکل کامل حذف خواهد شد';
+    "تمام داده های موجود در این جدول بشکل کامل حذف خواهد شد";
 
   public static async showDeleteAllMessage() {
     const modalResult = await Swal.fire({
-      icon: 'danger',
+      icon: "danger",
       title: this.title,
       text: this.message,
       showCancelButton: true,
       showDenyButton: true,
-      confirmButtonText: 'حذف شود',
+      confirmButtonText: "حذف شود",
       cancelButtonText: `حدف نشود`,
-      confirmButtonColor: '#F00',
-      cancelButtonColor: '#0742c0',
+      confirmButtonColor: "#F00",
+      cancelButtonColor: "#0742c0",
     });
     if (modalResult.isConfirmed) {
       return await this.deleteAll();
@@ -30,15 +30,15 @@ export class BatchDeleteHelper {
 
   public static async showDeleteSomeMessage(someIds) {
     const modalResult = await Swal.fire({
-      icon: 'danger',
+      icon: "danger",
       title: this.title,
       text: this.message,
       showCancelButton: true,
       showDenyButton: true,
-      confirmButtonText: 'حذف شود',
+      confirmButtonText: "حذف شود",
       cancelButtonText: `حدف نشود`,
-      confirmButtonColor: '#F00',
-      cancelButtonColor: '#0742c0',
+      confirmButtonColor: "#F00",
+      cancelButtonColor: "#0742c0",
     });
     if (modalResult.isConfirmed) {
       return await this.deleteSome(someIds);

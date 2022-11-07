@@ -24,12 +24,12 @@
   </FormContainer>
 </template>
 <script>
-import FormContainer from '@/custom/components/FormContainer';
-import FormBuilder from '@/custom/components/FormBuilder';
-import PromiseButton from '@/custom/components/PromiseButton';
+import FormContainer from "@/custom/components/FormContainer";
+import FormBuilder from "@/custom/components/FormBuilder";
+import PromiseButton from "@/custom/components/PromiseButton";
 
 export default {
-  props: ['formExtend'],
+  props: ["formExtend"],
   components: { PromiseButton, FormBuilder, FormContainer },
 };
 </script>

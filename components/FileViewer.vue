@@ -37,51 +37,51 @@
 }
 </style>
 <script>
-import Card from './Card';
-import { computed, ref, toRef } from 'vue';
+import Card from "./Card";
+import { computed, ref, toRef } from "vue";
 
 export default {
   components: { Card },
-  props: ['fileData'],
+  props: ["fileData"],
   setup(props) {
-    const fileData = toRef(props, 'fileData');
+    const fileData = toRef(props, "fileData");
     const file = ref(fileData.value.file);
     const type = computed(() => {
       let text = file.value;
       if (text) {
         text = text.name;
-        switch (text.toLowerCase().split('.')[text.split('.').length - 1]) {
-          case 'png':
-          case 'jpg':
-          case 'jpeg':
-          case 'svg':
-          case 'tiff':
-            return 'image';
-          case 'doc':
-          case 'docx':
-            return 'doc';
-          case 'mp3':
-          case 'flac':
-          case 'wav':
-          case 'wma':
-          case 'aac':
-            return 'mp3';
-          case 'mp4':
-          case 'avi':
-            return 'video';
-          case 'pdf':
-            return 'pdf';
-          case 'xls':
-          case 'xlsx':
-            return 'excel';
-          case 'txt':
-            return 'txt';
+        switch (text.toLowerCase().split(".")[text.split(".").length - 1]) {
+          case "png":
+          case "jpg":
+          case "jpeg":
+          case "svg":
+          case "tiff":
+            return "image";
+          case "doc":
+          case "docx":
+            return "doc";
+          case "mp3":
+          case "flac":
+          case "wav":
+          case "wma":
+          case "aac":
+            return "mp3";
+          case "mp4":
+          case "avi":
+            return "video";
+          case "pdf":
+            return "pdf";
+          case "xls":
+          case "xlsx":
+            return "excel";
+          case "txt":
+            return "txt";
           default:
-            return 'php';
+            return "php";
         }
       }
 
-      return 'php';
+      return "php";
     });
     return {
       type,

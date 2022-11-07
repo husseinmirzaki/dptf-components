@@ -5,13 +5,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import TableTD from '@/custom/components/table/tbody/TableTD.vue';
-import FieldComponent from '@/custom/components/FieldComponent.vue';
+import { defineComponent } from "vue";
+import TableTD from "@/custom/components/table/tbody/TableTD.vue";
+import FieldComponent from "@/custom/components/FieldComponent.vue";
 
 export default defineComponent({
   components: { FieldComponent, TableTD },
-  props: ['data'],
+  props: ["data"],
 });
 </script>
 <style>

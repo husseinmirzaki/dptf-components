@@ -31,13 +31,13 @@
   </table-t-d>
 </template>
 <script lang="ts">
-import { defineComponent, toRef } from 'vue';
-import TableTD from '@/custom/components/table/tbody/TableTD.vue';
-import { VueInstanceService } from '@/Defaults';
+import { defineComponent, toRef } from "vue";
+import TableTD from "@/custom/components/table/tbody/TableTD.vue";
+import { VueInstanceService } from "@/Defaults";
 
 export default defineComponent({
   components: { TableTD },
-  props: ['data'],
+  props: ["data"],
   setup() {
     return {
       VueInstanceService,

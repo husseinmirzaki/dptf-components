@@ -58,11 +58,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, watch } from 'vue';
-import { MenuComponent } from '@/assets/ts/components/MenuComponent';
-import { getCSSVariableValue } from '@/assets/ts/_utils';
-import Card from '@/custom/components/Card.vue';
-import CardMixin from '@/custom/mixins/CardMixin';
+import { defineComponent, onMounted, ref, watch } from "vue";
+import { MenuComponent } from "@/assets/ts/components/MenuComponent";
+import { getCSSVariableValue } from "@/assets/ts/_utils";
+import Card from "@/custom/components/Card.vue";
+import CardMixin from "@/custom/mixins/CardMixin";
 
 export default defineComponent({
   components: { Card },
@@ -74,17 +74,17 @@ export default defineComponent({
   },
   setup(props) {
     const root = ref();
-    const labelColor = getCSSVariableValue('--bs-gray-500');
-    const borderColor = getCSSVariableValue('--bs-gray-200');
+    const labelColor = getCSSVariableValue("--bs-gray-500");
+    const borderColor = getCSSVariableValue("--bs-gray-200");
 
-    const color = getCSSVariableValue('--bs-' + props.widgetColor);
+    const color = getCSSVariableValue("--bs-" + props.widgetColor);
 
     const strokeColor = ref(props.strokeColor);
 
     const chartOptions = {
       chart: {
-        fontFamily: 'inherit',
-        type: 'area',
+        fontFamily: "inherit",
+        type: "area",
         toolbar: {
           show: false,
         },
@@ -112,11 +112,11 @@ export default defineComponent({
         enabled: false,
       },
       fill: {
-        type: 'solid',
+        type: "solid",
         opacity: 0,
       },
       stroke: {
-        curve: 'smooth',
+        curve: "smooth",
         show: true,
         width: 3,
         colors: [strokeColor.value],
@@ -132,12 +132,12 @@ export default defineComponent({
           show: false,
           style: {
             colors: labelColor,
-            fontSize: '12px',
+            fontSize: "12px",
           },
         },
         crosshairs: {
           show: false,
-          position: 'front',
+          position: "front",
           stroke: {
             color: borderColor,
             width: 1,
@@ -152,50 +152,50 @@ export default defineComponent({
           show: false,
           style: {
             colors: labelColor,
-            fontSize: '12px',
+            fontSize: "12px",
           },
         },
       },
       states: {
         normal: {
           filter: {
-            type: 'none',
+            type: "none",
             value: 0,
           },
         },
         hover: {
           filter: {
-            type: 'none',
+            type: "none",
             value: 0,
           },
         },
         active: {
           allowMultipleDataPointsSelection: false,
           filter: {
-            type: 'none',
+            type: "none",
             value: 0,
           },
         },
       },
       tooltip: {
         style: {
-          fontSize: '12px',
+          fontSize: "12px",
         },
         x: {
           formatter: function (val) {
             return [
-              'فروردین',
-              'اردیبهشت',
-              'خرداد',
-              'تیر',
-              'مرداد',
-              'شهریور',
-              'مهر',
-              'آبان',
-              'آذر',
-              'دی',
-              'بهمن',
-              'اسفند',
+              "فروردین",
+              "اردیبهشت",
+              "خرداد",
+              "تیر",
+              "مرداد",
+              "شهریور",
+              "مهر",
+              "آبان",
+              "آذر",
+              "دی",
+              "بهمن",
+              "اسفند",
             ][val - 1];
           },
         },
@@ -217,7 +217,7 @@ export default defineComponent({
 
     const series = [
       {
-        name: 'موجودیت',
+        name: "موجودیت",
         data: [
           {
             x: 1,

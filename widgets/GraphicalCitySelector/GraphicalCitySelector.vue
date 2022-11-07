@@ -6,10 +6,10 @@
   />
 </template>
 <script>
-import { cities } from '@/custom/widgets/GraphicalCitySelector/cities';
-import { provinces } from '@/custom/widgets/GraphicalCitySelector/provinces';
-import { computed, onMounted, ref, toRef } from 'vue';
-import GraphicalSelector from '@/custom/widgets/GraphicalSelector';
+import { cities } from "@/custom/widgets/GraphicalCitySelector/cities";
+import { provinces } from "@/custom/widgets/GraphicalCitySelector/provinces";
+import { computed, onMounted, ref, toRef } from "vue";
+import GraphicalSelector from "@/custom/widgets/GraphicalSelector";
 
 export default {
   components: { GraphicalSelector },

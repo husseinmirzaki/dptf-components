@@ -96,11 +96,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, nextTick, onMounted, ref } from 'vue';
-import ScrollHandler from '@/custom/components/ScrollHandler.vue';
+import { defineComponent, nextTick, onMounted, ref } from "vue";
+import ScrollHandler from "@/custom/components/ScrollHandler.vue";
 import NotificationV1, {
   NotificationV1Interface,
-} from '@/custom/components/notification/NotificationV1.vue';
+} from "@/custom/components/notification/NotificationV1.vue";
 
 export default defineComponent({
   components: {
@@ -113,12 +113,12 @@ export default defineComponent({
     for (let i = 0; i < 10; i++) {
       notifications.value.push({
         id: i.toString(),
-        title: 'موضوع',
-        background: 'media/svg/shapes/abstract-4.svg',
-        widgetClasses: 'card-xl-stretch mb-xl-8',
-        time: '3:30PM - 4:20PM',
+        title: "موضوع",
+        background: "media/svg/shapes/abstract-4.svg",
+        widgetClasses: "card-xl-stretch mb-xl-8",
+        time: "3:30PM - 4:20PM",
         description:
-          'Create a headline that is informative<br/>and will capture readers',
+          "Create a headline that is informative<br/>and will capture readers",
       });
     }
 

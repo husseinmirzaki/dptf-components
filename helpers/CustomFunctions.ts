@@ -4,9 +4,9 @@ export function checkKeyRule(
   identifierCallback: () => string | number | null,
   before: any
 ) {
-  return before['promise']((instance, value) => {
+  return before["promise"]((instance, value) => {
     return new Promise<boolean>((resolve) => {
-      if (!value || value == '') {
+      if (!value || value == "") {
         resolve(true);
         return;
       }
@@ -14,13 +14,13 @@ export function checkKeyRule(
       service
         .checkKey(value, identifierCallback())
         .then(({ data }) => {
-          resolve(!data['exists']);
+          resolve(!data["exists"]);
         })
         .catch(() => {
           resolve(false);
         });
     });
-  }, 'این واحد تکراری میباشد');
+  }, "این واحد تکراری میباشد");
 }
 
 /**

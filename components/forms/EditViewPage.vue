@@ -37,28 +37,28 @@
   </StateManager>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
-import AddAbleFormOnline from '@/custom/components/forms/AddAbleFormOnline.vue';
-import SimpleReadOnlyFormOnline from '@/custom/components/forms/SimpleReadOnlyFormOnline.vue';
-import StateManager from '@/custom/components/forms/StateManager.vue';
+import { defineComponent } from "vue";
+import AddAbleFormOnline from "@/custom/components/forms/AddAbleFormOnline.vue";
+import SimpleReadOnlyFormOnline from "@/custom/components/forms/SimpleReadOnlyFormOnline.vue";
+import StateManager from "@/custom/components/forms/StateManager.vue";
 
 export default defineComponent({
   props: [
-    'pageTitle',
-    'modelName',
-    'onFieldsRead',
-    'onOrderRead',
-    'onReadTableCreation',
-    'onFormReadyRead',
-    'disableTitle',
-    'onFieldsAdd',
-    'onOrderAdd',
-    'onFormReadyAdd',
-    'onBuildFields',
-    'onModalBuildFields',
-    'onReadBuildFields',
-    'onModes',
-    'onReadModes',
+    "pageTitle",
+    "modelName",
+    "onFieldsRead",
+    "onOrderRead",
+    "onReadTableCreation",
+    "onFormReadyRead",
+    "disableTitle",
+    "onFieldsAdd",
+    "onOrderAdd",
+    "onFormReadyAdd",
+    "onBuildFields",
+    "onModalBuildFields",
+    "onReadBuildFields",
+    "onModes",
+    "onReadModes",
   ],
   components: { StateManager, SimpleReadOnlyFormOnline, AddAbleFormOnline },
 });

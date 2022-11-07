@@ -10,11 +10,11 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, nextTick, onMounted } from 'vue';
-import axios from 'axios';
-import AsideProject from '@/custom/components/AsideProject.vue';
-import { onScrollLoader } from '@/custom/helpers/OnScrollLoader';
-import { boolResolver } from '@/custom/helpers/PromiseHelper';
+import { defineComponent, nextTick, onMounted } from "vue";
+import axios from "axios";
+import AsideProject from "@/custom/components/AsideProject.vue";
+import { onScrollLoader } from "@/custom/helpers/OnScrollLoader";
+import { boolResolver } from "@/custom/helpers/PromiseHelper";
 
 export default defineComponent({
   components: { AsideProject },
@@ -25,7 +25,7 @@ export default defineComponent({
     // methods
     getData.value = (page) => {
       const n = new URLSearchParams({
-        access_token: 'ynWNGbivksJ7fgrSzZnK',
+        access_token: "ynWNGbivksJ7fgrSzZnK",
         page: String(page),
       });
       return boolResolver((ok, fail) => {

@@ -59,24 +59,24 @@
   </div>
 </template>
 <script>
-import { onMounted, ref, toRef, watch } from 'vue';
+import { onMounted, ref, toRef, watch } from "vue";
 
 export default {
   props: [
-    'title',
-    'active',
-    'parent',
-    'name',
-    'svgIcon',
-    'iconOnly',
-    'disable',
-    'badge',
-    'badgeColor',
+    "title",
+    "active",
+    "parent",
+    "name",
+    "svgIcon",
+    "iconOnly",
+    "disable",
+    "badge",
+    "badgeColor",
   ],
   setup(props) {
     const index = ref(0);
-    const indexUniqueName = ref('');
-    const parent = toRef(props, 'parent');
+    const indexUniqueName = ref("");
+    const parent = toRef(props, "parent");
 
     const log = (_index) => {
       parent.value.setActiveItem(_index);
@@ -133,7 +133,7 @@ $active-color: #0d8ddc;
   margin-bottom: 5px;
 
   &:after {
-    content: '';
+    content: "";
     position: absolute;
     top: 4px;
     left: 0;
@@ -198,7 +198,7 @@ $active-color: #0d8ddc;
     color: $active-color;
 
     &:after {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: 0;

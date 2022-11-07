@@ -6,14 +6,14 @@
   </div>
 </template>
 <script lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref } from "vue";
 
 export default {
   setup() {
     const helper = ref();
 
     onMounted(() => {
-      helper.value.lastElementChild.classList.add('helper-child');
+      helper.value.lastElementChild.classList.add("helper-child");
     });
 
     return { helper };

@@ -7,7 +7,7 @@
 export default {
   props: {
     sizeClass: {
-      default: 'svg-icon-2x',
+      default: "svg-icon-2x",
     },
   },
 };

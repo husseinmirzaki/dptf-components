@@ -1,28 +1,28 @@
-import TableHeader from '@/custom/components/table/header/TableHeader.vue';
-import TableTH from '@/custom/components/table/thead/TableTH.vue';
-import TableTD from '@/custom/components/table/tbody/TableTD.vue';
-import { Ref, ref, toRefs, watch } from 'vue';
-import { ApiService, Configs, VueInstanceService } from '@/Defaults';
-import TableTDUser from '@/custom/components/table/tbody/TableTDUser.vue';
-import TableTDUserMulti from '@/custom/components/table/tbody/TableTDUserMulti.vue';
-import TableTDEmpty from '@/custom/components/table/tbody/TableTDEmpty.vue';
-import { ContextMenuItem } from '@/custom/components/ContextMenuService';
-import TableTDBool from '@/custom/components/table/tbody/TableTDBool.vue';
-import Swal from 'sweetalert2/dist/sweetalert2.js';
-import { fieldC } from '@/custom/components/FieldComponent.vue';
-import TableTDDateTime from '@/custom/components/table/tbody/TableTDDateTime.vue';
-import TableTDColor from '@/custom/components/table/tbody/TableTDColor.vue';
-import TableTr from '@/custom/components/table/TableTr.vue';
-import TableTDDate from '@/custom/components/table/tbody/TableTDDate.vue';
-import FieldComponentPropsInterface from '@/custom/components/FieldComponentPropsInterface';
-import TableTDCurrency from '@/custom/components/table/tbody/TableTDCurrency.vue';
+import TableHeader from "@/custom/components/table/header/TableHeader.vue";
+import TableTH from "@/custom/components/table/thead/TableTH.vue";
+import TableTD from "@/custom/components/table/tbody/TableTD.vue";
+import { Ref, ref, toRefs, watch } from "vue";
+import { ApiService, Configs, VueInstanceService } from "@/Defaults";
+import TableTDUser from "@/custom/components/table/tbody/TableTDUser.vue";
+import TableTDUserMulti from "@/custom/components/table/tbody/TableTDUserMulti.vue";
+import TableTDEmpty from "@/custom/components/table/tbody/TableTDEmpty.vue";
+import { ContextMenuItem } from "@/custom/components/ContextMenuService";
+import TableTDBool from "@/custom/components/table/tbody/TableTDBool.vue";
+import Swal from "sweetalert2/dist/sweetalert2.js";
+import { fieldC } from "@/custom/components/FieldComponent.vue";
+import TableTDDateTime from "@/custom/components/table/tbody/TableTDDateTime.vue";
+import TableTDColor from "@/custom/components/table/tbody/TableTDColor.vue";
+import TableTr from "@/custom/components/table/TableTr.vue";
+import TableTDDate from "@/custom/components/table/tbody/TableTDDate.vue";
+import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
+import TableTDCurrency from "@/custom/components/table/tbody/TableTDCurrency.vue";
 
 export class Table {
-  defaultTableName = '';
-  preferencesPrefixKey = 'table_v1_';
+  defaultTableName = "";
+  preferencesPrefixKey = "table_v1_";
 
   get modelName() {
-    return '';
+    return "";
   }
 
   get tableName() {
@@ -158,7 +158,7 @@ export class Table {
    * defines the communication method with
    * the server
    */
-  method = 'get';
+  method = "get";
 
   /**
    * I DONT KNOW YET
@@ -175,8 +175,8 @@ export class Table {
    */
   isLoading: Ref<boolean> = ref(false);
 
-  basePushAddress = '';
-  teleportPaginationToSelector = '';
+  basePushAddress = "";
+  teleportPaginationToSelector = "";
 
   showPagination = true;
 
@@ -209,7 +209,7 @@ export class Table {
   }
 
   updatePushAddress(data) {
-    return this.basePushAddress + 'update/' + data.id;
+    return this.basePushAddress + "update/" + data.id;
   }
 
   getDeleteItemId(data) {
@@ -219,16 +219,16 @@ export class Table {
 
   onDeleteClicked(data) {
     Swal.fire({
-      icon: 'warning',
-      title: 'آیا تمایل داید که این داده را حذف کنید',
-      text: 'توجه کنید بعد از حذف کردن این مورد دیگر قادر به بازگردانی داده های موجود در آن نمیباشید',
+      icon: "warning",
+      title: "آیا تمایل داید که این داده را حذف کنید",
+      text: "توجه کنید بعد از حذف کردن این مورد دیگر قادر به بازگردانی داده های موجود در آن نمیباشید",
       showCancelButton: true,
-      confirmButtonText: 'حذف شود',
+      confirmButtonText: "حذف شود",
       cancelButtonText: `حدف نشود`,
-      confirmButtonColor: '#F00',
-      cancelButtonColor: '#0742c0',
+      confirmButtonColor: "#F00",
+      cancelButtonColor: "#0742c0",
     }).then((e) => {
-      if (this.props.url.value != '') {
+      if (this.props.url.value != "") {
         if (e.value) {
           this.service.deleteOne(this.getDeleteItemId(data)).then(
             () => {
@@ -236,38 +236,38 @@ export class Table {
             },
             (e) => {
               Swal.fire({
-                icon: 'error',
-                title: 'توجه کنید',
-                text: 'داده ای که می خواهید آنرا پاک کنید در بخش های دیگری استفاده شده لطفا اول آن موارد را پاک کنید',
-                confirmButtonText: 'حذف شود',
+                icon: "error",
+                title: "توجه کنید",
+                text: "داده ای که می خواهید آنرا پاک کنید در بخش های دیگری استفاده شده لطفا اول آن موارد را پاک کنید",
+                confirmButtonText: "حذف شود",
               });
             }
           );
         }
       } else {
-        this.context.emit('delete', data);
+        this.context.emit("delete", data);
       }
     });
   }
 
   onDataDeleted(data) {
     this.refresh();
-    this.context.emit('delete', data);
+    this.context.emit("delete", data);
   }
 
   onViewClicked(data) {
-    if (this.basePushAddress != '') {
+    if (this.basePushAddress != "") {
       VueInstanceService.router.push(this.viewPushAddress(data));
     } else {
-      this.context.emit('view', data);
+      this.context.emit("view", data);
     }
   }
 
   onEditClicked(data) {
-    if (this.basePushAddress != '') {
+    if (this.basePushAddress != "") {
       VueInstanceService.router.push(this.updatePushAddress(data));
     } else {
-      this.context.emit('update', data);
+      this.context.emit("update", data);
     }
   }
 
@@ -284,9 +284,9 @@ export class Table {
     this.filterForm = this.getFilterForm();
     VueInstanceService.on(this.tableName, (e) => {
       // console.log("called an event for table", this.tableName, e);
-      if (e[0] == 'refresh') {
+      if (e[0] == "refresh") {
         this.refresh();
-      } else if (e[0] == 'export') {
+      } else if (e[0] == "export") {
         this.requestExport();
       } else {
         this.onTableEvent(e);
@@ -306,15 +306,15 @@ export class Table {
   }
 
   get deleteContextMenuText() {
-    return 'حذف';
+    return "حذف";
   }
 
   get updateContextMenuText() {
-    return 'ویرایش';
+    return "ویرایش";
   }
 
   get viewContextMenuText() {
-    return 'نمایش';
+    return "نمایش";
   }
 
   buildContextMenu(): Array<ContextMenuItem> {
@@ -322,8 +322,8 @@ export class Table {
 
     if (this.showContextMenuView) {
       items.push({
-        state: 'primary',
-        faIcon: 'far fa-eye',
+        state: "primary",
+        faIcon: "far fa-eye",
         text: this.viewContextMenuText,
         onClick: (data) => {
           this.onViewClicked(data);
@@ -334,8 +334,8 @@ export class Table {
 
     if (this.showContextMenuUpdate) {
       items.push({
-        state: 'warning',
-        faIcon: 'fas fa-pen',
+        state: "warning",
+        faIcon: "fas fa-pen",
         text: this.updateContextMenuText,
         onClick: (data) => {
           this.onEditClicked(data);
@@ -345,8 +345,8 @@ export class Table {
 
     if (this.showContextMenuDelete) {
       items.push({
-        state: 'danger',
-        faIcon: 'far fa-trash-alt',
+        state: "danger",
+        faIcon: "far fa-trash-alt",
         text: this.deleteContextMenuText,
         onClick: (data) => {
           this.onDeleteClicked(data);
@@ -382,8 +382,8 @@ export class Table {
 
   get menuProps() {
     const props = {};
-    if (this.menuTitle) props['title'] = this.menuTitle;
-    if (this.menuItems) props['items'] = this.menuItems;
+    if (this.menuTitle) props["title"] = this.menuTitle;
+    if (this.menuItems) props["items"] = this.menuItems;
     return props;
   }
 
@@ -399,28 +399,28 @@ export class Table {
   }
 
   onTHeadProps(header, index) {
-    let translate = '';
+    let translate = "";
     if (this.headerTranslate[header]) {
       translate = this.headerTranslate[header];
     } else {
-      translate = VueInstanceService.vue.config.globalProperties['$t'](
+      translate = VueInstanceService.vue.config.globalProperties["$t"](
         `table_${header}`
       );
     }
 
-    if (header == 'table-action') {
-      translate = 'عملیات';
+    if (header == "table-action") {
+      translate = "عملیات";
     }
 
     return {
       class: [
-        'align-middle pe-2 text-nowrap',
+        "align-middle pe-2 text-nowrap",
         {
-          'min-w-150px': translate.length <= 20,
-          'min-w-250px': translate.length > 20 && translate.length < 50,
-          'min-w-300px': translate.length >= 50 && translate.length < 60,
-          'min-w-400px': translate.length >= 60,
-          'ps-3': index === 0,
+          "min-w-150px": translate.length <= 20,
+          "min-w-250px": translate.length > 20 && translate.length < 50,
+          "min-w-300px": translate.length >= 50 && translate.length < 60,
+          "min-w-400px": translate.length >= 60,
+          "ps-3": index === 0,
         },
       ],
       header: translate,
@@ -447,7 +447,7 @@ export class Table {
   ): any {
     let itemElement = Object.assign(item);
     if (header.search(/\./) > -1) {
-      const s = header.split('.');
+      const s = header.split(".");
       for (const i in s) {
         if (itemElement[s[i]]) {
           itemElement = itemElement[s[i]];
@@ -495,11 +495,11 @@ export class Table {
 
     const data = item[header];
     if (data != null) {
-      if (typeof data === 'boolean') {
+      if (typeof data === "boolean") {
         return TableTDBool;
-      } else if (typeof data === 'string') {
-        if (data.startsWith('#') && data.length === 7) return TableTDColor;
-        if (data === 'true' || data == 'false') return TableTDBool;
+      } else if (typeof data === "string") {
+        if (data.startsWith("#") && data.length === 7) return TableTDColor;
+        if (data === "true" || data == "false") return TableTDBool;
         else if (data.match(/^\d{4}-\d{1,2}-\d{1,2}$/)) {
           return TableTDDate;
         } else if (
@@ -509,24 +509,24 @@ export class Table {
         }
         // matches the json iso formatted datetime
         else if (
-          (data.endsWith('Z') && data.search(/[:\-T]{2,}/) > -1) ||
+          (data.endsWith("Z") && data.search(/[:\-T]{2,}/) > -1) ||
           data.split(/\d+[:\-T]/).length > 2
         ) {
           return TableTDDateTime;
         }
-      } else if (typeof data === 'object') {
+      } else if (typeof data === "object") {
         if (Array.isArray(data) && data.length > 0) {
           if (
-            data[0]['avatar'] ||
-            data[0]['first_name'] != null ||
-            data[0]['last_name'] != null
+            data[0]["avatar"] ||
+            data[0]["first_name"] != null ||
+            data[0]["last_name"] != null
           ) {
             return TableTDUserMulti;
           }
         } else if (data.length === 0) {
           return TableTDEmpty;
         } else {
-          if (data['avatar'] || data['full_name'] || data['last_name']) {
+          if (data["avatar"] || data["full_name"] || data["last_name"]) {
             return TableTDUser;
           }
         }
@@ -537,7 +537,7 @@ export class Table {
   }
 
   get canUseUrl() {
-    return this.props.url.value != '';
+    return this.props.url.value != "";
   }
 
   getFilters(): Record<string, any> {
@@ -552,39 +552,39 @@ export class Table {
     let url = this.props.url.value;
     const filters = this.getFilters();
 
-    if (url.indexOf('?') > -1 && !url.endsWith('?')) {
+    if (url.indexOf("?") > -1 && !url.endsWith("?")) {
       url += `&page=${this.currentPage.value}`;
-    } else if (!url.endsWith('?')) {
+    } else if (!url.endsWith("?")) {
       url += `?page=${this.currentPage.value}`;
     }
 
-    if (this.method == 'get') {
+    if (this.method == "get") {
       const qf = new URLSearchParams(filters);
 
-      qf.set('json_filter', JSON.stringify(this.jsonFilters));
+      qf.set("json_filter", JSON.stringify(this.jsonFilters));
 
       if (this.orderedField.value.name) {
-        qf.set('is_ord', '1');
-        qf.set('ord_field', this.orderedField.value.name);
-        qf.set('ord_dir', this.orderedField.value.order);
+        qf.set("is_ord", "1");
+        qf.set("ord_field", this.orderedField.value.name);
+        qf.set("ord_dir", this.orderedField.value.order);
       }
 
       if (this.isRequestingExport) {
-        qf.set('export_table_name', this.tableName);
+        qf.set("export_table_name", this.tableName);
         qf.set(
-          'export_table_conf_name',
+          "export_table_conf_name",
           `${this.preferencesPrefixKey}${this.tableName}`
         );
-        qf.set('export_current_query', '1');
+        qf.set("export_current_query", "1");
       }
 
-      if (qf.toString() != '') {
+      if (qf.toString() != "") {
         url += `&${qf.toString()}`;
       }
 
       if (this.isRequestingExport) {
         return ApiService.get(url, {
-          responseType: 'blob',
+          responseType: "blob",
         }).then(
           (e) => {
             this.downloadExportedFile(e);
@@ -607,17 +607,17 @@ export class Table {
       };
 
       if (this.orderedField.value.length > 0) {
-        tableData['is_ord'] = '1';
-        tableData['ord_field'] = this.orderedField.value.name;
-        tableData['ord_dir'] = this.orderedField.value.order;
+        tableData["is_ord"] = "1";
+        tableData["ord_field"] = this.orderedField.value.name;
+        tableData["ord_dir"] = this.orderedField.value.order;
       }
 
       if (this.isRequestingExport) {
-        tableData['export_table_name'] = this.tableName;
+        tableData["export_table_name"] = this.tableName;
         tableData[
-          'export_table_conf_name'
+          "export_table_conf_name"
         ] = `${this.preferencesPrefixKey}${this.tableName}`;
-        tableData['export_current_query'] = 1;
+        tableData["export_current_query"] = 1;
       }
 
       Object.keys(filters).forEach((key) => {
@@ -687,17 +687,17 @@ export class Table {
   }
 
   toggleOrder(header) {
-    if (this.orderedField.value['name'] != header) {
+    if (this.orderedField.value["name"] != header) {
       this.orderedField.value = {
         name: header,
       };
     }
 
-    if (this.orderedField.value['order'] == 'asc')
-      this.orderedField.value['order'] = 'desc';
-    else if (this.orderedField.value['order'] == 'desc') {
+    if (this.orderedField.value["order"] == "asc")
+      this.orderedField.value["order"] = "desc";
+    else if (this.orderedField.value["order"] == "desc") {
       this.orderedField.value = {};
-    } else this.orderedField.value['order'] = 'asc';
+    } else this.orderedField.value["order"] = "asc";
     console.log(this.orderedField);
     this.refresh();
   }
@@ -712,11 +712,11 @@ export class Table {
 
   downloadExportedFile(e: any) {
     const url = window.URL.createObjectURL(e.data);
-    const a = document.createElement('a');
-    a.style.display = 'none';
+    const a = document.createElement("a");
+    a.style.display = "none";
     a.href = url;
     // the filename you want
-    a.download = 'todo-1.xlsx';
+    a.download = "todo-1.xlsx";
     document.body.appendChild(a);
     a.click();
     window.URL.revokeObjectURL(url);

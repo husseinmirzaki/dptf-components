@@ -9,12 +9,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import DivTreeItem from '@/custom/components/div-tree/DivTreeItem.vue';
+import { defineComponent } from "vue";
+import DivTreeItem from "@/custom/components/div-tree/DivTreeItem.vue";
 
 export default defineComponent({
   components: { DivTreeItem },
-  props: ['structure'],
+  props: ["structure"],
 });
 </script>
 <style>
@@ -64,7 +64,7 @@ export default defineComponent({
   top: 0;
   left: 0;
   transform: translateX(50%) translateY(-100%);
-  content: '';
+  content: "";
   height: 20px;
   width: 100%;
   border-left: 1px solid black;
@@ -86,7 +86,7 @@ export default defineComponent({
 }
 
 .items-row .show-stuff .item:after {
-  content: '';
+  content: "";
   position: absolute;
   transform: translateX(50%) translateY(-100%);
   width: 100%;
@@ -99,7 +99,7 @@ export default defineComponent({
 }
 
 .items-row .show-stuff .item:before {
-  content: '';
+  content: "";
   position: absolute;
   transform: translateY(-100%);
   width: 100%;
@@ -144,7 +144,7 @@ export default defineComponent({
 }
 
 .item-children .item-container:before {
-  content: '';
+  content: "";
   position: absolute;
   width: 50%;
   height: 100%;
@@ -175,7 +175,7 @@ export default defineComponent({
 }
 
 .item-children:not(.show-stuff) > .item:after {
-  content: '';
+  content: "";
   position: absolute;
   width: 50%;
   height: calc(var(--height) + 20px);

@@ -1,12 +1,12 @@
 <script lang="ts">
-import { defineComponent, h, onMounted, ref } from 'vue';
-import Modal from '@/custom/components/model/Modal.vue';
-import DataHistoryService from '@/custom/services/DataHistoryService';
-import Spinner from '@/custom/components/Spinner.vue';
-import { VueInstanceService } from '@/Defaults';
-import FieldComponentPropsInterface from '@/custom/components/FieldComponentPropsInterface';
-import { BuildByModelName } from '@/custom/forms/utils/BuildByModelName';
-import { DEFAULT_COLS } from '@/custom/helpers/RenderFunctionHelpers';
+import { defineComponent, h, onMounted, ref } from "vue";
+import Modal from "@/custom/components/model/Modal.vue";
+import DataHistoryService from "@/custom/services/DataHistoryService";
+import Spinner from "@/custom/components/Spinner.vue";
+import { VueInstanceService } from "@/Defaults";
+import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
+import { BuildByModelName } from "@/custom/forms/utils/BuildByModelName";
+import { DEFAULT_COLS } from "@/custom/helpers/RenderFunctionHelpers";
 
 export default defineComponent({
   setup(props, context) {
@@ -23,7 +23,7 @@ export default defineComponent({
 
     const getItem = (id) => {
       promise.value = DataHistoryService.get(
-        DataHistoryService.baseUrl + id + '?key=w48f94qw9f84qw9f84qw9f8'
+        DataHistoryService.baseUrl + id + "?key=w48f94qw9f84qw9f84qw9f8"
       );
       promise.value.then(({ data: info }) => {
         state.value = 0;
@@ -41,7 +41,7 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      VueInstanceService.on('show-history-info', (e) => {
+      VueInstanceService.on("show-history-info", (e) => {
         open(e);
       });
     });
@@ -49,7 +49,7 @@ export default defineComponent({
     const fixSelectData = (field, data) => {
       if (
         field.name &&
-        field.field_type == 'select' &&
+        field.field_type == "select" &&
         !field.select_multiple
       ) {
         const item = field.select_data.find((e) => e[0] == data);
@@ -61,8 +61,8 @@ export default defineComponent({
     };
 
     const valueOrNull = (jsonInfo, field) => {
-      if (jsonInfo[field['name']]) {
-        return jsonInfo[field['name']];
+      if (jsonInfo[field["name"]]) {
+        return jsonInfo[field["name"]];
       }
       return null;
     };
@@ -71,39 +71,39 @@ export default defineComponent({
       const data = valueOrNull(jsonInfo, field);
       if (
         data &&
-        data['old'] != null &&
-        data['old'] != undefined &&
-        data['old'] != ''
+        data["old"] != null &&
+        data["old"] != undefined &&
+        data["old"] != ""
       ) {
-        return fixSelectData(field, data['old']);
+        return fixSelectData(field, data["old"]);
       }
-      return '-';
+      return "-";
     };
 
     const newD = (jsonInfo, field) => {
       const data = valueOrNull(jsonInfo, field);
       if (
         data &&
-        data['new'] != null &&
-        data['new'] != undefined &&
-        data['new'] != ''
+        data["new"] != null &&
+        data["new"] != undefined &&
+        data["new"] != ""
       ) {
-        return fixSelectData(field, data['new']);
+        return fixSelectData(field, data["new"]);
       }
-      return '-';
+      return "-";
     };
 
     return () => {
       return h(
         Modal,
         {
-          modalSizeClass: 'w-1000px mw-1000px',
-          modalTitle: 'تغییرات انجام شده',
+          modalSizeClass: "w-1000px mw-1000px",
+          modalTitle: "تغییرات انجام شده",
           ref: (el) => (modalInstance = el),
           thinFooter: true,
         },
         {
-          'modal-content': () =>
+          "modal-content": () =>
             h(
               Spinner,
               {
@@ -112,18 +112,18 @@ export default defineComponent({
               () => {
                 if (state.value == 0) return;
                 return [
-                  DEFAULT_COLS.row({ class: 'row first-row' }, [
-                    DEFAULT_COLS.col4(h('p', 'نام فیلد ها')),
-                    DEFAULT_COLS.col4(h('p', 'مقدار قدیمی')),
-                    DEFAULT_COLS.col4(h('p', 'مقدار جدید')),
+                  DEFAULT_COLS.row({ class: "row first-row" }, [
+                    DEFAULT_COLS.col4(h("p", "نام فیلد ها")),
+                    DEFAULT_COLS.col4(h("p", "مقدار قدیمی")),
+                    DEFAULT_COLS.col4(h("p", "مقدار جدید")),
                   ]),
                   lastModelInstance.formInstance.activeFields.value.map(
                     (field: FieldComponentPropsInterface) => {
                       const jsonInfo = data.value.changed_data;
-                      return DEFAULT_COLS.row({ class: 'not-first-row row' }, [
-                        DEFAULT_COLS.col4(h('p', field.label)),
-                        DEFAULT_COLS.col4(h('p', old(jsonInfo, field))),
-                        DEFAULT_COLS.col4(h('p', newD(jsonInfo, field))),
+                      return DEFAULT_COLS.row({ class: "not-first-row row" }, [
+                        DEFAULT_COLS.col4(h("p", field.label)),
+                        DEFAULT_COLS.col4(h("p", old(jsonInfo, field))),
+                        DEFAULT_COLS.col4(h("p", newD(jsonInfo, field))),
                       ]);
                     }
                   ),

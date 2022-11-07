@@ -1,7 +1,7 @@
-import { ref, Ref } from 'vue';
-import { CreateForm, CreateFormExtend } from '@/custom/helpers/BaseForm';
-import { modelToServiceMap } from '@/ModelToServiceMap';
-import { FieldsApiService } from '@/custom/services/FieldsApiService';
+import { ref, Ref } from "vue";
+import { CreateForm, CreateFormExtend } from "@/custom/helpers/BaseForm";
+import { modelToServiceMap } from "@/ModelToServiceMap";
+import { FieldsApiService } from "@/custom/services/FieldsApiService";
 
 // تمام چیزی که این خط داره انجام میده اینه که به کامپایلر
 // میگه که ما یک ورودی میگیریم و هرچیزی رو ممکنه که خروجی بدیم
@@ -39,20 +39,20 @@ class BuildByModelName {
 
     this.modelName = modelName;
 
-    this.overrideOptions = defaultOptions['overrideOptions'];
-    this.isUsingModal = defaultOptions['isUsingModal'];
+    this.overrideOptions = defaultOptions["overrideOptions"];
+    this.isUsingModal = defaultOptions["isUsingModal"];
 
-    this.onModes = defaultOptions['onModes'];
-    this.onBuildFields = defaultOptions['onBuildFields'];
-    this.onFields = defaultOptions['onFields'];
-    this.onOrderField = defaultOptions['onOrderField'];
+    this.onModes = defaultOptions["onModes"];
+    this.onBuildFields = defaultOptions["onBuildFields"];
+    this.onFields = defaultOptions["onFields"];
+    this.onOrderField = defaultOptions["onOrderField"];
 
-    this.onBeforeSubmit = defaultOptions['onBeforeSubmit'];
-    this.onAfterSubmit = defaultOptions['onAfterSubmit'];
-    this.onBeforeCreate = defaultOptions['onBeforeCreate'];
-    this.onAfterCreate = defaultOptions['onAfterCreate'];
-    this.onBeforeUpdate = defaultOptions['onBeforeUpdate'];
-    this.onAfterUpdate = defaultOptions['onAfterUpdate'];
+    this.onBeforeSubmit = defaultOptions["onBeforeSubmit"];
+    this.onAfterSubmit = defaultOptions["onAfterSubmit"];
+    this.onBeforeCreate = defaultOptions["onBeforeCreate"];
+    this.onAfterCreate = defaultOptions["onAfterCreate"];
+    this.onBeforeUpdate = defaultOptions["onBeforeUpdate"];
+    this.onAfterUpdate = defaultOptions["onAfterUpdate"];
   }
 
   getFields(buildExtend = true) {
@@ -80,21 +80,21 @@ class BuildByModelName {
     }
 
     fields.map((field) => {
-      if (field['field_type'] == 'textarea') {
-        field['col_class'] = 'col-12';
+      if (field["field_type"] == "textarea") {
+        field["col_class"] = "col-12";
       } else {
         if (this.isUsingModal)
-          field['col_class'] = 'col-sm-12 col-md-6 col-lg-4 col-xl-4';
-        else field['col_class'] = 'col-sm-12 col-md-6 col-lg-4 col-xl-4';
+          field["col_class"] = "col-sm-12 col-md-6 col-lg-4 col-xl-4";
+        else field["col_class"] = "col-sm-12 col-md-6 col-lg-4 col-xl-4";
       }
 
       return field;
     });
 
     fields.sort((a, b) =>
-      a['field_type'] == 'textarea' && b['field_type'] == 'textarea'
+      a["field_type"] == "textarea" && b["field_type"] == "textarea"
         ? 0
-        : a['field_type'] == 'textarea' && b['field_type'] != 'textarea'
+        : a["field_type"] == "textarea" && b["field_type"] != "textarea"
         ? -1
         : 1
     );
@@ -130,10 +130,10 @@ class BuildByModelName {
 
       get modes(): Array<string> {
         if (_this.onModes) {
-          const onModes1 = _this.onModes(['basic'], this);
+          const onModes1 = _this.onModes(["basic"], this);
           return onModes1;
         }
-        return ['basic'];
+        return ["basic"];
       }
 
       submit(event, isCustom = false, onDone: any = null): any {

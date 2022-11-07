@@ -43,16 +43,16 @@
   <!--end::Modal - New Address-->
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { randomId } from '@/custom/helpers/random';
-import Modal from 'bootstrap/js/dist/modal';
-import { VueInstanceService } from '@/Defaults';
+import { defineComponent } from "vue";
+import { randomId } from "@/custom/helpers/random";
+import Modal from "bootstrap/js/dist/modal";
+import { VueInstanceService } from "@/Defaults";
 
 export default defineComponent({
-  name: 'modal',
+  name: "modal",
   data() {
     return {
-      state: 'closed',
+      state: "closed",
       modal: null,
       event: null,
       innerModalTitle: this.modalTitle,
@@ -60,28 +60,28 @@ export default defineComponent({
   },
   mounted() {
     (async () => {
-      if (document.querySelector('#' + this.modalId)) {
+      if (document.querySelector("#" + this.modalId)) {
         if (this.sticky)
-          this.modal = new Modal('#' + this.modalId, {
-            backdrop: 'static',
+          this.modal = new Modal("#" + this.modalId, {
+            backdrop: "static",
             keyboard: false,
           });
-        else this.modal = new Modal('#' + this.modalId);
+        else this.modal = new Modal("#" + this.modalId);
         (this.$refs.modalEl as any).addEventListener(
-          'show.bs.modal',
-          this.emitEvent('open')
+          "show.bs.modal",
+          this.emitEvent("open")
         );
         (this.$refs.modalEl as any).addEventListener(
-          'shown.bs.modal',
-          this.emitEvent('opened')
+          "shown.bs.modal",
+          this.emitEvent("opened")
         );
         (this.$refs.modalEl as any).addEventListener(
-          'hide.bs.modal',
-          this.emitEvent('close')
+          "hide.bs.modal",
+          this.emitEvent("close")
         );
         (this.$refs.modalEl as any).addEventListener(
-          'hidden.bs.modal',
-          this.emitEvent('closed')
+          "hidden.bs.modal",
+          this.emitEvent("closed")
         );
       }
     })();
@@ -95,7 +95,7 @@ export default defineComponent({
         //
       }
     }
-    const modalE = document.querySelector('#' + this.modalId);
+    const modalE = document.querySelector("#" + this.modalId);
     if (modalE) modalE.remove();
   },
   props: {
@@ -103,7 +103,7 @@ export default defineComponent({
       default: false,
     },
     modalBodyClassExtra: {
-      default: '',
+      default: "",
     },
     modalId: {
       default: () => {
@@ -111,10 +111,10 @@ export default defineComponent({
       },
     },
     modalTitle: {
-      default: 'موضوع مدال',
+      default: "موضوع مدال",
     },
     modalSizeClass: {
-      default: 'mw-700px',
+      default: "mw-700px",
     },
     thinFooter: {
       default: false,

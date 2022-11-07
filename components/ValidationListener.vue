@@ -3,15 +3,15 @@
 </template>
 
 <script>
-import { toRef, watch } from 'vue';
+import { toRef, watch } from "vue";
 
 export default {
-  props: ['data'],
+  props: ["data"],
   setup(props, context) {
     let lastPopulation = new Date();
-    const data = toRef(props, 'data');
+    const data = toRef(props, "data");
     watch(data, () => {
-      context.emit('submit');
+      context.emit("submit");
     });
   },
 };

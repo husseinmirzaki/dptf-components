@@ -1,9 +1,9 @@
 <template><div /></template>
 <script>
-import { toRefs, watch } from 'vue';
+import { toRefs, watch } from "vue";
 
 export default {
-  props: ['theRef', 'theKey', 'theValue'],
+  props: ["theRef", "theKey", "theValue"],
   setup(props) {
     const { theRef, theKey, theValue } = toRefs(props);
     watch(theValue, () => {

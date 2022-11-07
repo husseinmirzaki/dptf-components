@@ -22,9 +22,9 @@
   <!--end::LoadingButton-->
 </template>
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import LoadingButton from '@/custom/components/LoadingButton.vue';
-import PromiseButton from '@/custom/components/PromiseButton.vue';
+import { defineComponent, ref } from "vue";
+import LoadingButton from "@/custom/components/LoadingButton.vue";
+import PromiseButton from "@/custom/components/PromiseButton.vue";
 
 export default defineComponent({
   components: { PromiseButton },

@@ -1,5 +1,5 @@
 export function addBaseToMe(url: string) {
-  if (url.startsWith('/')) {
+  if (url.startsWith("/")) {
     return process.env.VUE_APP_MEDIA_URL + url.substr(1);
   }
   const reg = /https?\/\/[\w\-.]+\//;

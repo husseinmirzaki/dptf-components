@@ -1,5 +1,5 @@
-import { ApiService } from '@/Defaults';
-import { ref } from 'vue';
+import { ApiService } from "@/Defaults";
+import { ref } from "vue";
 
 export class UserPreferencesManager {
   public loadingPreferences = ref(false);
@@ -27,7 +27,7 @@ export class UserPreferencesManager {
 }
 
 export class UserPreferencesV2Api extends ApiService {
-  static baseUrl = 'user/preference/';
+  static baseUrl = "user/preference/";
 
   public static getPreferences(key) {
     return this.get(this.baseUrl + `get_item/?key=${encodeURI(key)}`);

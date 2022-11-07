@@ -31,17 +31,17 @@
 }
 </style>
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import { Form } from 'vee-validate';
-import FormMixin from '@/custom/mixins/FormMixin';
-import ValidationListener from '@/custom/components/ValidationListener.vue';
-import ShowToastingErrors from '@/custom/components/ShowToastingErrors.vue';
-import SetToRef from '@/custom/components/helpers/SetToRef.vue';
+import { defineComponent, ref } from "vue";
+import { Form } from "vee-validate";
+import FormMixin from "@/custom/mixins/FormMixin";
+import ValidationListener from "@/custom/components/ValidationListener.vue";
+import ShowToastingErrors from "@/custom/components/ShowToastingErrors.vue";
+import SetToRef from "@/custom/components/helpers/SetToRef.vue";
 
 export default defineComponent({
   components: { SetToRef, ShowToastingErrors, ValidationListener, Form },
   mixins: [FormMixin],
-  props: ['captureAllSubmit', 'showToastingErrors'],
+  props: ["captureAllSubmit", "showToastingErrors"],
   data() {
     return {
       time: new Date().getTime(),
@@ -51,7 +51,7 @@ export default defineComponent({
     submit(event) {
       const now = new Date().getTime();
       if (now - this.time > 150) {
-        this.$emit('submit-form', event);
+        this.$emit("submit-form", event);
         this.time = now;
       }
     },
@@ -64,9 +64,9 @@ export default defineComponent({
     const onCapture = async (validate, values) => {
       const a = await validate();
       if (Object.keys(a.errors).length > 0) {
-        context.emit('capture', null);
+        context.emit("capture", null);
       } else {
-        context.emit('capture', values);
+        context.emit("capture", values);
       }
     };
     return {

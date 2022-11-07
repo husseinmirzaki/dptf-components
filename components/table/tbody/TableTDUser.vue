@@ -14,14 +14,14 @@
   </table-t-d>
 </template>
 <script lang="ts">
-import { defineComponent, toRef } from 'vue';
-import TableTD from '@/custom/components/table/tbody/TableTD.vue';
+import { defineComponent, toRef } from "vue";
+import TableTD from "@/custom/components/table/tbody/TableTD.vue";
 
 export default defineComponent({
   components: { TableTD },
-  props: ['data'],
+  props: ["data"],
   setup(props) {
-    const data = toRef(props, 'data');
+    const data = toRef(props, "data");
 
     return {};
   },

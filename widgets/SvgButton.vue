@@ -8,10 +8,10 @@
   </el-tooltip>
 </template>
 <script>
-import SvgIcon from '@/custom/widgets/SvgIcon';
+import SvgIcon from "@/custom/widgets/SvgIcon";
 
 export default {
-  props: ['content'],
+  props: ["content"],
   components: { SvgIcon },
   mounted() {
     //

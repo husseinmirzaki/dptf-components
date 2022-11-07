@@ -1,5 +1,5 @@
-import { Actions, Mutations } from '@/custom/store/enums/StoreEnums';
-import { Module, Action, Mutation, VuexModule } from 'vuex-module-decorators';
+import { Actions, Mutations } from "@/custom/store/enums/StoreEnums";
+import { Module, Action, Mutation, VuexModule } from "vuex-module-decorators";
 
 @Module
 export default class AuthModule extends VuexModule {

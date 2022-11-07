@@ -1,19 +1,19 @@
 <script lang="ts">
-import { defineComponent, h, onMounted, ref } from 'vue';
-import Modal from '@/custom/components/model/Modal.vue';
-import { VueInstanceService } from '@/Defaults';
-import CounterCardV1 from '@/custom/components/utils/CounterCardV1.vue';
-import { DEFAULT_COLS } from '@/custom/helpers/RenderFunctionHelpers';
-import DataHistoryService from '@/custom/services/DataHistoryService';
-import Spinner from '@/custom/components/Spinner.vue';
-import ShowModelHistoryUserInformation from '@/custom/components/ShowModelHistoryUserInformation.vue';
-import ShowModelHistoryInfo from '@/custom/components/ShowModelHistoryInfo.vue';
+import { defineComponent, h, onMounted, ref } from "vue";
+import Modal from "@/custom/components/model/Modal.vue";
+import { VueInstanceService } from "@/Defaults";
+import CounterCardV1 from "@/custom/components/utils/CounterCardV1.vue";
+import { DEFAULT_COLS } from "@/custom/helpers/RenderFunctionHelpers";
+import DataHistoryService from "@/custom/services/DataHistoryService";
+import Spinner from "@/custom/components/Spinner.vue";
+import ShowModelHistoryUserInformation from "@/custom/components/ShowModelHistoryUserInformation.vue";
+import ShowModelHistoryInfo from "@/custom/components/ShowModelHistoryInfo.vue";
 
 export default defineComponent({
   setup(props, context) {
     let modalInstance: any = null;
     let userInformationModalInstance: any = null;
-    let tableName = '';
+    let tableName = "";
     const data: any = ref({
       user_count: 0,
       deleted_count: 0,
@@ -31,11 +31,11 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      VueInstanceService.on('show-history', (e) => {
+      VueInstanceService.on("show-history", (e) => {
         const command: string = e[0];
 
         switch (command) {
-          case 'open':
+          case "open":
             tableName = e[1];
             promise.value = getTableBasicHistory(tableName);
             promise.value.then(({ data: info }) => (data.value = info));
@@ -54,16 +54,16 @@ export default defineComponent({
       const overallInformationModal = h(
         Modal,
         {
-          modalSizeClass: 'w-1000px mw-1000px',
-          modalTitle: 'تاریخچه جدول',
+          modalSizeClass: "w-1000px mw-1000px",
+          modalTitle: "تاریخچه جدول",
           modalDescription:
-            'اطلاعات اولیه ای درمورد اضافه شده، ویرایش شده، حذف شده ارائه میدهد',
+            "اطلاعات اولیه ای درمورد اضافه شده، ویرایش شده، حذف شده ارائه میدهد",
           thinFooter: true,
           ref: (el) => (modalInstance = el),
         },
         {
-          'modal-content': (e) => {
-            if (['opened', 'open', 'close'].indexOf(e.state) > -1) {
+          "modal-content": (e) => {
+            if (["opened", "open", "close"].indexOf(e.state) > -1) {
               const changeCounter = [
                 DEFAULT_COLS.col3(
                   h(
@@ -74,7 +74,7 @@ export default defineComponent({
                     {
                       default: () =>
                         h(CounterCardV1, {
-                          title: 'تغییر دهندگان',
+                          title: "تغییر دهندگان",
                           extra: data.value.user_count,
                           onClick: () => {
                             userInformationModalInstance.open(tableName);
@@ -92,7 +92,7 @@ export default defineComponent({
                     {
                       default: () =>
                         h(CounterCardV1, {
-                          title: 'تعداد اضافه کردن ها',
+                          title: "تعداد اضافه کردن ها",
                           extra: data.value.added_count,
                           onClick: () => {
                             //
@@ -110,7 +110,7 @@ export default defineComponent({
                     {
                       default: () =>
                         h(CounterCardV1, {
-                          title: 'تعداد ویرایش کردن ها',
+                          title: "تعداد ویرایش کردن ها",
                           extra: data.value.changes_count,
                           onClick: () => {
                             //
@@ -128,7 +128,7 @@ export default defineComponent({
                     {
                       default: () =>
                         h(CounterCardV1, {
-                          title: 'تعداد حذف کردن ها',
+                          title: "تعداد حذف کردن ها",
                           extra: data.value.deleted_count,
                           onClick: () => {
                             //
@@ -139,9 +139,9 @@ export default defineComponent({
                 ),
               ];
               return h(
-                'div',
+                "div",
                 {
-                  class: 'row',
+                  class: "row",
                 },
                 changeCounter
               );

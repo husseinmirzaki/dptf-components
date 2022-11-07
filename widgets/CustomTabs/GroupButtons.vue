@@ -52,7 +52,7 @@
     overflow: hidden;
     &:after {
       position: absolute;
-      content: '';
+      content: "";
       width: 100%;
       height: 3px;
       background-color: #0b0e18;

@@ -1,10 +1,10 @@
-import { App } from 'vue';
-import axios, { AxiosResponse } from 'axios';
-import VueAxios from 'vue-axios';
-import JwtService from '@/custom/core/services/JwtService';
-import { Actions, Mutations } from '@/custom/store/enums/StoreEnums';
-import { VueInstanceService } from '@/Defaults';
-import { initMockAdapter } from '@/custom/mock/mock_server';
+import { App } from "vue";
+import axios, { AxiosResponse } from "axios";
+import VueAxios from "vue-axios";
+import JwtService from "@/custom/core/services/JwtService";
+import { Actions, Mutations } from "@/custom/store/enums/StoreEnums";
+import { VueInstanceService } from "@/Defaults";
+import { initMockAdapter } from "@/custom/mock/mock_server";
 
 /**
  * @description service to call HTTP request via Axios
@@ -22,34 +22,34 @@ class ApiService {
   // http://127.0.0.1:8000/api/
 
   public static base_url = process.env.VUE_APP_BASE_URL;
-  public static baseUrl = '';
+  public static baseUrl = "";
 
   public static get loginURL() {
-    return 'user/auth/login/';
+    return "user/auth/login/";
   }
 
   public static get loginFinalizeURL() {
-    return 'user/auth/token/';
+    return "user/auth/token/";
   }
 
   public static get refreshUrl() {
-    return 'user/auth/refresh/';
+    return "user/auth/refresh/";
   }
 
   public static get verifyTokenUrl() {
-    return 'user/auth/verify/';
+    return "user/auth/verify/";
   }
 
   public static get forgetPasswordUrl() {
-    return 'user/auth/forgotten/';
+    return "user/auth/forgotten/";
   }
 
   public static get forgetPasswordResetUrl() {
-    return 'user/auth/reset_forgotten/';
+    return "user/auth/reset_forgotten/";
   }
 
   public static get selectUrl() {
-    return this.baseUrl + 'select/';
+    return this.baseUrl + "select/";
   }
 
   /**
@@ -60,7 +60,7 @@ class ApiService {
     this.vueInstance.use(VueAxios, axios);
     this.vueInstance.axios.defaults.baseURL = this.base_url;
 
-    if (process.env.VUE_APP_FAKE_AXIOS == '1') {
+    if (process.env.VUE_APP_FAKE_AXIOS == "1") {
       initMockAdapter(axios);
     }
   }
@@ -90,7 +90,7 @@ class ApiService {
           // try to find the error
           if (result.response.status == 400) {
             Object.keys(result.response.data).forEach((key) => {
-              if (key == 'exception') {
+              if (key == "exception") {
                 VueInstanceService.store.commit(
                   Mutations.ADD_ERROR,
                   Array.isArray(result.response.data[key])
@@ -98,7 +98,7 @@ class ApiService {
                     : result.response.data[key]
                 );
                 return;
-              } else if (key == 'exceptions') {
+              } else if (key == "exceptions") {
                 result.response.data[key].forEach((exception) => {
                   VueInstanceService.store.commit(
                     Mutations.ADD_ERROR,
@@ -117,33 +117,33 @@ class ApiService {
             reject(result);
           } else if (
             result.response.data &&
-            result.response.data['code'] == 'user_not_validated'
+            result.response.data["code"] == "user_not_validated"
           ) {
             VueInstanceService.store.dispatch(Actions.LOGOUT);
-            VueInstanceService.showErrorMessage('کاربر هنوز فعال نشده');
+            VueInstanceService.showErrorMessage("کاربر هنوز فعال نشده");
             reject(result);
           } else if (
             result.response.data &&
-            result.response.data['code'] == 'user_inactive'
+            result.response.data["code"] == "user_inactive"
           ) {
             VueInstanceService.store.dispatch(Actions.LOGOUT);
-            VueInstanceService.showErrorMessage('کاربر هنوز فعال نشده');
+            VueInstanceService.showErrorMessage("کاربر هنوز فعال نشده");
             reject(result);
           } else if (
             result.response.data &&
-            result.response.data['code'] == 'user_not_found'
+            result.response.data["code"] == "user_not_found"
           ) {
             VueInstanceService.store.dispatch(Actions.LOGOUT);
-            VueInstanceService.showErrorMessage('کاربر هنوز فعال نشده');
+            VueInstanceService.showErrorMessage("کاربر هنوز فعال نشده");
             reject(result);
           } else if (
             result.response.status == 401 ||
             result.response.status == 403
           ) {
-            if (result.response.code == 'permission_denied') {
-              VueInstanceService.router.push('/');
+            if (result.response.code == "permission_denied") {
+              VueInstanceService.router.push("/");
               VueInstanceService.showErrorMessage(
-                'شما دسترسی به بخش درخواستی را ندارید'
+                "شما دسترسی به بخش درخواستی را ندارید"
               );
               return result;
             }
@@ -169,7 +169,7 @@ class ApiService {
             // findIndex fails sometimes for some
             // unknown reasons
             const found = errors.findIndex((d) => {
-              return d === 'invalid_access_token' || d === 'token_not_valid';
+              return d === "invalid_access_token" || d === "token_not_valid";
             });
 
             if (found > -1)
@@ -194,8 +194,8 @@ class ApiService {
             // tell user its server error
             if (!VueInstanceService.ignoreServerError)
               VueInstanceService.showErrorMessage(
-                'مشکلی در اتصال به سرور رخ داد',
-                'مشکل اتصال',
+                "مشکلی در اتصال به سرور رخ داد",
+                "مشکل اتصال",
                 0
               );
             else VueInstanceService.ignoreServerError = false;
@@ -207,8 +207,8 @@ class ApiService {
           if (!result.response || !result.response.data) {
             // internet issues
             VueInstanceService.showErrorMessage(
-              'بنظر مشکلی در اتصال به اینترنت رخ داده است',
-              'مشکل اتصال',
+              "بنظر مشکلی در اتصال به اینترنت رخ داده است",
+              "مشکل اتصال",
               0
             );
           }
@@ -235,7 +235,7 @@ class ApiService {
             Object.keys(e.response.data).forEach((objectKey) => {
               e.response.data[objectKey].forEach((message) => {
                 message =
-                  VueInstanceService.vue.config.globalProperties['$t'](message);
+                  VueInstanceService.vue.config.globalProperties["$t"](message);
                 VueInstanceService.showErrorMessage(message);
               });
             });
@@ -280,29 +280,29 @@ class ApiService {
     const conf = {};
 
     if (params) {
-      if (params['dont_set_header']) {
-        conf['headers'] = {};
+      if (params["dont_set_header"]) {
+        conf["headers"] = {};
       } else {
-        conf['headers'] = this.getAuthHeaders();
+        conf["headers"] = this.getAuthHeaders();
       }
 
-      if (params['headers']) {
-        const headers = conf['headers'] || {};
-        Object.keys(params['headers']).forEach((e) => {
-          headers[e] = params['headers'][e];
+      if (params["headers"]) {
+        const headers = conf["headers"] || {};
+        Object.keys(params["headers"]).forEach((e) => {
+          headers[e] = params["headers"][e];
         });
-        conf['headers'] = headers;
+        conf["headers"] = headers;
       }
 
-      if (params['params']) {
-        conf['params'] = params['params'];
+      if (params["params"]) {
+        conf["params"] = params["params"];
       }
 
-      if (params['responseType']) {
-        conf['responseType'] = params['responseType'];
+      if (params["responseType"]) {
+        conf["responseType"] = params["responseType"];
       }
     } else {
-      conf['headers'] = this.getAuthHeaders();
+      conf["headers"] = this.getAuthHeaders();
     }
 
     return conf;
@@ -316,7 +316,7 @@ class ApiService {
         urlEncode.append(extraParam, this.extraParams[extraParam]);
       });
       if (resource.search(/\?/) > -1) {
-        if (resource.endsWith('&')) {
+        if (resource.endsWith("&")) {
           resource += urlEncode.toString();
         } else {
           resource += `&${urlEncode.toString()}`;
@@ -340,19 +340,19 @@ class ApiService {
         params = {};
       }
 
-      if (!params['data']) {
-        params['data'] = {};
+      if (!params["data"]) {
+        params["data"] = {};
       }
 
-      params['data'] = {
-        ...params['data'],
+      params["data"] = {
+        ...params["data"],
         ...this.extraParams,
       };
       console.log(this.extraParams, params);
     }
 
-    if (params && params['data']) {
-      return params['data'];
+    if (params && params["data"]) {
+      return params["data"];
     }
 
     return undefined;
@@ -400,11 +400,11 @@ class ApiService {
     resource: string,
     params: any | null = null
   ): Promise<AxiosResponse> {
-    if (params && params['data'] && params['data'] instanceof FormData) {
-      if (!params['headers']) {
-        params['headers'] = {};
+    if (params && params["data"] && params["data"] instanceof FormData) {
+      if (!params["headers"]) {
+        params["headers"] = {};
       }
-      params['headers']['content-type'] = 'multipart/form-data';
+      params["headers"]["content-type"] = "multipart/form-data";
     }
 
     const config = this.calcConf(params);

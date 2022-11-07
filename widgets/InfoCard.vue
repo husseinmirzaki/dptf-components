@@ -11,6 +11,6 @@
 </template>
 <script>
 export default {
-  props: ['cardData', 'cardTitle', 'textClass'],
+  props: ["cardData", "cardTitle", "textClass"],
 };
 </script>

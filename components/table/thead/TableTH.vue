@@ -128,10 +128,10 @@ th.custom-table-th {
 }
 </style>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from "vue";
 
 export default defineComponent({
   components: {},
-  props: ['header', 'disableFilters', 'isFiltered', 'sortDirection'],
+  props: ["header", "disableFilters", "isFiltered", "sortDirection"],
 });
 </script>

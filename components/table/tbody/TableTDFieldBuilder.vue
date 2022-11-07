@@ -4,8 +4,8 @@
   </table-t-d>
 </template>
 <script>
-import TableTD from '@/custom/components/table/tbody/TableTD';
-import FieldBuilder from '@/custom/components/FieldBuilder';
+import TableTD from "@/custom/components/table/tbody/TableTD";
+import FieldBuilder from "@/custom/components/FieldBuilder";
 export default {
   components: { FieldBuilder, TableTD },
 };

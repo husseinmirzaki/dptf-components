@@ -1,7 +1,7 @@
 <script lang="ts">
-import { defineComponent, h } from 'vue';
-import PromiseButton from '@/custom/components/PromiseButton.vue';
-import { DEFAULT_BUTTONS } from '@/custom/helpers/RenderFunctionHelpers';
+import { defineComponent, h } from "vue";
+import PromiseButton from "@/custom/components/PromiseButton.vue";
+import { DEFAULT_BUTTONS } from "@/custom/helpers/RenderFunctionHelpers";
 
 export default defineComponent({
   setup() {

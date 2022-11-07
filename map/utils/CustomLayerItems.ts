@@ -1,4 +1,4 @@
-import { Component } from 'vue';
+import { Component } from "vue";
 
 export class CustomLayerItems {
   mapToolsButton: Array<any> = [];
@@ -17,16 +17,16 @@ export class CustomLayerItems {
     return this.mapExtensions.length > 0;
   }
 
-  add(item: Record<'type', Component>) {
-    if (!item['type'].name) {
+  add(item: Record<"type", Component>) {
+    if (!item["type"].name) {
       return;
     }
-    const componentName = item['type'].name.toLowerCase();
-    if (componentName.startsWith('maptoolsbutton')) {
+    const componentName = item["type"].name.toLowerCase();
+    if (componentName.startsWith("maptoolsbutton")) {
       this.mapToolsButton.push(item);
-    } else if (componentName.startsWith('maptoolswindow')) {
+    } else if (componentName.startsWith("maptoolswindow")) {
       this.mapToolWindow.push(item);
-    } else if (componentName.startsWith('mapextension')) {
+    } else if (componentName.startsWith("mapextension")) {
       this.mapExtensions.push(item);
     }
   }

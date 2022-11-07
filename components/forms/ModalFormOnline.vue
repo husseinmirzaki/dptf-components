@@ -1,22 +1,22 @@
 <script lang="ts">
-import { h, ref, watch } from 'vue';
-import Modal from '@/custom/components/model/Modal.vue';
-import FormBuilder from '@/custom/components/FormBuilder.vue';
-import FormContainer from '@/custom/components/FormContainer.vue';
-import PromiseButton from '@/custom/components/PromiseButton.vue';
-import { BuildByModelName } from '@/custom/forms/utils/BuildByModelName';
-import FixedHeightLoader from '@/custom/components/forms/FixedHeightLoader.vue';
-import FixedHeightAccess from '@/custom/components/forms/FixedHeightAccess.vue';
+import { h, ref, watch } from "vue";
+import Modal from "@/custom/components/model/Modal.vue";
+import FormBuilder from "@/custom/components/FormBuilder.vue";
+import FormContainer from "@/custom/components/FormContainer.vue";
+import PromiseButton from "@/custom/components/PromiseButton.vue";
+import { BuildByModelName } from "@/custom/forms/utils/BuildByModelName";
+import FixedHeightLoader from "@/custom/components/forms/FixedHeightLoader.vue";
+import FixedHeightAccess from "@/custom/components/forms/FixedHeightAccess.vue";
 
 export default {
   props: [
-    'modelName',
-    'overrideOptions',
-    'onFields',
-    'onOrderField',
-    'onBuildFields',
-    'onFormReady',
-    'onModes',
+    "modelName",
+    "overrideOptions",
+    "onFields",
+    "onOrderField",
+    "onBuildFields",
+    "onFormReady",
+    "onModes",
   ],
   setup(props, context) {
     const modal = ref();
@@ -55,7 +55,7 @@ export default {
           thinFooter: true,
         },
         {
-          'modal-content': () => {
+          "modal-content": () => {
             if (
               !buildByModelName.formBuilt.value &&
               buildByModelName.formFound.value
@@ -80,12 +80,12 @@ export default {
               }
             );
           },
-          'modal-footer': () => {
+          "modal-footer": () => {
             return h(PromiseButton, {
               onSubmitDone: (e) => {
                 buildByModelName.formInstance!.formInstance.resetForm();
                 modal.value.close(e);
-                context.emit('done');
+                context.emit("done");
               },
               onClicked: (event) => {
                 event(formRef.value, buildByModelName.formInstance);

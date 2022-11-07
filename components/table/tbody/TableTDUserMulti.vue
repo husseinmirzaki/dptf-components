@@ -49,14 +49,14 @@
 }
 </style>
 <script lang="ts">
-import { computed, defineComponent, toRef } from 'vue';
-import TableTD from '@/custom/components/table/tbody/TableTD.vue';
+import { computed, defineComponent, toRef } from "vue";
+import TableTD from "@/custom/components/table/tbody/TableTD.vue";
 
 export default defineComponent({
   components: { TableTD },
-  props: ['data'],
+  props: ["data"],
   setup(props) {
-    const data = toRef(props, 'data');
+    const data = toRef(props, "data");
     const firstThree = computed(() => {
       if (data.value) return data.value.slice(0, 3);
 

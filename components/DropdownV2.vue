@@ -62,13 +62,13 @@
 }
 </style>
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { randomId } from '@/custom/helpers/random';
+import { defineComponent } from "vue";
+import { randomId } from "@/custom/helpers/random";
 
 export default defineComponent({
   props: {
     title: {
-      default: 'ابزار',
+      default: "ابزار",
     },
     description: [String],
     dropdownId: {

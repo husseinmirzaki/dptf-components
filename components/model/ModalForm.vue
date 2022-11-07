@@ -24,16 +24,16 @@
   </FormContainer>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { modalExtend } from '@/custom/helpers/ModalExtendHelper';
-import FormContainer from '@/custom/components/FormContainer.vue';
-import FormBuilder from '@/custom/components/FormBuilder.vue';
-import FormContainerButtons from '@/custom/components/FormContainerButtons.vue';
-import Modal from '@/custom/components/model/Modal.vue';
+import { defineComponent } from "vue";
+import { modalExtend } from "@/custom/helpers/ModalExtendHelper";
+import FormContainer from "@/custom/components/FormContainer.vue";
+import FormBuilder from "@/custom/components/FormBuilder.vue";
+import FormContainerButtons from "@/custom/components/FormContainerButtons.vue";
+import Modal from "@/custom/components/model/Modal.vue";
 
 export default defineComponent({
   components: { FormContainerButtons, FormBuilder, FormContainer, Modal },
-  props: ['form'],
+  props: ["form"],
   setup() {
     const _modalExtend = modalExtend();
     return {

@@ -1,7 +1,7 @@
-import { ApiService } from '@/Defaults';
+import { ApiService } from "@/Defaults";
 
 class FieldsApiService extends ApiService {
-  static baseUrl = 'fields/';
+  static baseUrl = "fields/";
 
   public static getFieldsConfig(modelName: string) {
     return this.get(

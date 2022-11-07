@@ -290,40 +290,40 @@ svg {
 }
 </style>
 <script>
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from "vue";
 
 export const mapPmap = {
-  'azerbaijan-east': 'آذربايجان شرقي',
-  'azerbaijan-west': 'آذربايجان غربي',
-  ardabil: 'اردبيل',
-  isfahan: 'اصفهان',
-  alborz: 'البرز',
-  ilam: 'ايلام',
-  bushehr: 'بوشهر',
-  tehran: 'تهران',
-  'chahar-mahaal-bakhtiari': 'چهارمحال وبختياري',
-  'khorasan-south': 'خراسان جنوبي',
-  'khorasan-razavi': 'خراسان رضوئ',
-  'khorasan-north': 'خراسان شمالي',
-  khuzestan: 'خوزستان',
-  zanjan: 'زنجان',
-  semnan: 'سمنان',
-  'sistan-baluchestan': 'سيستان وبلوچستان',
-  fars: 'فارس',
-  qazvin: 'قزوين',
-  qom: 'قم',
-  kurdistan: 'كردستان',
-  kerman: 'كرمان',
-  kermanshah: 'کرمانشاه',
-  'kohgiluyeh-boyer-ahmad': 'كهگيلويه وبويراحمد',
-  golestan: 'گلستان',
-  gilan: 'گيلان',
-  lorestan: 'لرستان',
-  mazandaran: 'مازندران',
-  markazi: 'مرکزي',
-  hormozgan: 'هرمزگان',
-  hamadan: 'همدان',
-  yazd: 'يزد',
+  "azerbaijan-east": "آذربايجان شرقي",
+  "azerbaijan-west": "آذربايجان غربي",
+  ardabil: "اردبيل",
+  isfahan: "اصفهان",
+  alborz: "البرز",
+  ilam: "ايلام",
+  bushehr: "بوشهر",
+  tehran: "تهران",
+  "chahar-mahaal-bakhtiari": "چهارمحال وبختياري",
+  "khorasan-south": "خراسان جنوبي",
+  "khorasan-razavi": "خراسان رضوئ",
+  "khorasan-north": "خراسان شمالي",
+  khuzestan: "خوزستان",
+  zanjan: "زنجان",
+  semnan: "سمنان",
+  "sistan-baluchestan": "سيستان وبلوچستان",
+  fars: "فارس",
+  qazvin: "قزوين",
+  qom: "قم",
+  kurdistan: "كردستان",
+  kerman: "كرمان",
+  kermanshah: "کرمانشاه",
+  "kohgiluyeh-boyer-ahmad": "كهگيلويه وبويراحمد",
+  golestan: "گلستان",
+  gilan: "گيلان",
+  lorestan: "لرستان",
+  mazandaran: "مازندران",
+  markazi: "مرکزي",
+  hormozgan: "هرمزگان",
+  hamadan: "همدان",
+  yazd: "يزد",
 };
 
 export default {
@@ -331,34 +331,34 @@ export default {
     const container = ref();
     const mapToolTip = ref();
     const map = ref();
-    const mapData = ref('');
+    const mapData = ref("");
     let lastTimeout = null;
     let nextUpdate = 0;
 
     let setCityValue = (city, value, max) => {
       const element = map.value.querySelector(`[data-name="${city}"]`);
-      element.style.removeProperty('fill');
+      element.style.removeProperty("fill");
       let classList = element.classList;
       if (value > 0) {
         const a = 11 - Math.round((value * 10) / max);
-        element.classList = '';
+        element.classList = "";
         classList.add(city, `local-color-${a}`);
       } else {
-        element.classList = '';
+        element.classList = "";
         classList.add(city, `local-color-10`);
       }
-      element.setAttribute('data-value', String(value));
+      element.setAttribute("data-value", String(value));
     };
 
     let setCityColor = (city, value) => {
       const element = map.value.querySelector(`[data-name="${city}"]`);
-      element.style.removeProperty('fill');
+      element.style.removeProperty("fill");
       let classList = element.classList;
       for (const i of classList) {
         classList.remove(i);
       }
       classList.add(city);
-      if (value) element.style.setProperty('fill', 'value');
+      if (value) element.style.setProperty("fill", "value");
     };
 
     const persianName = computed(() => {
@@ -366,17 +366,17 @@ export default {
     });
 
     onMounted(() => {
-      let data = document.querySelector('.province');
-      container.value.addEventListener('mouseleave', () => {
+      let data = document.querySelector(".province");
+      container.value.addEventListener("mouseleave", () => {
         clearTimeout(lastTimeout);
         mapToolTip.value.style.opacity = 0;
-        mapToolTip.value.style.left = '-1000px';
-        mapToolTip.value.style.top = '-1000px';
+        mapToolTip.value.style.left = "-1000px";
+        mapToolTip.value.style.top = "-1000px";
       });
 
-      data.addEventListener('mousemove', (event) => {
-        mapToolTip.value.style.left = event.layerX + 10 + 'px';
-        mapToolTip.value.style.top = event.layerY + 10 + 'px';
+      data.addEventListener("mousemove", (event) => {
+        mapToolTip.value.style.left = event.layerX + 10 + "px";
+        mapToolTip.value.style.top = event.layerY + 10 + "px";
         mapToolTip.value.style.opacity = 1;
         (async () => {
           clearTimeout(lastTimeout);
@@ -388,16 +388,16 @@ export default {
 
       for (let i = 0; i < data.children.length; i++) {
         data.children[i].setAttribute(
-          'data-name',
+          "data-name",
           data.children[i].classList[0]
         );
-        data.children[i].addEventListener('mouseenter', (event) => {
-          mapData.value = data.children[i].getAttribute('data-name');
+        data.children[i].addEventListener("mouseenter", (event) => {
+          mapData.value = data.children[i].getAttribute("data-name");
         });
-        data.children[i].addEventListener('click', (event) => {
+        data.children[i].addEventListener("click", (event) => {
           context.emit(
-            'province-clicked',
-            data.children[i].getAttribute('data-name')
+            "province-clicked",
+            data.children[i].getAttribute("data-name")
           );
         });
       }

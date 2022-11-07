@@ -27,7 +27,7 @@ export function removeArrayElements(
 function buildFormData(formData, data, parentKey?) {
   if (
     data &&
-    typeof data === 'object' &&
+    typeof data === "object" &&
     !(data instanceof Date) &&
     !(data instanceof File)
   ) {
@@ -40,7 +40,7 @@ function buildFormData(formData, data, parentKey?) {
       );
     });
   } else {
-    const value = data == null ? '' : data;
+    const value = data == null ? "" : data;
     console.log(parentKey, value);
     formData.append(parentKey, value);
   }
@@ -57,14 +57,14 @@ export function jsonToFormData(data) {
 export function obj2FormData(obj) {
   const formData = new FormData();
 
-  const createFormData = (obj, subKeyStr = '') => {
+  const createFormData = (obj, subKeyStr = "") => {
     for (const i in obj) {
       const value = obj[i];
-      const subKeyStrTrans = subKeyStr ? subKeyStr + '[' + i + ']' : i;
+      const subKeyStrTrans = subKeyStr ? subKeyStr + "[" + i + "]" : i;
 
-      if (typeof value === 'string' || typeof value === 'number') {
+      if (typeof value === "string" || typeof value === "number") {
         formData.append(subKeyStrTrans, String(value));
-      } else if (typeof value === 'object') {
+      } else if (typeof value === "object") {
         createFormData(value, subKeyStrTrans);
       }
     }

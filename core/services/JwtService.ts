@@ -1,4 +1,4 @@
-const ID_TOKEN_KEY = 'id_token' as string;
+const ID_TOKEN_KEY = "id_token" as string;
 
 /**
  * @description get token form localStorage
@@ -6,7 +6,7 @@ const ID_TOKEN_KEY = 'id_token' as string;
 export const getToken = (): string | null => {
   try {
     const token = window.localStorage.getItem(ID_TOKEN_KEY);
-    if (token) return JSON.parse(token)['access'];
+    if (token) return JSON.parse(token)["access"];
   } catch (e) {
     //
   }
@@ -20,7 +20,7 @@ export const setAccess = (_token) => {
   const token = window.localStorage.getItem(ID_TOKEN_KEY);
   if (token) {
     const d = JSON.parse(token);
-    d['access'] = _token;
+    d["access"] = _token;
     window.localStorage.setItem(ID_TOKEN_KEY, JSON.stringify(d));
   }
 };
@@ -30,7 +30,7 @@ export const setAccess = (_token) => {
  */
 export const getRefresh = (): string | null => {
   const token = window.localStorage.getItem(ID_TOKEN_KEY);
-  if (token) return JSON.parse(token)['refresh'];
+  if (token) return JSON.parse(token)["refresh"];
   return null;
 };
 

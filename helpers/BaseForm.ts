@@ -1,6 +1,6 @@
-import { computed, nextTick, ref, Ref, watch } from 'vue';
-import FieldComponentPropsInterface from '@/custom/components/FieldComponentPropsInterface';
-import * as Yup from 'yup';
+import { computed, nextTick, ref, Ref, watch } from "vue";
+import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
+import * as Yup from "yup";
 
 export interface CreateFormExtend<T extends CreateForm, E = any> {
   update: any;
@@ -50,18 +50,18 @@ export class CreateForm<T extends FieldsInterface = any> {
   }
 
   getModes(): Array<string> {
-    return ['basic'];
+    return ["basic"];
   }
 
-  activeMode: Ref<string> = ref('basic');
+  activeMode: Ref<string> = ref("basic");
 
   get theActiveMode() {
     return this.activeMode.value;
   }
 
   set theActiveMode(mode) {
-    if (mode == '') {
-      this.theActiveMode = 'basic';
+    if (mode == "") {
+      this.theActiveMode = "basic";
       return;
     }
 
@@ -154,8 +154,8 @@ export class CreateForm<T extends FieldsInterface = any> {
    * sets id of basic mode
    * @param id
    */
-  getSetDataById(id, mode = 'basic') {
-    this.refs[mode].value['id'] = id;
+  getSetDataById(id, mode = "basic") {
+    this.refs[mode].value["id"] = id;
   }
 
   /**
@@ -185,10 +185,10 @@ export class CreateForm<T extends FieldsInterface = any> {
     return (eMode: string) => {
       const eModeContainsSearchMode =
         eMode.startsWith(searchMode) &&
-        eMode.split('-').length <= searchMode.split('-').length;
+        eMode.split("-").length <= searchMode.split("-").length;
       const searchModeContainsEMode =
         searchMode.startsWith(eMode) &&
-        searchMode.split('-').length >= eMode.split('-').length;
+        searchMode.split("-").length >= eMode.split("-").length;
       return eModeContainsSearchMode || searchModeContainsEMode;
     };
   }
@@ -246,7 +246,7 @@ export class CreateForm<T extends FieldsInterface = any> {
    * can hold file
    * @param mode the mode we are trying to find files in
    */
-  extractFiles(mode = 'basic') {
+  extractFiles(mode = "basic") {
     const files: Array<any> = [];
     // files are found using field_type and file length
     // parameter
@@ -258,7 +258,7 @@ export class CreateForm<T extends FieldsInterface = any> {
     const r = this.refs[mode].value ? this.refs[mode].value : this.refs[mode];
     Object.keys(r).forEach((e1) => {
       const field = this.fields.find((e) => e.name == e1);
-      if (field && (field.field_type === 'file' || field.isFile))
+      if (field && (field.field_type === "file" || field.isFile))
         if (r[e1] && r[e1].length) {
           for (let i = 0; i < r[e1].length; i++) {
             files.push({
@@ -280,7 +280,7 @@ export class CreateForm<T extends FieldsInterface = any> {
    * @param mode
    * @param is_array
    */
-  extractFilesToSend(mode = 'basic', is_array: Array<string> = []) {
+  extractFilesToSend(mode = "basic", is_array: Array<string> = []) {
     const files: Record<string, Array<any>> = {};
     // Get fields of a specific mode and finds
     // possible file and then set those found
@@ -311,7 +311,7 @@ export class CreateForm<T extends FieldsInterface = any> {
    * @param reference vue Ref object
    * @param mode mode
    */
-  addR(reference: Ref, mode = 'basic') {
+  addR(reference: Ref, mode = "basic") {
     this.refs[mode] = reference;
   }
 
@@ -329,7 +329,7 @@ export class CreateForm<T extends FieldsInterface = any> {
    * validation schemas
    */
   concatFields(): Array<FieldComponentPropsInterface> {
-    if (typeof this.rawFields == 'string') return JSON.parse(this.rawFields);
+    if (typeof this.rawFields == "string") return JSON.parse(this.rawFields);
     return this.rawFields;
   }
 
@@ -349,7 +349,7 @@ export class CreateForm<T extends FieldsInterface = any> {
      * adds a mode to fieldsValidations
      * @param b
      */
-    const addBase = (b = 'basic') => {
+    const addBase = (b = "basic") => {
       if (!fieldsValidations[b]) {
         fieldsValidations[b] = {};
       }
@@ -377,14 +377,14 @@ export class CreateForm<T extends FieldsInterface = any> {
     // we should use a different kind of validation
     // schema
     this.fields.forEach((e) => {
-      if (e.field_type == 'separator') return;
+      if (e.field_type == "separator") return;
 
-      const d = e['validation'];
+      const d = e["validation"];
       if (d) {
         // console.log("custom validations", d);
         if (Array.isArray(d)) {
           d.forEach((validation) => {
-            fieldsValidations['basic'][e.name] = validation;
+            fieldsValidations["basic"][e.name] = validation;
           });
         } else {
           Object.keys(d).forEach((modeName) => {
@@ -411,16 +411,16 @@ export class CreateForm<T extends FieldsInterface = any> {
           });
         };
 
-        const fieldType = e['field_type'];
-        const label = e['label'];
-        const placeholder = e['placeholder'];
+        const fieldType = e["field_type"];
+        const label = e["label"];
+        const placeholder = e["placeholder"];
         // this text is shown in errors
         const text = label || placeholder;
-        const required = e['required'] === undefined || e['required'];
+        const required = e["required"] === undefined || e["required"];
 
         if (text) {
-          if (fieldType == 'select') {
-            const multipleSelected = e['select_multiple'];
+          if (fieldType == "select") {
+            const multipleSelected = e["select_multiple"];
             if (multipleSelected && required) {
               // selects with multiple attribute return array
               // so, we should use an array validation schema
@@ -428,7 +428,7 @@ export class CreateForm<T extends FieldsInterface = any> {
                 e.name,
                 Yup.array()
                   .nullable()
-                  ['checkSelect']('حداقل یکی از موارد را انتخاب کنید')
+                  ["checkSelect"]("حداقل یکی از موارد را انتخاب کنید")
                   .label(text)
               );
             } else if (required) {
@@ -437,16 +437,16 @@ export class CreateForm<T extends FieldsInterface = any> {
                 e.name,
                 Yup.string()
                   .nullable()
-                  ['checkSingleSelect']('حداقل یکی از موارد را انتخاب کنید')
+                  ["checkSingleSelect"]("حداقل یکی از موارد را انتخاب کنید")
                   .label(text)
               );
             }
-          } else if ((fieldType == 'file' || e['isFile']) && required) {
+          } else if ((fieldType == "file" || e["isFile"]) && required) {
             // file filedType returns an Object
             // as output, so we should use mixed
             // validation schema for it
             addValidationToModes(e.name, Yup.mixed().required().label(text));
-          } else if (fieldType == 'number' && required) {
+          } else if (fieldType == "number" && required) {
             // we expect number fieldType to return
             // a number so number validation schema
             // is used
@@ -486,11 +486,11 @@ export class CreateForm<T extends FieldsInterface = any> {
    * @param ref the ref which key must be searched in
    * @param name the key which data will use
    */
-  setKeyRef(key: string, ref = 'basic', name: string | null = null) {
+  setKeyRef(key: string, ref = "basic", name: string | null = null) {
     this.fields.forEach((e) => {
       if ((!name && key == e.name) || e.name == name) {
-        e['v-model'] = this.refs[ref];
-        e['v-model-key'] = key;
+        e["v-model"] = this.refs[ref];
+        e["v-model-key"] = key;
       }
     });
     Object.keys(this.modeFields).forEach((fieldsKey) => {
@@ -499,8 +499,8 @@ export class CreateForm<T extends FieldsInterface = any> {
           (!name && key == fieldComponent.name) ||
           fieldComponent.name == name
         ) {
-          fieldComponent['v-model'] = this.refs[ref];
-          fieldComponent['v-model-key'] = key;
+          fieldComponent["v-model"] = this.refs[ref];
+          fieldComponent["v-model-key"] = key;
         }
       });
     });
@@ -557,7 +557,7 @@ export class CreateForm<T extends FieldsInterface = any> {
     // if any file is selected then it means that we should
     // use FormData otherwise a JsonObject is used
     if (this.extractFiles().length > 0) {
-      console.log('sending files');
+      console.log("sending files");
       // in case we need to Return FormData
       // we should know which field is an
       // array to do so we use multiple
@@ -573,14 +573,14 @@ export class CreateForm<T extends FieldsInterface = any> {
           isArray.push(e.name);
         }
         // ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
-        if (e.field_type !== 'file' && !e.isFile) {
+        if (e.field_type !== "file" && !e.isFile) {
           if (e.select_multiple) {
             if (
               this.refs.basic.value[e.name] &&
               this.refs.basic.value[e.name].length
             )
               this.refs.basic.value[e.name].forEach((value) => {
-                formData.append(e.name + '[]', value as any);
+                formData.append(e.name + "[]", value as any);
               });
           } else {
             if (this.refs.basic.value[e.name] === undefined) return;
@@ -589,11 +589,11 @@ export class CreateForm<T extends FieldsInterface = any> {
         }
       });
       // ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
-      const files = this.extractFilesToSend('basic', isArray);
+      const files = this.extractFilesToSend("basic", isArray);
       Object.keys(files).forEach((e) => {
         if (files[e].length)
           for (let i = 0; i < files[e].length; i++) {
-            formData.append(e + '[]', files[e][i]);
+            formData.append(e + "[]", files[e][i]);
           }
         else formData.append(e, files[e] as any);
       });
@@ -602,7 +602,7 @@ export class CreateForm<T extends FieldsInterface = any> {
       }
       if (this.isUpdate.value)
         promise = this.update(
-          this.refs[this.activeMode.value].value['id'],
+          this.refs[this.activeMode.value].value["id"],
           formData
         );
       else promise = this.createD(formData);
@@ -613,7 +613,7 @@ export class CreateForm<T extends FieldsInterface = any> {
       }
       if (this.isUpdate.value)
         promise = this.update(
-          this.refs[this.activeMode.value].value['id'],
+          this.refs[this.activeMode.value].value["id"],
           this.refs[this.activeMode.value].value
         );
       else promise = this.createD(this.refs[this.activeMode.value].value);
@@ -641,9 +641,9 @@ export class CreateForm<T extends FieldsInterface = any> {
         if (
           this.refs[mode] &&
           this.refs[mode].value &&
-          this.refs[mode].value['id']
+          this.refs[mode].value["id"]
         )
-          this.id = this.refs[mode].value['id']!;
+          this.id = this.refs[mode].value["id"]!;
       },
       { deep: true }
     );
@@ -676,18 +676,18 @@ export class CreateForm<T extends FieldsInterface = any> {
   }
 
   resetForm(newDefaults: null | Record<string, any> = null) {
-    this.activeMode.value = 'basic';
+    this.activeMode.value = "basic";
     this.isUpdate.value = false;
     Object.keys(this.refs).forEach((refKey) => {
       // console.log("this.refs[refKey].value", this.refs[refKey].value);
       if (this.refs[refKey].value) {
-        this.refs[refKey].value['id'] = null;
+        this.refs[refKey].value["id"] = null;
         Object.keys(this.refs[refKey].value).forEach((dataKey) => {
           const field = this.modeFields[this.activeMode.value].find(
             (e) => e.name == dataKey
           );
 
-          if (field && field.field_type === 'select') {
+          if (field && field.field_type === "select") {
             try {
               if (field.select_multiple)
                 this.elementRefs[dataKey].select2Instance.value.val([]);
@@ -702,18 +702,18 @@ export class CreateForm<T extends FieldsInterface = any> {
           const data = this.refs[refKey].value[dataKey];
           const _set = (a) => (this.refs[refKey].value[dataKey] = a);
           switch (typeof data) {
-            case 'boolean':
+            case "boolean":
               _set(false);
               break;
-            case 'bigint':
-            case 'number':
+            case "bigint":
+            case "number":
               _set(0);
               break;
-            case 'object':
+            case "object":
               _set(null);
               break;
-            case 'string':
-              _set('');
+            case "string":
+              _set("");
               break;
           }
           nextTick(() => {
@@ -723,7 +723,7 @@ export class CreateForm<T extends FieldsInterface = any> {
         });
       }
     });
-    this.refs.basic.value['id'] = null;
+    this.refs.basic.value["id"] = null;
 
     if (newDefaults)
       Object.keys(newDefaults).forEach((key) => {
@@ -733,14 +733,14 @@ export class CreateForm<T extends FieldsInterface = any> {
 
   setValues(data: Record<string, any>) {
     if (data.id) {
-      this.refs.basic.value['id'] = data.id;
+      this.refs.basic.value["id"] = data.id;
       this.isUpdate.value = true;
     } else {
       this.isUpdate.value = false;
     }
 
     Object.keys(data).forEach((e) => {
-      console.log('data to set', e, this.elementRefs, this.elementRefs[e]);
+      console.log("data to set", e, this.elementRefs, this.elementRefs[e]);
       try {
         if (this.elementRefs[e]) (this.elementRefs[e] as any).setValue(data[e]);
       } catch (e) {

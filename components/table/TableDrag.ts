@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { ref } from "vue";
 
 export class DragHandler {
   isMouseDown = ref(false);
@@ -6,7 +6,7 @@ export class DragHandler {
   mouseDownEvent: MouseEvent | null = null;
 
   constructor() {
-    document.addEventListener('mouseup', () => {
+    document.addEventListener("mouseup", () => {
       this.mouseDownEvent = null;
       this.isMouseDown.value = false;
     });
@@ -50,8 +50,8 @@ export class SimpleDrag {
   elements = {};
   selectedElement: HTMLElement | null = null;
 
-  exclude_one_clone = '';
-  exclude_all_clone = '';
+  exclude_one_clone = "";
+  exclude_all_clone = "";
 
   constructor(selectedElement) {
     this.selectedElement = selectedElement;
@@ -60,17 +60,17 @@ export class SimpleDrag {
 
   findElements() {
     this.elements = {};
-    this.selectedElement!.querySelectorAll('[moveable]').forEach(
+    this.selectedElement!.querySelectorAll("[moveable]").forEach(
       (element, index) => {
-        if (element.hasAttribute('group')) {
+        if (element.hasAttribute("group")) {
           const group = this.getElementGroup(element);
           if (!this.elements[group]) this.elements[group] = [];
 
           this.elements[group].push(element);
         } else {
-          if (!this.elements['no-group']) this.elements['no-group'] = [];
+          if (!this.elements["no-group"]) this.elements["no-group"] = [];
 
-          this.elements['no-group'].push(element);
+          this.elements["no-group"].push(element);
         }
       }
     );
@@ -92,13 +92,13 @@ export class SimpleDrag {
 
   addMouseEvents() {
     this.iterateOn((element) => {
-      element.addEventListener('mousedown', (e) => this.onMouseDown(e));
-      element.addEventListener('mousemove', (e) => this.onElementMouseMove(e));
+      element.addEventListener("mousedown", (e) => this.onMouseDown(e));
+      element.addEventListener("mousemove", (e) => this.onElementMouseMove(e));
     });
   }
 
   getElementGroup(element) {
-    return element.getAttribute('group');
+    return element.getAttribute("group");
   }
 
   classToGroup(group, klass, remove = false, excludeElement = null) {
@@ -115,8 +115,8 @@ export class SimpleDrag {
   }
 
   onMouseUp(e) {
-    document.removeEventListener('mouseup', this.lastGlobalMouseUpListener);
-    document.removeEventListener('mousemove', this.lastGlobalMoveListener);
+    document.removeEventListener("mouseup", this.lastGlobalMouseUpListener);
+    document.removeEventListener("mousemove", this.lastGlobalMoveListener);
 
     this.mouseIsDown = false;
 
@@ -142,8 +142,8 @@ export class SimpleDrag {
     this.lastGlobalMouseUpListener = (e) => {
       this.onMouseUp(e);
     };
-    document.addEventListener('mouseup', this.lastGlobalMouseUpListener);
-    document.addEventListener('mousemove', this.lastGlobalMoveListener);
+    document.addEventListener("mouseup", this.lastGlobalMouseUpListener);
+    document.addEventListener("mousemove", this.lastGlobalMoveListener);
   }
 
   lastGlobalMoveListener: any = null;
@@ -153,12 +153,12 @@ export class SimpleDrag {
     if (this.mouseIsDown && this.lastDraggingElement != null) {
       this.currentY = e.y - this.offsetY;
       this.currentX = e.x - this.offsetX;
-      this.lastDraggingElement.style.left = this.currentX + 'px';
-      this.lastDraggingElement.style.top = this.currentY + 'px';
+      this.lastDraggingElement.style.left = this.currentX + "px";
+      this.lastDraggingElement.style.top = this.currentY + "px";
     }
   }
 
-  cloneWithStyle(target, exclude = '') {
+  cloneWithStyle(target, exclude = "") {
     const clone = target.cloneNode(true);
     const styles = getComputedStyle(target) as any;
     for (const i of styles) {
@@ -179,7 +179,7 @@ export class SimpleDrag {
     if (this.mouseIsDown && this.lastDraggingElement == null) {
       let currentTarget = this.lastMouseDownEvent!.target as HTMLElement;
 
-      while (!currentTarget.hasAttribute('moveable')) {
+      while (!currentTarget.hasAttribute("moveable")) {
         currentTarget = currentTarget.parentElement!;
       }
 
@@ -187,14 +187,14 @@ export class SimpleDrag {
       this.lastTargetDrag = currentTarget;
 
       const clone = this.cloneWithStyle(target, this.exclude_one_clone);
-      clone.style.position = 'absolute';
+      clone.style.position = "absolute";
       this.lastDraggingElement = clone;
 
       this.offsetX = this.lastMouseDownEvent!.offsetX;
       this.offsetY = this.lastMouseDownEvent!.offsetY;
 
-      clone.classList.add('show-animation');
-      clone.setAttribute('dragged', 'dragged');
+      clone.classList.add("show-animation");
+      clone.setAttribute("dragged", "dragged");
 
       document.body.append(clone);
 
@@ -207,25 +207,25 @@ export class SimpleDrag {
           const cloned = this.cloneWithStyle(element, this.exclude_all_clone);
           const clonedBB = this.getBB(element);
 
-          cloned.style.position = 'absolute';
-          cloned.style.top = clonedBB.top + 'px';
-          cloned.style.left = clonedBB.left + 'px';
-          cloned.classList.add('is-replace-able');
+          cloned.style.position = "absolute";
+          cloned.style.top = clonedBB.top + "px";
+          cloned.style.left = clonedBB.left + "px";
+          cloned.classList.add("is-replace-able");
 
           document.body.append(cloned);
 
           this.removeOnMouseUp.push(cloned);
 
-          cloned.addEventListener('mouseenter', (e) => {
-            cloned.classList.add('selected-this-one');
+          cloned.addEventListener("mouseenter", (e) => {
+            cloned.classList.add("selected-this-one");
           });
-          cloned.addEventListener('mouseleave', (e) => {
-            cloned.classList.remove('selected-this-one');
+          cloned.addEventListener("mouseleave", (e) => {
+            cloned.classList.remove("selected-this-one");
           });
 
-          cloned.addEventListener('mouseup', (e) => {
-            const marker1 = document.createElement('div');
-            const marker2 = document.createElement('div');
+          cloned.addEventListener("mouseup", (e) => {
+            const marker1 = document.createElement("div");
+            const marker2 = document.createElement("div");
             console.log(this.lastTargetDrag!, element);
             this.lastTargetDrag!.before(marker1);
             element.before(marker2);

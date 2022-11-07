@@ -146,7 +146,7 @@
   </div>
 </template>
 <style scoped lang="scss">
-.card-header[dragable='dragable'] {
+.card-header[dragable="dragable"] {
   cursor: move;
 }
 
@@ -176,7 +176,7 @@
   position: relative;
 
   &:after {
-    content: '';
+    content: "";
     position: absolute;
     width: 100%;
     height: 100%;
@@ -193,11 +193,11 @@
 }
 </style>
 <script>
-import CardMixin from '@/custom/mixins/CardMixin';
-import { Collapse } from 'bootstrap';
-import { onMounted, onUnmounted, ref, toRef } from 'vue';
-import { MenuComponent } from '@/assets/ts/components';
-import { Configs } from '@/Configs';
+import CardMixin from "@/custom/mixins/CardMixin";
+import { Collapse } from "bootstrap";
+import { onMounted, onUnmounted, ref, toRef } from "vue";
+import { MenuComponent } from "@/assets/ts/components";
+import { Configs } from "@/Configs";
 
 export default {
   mixins: [CardMixin],
@@ -211,10 +211,10 @@ export default {
       default: false,
     },
     disableDrag: {
-      default: !Configs['cardsAreDraggable'],
+      default: !Configs["cardsAreDraggable"],
     },
     hideCardIcon: {
-      default: Configs['cardsHideCardIcon'],
+      default: Configs["cardsHideCardIcon"],
     },
     enableCollapse: {
       default: false,
@@ -223,7 +223,7 @@ export default {
       default: false,
     },
     icon: {
-      default: 'media/icons/duotune/maps/map008.svg',
+      default: "media/icons/duotune/maps/map008.svg",
     },
     cardIconWidth: {
       default: null,
@@ -241,9 +241,9 @@ export default {
     const selectedNavItem = ref();
     const mouseDown = ref(false);
     const isCollapsed = ref(false);
-    const disableCard = toRef(props, 'disableCard');
-    const disableDrag = toRef(props, 'disableDrag');
-    const enableCollapse = toRef(props, 'enableCollapse');
+    const disableCard = toRef(props, "disableCard");
+    const disableDrag = toRef(props, "disableDrag");
+    const enableCollapse = toRef(props, "enableCollapse");
 
     let collapse;
     let clonedElement = null;
@@ -257,42 +257,42 @@ export default {
       } else {
         selectedNavItem.value = e;
       }
-      context.emit('selected-nav-item', selectedNavItem.value);
+      context.emit("selected-nav-item", selectedNavItem.value);
     };
 
     const collapseToggle = () => {
       // console.log("collapse");
       collapse.toggle();
       setTimeout(() => {
-        isCollapsed.value = !bodyRef.value.classList.contains('show');
+        isCollapsed.value = !bodyRef.value.classList.contains("show");
       }, 450);
     };
 
     const mouseLeave = () => {
       if (!mouseDown.value && cardRef.value)
-        cardRef.value.classList.remove('draggable-start');
+        cardRef.value.classList.remove("draggable-start");
     };
 
     const dragMouseDown = (e) => {
       if (disableDrag.value) return;
 
-      if (!e.target.classList.contains('card-header')) return;
+      if (!e.target.classList.contains("card-header")) return;
 
       mouseDown.value = true;
 
       const clone = cardRef.value.cloneNode(true);
       clonedElement = clone;
 
-      clone.setAttribute('cloned-element', 'cloned-element');
-      clone.style.position = 'fixed';
+      clone.setAttribute("cloned-element", "cloned-element");
+      clone.style.position = "fixed";
 
       const cardRect = cardRef.value.getBoundingClientRect();
       const clientRect = e.target.getBoundingClientRect();
 
-      clone.style.top = cardRect.top + 'px';
-      clone.style.left = cardRect.left + 'px';
-      clone.style.width = cardRect.width + 'px';
-      clone.style.height = cardRect.height + 'px';
+      clone.style.top = cardRect.top + "px";
+      clone.style.left = cardRect.left + "px";
+      clone.style.width = cardRect.width + "px";
+      clone.style.height = cardRect.height + "px";
 
       xDiff = clientRect.left - cardRect.left;
       yDiff = clientRect.top - cardRect.top;
@@ -309,24 +309,24 @@ export default {
         lastP.insertBefore(cardRef.value, null);
       }
       lastFoundElement = null;
-      document.querySelectorAll('[cloned-element]').forEach((e) => {
+      document.querySelectorAll("[cloned-element]").forEach((e) => {
         e.remove();
       });
       clonedElement = null;
       mouseDown.value = false;
-      if (cardRef.value) cardRef.value.classList.remove('draggable-start');
+      if (cardRef.value) cardRef.value.classList.remove("draggable-start");
       // console.log(e);
     };
 
     const findDraggble = (target) => {
-      if (target.hasAttribute('data-dragable')) return target;
+      if (target.hasAttribute("data-dragable")) return target;
 
       let parent = target.parentElement;
 
-      if (parent.hasAttribute('data-dragable')) return parent;
+      if (parent.hasAttribute("data-dragable")) return parent;
 
       for (let i = 0; i < 50; i++) {
-        if (parent && parent.hasAttribute('data-dragable')) {
+        if (parent && parent.hasAttribute("data-dragable")) {
           return parent;
         } else if (!parent) {
           return null;
@@ -339,8 +339,8 @@ export default {
     const mouseMove = (e) => {
       if (mouseDown.value) {
         if (clonedElement) {
-          clonedElement.style.left = e.x - xDiff + 'px';
-          clonedElement.style.top = e.y - yDiff + 'px';
+          clonedElement.style.left = e.x - xDiff + "px";
+          clonedElement.style.top = e.y - yDiff + "px";
         }
 
         const f = findDraggble(
@@ -351,13 +351,13 @@ export default {
 
         if (f) {
           if (f !== lastFoundElement && lastFoundElement != null) {
-            lastFoundElement.classList.remove('draggable-start');
+            lastFoundElement.classList.remove("draggable-start");
           }
           lastFoundElement = f;
-          f.classList.add('draggable-start');
+          f.classList.add("draggable-start");
         } else {
           if (lastFoundElement != null) {
-            lastFoundElement.classList.remove('draggable-start');
+            lastFoundElement.classList.remove("draggable-start");
           }
           lastFoundElement = null;
         }
@@ -365,31 +365,31 @@ export default {
     };
 
     onUnmounted(() => {
-      document.removeEventListener('mouseup', dragMouseUp);
-      document.removeEventListener('mousemove', mouseMove);
+      document.removeEventListener("mouseup", dragMouseUp);
+      document.removeEventListener("mousemove", mouseMove);
     });
 
     onMounted(() => {
       if ((!disableCard.value && !disableDrag.value) || enableCollapse.value)
-        collapse = new Collapse(cardRef.value.querySelector('.card-body'));
+        collapse = new Collapse(cardRef.value.querySelector(".card-body"));
       if (!disableCard.value && !disableDrag.value) {
-        document.addEventListener('mouseup', dragMouseUp);
-        document.addEventListener('mousemove', mouseMove);
+        document.addEventListener("mouseup", dragMouseUp);
+        document.addEventListener("mousemove", mouseMove);
         MenuComponent.reinitialization();
-        if (context.slots['card-body']) {
+        if (context.slots["card-body"]) {
           // console.log("context.slots['card-body']", context)
         }
 
         let contains = false;
         cardRef.value.parentElement.classList.forEach((e) => {
-          if (e.search('col-') > -1) {
+          if (e.search("col-") > -1) {
             contains = true;
             return true;
           }
         });
         if (!contains) {
           console.warn(
-            'this card does not have a proper parent',
+            "this card does not have a proper parent",
             cardRef.value
           );
         }

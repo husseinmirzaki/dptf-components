@@ -11,10 +11,10 @@
   </ul>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref } from "vue";
 
 export default defineComponent({
-  props: ['items'],
+  props: ["items"],
   setup(props, context) {
     const selectedItem = ref();
     const selected = (e) => {
@@ -23,7 +23,7 @@ export default defineComponent({
       } else {
         selectedItem.value = e;
       }
-      context.emit('selected', selectedItem.value);
+      context.emit("selected", selectedItem.value);
     };
     return {
       selected,

@@ -13,14 +13,14 @@
  *
  */
 
-import { ApiService } from '@/Defaults';
-import JwtService from '@/custom/core/services/JwtService';
-import { Actions, Mutations } from '@/custom/store/enums/StoreEnums';
-import { Module, Action, Mutation, VuexModule } from 'vuex-module-decorators';
-import { VueInstanceService } from '@/Defaults';
-import { UserApiService } from '@/custom/services/UserApiService';
-import { fullNameGenerator } from '@/custom/helpers/UserHelpers';
-import { useI18n } from 'vue-i18n';
+import { ApiService } from "@/Defaults";
+import JwtService from "@/custom/core/services/JwtService";
+import { Actions, Mutations } from "@/custom/store/enums/StoreEnums";
+import { Module, Action, Mutation, VuexModule } from "vuex-module-decorators";
+import { VueInstanceService } from "@/Defaults";
+import { UserApiService } from "@/custom/services/UserApiService";
+import { fullNameGenerator } from "@/custom/helpers/UserHelpers";
+import { useI18n } from "vue-i18n";
 
 export interface User {
   avatar?: string;
@@ -48,7 +48,7 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
     (process.env.VUE_APP_IS_LOGGED_IN &&
       (process.env.VUE_APP_IS_LOGGED_IN as any) == 1);
 
-  forgottenUser = '';
+  forgottenUser = "";
 
   /**
    * Get current user object
@@ -102,7 +102,7 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
     for (let i = 0; i < errors.length; i++) {
       try {
         VueInstanceService.showErrorMessage(
-          VueInstanceService.vue.config.globalProperties['$t'](
+          VueInstanceService.vue.config.globalProperties["$t"](
             errors[i].toLowerCase()
           )
         );
@@ -142,7 +142,7 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
    */
   @Mutation
   [Mutations.SET_NEW_TOKEN](data) {
-    JwtService.setAccess(data['access']);
+    JwtService.setAccess(data["access"]);
   }
 
   /**
@@ -172,7 +172,7 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
     this.user = {} as User;
     this.errors = [];
     JwtService.destroyToken();
-    localStorage.removeItem('activePostId');
+    localStorage.removeItem("activePostId");
   }
 
   /**
@@ -255,9 +255,9 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
   @Action
   [Actions.LOGOUT]() {
     this.context.commit(Mutations.PURGE_AUTH);
-    VueInstanceService.showSuccessMessage('شما با موفقیت خارج شدید');
+    VueInstanceService.showSuccessMessage("شما با موفقیت خارج شدید");
     VueInstanceService.router.push({
-      name: 'sign-in',
+      name: "sign-in",
     });
   }
 
@@ -287,7 +287,7 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
     return new Promise<void>((resolve, reject) => {
       ApiService.post(ApiService.forgetPasswordResetUrl, { data: payload })
         .then(() => {
-          this.context.commit(Mutations.SET_FORGOTTEN_USER, '');
+          this.context.commit(Mutations.SET_FORGOTTEN_USER, "");
           resolve();
         })
         .catch(() => {
@@ -302,7 +302,7 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
   @Action
   [Actions.VERIFY_AUTH]() {
     if (
-      process.env.NODE_ENV == 'development' &&
+      process.env.NODE_ENV == "development" &&
       (process.env.VUE_APP_IS_LOGGED_IN as any) == 1
     ) {
       return;
@@ -311,7 +311,7 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
     const token = JwtService.getToken();
     if (token) {
       try {
-        const data = JSON.parse(atob(token.split('.')[1]));
+        const data = JSON.parse(atob(token.split(".")[1]));
         const expireDate = new Date(data.exp * 1000);
 
         expireDate.setTime(expireDate.getTime() - 5 * 60 * 1000);
@@ -323,7 +323,7 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
         this.context.commit(Mutations.PURGE_AUTH);
       }
     } else {
-      console.error('no token');
+      console.error("no token");
       this.context.commit(Mutations.PURGE_AUTH);
     }
   }
@@ -346,7 +346,7 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
           (response) => {
             if (!response) {
               this.context.commit(Mutations.PURGE_AUTH);
-              VueInstanceService.router.push('/sign-in');
+              VueInstanceService.router.push("/sign-in");
               reject();
               return;
             }
@@ -364,12 +364,12 @@ export default class AuthModule extends VuexModule implements UserAuthInfo {
               e.response.data &&
               !Array.isArray(e.response.data) &&
               e.response.data.auth &&
-              e.response.data.auth == 'invalid_refresh_token'
+              e.response.data.auth == "invalid_refresh_token"
             ) {
               this.context.commit(Mutations.PURGE_AUTH);
-              VueInstanceService.showSuccessMessage('شما با موفقیت خارج شدید');
+              VueInstanceService.showSuccessMessage("شما با موفقیت خارج شدید");
               VueInstanceService.router.push({
-                name: 'sign-in',
+                name: "sign-in",
               });
             } else {
               reject(e);

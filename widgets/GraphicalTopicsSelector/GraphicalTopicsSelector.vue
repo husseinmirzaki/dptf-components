@@ -7,10 +7,10 @@
   />
 </template>
 <script>
-import { cities } from '@/custom/widgets/GraphicalCitySelector/cities';
-import { provinces } from '@/custom/widgets/GraphicalCitySelector/provinces';
-import { computed, onMounted, ref, toRef } from 'vue';
-import GraphicalSelector from '@/custom/widgets/GraphicalSelector';
+import { cities } from "@/custom/widgets/GraphicalCitySelector/cities";
+import { provinces } from "@/custom/widgets/GraphicalCitySelector/provinces";
+import { computed, onMounted, ref, toRef } from "vue";
+import GraphicalSelector from "@/custom/widgets/GraphicalSelector";
 
 export default {
   components: { GraphicalSelector },
@@ -23,27 +23,27 @@ export default {
       return [
         {
           id: 1,
-          name: 'مسکن',
+          name: "مسکن",
         },
         {
           id: 2,
-          name: 'اشتغال',
+          name: "اشتغال",
         },
         {
           id: 3,
-          name: 'بیمه و درمان',
+          name: "بیمه و درمان",
         },
         {
           id: 4,
-          name: 'پوشش سازمان های حمایتی',
+          name: "پوشش سازمان های حمایتی",
         },
         {
           id: 5,
-          name: 'آموزشی',
+          name: "آموزشی",
         },
         {
           id: 6,
-          name: 'معنوی',
+          name: "معنوی",
         },
       ].sort((a, b) => (a.name.length > b.name.length ? 1 : -1));
     });

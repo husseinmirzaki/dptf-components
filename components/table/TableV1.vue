@@ -189,29 +189,29 @@ import {
   toRef,
   watch,
   withModifiers,
-} from 'vue';
-import { Table } from '@/custom/components/table/Table';
-import TablePagination from '@/custom/components/table/TablePagination.vue';
-import Card from '@/custom/components/Card.vue';
-import { ContextMenuService } from '@/custom/components/ContextMenuService';
-import Spinner from '@/custom/components/Spinner.vue';
-import FieldComponent from '@/custom/components/FieldComponent.vue';
-import { DragHandler, SimpleDrag } from '@/custom/components/table/TableDrag';
-import DropdownV2 from '@/custom/components/DropdownV2.vue';
-import { MenuComponent } from '@/assets/ts/components';
-import { mobileCheck } from '@/custom/helpers/MobileHelpers';
-import { UserPreferencesManager } from '@/custom/services/UserPreferencesV2Api';
-import { Configs } from '@/Configs';
-import { DEFAULT_BUTTONS } from '@/custom/helpers/RenderFunctionHelpers';
-import TableFilter from '@/custom/components/table/TableFilter.vue';
-import Sortable from 'sortablejs';
-import { VueInstanceService } from '@/Defaults';
+} from "vue";
+import { Table } from "@/custom/components/table/Table";
+import TablePagination from "@/custom/components/table/TablePagination.vue";
+import Card from "@/custom/components/Card.vue";
+import { ContextMenuService } from "@/custom/components/ContextMenuService";
+import Spinner from "@/custom/components/Spinner.vue";
+import FieldComponent from "@/custom/components/FieldComponent.vue";
+import { DragHandler, SimpleDrag } from "@/custom/components/table/TableDrag";
+import DropdownV2 from "@/custom/components/DropdownV2.vue";
+import { MenuComponent } from "@/assets/ts/components";
+import { mobileCheck } from "@/custom/helpers/MobileHelpers";
+import { UserPreferencesManager } from "@/custom/services/UserPreferencesV2Api";
+import { Configs } from "@/Configs";
+import { DEFAULT_BUTTONS } from "@/custom/helpers/RenderFunctionHelpers";
+import TableFilter from "@/custom/components/table/TableFilter.vue";
+import Sortable from "sortablejs";
+import { VueInstanceService } from "@/Defaults";
 
 export default defineComponent({
   props: {
     url: {
       default: () => {
-        return '';
+        return "";
       },
     },
     conf: {
@@ -223,22 +223,22 @@ export default defineComponent({
       default: () => [],
     },
     icon: {
-      default: 'media/icons/duotune/maps/map008.svg',
+      default: "media/icons/duotune/maps/map008.svg",
     },
     title: {
-      default: 'موضوع جدول',
+      default: "موضوع جدول",
     },
     currentPage: {
       default: 0,
     },
     description: {
-      default: 'توضیحاتی درمورد جدول که اطلاعات کلیی در مورد جدول به ما میدهد',
+      default: "توضیحاتی درمورد جدول که اطلاعات کلیی در مورد جدول به ما میدهد",
     },
     disableCard: {
       default: false,
     },
     disableDrag: {
-      default: !Configs['cardsAreDraggable'],
+      default: !Configs["cardsAreDraggable"],
     },
     userPreferences: {
       default: false,
@@ -260,9 +260,9 @@ export default defineComponent({
   },
   setup(props, context) {
     const isMobile = mobileCheck();
-    const conf = toRef(props, 'conf');
-    const list = toRef(props, 'list');
-    const url = toRef(props, 'url');
+    const conf = toRef(props, "conf");
+    const list = toRef(props, "list");
+    const url = toRef(props, "url");
 
     let headersRef: any;
     let tableRef: any;
@@ -282,9 +282,9 @@ export default defineComponent({
       () => {
         Object.keys(checkedDataList.value).forEach((key) => {
           if (checkedDataList.value[key] && !cacheSelected[key]) {
-            const currentKeyId = key.split('_')[1];
+            const currentKeyId = key.split("_")[1];
             const dataIndex = dList.value.findIndex(
-              (item) => item['id'] == Number(currentKeyId)
+              (item) => item["id"] == Number(currentKeyId)
             );
             cacheSelected[key] = dList.value[dataIndex];
           } else if (!checkedDataList.value[key] && cacheSelected[key]) {
@@ -377,7 +377,7 @@ export default defineComponent({
     });
 
     const onGetData = () => {
-      console.debug('here');
+      console.debug("here");
       return new Promise<void>((resolve) => {
         if (defaultConfig.canUseUrl) {
           defaultConfig.onGetData().then(
@@ -495,7 +495,7 @@ export default defineComponent({
         });
       }
       watchHeaderVisibility = true;
-      if (!url.value || url.value == '') {
+      if (!url.value || url.value == "") {
         // dragStuff();
       } else {
         if (getData)
@@ -511,15 +511,15 @@ export default defineComponent({
       if (headersRef)
         Sortable.create(headersRef, {
           group: defaultConfig.tableName,
-          draggable: '.custom-table-th',
-          direction: 'horizontal',
+          draggable: ".custom-table-th",
+          direction: "horizontal",
           animation: 180,
-          filter: '[ignore-drags]',
+          filter: "[ignore-drags]",
           onUpdate: () => {
             setTimeout(() => {
               const l: Array<string> = [];
               for (let i = 0; i < headersRef.children.length; i++) {
-                l.push(headersRef.children[i].getAttribute('header-name'));
+                l.push(headersRef.children[i].getAttribute("header-name"));
               }
               changedHeaders.value.splice(0);
               changedHeaders.value.push(...l.reverse());
@@ -532,15 +532,15 @@ export default defineComponent({
       if (!props.disableDropdown && filtersRef)
         Sortable.create(filtersRef, {
           group: defaultConfig.tableName,
-          draggable: '.field',
-          direction: 'vertical',
+          draggable: ".field",
+          direction: "vertical",
           animation: 180,
           onUpdate: () => {
             setTimeout(() => {
               const l: Array<string> = [];
-              const items = filtersRef.querySelectorAll('input[name]');
+              const items = filtersRef.querySelectorAll("input[name]");
               for (let i = 0; i < items.length; i++) {
-                l.push(items[i].getAttribute('name'));
+                l.push(items[i].getAttribute("name"));
               }
               changedHeaders.value.splice(0);
               changedHeaders.value.push(...l);
@@ -554,28 +554,28 @@ export default defineComponent({
       let lastTimeoutNotify: any;
       let lastTimeoutNotifyLonger: any;
       VueInstanceService.on(defaultConfig.tableName, (e) => {
-        if (e[0] == 'refresh-one') {
+        if (e[0] == "refresh-one") {
           const _data: any = e[1];
           const found = dList.value.findIndex(
-            (item) => item['id'] && item['id'] == _data['id']
+            (item) => item["id"] && item["id"] == _data["id"]
           );
           if (found > -1) {
             dList.value.splice(found, 1, _data);
             nextTick(() => {
               const a = document.querySelector(
-                `[item-data-id="${_data['id']}"]`
+                `[item-data-id="${_data["id"]}"]`
               );
               if (a) {
-                a.classList.add('notify-longer');
-                a.classList.add('notify');
+                a.classList.add("notify-longer");
+                a.classList.add("notify");
                 clearTimeout(lastTimeoutNotify);
                 clearTimeout(lastTimeoutNotifyLonger);
                 lastTimeoutNotify = setTimeout(
-                  () => a.classList.remove('notify'),
+                  () => a.classList.remove("notify"),
                   6000
                 );
                 lastTimeoutNotifyLonger = setTimeout(
-                  () => a.classList.remove('notify-longer'),
+                  () => a.classList.remove("notify-longer"),
                   12000
                 );
               }
@@ -662,18 +662,18 @@ export default defineComponent({
 
       const checkBoxes = defaultConfig.checkAble
         ? h(
-            'th',
+            "th",
             {
-              class: 'check-stuff',
-              'ignore-drags': 1,
+              class: "check-stuff",
+              "ignore-drags": 1,
             },
             h(FieldComponent, {
               modelValue: checkAll.value,
-              col_class: '',
-              input_container_class: 'test',
-              defaultInputClasses: '',
+              col_class: "",
+              input_container_class: "test",
+              defaultInputClasses: "",
               show_errors: false,
-              field_type: 'checkbox',
+              field_type: "checkbox",
             })
           )
         : undefined;
@@ -685,41 +685,41 @@ export default defineComponent({
             key: header,
             onShowFilter: () => defaultConfig.onShowFilter(header, index),
             onToggleOrder: () => defaultConfig.toggleOrder(header),
-            moveable: 'moveable',
+            moveable: "moveable",
             isFiltered:
               defaultConfig.filteredHeaders.value.indexOf(header) > -1,
             sortDirection:
-              defaultConfig.orderedField.value['name'] === header
-                ? defaultConfig.orderedField.value['order']
+              defaultConfig.orderedField.value["name"] === header
+                ? defaultConfig.orderedField.value["order"]
                 : undefined,
-            'header-name': header,
+            "header-name": header,
             group: defaultConfig.tableName,
             ...defaultConfig.onTHeadProps(header, index),
           });
         });
 
       const actionButtons = defaultConfig.showActionButtons
-        ? h(defaultConfig.onTHeadComponent('table-action', -1), {
+        ? h(defaultConfig.onTHeadComponent("table-action", -1), {
             disableFilters: 1,
-            'ignore-drags': 1,
-            'header-name': 'table-action',
+            "ignore-drags": 1,
+            "header-name": "table-action",
             group: defaultConfig.tableName,
-            ...defaultConfig.onTHeadProps('table-action', -1),
+            ...defaultConfig.onTHeadProps("table-action", -1),
           })
         : undefined;
 
       return h(
-        'thead',
+        "thead",
         {
           onUpdate: withModifiers(() => {
             //
-          }, ['stop', 'prevent']),
+          }, ["stop", "prevent"]),
         },
         h(
-          'tr',
+          "tr",
           {
             ref: (el) => (headersRef = el),
-            class: 'fw-bolder text-muted bg-light',
+            class: "fw-bolder text-muted bg-light",
           },
           [
             // action buttons
@@ -739,19 +739,19 @@ export default defineComponent({
       let tr: any;
       if (!dList.value || dList.value.length == 0) {
         tr = h(
-          'tr',
+          "tr",
           {},
           h(
-            'td',
+            "td",
             {
-              dir: 'rtl',
+              dir: "rtl",
               colspan: headersToIterate.filter(
                 (header) => headerVisibility.value[header]
               ).length,
             },
-            context.slots['empty']
-              ? context.slots['empty']()
-              : 'داده ای برای نمایش موجود نمی‌باشد ؟'
+            context.slots["empty"]
+              ? context.slots["empty"]()
+              : "داده ای برای نمایش موجود نمی‌باشد ؟"
           )
         );
       } else {
@@ -759,15 +759,15 @@ export default defineComponent({
           return h(
             defaultConfig.onTBodyRowComponent(item, index),
             {
-              key: item['id'] ? 'tr_' + item['id'] : 'tr_index_' + index,
-              'data-context-menu': 'true',
-              'item-data-id': item['id'] ? item['id'] : index,
+              key: item["id"] ? "tr_" + item["id"] : "tr_index_" + index,
+              "data-context-menu": "true",
+              "item-data-id": item["id"] ? item["id"] : index,
               onContextmenu: () => contextMenu(item),
               onMouseenter: () => {
-                checkCheckFieldData(`check_${item['id']}`);
+                checkCheckFieldData(`check_${item["id"]}`);
               },
               onClick: () => {
-                context.emit('on-row-selected', item);
+                context.emit("on-row-selected", item);
               },
               ...defaultConfig.onTBodyRowBinds(item, index),
             },
@@ -775,25 +775,25 @@ export default defineComponent({
               default: () => {
                 const checkBox = defaultConfig.checkAble
                   ? h(
-                      'td',
+                      "td",
                       {
                         onMousemove: () => {
-                          checkCheckFieldData(`check_${item['id']}`);
+                          checkCheckFieldData(`check_${item["id"]}`);
                         },
                         onMouseenter: () => {
-                          checkCheckFieldData(`check_${item['id']}`);
+                          checkCheckFieldData(`check_${item["id"]}`);
                         },
                         onClick: () =>
-                          (checkedDataList[`check_${item['id']}`] =
-                            !checkedDataList[`check_${item['id']}`]),
+                          (checkedDataList[`check_${item["id"]}`] =
+                            !checkedDataList[`check_${item["id"]}`]),
                       },
                       h(FieldComponent, {
-                        modelValue: checkedDataList[`check_${item['id']}`],
-                        col_class: '',
-                        input_container_class: '',
-                        defaultInputClasses: '',
+                        modelValue: checkedDataList[`check_${item["id"]}`],
+                        col_class: "",
+                        input_container_class: "",
+                        defaultInputClasses: "",
                         show_errors: false,
-                        field_type: 'checkbox',
+                        field_type: "checkbox",
                       })
                     )
                   : undefined;
@@ -808,11 +808,11 @@ export default defineComponent({
                       index
                     );
                     let key =
-                      String(item['id'] ? 'td_' + item['id'] : 'td_' + index) +
+                      String(item["id"] ? "td_" + item["id"] : "td_" + index) +
                       header +
                       headerIndex;
-                    if (props['data']) {
-                      key += String(props['data']);
+                    if (props["data"]) {
+                      key += String(props["data"]);
                     }
                     return h(
                       defaultConfig.onTBodyComponent(
@@ -830,9 +830,9 @@ export default defineComponent({
 
                 const actionButtons = defaultConfig.showActionButtons
                   ? h(
-                      'td',
+                      "td",
                       {
-                        class: 'pe-2 text-nowrap text-center',
+                        class: "pe-2 text-nowrap text-center",
                       },
                       defaultConfig
                         .getContextMenuItems(item)
@@ -843,10 +843,10 @@ export default defineComponent({
                                 `btn-sm p-1 btn-${
                                   contextMenuItem.state
                                     ? contextMenuItem.state
-                                    : 'primary'
+                                    : "primary"
                                 }`,
                                 {
-                                  'ms-1': contextMenuIndex > 0,
+                                  "ms-1": contextMenuIndex > 0,
                                 },
                               ],
                               onClick: () => {
@@ -857,23 +857,23 @@ export default defineComponent({
                             [
                               //<i v-if="item.icon" :class="item.icon"></i>
                               contextMenuItem.faIcon
-                                ? h('i', { class: contextMenuItem.faIcon })
+                                ? h("i", { class: contextMenuItem.faIcon })
                                 : undefined,
                               contextMenuItem.svgIcon
                                 ? h(
-                                    'span',
+                                    "span",
                                     {
                                       class: [
-                                        'svg-icon me-4',
+                                        "svg-icon me-4",
                                         `svg-icon-${
                                           contextMenuItem.state
                                             ? contextMenuItem.state
-                                            : 'primary'
+                                            : "primary"
                                         }`,
                                         contextMenuItem.svgIcon.spanClass,
                                       ],
                                     },
-                                    h(resolveComponent('inline-svg'), {
+                                    h(resolveComponent("inline-svg"), {
                                       src: contextMenuItem.svgIcon.src,
                                     })
                                   )
@@ -892,25 +892,25 @@ export default defineComponent({
         });
       }
 
-      return h('tbody', {}, tr);
+      return h("tbody", {}, tr);
     };
 
     const buildTable = () => {
       return h(
-        'div',
+        "div",
         {
           ref: (el) => (tableRef = el),
-          class: 'table-responsive table-container',
+          class: "table-responsive table-container",
         },
         // table
         h(
-          'table',
+          "table",
           {
             class: [
-              'table table-bordered align-middle ge-4 gy-4 table-hover table table-v2-custom',
+              "table table-bordered align-middle ge-4 gy-4 table-hover table table-v2-custom",
               {
-                'mb-0': !defaultConfig.showPagination,
-                'with-action-buttons': defaultConfig.showActionButtons,
+                "mb-0": !defaultConfig.showPagination,
+                "with-action-buttons": defaultConfig.showActionButtons,
               },
             ],
           },
@@ -930,9 +930,9 @@ export default defineComponent({
             const table = buildTable();
 
             const cardBody = h(
-              'div',
+              "div",
               {
-                class: ['card-body m-0 p-0', context.attrs['bodyClass']],
+                class: ["card-body m-0 p-0", context.attrs["bodyClass"]],
               },
               [
                 table,
@@ -946,7 +946,7 @@ export default defineComponent({
                         count: defaultConfig.count.value,
                         onPageSelected: onPage,
                       });
-                      if (defaultConfig.teleportPaginationToSelector != '') {
+                      if (defaultConfig.teleportPaginationToSelector != "") {
                         const elementToTeleportTo = document.querySelector(
                           defaultConfig.teleportPaginationToSelector
                         );
@@ -976,36 +976,36 @@ export default defineComponent({
           changedHeaders.value.length > 0
             ? changedHeaders.value
             : headers.value;
-        slots['dropDown'] = h(
+        slots["dropDown"] = h(
           DropdownV2,
           {},
           {
             icons: () => {
               return h(
-                'div',
+                "div",
                 {
-                  class: 'me-n4',
+                  class: "me-n4",
                 },
                 h(
-                  'button',
+                  "button",
                   {
-                    type: 'button',
+                    type: "button",
                     class:
-                      'btn btn-sm btn-icon btn-color-primary btn-active-light-primary',
+                      "btn btn-sm btn-icon btn-color-primary btn-active-light-primary",
                     onClick: () => defaultConfig.requestExport(),
                   },
                   h(
-                    'span',
+                    "span",
                     {
-                      class: 'svg-icon svg-icon-2',
+                      class: "svg-icon svg-icon-2",
                     },
                     h(
-                      resolveComponent('ElTooltip'),
+                      resolveComponent("ElTooltip"),
                       {
-                        content: 'خروجی اکسل',
+                        content: "خروجی اکسل",
                       },
-                      h(resolveComponent('inline-svg'), {
-                        src: 'media/icons/duotune/files/fil021.svg',
+                      h(resolveComponent("inline-svg"), {
+                        src: "media/icons/duotune/files/fil021.svg",
                       })
                     )
                   )
@@ -1014,12 +1014,12 @@ export default defineComponent({
             },
             default: () => {
               return h(
-                'div',
+                "div",
                 {
                   onUpdate: withModifiers(() => {
                     //
-                  }, ['stop', 'prevent']),
-                  class: 'items-container',
+                  }, ["stop", "prevent"]),
+                  class: "items-container",
                   ref: (el) => (filtersRef = el),
                 },
                 headersToIterate.map((header, index) =>
@@ -1029,8 +1029,8 @@ export default defineComponent({
                     modelValue: headerVisibility.value[header],
                     placeholder: defaultConfig.onTHeadProps(header, index)
                       .header,
-                    field_type: 'checkbox',
-                    'onUpdate:modelValue': (e) =>
+                    field_type: "checkbox",
+                    "onUpdate:modelValue": (e) =>
                       (headerVisibility.value[header] = e),
                   })
                 )
@@ -1040,12 +1040,12 @@ export default defineComponent({
         );
       }
 
-      slots['card-body'] = buildCardBody;
+      slots["card-body"] = buildCardBody;
 
       const card = h(
         Card,
         {
-          cardTitle: context.attrs['cardTitle']
+          cardTitle: context.attrs["cardTitle"]
             ? context.attrs.cardTitle
             : props.title,
           cardDescription: props.description,
@@ -1053,8 +1053,8 @@ export default defineComponent({
           disableCard: props.disableCard,
           disableDrag: props.disableDrag,
           navItems: props.navItems,
-          bodyPaddingClass: 'm-0',
-          onSelectedNavItem: (e) => context.emit('selectedNavItem', e),
+          bodyPaddingClass: "m-0",
+          onSelectedNavItem: (e) => context.emit("selectedNavItem", e),
           ...context.attrs,
         },
         slots

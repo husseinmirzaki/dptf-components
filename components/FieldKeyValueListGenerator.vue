@@ -50,17 +50,17 @@
 }
 </style>
 <script lang="ts">
-import { Table } from '@/custom/components/table/Table';
-import TableV1 from '@/custom/components/table/TableV1.vue';
-import FieldComponent from '@/custom/components/FieldComponent.vue';
-import { computed, onMounted, Ref, ref, toRef } from 'vue';
+import { Table } from "@/custom/components/table/Table";
+import TableV1 from "@/custom/components/table/TableV1.vue";
+import FieldComponent from "@/custom/components/FieldComponent.vue";
+import { computed, onMounted, Ref, ref, toRef } from "vue";
 
 class LocalSimpleTable extends Table {
-  defaultHeaders = ['key', 'value'];
+  defaultHeaders = ["key", "value"];
 
   headerTranslate = {
-    key: 'کلید',
-    value: 'مقدار',
+    key: "کلید",
+    value: "مقدار",
   };
 
   get showContextMenuView() {
@@ -70,45 +70,45 @@ class LocalSimpleTable extends Table {
 
 export default {
   components: { FieldComponent, TableV1 },
-  props: ['name', 'modelValue'],
-  emits: ['update:modelValue'],
+  props: ["name", "modelValue"],
+  emits: ["update:modelValue"],
   setup(props, context) {
-    const modelValue = toRef(props, 'modelValue');
-    const key = ref('');
-    const value = ref('');
+    const modelValue = toRef(props, "modelValue");
+    const key = ref("");
+    const value = ref("");
     const list: Ref<Array<Record<string, any>>> = ref(
       modelValue.value ? modelValue.value : []
     );
 
     const add = () => {
       const found =
-        list.value.findIndex((item) => item['key'] === key.value) > -1;
+        list.value.findIndex((item) => item["key"] === key.value) > -1;
 
       const keyData = key.value.trim();
       const valueData = value.value.trim();
 
-      if (keyData === '' || valueData === '') return;
+      if (keyData === "" || valueData === "") return;
 
       if (!found) {
         list.value.push({
           key: key.value,
           value: value.value,
         });
-        key.value = '';
-        value.value = '';
+        key.value = "";
+        value.value = "";
       }
-      context.emit('update:modelValue', list.value);
+      context.emit("update:modelValue", list.value);
     };
 
     const convertedList = computed(() => {
-      context.emit('update:modelValue', list.value);
+      context.emit("update:modelValue", list.value);
       return JSON.stringify(list.value);
     });
 
     const removeItem = (e) => {
       const found = list.value.findIndex((item) => {
-        console.log(item['key'] === e['key']);
-        return item['key'] === e['key'];
+        console.log(item["key"] === e["key"]);
+        return item["key"] === e["key"];
       });
       console.log(list.value, e);
       console.log("e['key']", found);

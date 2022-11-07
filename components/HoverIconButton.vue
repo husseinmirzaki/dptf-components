@@ -70,10 +70,10 @@ export default {
       default: 0,
     },
     iconClass: {
-      default: '',
+      default: "",
     },
     badgeText: {
-      default: '',
+      default: "",
     },
     color: {
       default: true,

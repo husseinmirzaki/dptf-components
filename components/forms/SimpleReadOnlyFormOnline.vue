@@ -47,29 +47,29 @@
   </Card>
 </template>
 <script lang="ts">
-import { h, watch } from 'vue';
-import Card from '@/custom/components/Card.vue';
-import FormBuilder from '@/custom/components/FormBuilder.vue';
-import FormContainer from '@/custom/components/FormContainer.vue';
-import PromiseButton from '@/custom/components/PromiseButton.vue';
-import { BuildByModelName } from '@/custom/forms/utils/BuildByModelName';
-import TableByModelName from '@/custom/components/forms/TableByModelName.vue';
-import FieldComponentPropsInterface from '@/custom/components/FieldComponentPropsInterface';
-import { Table } from '@/custom/components/table/Table';
+import { h, watch } from "vue";
+import Card from "@/custom/components/Card.vue";
+import FormBuilder from "@/custom/components/FormBuilder.vue";
+import FormContainer from "@/custom/components/FormContainer.vue";
+import PromiseButton from "@/custom/components/PromiseButton.vue";
+import { BuildByModelName } from "@/custom/forms/utils/BuildByModelName";
+import TableByModelName from "@/custom/components/forms/TableByModelName.vue";
+import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
+import { Table } from "@/custom/components/table/Table";
 
 export default {
   components: { Card, PromiseButton, FormBuilder },
   props: [
-    'modelName',
-    'disableTitle',
-    'showEditButton',
-    'onFields',
-    'onTableCreation',
-    'overrideOptions',
-    'onOrderField',
-    'onBuildFields',
-    'onFormReady',
-    'onModes',
+    "modelName",
+    "disableTitle",
+    "showEditButton",
+    "onFields",
+    "onTableCreation",
+    "overrideOptions",
+    "onOrderField",
+    "onBuildFields",
+    "onFormReady",
+    "onModes",
   ],
   setup(props) {
     const buildByModelName = new BuildByModelName(props.modelName, {
@@ -81,9 +81,9 @@ export default {
           field = props.onFields(field);
         }
 
-        if (field['rel_model'] && field['select_multiple']) {
-          field['col_class'] = 'col-12';
-          field['field_type'] = 'component';
+        if (field["rel_model"] && field["select_multiple"]) {
+          field["col_class"] = "col-12";
+          field["field_type"] = "component";
 
           class ExtendTable extends Table {
             get showActionButtons(): boolean {
@@ -103,15 +103,15 @@ export default {
             }
 
             onDeleteClicked(data) {
-              this.context.emit('delete', data);
+              this.context.emit("delete", data);
             }
           }
 
           let tableConfig = {
-            filterModelName: field['rel_model'],
+            filterModelName: field["rel_model"],
             filterModelField: field,
             sourceModelName: props.modelName,
-            title: field['label'],
+            title: field["label"],
             disableCard: props.disableTitle,
             extendClass: ExtendTable,
           };
@@ -120,12 +120,12 @@ export default {
             tableConfig = props.onTableCreation(tableConfig, field);
           }
 
-          field['selected_component'] = h(TableByModelName, tableConfig);
+          field["selected_component"] = h(TableByModelName, tableConfig);
 
-          field['label'] = undefined;
-          field['placeholder'] = undefined;
+          field["label"] = undefined;
+          field["placeholder"] = undefined;
         }
-        field['read_only'] = true;
+        field["read_only"] = true;
         return field;
       },
       onOrderField: props.onOrderField,

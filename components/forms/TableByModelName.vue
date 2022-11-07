@@ -1,26 +1,26 @@
 <script lang="ts">
-import { defineComponent, h, ref, toRef } from 'vue';
-import TableV1 from '@/custom/components/table/TableV1.vue';
-import FixedHeightLoader from '@/custom/components/forms/FixedHeightLoader.vue';
-import FixedHeightAccess from '@/custom/components/forms/FixedHeightAccess.vue';
-import { modelToServiceMap } from '@/ModelToServiceMap';
-import { Table } from '@/custom/components/table/Table';
-import { FieldsApiService } from '@/custom/services/FieldsApiService';
+import { defineComponent, h, ref, toRef } from "vue";
+import TableV1 from "@/custom/components/table/TableV1.vue";
+import FixedHeightLoader from "@/custom/components/forms/FixedHeightLoader.vue";
+import FixedHeightAccess from "@/custom/components/forms/FixedHeightAccess.vue";
+import { modelToServiceMap } from "@/ModelToServiceMap";
+import { Table } from "@/custom/components/table/Table";
+import { FieldsApiService } from "@/custom/services/FieldsApiService";
 
 export default defineComponent({
   props: [
-    'filterModelName',
-    'filterModelField',
-    'filterModelId',
-    'sourceModelName',
-    'field',
-    'title',
-    'description',
-    'onSearchParams',
-    'onConfig',
-    'onAfterConfig',
-    'extendClass',
-    'extendFromClass',
+    "filterModelName",
+    "filterModelField",
+    "filterModelId",
+    "sourceModelName",
+    "field",
+    "title",
+    "description",
+    "onSearchParams",
+    "onConfig",
+    "onAfterConfig",
+    "extendClass",
+    "extendFromClass",
   ],
   setup(props, context) {
     const promise = FieldsApiService.getFieldsConfig(props.filterModelName);
@@ -28,7 +28,7 @@ export default defineComponent({
     const tableIsReady = ref(false);
     const loadingFailed = ref(false);
     const service = modelToServiceMap[props.filterModelName];
-    const filterModelId = toRef(props, 'filterModelId');
+    const filterModelId = toRef(props, "filterModelId");
 
     if (!service) {
       throw new DOMException(`service does not exist ${props.filterModelName}`);
@@ -69,7 +69,7 @@ export default defineComponent({
         }
 
         get tableName(): string {
-          return props.filterModelName + 'Table';
+          return props.filterModelName + "Table";
         }
 
         defaultHeaders = defaultTableOptions.defaultHeaders;
@@ -92,7 +92,7 @@ export default defineComponent({
         onTBodyProps(item, header, index): any {
           const field = fields.find((_field) => _field.name == header);
           if (field) {
-            if (field.field_type == 'select' && !field['rel_model']) {
+            if (field.field_type == "select" && !field["rel_model"]) {
               if (item[header]) {
                 const found = field.select_data.find(
                   (_item) => _item[0] == item[header]
@@ -143,17 +143,17 @@ export default defineComponent({
         const urlSearch = new URLSearchParams();
 
         if (props.filterModelField) {
-          urlSearch.set('filter_model_name', props.filterModelName);
-          if (typeof props.filterModelField == 'string')
-            urlSearch.set('filter_model_field', props.filterModelField);
+          urlSearch.set("filter_model_name", props.filterModelName);
+          if (typeof props.filterModelField == "string")
+            urlSearch.set("filter_model_field", props.filterModelField);
           else
-            urlSearch.set('filter_model_field', props.filterModelField['name']);
+            urlSearch.set("filter_model_field", props.filterModelField["name"]);
         }
 
         if (filterModelId.value)
-          urlSearch.set('filter_model_id', filterModelId.value);
+          urlSearch.set("filter_model_id", filterModelId.value);
 
-        urlSearch.set('source_model_name', props.sourceModelName);
+        urlSearch.set("source_model_name", props.sourceModelName);
 
         if (props.onSearchParams) {
           props.onSearchParams(urlSearch);
@@ -166,10 +166,10 @@ export default defineComponent({
           {
             disableDrag: true,
             cardTitle: props.title,
-            description: props.description ? props.description : '',
+            description: props.description ? props.description : "",
             disableDropdown: false,
             url,
-            class: 'custom-field-class',
+            class: "custom-field-class",
             conf: table,
           },
           context.slots

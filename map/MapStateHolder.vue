@@ -9,25 +9,25 @@
 }
 </style>
 <script lang="ts">
-import { defineComponent, h } from 'vue';
-import { LControl } from '@vue-leaflet/vue-leaflet';
+import { defineComponent, h } from "vue";
+import { LControl } from "@vue-leaflet/vue-leaflet";
 
 export default defineComponent({
   props: {
     state: {
-      default: '',
+      default: "",
     },
   },
   render() {
     return h(
       LControl,
-      { position: 'bottomleft' },
+      { position: "bottomleft" },
       {
         default: () => [
           h(
-            'div',
+            "div",
             {
-              class: 'lat-lng-holder',
+              class: "lat-lng-holder",
             },
             this.state
           ),

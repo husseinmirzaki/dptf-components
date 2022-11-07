@@ -65,14 +65,14 @@
 }
 </style>
 <script lang="ts">
-import { defineComponent, nextTick, ref, toRefs, watch } from 'vue';
-import { CreateFormExtend } from '@/custom/helpers/BaseForm';
-import FormContainer from '@/custom/components/FormContainer.vue';
-import FormBuilder from '@/custom/components/FormBuilder.vue';
+import { defineComponent, nextTick, ref, toRefs, watch } from "vue";
+import { CreateFormExtend } from "@/custom/helpers/BaseForm";
+import FormContainer from "@/custom/components/FormContainer.vue";
+import FormBuilder from "@/custom/components/FormBuilder.vue";
 
 export default defineComponent({
   components: { FormBuilder, FormContainer },
-  props: ['formClass', 'addButtonText'],
+  props: ["formClass", "addButtonText"],
   setup(props, context) {
     const { formClass } = toRefs(props);
     const forms = ref<any>([]);
@@ -89,7 +89,7 @@ export default defineComponent({
       watch(
         newItem.obj,
         (newData, oldData) => {
-          context.emit('data-change', { formInstances, newData, oldData });
+          context.emit("data-change", { formInstances, newData, oldData });
         },
         {
           deep: true,
@@ -99,24 +99,24 @@ export default defineComponent({
       nextTick(() => {
         const newIndex = forms.value.length;
         forms.value.push(newIndex);
-        context.emit('addedForm', {
+        context.emit("addedForm", {
           formInstances,
           newIndex,
           newItem,
         });
-        context.emit('change', formInstances);
+        context.emit("change", formInstances);
       });
     };
 
     const removeForm = (form) => {
       const removedIndex = forms.value.splice(form, 1);
       const removedItem = formInstances.splice(form, 1);
-      context.emit('removedForm', {
+      context.emit("removedForm", {
         formInstances,
         removedIndex,
         removedItem,
       });
-      context.emit('change', formInstances);
+      context.emit("change", formInstances);
     };
 
     return {

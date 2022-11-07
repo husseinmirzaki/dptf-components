@@ -1,40 +1,40 @@
 <script lang="ts">
-import { h, nextTick, watch } from 'vue';
-import Card from '@/custom/components/Card.vue';
-import FormBuilder from '@/custom/components/FormBuilder.vue';
-import FormContainer from '@/custom/components/FormContainer.vue';
-import PromiseButton from '@/custom/components/PromiseButton.vue';
-import { BuildByModelName } from '@/custom/forms/utils/BuildByModelName';
-import FixedHeightAccess from '@/custom/components/forms/FixedHeightAccess.vue';
-import FixedHeightLoader from '@/custom/components/forms/FixedHeightLoader.vue';
-import { DEFAULT_BUTTONS } from '@/custom/helpers/RenderFunctionHelpers';
-import Modal from '@/custom/components/model/Modal.vue';
+import { h, nextTick, watch } from "vue";
+import Card from "@/custom/components/Card.vue";
+import FormBuilder from "@/custom/components/FormBuilder.vue";
+import FormContainer from "@/custom/components/FormContainer.vue";
+import PromiseButton from "@/custom/components/PromiseButton.vue";
+import { BuildByModelName } from "@/custom/forms/utils/BuildByModelName";
+import FixedHeightAccess from "@/custom/components/forms/FixedHeightAccess.vue";
+import FixedHeightLoader from "@/custom/components/forms/FixedHeightLoader.vue";
+import { DEFAULT_BUTTONS } from "@/custom/helpers/RenderFunctionHelpers";
+import Modal from "@/custom/components/model/Modal.vue";
 
 export default {
   components: { Card, PromiseButton, FormContainer, FormBuilder },
   props: [
-    'modelName',
-    'overrideOptions',
-    'showCancelButton',
-    'onBuildFields',
-    'onFields',
-    'onOrderField',
-    'onFormReady',
-    'onBeforeSend',
-    'onModes',
-    'onBeforeSubmit',
-    'onAfterSubmit',
-    'onSend',
-    'isReadOnly',
-    'formAsModal',
+    "modelName",
+    "overrideOptions",
+    "showCancelButton",
+    "onBuildFields",
+    "onFields",
+    "onOrderField",
+    "onFormReady",
+    "onBeforeSend",
+    "onModes",
+    "onBeforeSubmit",
+    "onAfterSubmit",
+    "onSend",
+    "isReadOnly",
+    "formAsModal",
   ],
   setup(props, context) {
     const onUpdate = (data) => {
       buildByModelName.formInstance!.formInstance.fields.forEach((field) => {
-        if (field['is_json_field']) {
-          const value = data[field['name']];
-          if (value == '') {
-            delete data[field['name']];
+        if (field["is_json_field"]) {
+          const value = data[field["name"]];
+          if (value == "") {
+            delete data[field["name"]];
           } else {
             // data[field['name']] = {
             //   "text": data[field['name']]
@@ -61,7 +61,7 @@ export default {
         props.onFormReady(buildByModelName);
       }
       nextTick(() => {
-        if (!buildByModelName.formInstance!.obj.value['id']) {
+        if (!buildByModelName.formInstance!.obj.value["id"]) {
           buildByModelName.formInstance!.formInstance.fields.forEach(
             (field) => {
               if (field.default !== undefined) {
@@ -79,10 +79,10 @@ export default {
 
     const onBeforeSendC = (e) => {
       buildByModelName.formInstance!.formInstance.fields.forEach((field) => {
-        if (field['is_json_field']) {
-          const value = buildByModelName.formInstance!.obj[field['name']];
-          if (value && value == '') {
-            buildByModelName.formInstance!.obj[field['name']] = null;
+        if (field["is_json_field"]) {
+          const value = buildByModelName.formInstance!.obj[field["name"]];
+          if (value && value == "") {
+            buildByModelName.formInstance!.obj[field["name"]] = null;
           }
         }
       });
@@ -125,16 +125,16 @@ export default {
             default: formBuilder,
           }
         ),
-        context.slots['multiForm'] ? context.slots['multiForm']() : undefined,
+        context.slots["multiForm"] ? context.slots["multiForm"]() : undefined,
       ];
     };
     const cardFooter = () => {
       if (!(buildByModelName.formBuilt.value && !props.isReadOnly)) return;
 
       const promiseButton = h(PromiseButton, {
-        text: 'ثبت',
+        text: "ثبت",
         onSubmitDone: (e) => {
-          context.emit('done', e, buildByModelName);
+          context.emit("done", e, buildByModelName);
           if (props.formAsModal) {
             modalInstance.close();
           }
@@ -157,10 +157,10 @@ export default {
       const cancelButton = DEFAULT_BUTTONS.danger(
         {
           onClick: () => {
-            context.emit('cancel');
+            context.emit("cancel");
           },
         },
-        'لغو'
+        "لغو"
       );
 
       return [promiseButton, cancelButton];
@@ -171,16 +171,16 @@ export default {
             Card,
             {},
             {
-              'card-content': cardContent,
-              'card-footer': cardFooter,
+              "card-content": cardContent,
+              "card-footer": cardFooter,
             }
           )
         : h(
             Modal,
             {
-              modalTitle: context.attrs['cardTitle'],
+              modalTitle: context.attrs["cardTitle"],
               thinFooter: true,
-              onClose: () => context.emit('cancel'),
+              onClose: () => context.emit("cancel"),
               ref: (el) => {
                 modalInstance = el;
                 context.expose({
@@ -189,8 +189,8 @@ export default {
               },
             },
             {
-              'modal-content': cardContent,
-              'modal-footer': cardFooter,
+              "modal-content": cardContent,
+              "modal-footer": cardFooter,
             }
           );
     };

@@ -62,7 +62,7 @@
   </div>
 </template>
 <script>
-import { ref, toRef, watch } from 'vue';
+import { ref, toRef, watch } from "vue";
 
 export default {
   props: {
@@ -77,8 +77,8 @@ export default {
     state: {
       default: () => {
         return {
-          reportState: 'weekly',
-          toggleState: 'chart',
+          reportState: "weekly",
+          toggleState: "chart",
         };
       },
     },
@@ -87,17 +87,17 @@ export default {
     const localOptions = ref({
       showDaily: false,
       showMapToggle: true,
-      reportState: 'weekly',
-      toggleState: 'chart',
+      reportState: "weekly",
+      toggleState: "chart",
     });
-    const options = toRef(props, 'options');
+    const options = toRef(props, "options");
 
     options.value = Object.assign(localOptions.value, options.value);
 
     watch(
       localOptions,
       () => {
-        context.emit('stateChanged', localOptions.value);
+        context.emit("stateChanged", localOptions.value);
       },
       {
         deep: true,

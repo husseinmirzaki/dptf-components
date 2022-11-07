@@ -21,7 +21,7 @@
             </span>
             <i v-if="item.faIcon" class="text-dark" :class="item.faIcon"></i>
           </div>
-          <span class="text">{{ item['text'] }}</span>
+          <span class="text">{{ item["text"] }}</span>
         </div>
       </li>
     </ul>
@@ -86,11 +86,11 @@
 }
 </style>
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import { defineComponent, onMounted, ref } from "vue";
 import {
   ContextMenuItem,
   ContextMenuService,
-} from '@/custom/components/ContextMenuService';
+} from "@/custom/components/ContextMenuService";
 
 export default defineComponent({
   setup() {
@@ -104,7 +104,7 @@ export default defineComponent({
     };
 
     const hide = () => {
-      contextMenu.value.style.display = 'none';
+      contextMenu.value.style.display = "none";
     };
 
     const show = (_x, _y) => {
@@ -116,11 +116,11 @@ export default defineComponent({
 
       contextMenu.value.style.left = `${x}px`;
       contextMenu.value.style.top = `${y}px`;
-      contextMenu.value.style.display = 'block';
+      contextMenu.value.style.display = "block";
     };
 
     onMounted(() => {
-      document.addEventListener('contextmenu', (e) => {
+      document.addEventListener("contextmenu", (e) => {
         if (contextMenu.value) {
           let element = e.target as HTMLElement | null;
           for (let i = 0; i < 10; i++) {
@@ -131,9 +131,9 @@ export default defineComponent({
               return false;
             }
 
-            if (element.getAttribute('data-context-menu')) {
+            if (element.getAttribute("data-context-menu")) {
               e.preventDefault();
-              contextMenu.value.style.display = 'block';
+              contextMenu.value.style.display = "block";
               const x = e.clientX,
                 y = e.clientY;
               show(x, y);
@@ -145,7 +145,7 @@ export default defineComponent({
         }
         hide();
       });
-      document.addEventListener('click', (e) => {
+      document.addEventListener("click", (e) => {
         if (contextMenu.value) {
           let element = e.target as HTMLElement | null;
           for (let i = 0; i < 10; i++) {
@@ -156,7 +156,7 @@ export default defineComponent({
             }
             if (element) element = element.parentElement;
           }
-          contextMenu.value.style.display = 'none';
+          contextMenu.value.style.display = "none";
         }
       });
     });

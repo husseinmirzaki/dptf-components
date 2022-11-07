@@ -12,7 +12,7 @@ export function random(times = 2, dot = true) {
     }
     return String(Math.random() * 99999 + Math.random() * 50);
   };
-  let sequence = '';
+  let sequence = "";
   for (let i = 0; i < times; i++) {
     sequence += s();
   }

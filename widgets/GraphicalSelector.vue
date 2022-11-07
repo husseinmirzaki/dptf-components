@@ -48,9 +48,9 @@
 }
 </style>
 <script>
-import { cities } from '@/custom/widgets/GraphicalCitySelector/cities';
-import { provinces } from '@/custom/widgets/GraphicalCitySelector/provinces';
-import { computed, ref, toRef } from 'vue';
+import { cities } from "@/custom/widgets/GraphicalCitySelector/cities";
+import { provinces } from "@/custom/widgets/GraphicalCitySelector/provinces";
+import { computed, ref, toRef } from "vue";
 
 export default {
   props: {
@@ -66,8 +66,8 @@ export default {
     },
   },
   setup(props, context) {
-    const dataList = toRef(props, 'dataList');
-    const cityFilter = ref('');
+    const dataList = toRef(props, "dataList");
+    const cityFilter = ref("");
     const selected = ref([]);
 
     const toggleItem = (city) => {
@@ -79,7 +79,7 @@ export default {
       } else {
         selected.value.push(city);
       }
-      context.emit('selected', selected.value);
+      context.emit("selected", selected.value);
     };
 
     const filter = (data, inputText) => {
@@ -87,7 +87,7 @@ export default {
     };
 
     const computedCityData = computed(() => {
-      if (cityFilter.value == '') {
+      if (cityFilter.value == "") {
         return [].concat(dataList.value).splice(0, 20);
       }
       return []

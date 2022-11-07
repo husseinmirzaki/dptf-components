@@ -9,10 +9,10 @@ import {
   toRef,
   watch,
   withModifiers,
-} from 'vue';
-import { VueInstanceService } from '@/Defaults';
-import MapToolsButton from '@/custom/map/MapToolsButton.vue';
-import { LControl } from '@vue-leaflet/vue-leaflet';
+} from "vue";
+import { VueInstanceService } from "@/Defaults";
+import MapToolsButton from "@/custom/map/MapToolsButton.vue";
+import { LControl } from "@vue-leaflet/vue-leaflet";
 
 export class AMapToolsButton {
   help: string;
@@ -34,7 +34,7 @@ export default defineComponent({
     },
   },
   setup(props, context) {
-    const modelValue = toRef(props, 'modelValue');
+    const modelValue = toRef(props, "modelValue");
     const activeItem = ref(props.modelValue);
 
     watch(modelValue, (e) => {
@@ -47,18 +47,18 @@ export default defineComponent({
     const slots = context.slots.default?.() ?? ([] as Array<any>);
 
     for (let i = 0; i < slots.length; i++) {
-      const windowActivationKey = slots[i].props['window-activation-key'];
-      if (slots[i].props['window-activation-key']) {
-        slots[i].props['onUpdate:state'] = (state) => {
-          context.emit('update:state', state);
+      const windowActivationKey = slots[i].props["window-activation-key"];
+      if (slots[i].props["window-activation-key"]) {
+        slots[i].props["onUpdate:state"] = (state) => {
+          context.emit("update:state", state);
         };
-        slots[i].props['onUpdate:activeKey'] = () => {
+        slots[i].props["onUpdate:activeKey"] = () => {
           if (activeItem.value === windowActivationKey) {
             activeItem.value = undefined;
           } else {
             activeItem.value = windowActivationKey;
           }
-          context.emit('update:modelValue', activeItem.value);
+          context.emit("update:modelValue", activeItem.value);
         };
       }
     }
@@ -69,14 +69,14 @@ export default defineComponent({
     };
   },
   render() {
-    return h(LControl, { position: 'topleft' }, [
+    return h(LControl, { position: "topleft" }, [
       h(
-        'div',
-        { class: 'd-flex flex-column' },
+        "div",
+        { class: "d-flex flex-column" },
         this.slots.map((item) => {
           if (item.component)
-            item.component.props['isActive'] =
-              item.props['window-activation-key'] == this.activeItem;
+            item.component.props["isActive"] =
+              item.props["window-activation-key"] == this.activeItem;
           return item;
         })
       ),

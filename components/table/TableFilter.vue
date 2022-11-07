@@ -35,15 +35,15 @@
 }
 </style>
 <script>
-import FieldComponent from '../FieldComponent';
-import { h, nextTick, onMounted, ref, watch } from 'vue';
-import { VueInstanceService } from '@/Defaults';
-import { Table } from '@/custom/components/table/Table';
-import { FieldsApiService } from '@/custom/services/FieldsApiService';
-import { modelToServiceMap } from '@/ModelToServiceMap';
-import { DEFAULT_BUTTONS } from '@/custom/helpers/RenderFunctionHelpers';
-import InlineSvg from 'vue-inline-svg';
-import { randomId } from '@/custom/helpers/random';
+import FieldComponent from "../FieldComponent";
+import { h, nextTick, onMounted, ref, watch } from "vue";
+import { VueInstanceService } from "@/Defaults";
+import { Table } from "@/custom/components/table/Table";
+import { FieldsApiService } from "@/custom/services/FieldsApiService";
+import { modelToServiceMap } from "@/ModelToServiceMap";
+import { DEFAULT_BUTTONS } from "@/custom/helpers/RenderFunctionHelpers";
+import InlineSvg from "vue-inline-svg";
+import { randomId } from "@/custom/helpers/random";
 
 export default {
   components: { FieldComponent },
@@ -52,44 +52,44 @@ export default {
   },
   setup(props) {
     const BOOLEAN_COMP_SELECTS = [
-      [null, 'انتخاب کنید'],
-      [1, 'بلی'],
-      [0, 'خیر'],
+      [null, "انتخاب کنید"],
+      [1, "بلی"],
+      [0, "خیر"],
     ];
 
     const FOREIGN_COMP_SELECTS = [
-      [null, 'انتخاب کنید'],
-      [1, 'مساوی'],
-      [2, 'بجز'],
+      [null, "انتخاب کنید"],
+      [1, "مساوی"],
+      [2, "بجز"],
     ];
 
     const STRING_COMP_SELECTS = [
-      [null, 'انتخاب کنید'],
-      [1, 'مساوی'],
-      [2, 'بجر'],
-      [3, 'شامل'],
-      [4, 'شروع شود'],
-      [5, 'تمام شود'],
+      [null, "انتخاب کنید"],
+      [1, "مساوی"],
+      [2, "بجر"],
+      [3, "شامل"],
+      [4, "شروع شود"],
+      [5, "تمام شود"],
     ];
 
     const DATE_COMP_SELECTS = [
-      [null, 'انتخاب کنید'],
-      [1, 'مساوی'],
-      [2, 'بجر'],
-      [3, 'بزرگتر'],
-      [4, 'بزرگتر مساوی'],
-      [5, 'کوچکتر'],
-      [6, 'کوچکتر مساوی'],
+      [null, "انتخاب کنید"],
+      [1, "مساوی"],
+      [2, "بجر"],
+      [3, "بزرگتر"],
+      [4, "بزرگتر مساوی"],
+      [5, "کوچکتر"],
+      [6, "کوچکتر مساوی"],
     ];
 
     const INTEGER_COMP_SELECTS = [
-      [null, 'انتخاب کنید'],
-      [1, 'مساوی'],
-      [2, 'بجر'],
-      [3, 'بزرگتر'],
-      [4, 'بزرگتر مساوی'],
-      [6, 'کوچکتر'],
-      [7, 'کوچکتر مساوی'],
+      [null, "انتخاب کنید"],
+      [1, "مساوی"],
+      [2, "بجر"],
+      [3, "بزرگتر"],
+      [4, "بزرگتر مساوی"],
+      [6, "کوچکتر"],
+      [7, "کوچکتر مساوی"],
     ];
 
     // current data
@@ -111,10 +111,10 @@ export default {
 
     const checkFilterButtonStatus = () => {
       if (
-        currentData.value == '' ||
+        currentData.value == "" ||
         currentData.value == undefined ||
         currentData.value == null ||
-        currentComp.value == '' ||
+        currentComp.value == "" ||
         !currentComp.value
       ) {
         if (addButtonInstance) {
@@ -146,17 +146,17 @@ export default {
       if (!filterContainer) {
         reRendered.value++;
         nextTick(() => {
-          if (filterContainer) filterContainer.style.display = 'block';
+          if (filterContainer) filterContainer.style.display = "block";
           else
             nextTick(() => {
-              filterContainer.style.display = 'block';
+              filterContainer.style.display = "block";
             });
         });
-      } else filterContainer.style.display = 'block';
+      } else filterContainer.style.display = "block";
     };
 
     const hideFilters = () => {
-      filterContainer.style.display = 'none';
+      filterContainer.style.display = "none";
       lastRequestedField = undefined;
       loadingField.value = true;
       compFieldInstance.setValue(null);
@@ -184,15 +184,15 @@ export default {
     };
 
     const addFilter = () => {
-      if (lastRequestedField['rel_model']) {
-        const response = ref('در حال لود');
-        modelToServiceMap[lastRequestedField['rel_model']]
+      if (lastRequestedField["rel_model"]) {
+        const response = ref("در حال لود");
+        modelToServiceMap[lastRequestedField["rel_model"]]
           .getOne(currentData.value)
           .then(({ data }) => {
             if (data.name) {
               response.value = name;
             } else if (data.first_name && data.last_name) {
-              response.value = data.first_name + ' ' + data.last_name;
+              response.value = data.first_name + " " + data.last_name;
             } else if (data.first_name) {
               response.value = data.first_name;
             } else if (data.last_name) {
@@ -284,11 +284,11 @@ export default {
 
         const field_type = lastRequestedField.field_type;
 
-        if (!field_type || field_type == 'text') return STRING_COMP_SELECTS;
-        else if (field_type == 'integer' || field_type == 'number')
+        if (!field_type || field_type == "text") return STRING_COMP_SELECTS;
+        else if (field_type == "integer" || field_type == "number")
           return INTEGER_COMP_SELECTS;
-        else if (field_type == 'p-date-time') return DATE_COMP_SELECTS;
-        else if (field_type == 'checkbox') return BOOLEAN_COMP_SELECTS;
+        else if (field_type == "p-date-time") return DATE_COMP_SELECTS;
+        else if (field_type == "checkbox") return BOOLEAN_COMP_SELECTS;
 
         return FOREIGN_COMP_SELECTS;
       })();
@@ -296,81 +296,81 @@ export default {
       let dynamicField = undefined;
       if (loadingField.value) {
         dynamicField = h(
-          'div',
+          "div",
           {
-            class: 'd-flex justify-content-center align-items-center',
+            class: "d-flex justify-content-center align-items-center",
             style: {
-              height: '39px',
+              height: "39px",
             },
           },
           h(
-            'p',
+            "p",
             {
-              class: 'p-0 m-0',
+              class: "p-0 m-0",
             },
-            'درحال لود فیلتر'
+            "درحال لود فیلتر"
           )
         );
       } else if (!loadingField.value && !lastRequestedField) {
         dynamicField = h(
-          'div',
+          "div",
           {
-            class: 'd-flex justify-content-center align-items-center',
+            class: "d-flex justify-content-center align-items-center",
             style: {
-              height: '39px',
+              height: "39px",
             },
           },
           h(
-            'p',
+            "p",
             {
-              class: 'p-0 m-0',
+              class: "p-0 m-0",
             },
-            'یک فیلتر را انتخاب کنید'
+            "یک فیلتر را انتخاب کنید"
           )
         );
       } else {
-        console.log('here', lastRequestedField);
+        console.log("here", lastRequestedField);
         const fieldProps = {
-          placeholder: lastRequestedField['label'],
+          placeholder: lastRequestedField["label"],
           modelValue: currentData.value,
-          'onUpdate:modelValue': (v) => (currentData.value = v),
+          "onUpdate:modelValue": (v) => (currentData.value = v),
           ref: (el) => (filterFieldInstance = el),
         };
-        if (lastRequestedField['field_type'] === 'select') {
-          fieldProps['field_type'] = 'select';
-          fieldProps['modal_id'] = '.filter-container-like-model';
-          fieldProps['select_multiple'] =
-            !!lastRequestedField['select_multiple'];
-          if (lastRequestedField['rel_model']) {
-            fieldProps['select_url'] =
-              modelToServiceMap[lastRequestedField['rel_model']].selectUrl;
-            fieldProps['select_options'] = {
+        if (lastRequestedField["field_type"] === "select") {
+          fieldProps["field_type"] = "select";
+          fieldProps["modal_id"] = ".filter-container-like-model";
+          fieldProps["select_multiple"] =
+            !!lastRequestedField["select_multiple"];
+          if (lastRequestedField["rel_model"]) {
+            fieldProps["select_url"] =
+              modelToServiceMap[lastRequestedField["rel_model"]].selectUrl;
+            fieldProps["select_options"] = {
               onParams: (e) => {
                 e.by_id = 1;
               },
             };
           } else {
-            fieldProps['select_options'] = {
+            fieldProps["select_options"] = {
               minimumResultsForSearch: -1,
             };
-            fieldProps['select_data'] = lastRequestedField['select_data'];
+            fieldProps["select_data"] = lastRequestedField["select_data"];
           }
         } else {
-          fieldProps['field_type'] = lastRequestedField['field_type'];
+          fieldProps["field_type"] = lastRequestedField["field_type"];
         }
 
-        if (lastRequestedField['field_type'] == 'p-date-time') {
-          fieldProps['dateTimeType'] = lastRequestedField['dateTimeType'];
+        if (lastRequestedField["field_type"] == "p-date-time") {
+          fieldProps["dateTimeType"] = lastRequestedField["dateTimeType"];
         }
 
         dynamicField = h(FieldComponent, fieldProps);
       }
       const compField = h(FieldComponent, {
         ref: (el) => (compFieldInstance = el),
-        modal_id: '.filter-container-like-model',
+        modal_id: ".filter-container-like-model",
         modelValue: currentComp.value,
-        'onUpdate:modelValue': (v) => (currentComp.value = v),
-        field_type: 'select',
+        "onUpdate:modelValue": (v) => (currentComp.value = v),
+        field_type: "select",
         read_only: !lastRequestedField,
         select_options: {
           minimumResultsForSearch: -1,
@@ -379,23 +379,23 @@ export default {
       });
 
       const currentFilter = h(
-        'div',
+        "div",
         {
-          class: 'd-flex',
+          class: "d-flex",
         },
         [
           h(
-            'div',
+            "div",
             {
-              style: { width: '200px' },
+              style: { width: "200px" },
             },
             dynamicField
           ),
           h(
-            'div',
+            "div",
             {
-              class: 'ms-1',
-              style: { width: '90px' },
+              class: "ms-1",
+              style: { width: "90px" },
             },
             compField
           ),
@@ -405,43 +405,43 @@ export default {
       const addFilterButton = [
         DEFAULT_BUTTONS.primary(
           {
-            class: 'btn-sm add-filter-button',
+            class: "btn-sm add-filter-button",
             ref: (el) => (addButtonInstance = el),
             onClick: addFilter,
           },
-          'اضافه کردن فیلتر'
+          "اضافه کردن فیلتر"
         ),
         DEFAULT_BUTTONS.primary(
           {
-            class: 'btn-sm add-filter-button ms-1',
+            class: "btn-sm add-filter-button ms-1",
             onClick: applyFilters,
           },
-          'اعمال'
+          "اعمال"
         ),
       ];
 
       const currentlySelectedFilters = currentFilters.value.map((e) =>
         h(
-          'div',
+          "div",
           {
             key: e.id,
-            class: 'd-flex',
+            class: "d-flex",
           },
           [
             h(
-              'div',
+              "div",
               {
                 style: {
-                  'flex-grow': 1,
+                  "flex-grow": 1,
                 },
               },
               e.text
             ),
             h(
-              'div',
+              "div",
               {
                 style: {
-                  'flex-grow': 1,
+                  "flex-grow": 1,
                 },
               },
               (() => {
@@ -449,7 +449,7 @@ export default {
                 if (found) {
                   return found[1];
                 }
-                return 'بدون';
+                return "بدون";
               })()
             ),
             h(InlineSvg, {
@@ -457,37 +457,37 @@ export default {
                 removeFilter(e.id);
               },
               style: {
-                width: '18px',
+                width: "18px",
               },
-              src: 'media/icons/duotune/arrows/arr061.svg',
+              src: "media/icons/duotune/arrows/arr061.svg",
             }),
           ]
         )
       );
 
       return h(
-        'div',
+        "div",
         {
           onClick: () => {
             hideFilters();
           },
-          class: 'position-fixed table-v1-filter-holder',
+          class: "position-fixed table-v1-filter-holder",
           ref: (el) => (filterContainer = el),
         },
         h(
-          'div',
+          "div",
           {
             onClick: (e) => {
               e.stopPropagation();
             },
-            class: 'filter-container filter-container-like-model',
+            class: "filter-container filter-container-like-model",
           },
           currentFilter,
           currentlySelectedFilters,
           h(
-            'div',
+            "div",
             {
-              class: 'd-flex align-items-end justify-content-end add-button',
+              class: "d-flex align-items-end justify-content-end add-button",
             },
             addFilterButton
           )

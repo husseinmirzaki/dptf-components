@@ -33,9 +33,9 @@
   <!--end:: Pagination-->
 </template>
 <script>
-import { computed, defineComponent, toRefs } from 'vue';
-import { Configs } from '@/Defaults';
-import { closeAllOpenInstance } from '@/custom/helpers/select2_decelaration';
+import { computed, defineComponent, toRefs } from "vue";
+import { Configs } from "@/Defaults";
+import { closeAllOpenInstance } from "@/custom/helpers/select2_decelaration";
 
 export default defineComponent({
   props: {
@@ -49,7 +49,7 @@ export default defineComponent({
       default: 0,
     },
   },
-  emits: ['pageSelected'],
+  emits: ["pageSelected"],
   setup(props, context) {
     const { count, perPage, currentPage } = toRefs(props);
     const pages = computed(() => {
@@ -77,7 +77,7 @@ export default defineComponent({
             i === current_page - (offset + 1) ||
             i === current_page + (offset + 1)
           ) {
-            _pages.push('...');
+            _pages.push("...");
           }
         }
         return _pages;
@@ -92,7 +92,7 @@ export default defineComponent({
       closeAllOpenInstance();
       if (count.value > 0)
         if (Math.ceil(count.value / perPage.value) > currentPage.value) {
-          context.emit('pageSelected', currentPage.value + 1);
+          context.emit("pageSelected", currentPage.value + 1);
         }
     };
 
@@ -100,7 +100,7 @@ export default defineComponent({
       closeAllOpenInstance();
       if (currentPage.value - 1 === 0) return;
 
-      context.emit('pageSelected', currentPage.value - 1);
+      context.emit("pageSelected", currentPage.value - 1);
     };
 
     return {

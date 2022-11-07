@@ -8,11 +8,11 @@ export function fullNameGenerator(obj?: UserInfoInterface) {
     if (
       obj.first_name &&
       obj.last_name &&
-      obj.first_name != '' &&
-      obj.last_name != ''
+      obj.first_name != "" &&
+      obj.last_name != ""
     ) {
-      return obj.first_name + ' ' + obj.last_name;
+      return obj.first_name + " " + obj.last_name;
     }
   }
-  return 'بدون نام و نام خانوادگی';
+  return "بدون نام و نام خانوادگی";
 }

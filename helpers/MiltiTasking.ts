@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios';
+import { AxiosResponse } from "axios";
 
 type ToDoTask = () => Promise<void>;
 
@@ -16,7 +16,7 @@ export class TaskManager {
   }
 
   private async runTasks() {
-    console.log('this.tasksAreRunning', this.tasksAreRunning);
+    console.log("this.tasksAreRunning", this.tasksAreRunning);
     if (this.tasksAreRunning) return;
     this.tasksAreRunning = true;
     let lastTask = this.tasks.shift();

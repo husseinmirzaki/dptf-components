@@ -34,13 +34,13 @@
   </div>
 </template>
 <script>
-import { nextTick, onMounted, ref, watch } from 'vue';
-import { VueInstanceService } from '@/Defaults';
-import { SimpleDrag } from '@/custom/components/table/TableDrag';
-import { UserPreferencesManager } from '@/custom/services/UserPreferencesV2Api';
-import { findClassInParent } from '@/custom/helpers/DomHelpers';
-import { useRoute } from 'vue-router';
-import Sortable from 'sortablejs';
+import { nextTick, onMounted, ref, watch } from "vue";
+import { VueInstanceService } from "@/Defaults";
+import { SimpleDrag } from "@/custom/components/table/TableDrag";
+import { UserPreferencesManager } from "@/custom/services/UserPreferencesV2Api";
+import { findClassInParent } from "@/custom/helpers/DomHelpers";
+import { useRoute } from "vue-router";
+import Sortable from "sortablejs";
 
 export default {
   props: {
@@ -48,7 +48,7 @@ export default {
       default: 0,
     },
     routerPrefix: {
-      default: '',
+      default: "",
     },
     routerMode: {
       default: false,
@@ -68,7 +68,7 @@ export default {
   },
   setup(props, context) {
     const show = ref(false);
-    const activeContent = ref('');
+    const activeContent = ref("");
     const activeItem = ref(props.activeIndex);
     const container = ref();
     const tabContainerBody = ref();
@@ -110,27 +110,27 @@ export default {
       }
     };
 
-    const selectItems = () => container.value.querySelectorAll('.tab-item-v2');
+    const selectItems = () => container.value.querySelectorAll(".tab-item-v2");
 
     const initDragger = () => {
-      const items = container.value.querySelectorAll('.tab-item-v2');
+      const items = container.value.querySelectorAll(".tab-item-v2");
 
       for (let i = 0; i < items.length; i++) {
-        items[i].setAttribute('moveable', 'moveable');
-        items[i].setAttribute('group', 'tabs-container');
+        items[i].setAttribute("moveable", "moveable");
+        items[i].setAttribute("group", "tabs-container");
       }
 
       Sortable.create(container.value, {
-        group: 'tabs-container',
-        draggable: '.tab-item-v2',
-        direction: 'horizontal',
+        group: "tabs-container",
+        draggable: ".tab-item-v2",
+        direction: "horizontal",
         animation: 180,
         onUpdate: () => {
           setTimeout(() => {
             const items = selectItems();
             const newOrder = {};
             for (let i = 0; i < items.length; i++) {
-              newOrder[i] = items[i].getAttribute('data-item-name');
+              newOrder[i] = items[i].getAttribute("data-item-name");
             }
             if (!props.disablePreferences) preferencesManager.set(newOrder);
           });
@@ -157,7 +157,7 @@ export default {
 
       if (tabName) {
         if (!props.routerMode) tabNames.value.push(tabName);
-        else tabNames.value.push(props.routerPrefix + '_' + tabName);
+        else tabNames.value.push(props.routerPrefix + "_" + tabName);
       } else {
         tabNames.value.push(`${props.routerPrefix}_tab_${current}`);
       }
@@ -190,7 +190,7 @@ export default {
             const dataItemName = tabsList[i];
             for (let j = 0; j < tabs.length; j++) {
               const tabElement = tabs[j];
-              if (tabElement.getAttribute('data-item-name') === dataItemName)
+              if (tabElement.getAttribute("data-item-name") === dataItemName)
                 sharedParents.append(tabElement);
             }
           }
@@ -201,13 +201,13 @@ export default {
     const updateBodyHeight = () => {
       const cardBodyParent = findClassInParent(
         tabContainerBody.value,
-        'card-body'
+        "card-body"
       );
       if (!cardBodyParent) return;
       const myStyle = getComputedStyle(tabContainerBody.value);
       const style = getComputedStyle(cardBodyParent);
-      const cardBodyHeight = Number(style.height.replace('px', ''));
-      const myHeight = Number(myStyle.height.replace('px', ''));
+      const cardBodyHeight = Number(style.height.replace("px", ""));
+      const myHeight = Number(myStyle.height.replace("px", ""));
       const extraHeight = cardBodyHeight - myHeight;
       bodyHeight.value = cardBodyHeight - extraHeight - 80;
     };

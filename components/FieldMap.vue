@@ -25,10 +25,10 @@
   </div>
 </template>
 <script>
-import 'leaflet/dist/leaflet.css';
-import { LMap, LMarker, LTileLayer } from '@vue-leaflet/vue-leaflet';
-import { onBeforeUnmount, onMounted, ref, toRef, watch } from 'vue';
-import { VueInstanceService } from '@/Defaults';
+import "leaflet/dist/leaflet.css";
+import { LMap, LMarker, LTileLayer } from "@vue-leaflet/vue-leaflet";
+import { onBeforeUnmount, onMounted, ref, toRef, watch } from "vue";
+import { VueInstanceService } from "@/Defaults";
 
 export default {
   components: { LTileLayer, LMap, LMarker },
@@ -36,15 +36,15 @@ export default {
     name: String,
     readonly: Boolean,
     modelValue: {
-      default: '34.0136278,51.3639472',
+      default: "34.0136278,51.3639472",
       type: String,
     },
   },
-  emits: ['update:modelValue'],
+  emits: ["update:modelValue"],
   setup(props, context) {
     const map = ref();
-    const modelValue = toRef(props, 'modelValue');
-    const inputValue = ref('');
+    const modelValue = toRef(props, "modelValue");
+    const inputValue = ref("");
     const zoom = ref(17);
     const unmount = ref(false);
 
@@ -56,7 +56,7 @@ export default {
       }
       if (e.latlng) {
         inputValue.value = `${e.latlng.lat},${e.latlng.lng}`;
-        context.emit('update:modelValue', marker.value);
+        context.emit("update:modelValue", marker.value);
       }
     };
 
@@ -67,7 +67,7 @@ export default {
           map.value &&
           map.value.leafletObject &&
           map.value.leafletObject.setView &&
-          typeof map.value.leafletObject.setView == 'function'
+          typeof map.value.leafletObject.setView == "function"
         ) {
           map.value.leafletObject.setView([Number(s[0]), Number(s[1])]);
           done++;
@@ -77,7 +77,7 @@ export default {
     };
 
     watch(inputValue, (e) => {
-      const s = e.split(',');
+      const s = e.split(",");
       if (s.length == 2) {
         const r = /^[+-]?\d+(\.\d+)?$/;
         s[0] = s[0].trim();
@@ -88,7 +88,7 @@ export default {
 
           const location = `${Number(s[0])},${Number(s[1])}`;
           if (location !== modelValue.value)
-            context.emit('update:modelValue', location);
+            context.emit("update:modelValue", location);
         }
       }
     });
@@ -100,13 +100,13 @@ export default {
     onMounted(() => {
       unmount.value = true;
       inputValue.value = modelValue.value;
-      tryToCenter(inputValue.value.split(','));
-      VueInstanceService.on('opened.bs.modal', () => {
+      tryToCenter(inputValue.value.split(","));
+      VueInstanceService.on("opened.bs.modal", () => {
         setTimeout(() => {
           map.value.leafletObject.invalidateSize();
         }, 10);
       });
-      context.emit('update:modelValue', inputValue.value);
+      context.emit("update:modelValue", inputValue.value);
     });
 
     onBeforeUnmount(() => {

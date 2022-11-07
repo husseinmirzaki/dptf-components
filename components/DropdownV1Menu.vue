@@ -32,14 +32,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { randomId } from '@/custom/helpers/random';
-import MenuItemModel from '@/custom/models/MenuItemModel';
+import { defineComponent } from "vue";
+import { randomId } from "@/custom/helpers/random";
+import MenuItemModel from "@/custom/models/MenuItemModel";
 
 export default defineComponent({
   props: {
     title: {
-      default: 'ابزار',
+      default: "ابزار",
     },
     dropdownId: {
       type: String,
@@ -51,13 +51,13 @@ export default defineComponent({
       default: (): MenuItemModel[] => {
         return [
           {
-            text: 'test',
+            text: "test",
           },
           {
             isSeparator: true,
           },
           {
-            text: 'test',
+            text: "test",
           },
         ];
       },

@@ -1,12 +1,12 @@
 <script lang="ts">
-import { defineComponent, h, withModifiers } from 'vue';
-import { LPolyline } from '@vue-leaflet/vue-leaflet';
-import { ContextMenuService } from '@/custom/components/ContextMenuService';
+import { defineComponent, h, withModifiers } from "vue";
+import { LPolyline } from "@vue-leaflet/vue-leaflet";
+import { ContextMenuService } from "@/custom/components/ContextMenuService";
 
 export default defineComponent({
   props: {
     strokeColor: {
-      default: '#000000',
+      default: "#000000",
     },
     innerColor: {
       type: String,
@@ -30,8 +30,8 @@ export default defineComponent({
           e.originalEvent._alreadyFilled = true;
           ContextMenuService.set([
             {
-              text: 'ویرایش',
-              onClick: () => context.emit('edit'),
+              text: "ویرایش",
+              onClick: () => context.emit("edit"),
             },
           ]);
         }

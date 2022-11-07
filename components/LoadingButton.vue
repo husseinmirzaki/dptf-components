@@ -10,13 +10,13 @@
   </button>
 </template>
 <script lang="ts">
-import { defineComponent, ref, toRef, watch } from 'vue';
+import { defineComponent, ref, toRef, watch } from "vue";
 
 export default defineComponent({
-  name: 'loading-button',
+  name: "loading-button",
   props: {
     text: {
-      default: 'ارسال',
+      default: "ارسال",
       type: String,
     },
     isLoading: {
@@ -24,12 +24,12 @@ export default defineComponent({
       type: Boolean,
     },
     loadingText: {
-      default: 'لطفاً صبر کنید...',
+      default: "لطفاً صبر کنید...",
       type: String,
     },
   },
   setup(props) {
-    const isLoading = toRef(props, 'isLoading');
+    const isLoading = toRef(props, "isLoading");
     const submitButton = ref<HTMLButtonElement | null>();
 
     const startLoading = () => {
@@ -37,7 +37,7 @@ export default defineComponent({
       //Disable button
       submitButton.value.disabled = true;
       // Activate indicator
-      submitButton.value.setAttribute('data-kt-indicator', 'on');
+      submitButton.value.setAttribute("data-kt-indicator", "on");
     };
 
     const stopLoading = () => {
@@ -45,7 +45,7 @@ export default defineComponent({
       //Disable button
       submitButton.value.disabled = false;
       // Activate indicator
-      submitButton.value.removeAttribute('data-kt-indicator');
+      submitButton.value.removeAttribute("data-kt-indicator");
     };
 
     const loading = (promise: Promise<any>) => {

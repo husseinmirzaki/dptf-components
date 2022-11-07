@@ -46,9 +46,9 @@
 }
 </style>
 <script>
-import { ref } from 'vue';
-import DropdownV2 from '@/custom/components/DropdownV2';
-import GroupButtons from '@/custom/widgets/CustomTabs/GroupButtons';
+import { ref } from "vue";
+import DropdownV2 from "@/custom/components/DropdownV2";
+import GroupButtons from "@/custom/widgets/CustomTabs/GroupButtons";
 
 export default {
   components: { GroupButtons, DropdownV2 },

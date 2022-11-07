@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, h, resolveComponent } from 'vue';
+import { defineComponent, h, resolveComponent } from "vue";
 
 export default defineComponent({
   props: {
@@ -13,21 +13,21 @@ export default defineComponent({
   setup(props) {
     return () => {
       return h(
-        'div',
+        "div",
         {
           class:
-            'd-flex flex-column justify-content-center align-items-center text-center',
+            "d-flex flex-column justify-content-center align-items-center text-center",
         },
         [
           h(
-            'span',
-            { class: 'svg-icon svg-icon-danger' },
-            h(resolveComponent('inline-svg'), {
-              src: 'media/icons/duotune/arrows/arr061.svg',
-              style: { width: '150px', height: '150px' },
+            "span",
+            { class: "svg-icon svg-icon-danger" },
+            h(resolveComponent("inline-svg"), {
+              src: "media/icons/duotune/arrows/arr061.svg",
+              style: { width: "150px", height: "150px" },
             })
           ),
-          h('h4', { innerHTML: props.content }),
+          h("h4", { innerHTML: props.content }),
         ]
       );
     };

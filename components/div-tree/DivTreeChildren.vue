@@ -4,13 +4,13 @@
   </div>
 </template>
 <script>
-import DivTreeItem from '@/custom/components/div-tree/DivTreeItem.vue';
+import DivTreeItem from "@/custom/components/div-tree/DivTreeItem.vue";
 export default {
   components: { DivTreeItem },
   setup() {
     const childrenCount = (data) => {
       if (data.children)
-        return data.children.filter((e) => !!e['children']).length;
+        return data.children.filter((e) => !!e["children"]).length;
       return 0;
     };
 

@@ -17,10 +17,10 @@ import {
   ref,
   toRefs,
   watch,
-} from 'vue';
+} from "vue";
 
 export default defineComponent({
-  props: ['promise', 'loading'],
+  props: ["promise", "loading"],
   setup(props, context) {
     const spinnerContainer = ref();
     const { promise, loading } = toRefs(props);
@@ -31,7 +31,7 @@ export default defineComponent({
     });
 
     watch(promise, () => {
-      console.log('new promise');
+      console.log("new promise");
       localLoading.value = true;
       promise.value
         .then(() => (localLoading.value = false))
@@ -40,21 +40,21 @@ export default defineComponent({
 
     return () => {
       return h(
-        'div',
+        "div",
         {
-          class: 'position-relative',
+          class: "position-relative",
         },
         [
           localLoading.value
             ? h(
-                'div',
+                "div",
                 {
                   class:
-                    'd-flex align-items-center align-content-center justify-content-center the-spinner',
+                    "d-flex align-items-center align-content-center justify-content-center the-spinner",
                 },
-                h('span', {
-                  class: 'spinner-border text-primary',
-                  role: 'status',
+                h("span", {
+                  class: "spinner-border text-primary",
+                  role: "status",
                 })
               )
             : undefined,

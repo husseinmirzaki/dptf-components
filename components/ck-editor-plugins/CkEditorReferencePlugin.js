@@ -1,9 +1,9 @@
-import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
+import Plugin from "@ckeditor/ckeditor5-core/src/plugin";
 import {
   toWidget,
   toWidgetEditable,
-} from '@ckeditor/ckeditor5-widget/src/utils';
-import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
+} from "@ckeditor/ckeditor5-widget/src/utils";
+import ButtonView from "@ckeditor/ckeditor5-ui/src/button/buttonview";
 
 export default class CkEditorReferencePlugin extends Plugin {
   init() {
@@ -14,17 +14,17 @@ export default class CkEditorReferencePlugin extends Plugin {
   }
 
   _addButton() {
-    this.editor.ui.componentFactory.add('insertReference', (locale) => {
+    this.editor.ui.componentFactory.add("insertReference", (locale) => {
       const view = new ButtonView(locale);
 
       view.set({
-        label: 'اضافه کردن عطف',
+        label: "اضافه کردن عطف",
         tooltip: true,
         withText: true,
       });
 
-      view.on('execute', () => {
-        this.editor.config._config.emitter('addReference', this);
+      view.on("execute", () => {
+        this.editor.config._config.emitter("addReference", this);
       });
 
       return view;
@@ -33,28 +33,28 @@ export default class CkEditorReferencePlugin extends Plugin {
 
   _defineSchema() {
     const schema = this.editor.model.schema;
-    schema.register('reference', {
+    schema.register("reference", {
       // avoid easy delets
       isInline: true,
       isObject: true,
       // Allow in places where other blocks are allowed (e.g. directly in the root).
-      allowWhere: '$inlineObject',
-      allowContentOf: '$block',
-      allowAttributesOf: '$block',
-      allowAttributes: 'letterId',
+      allowWhere: "$inlineObject",
+      allowContentOf: "$block",
+      allowAttributesOf: "$block",
+      allowAttributes: "letterId",
     });
 
-    schema.register('letter-number', {
+    schema.register("letter-number", {
       // Cannot be split or left by the caret.
       isLimit: true,
       isInline: true,
 
-      allowIn: 'reference',
+      allowIn: "reference",
 
       // Allow content which is allowed in blocks (i.e. text with attributes).
-      allowWhere: '$inlineObject',
-      allowContentOf: '$block',
-      allowAttributesOf: '$block',
+      allowWhere: "$inlineObject",
+      allowContentOf: "$block",
+      allowAttributesOf: "$block",
     });
   }
 
@@ -63,69 +63,69 @@ export default class CkEditorReferencePlugin extends Plugin {
     const conversion = this.editor.conversion;
 
     // this will convert sth called reference to a span
-    conversion.for('upcast').elementToElement({
-      model: 'reference',
+    conversion.for("upcast").elementToElement({
+      model: "reference",
       view: {
-        name: 'span',
-        classes: 'letter-reference',
+        name: "span",
+        classes: "letter-reference",
       },
     });
 
-    conversion.for('dataDowncast').elementToElement({
-      model: 'reference',
+    conversion.for("dataDowncast").elementToElement({
+      model: "reference",
       view: {
-        name: 'span',
-        classes: 'letter-reference',
+        name: "span",
+        classes: "letter-reference",
       },
     });
 
-    conversion.for('editingDowncast').elementToElement({
-      model: 'reference',
+    conversion.for("editingDowncast").elementToElement({
+      model: "reference",
       view: (modelElement, { writer: viewWriter }) => {
-        const span = viewWriter.createContainerElement('span', {
-          class: 'letter-reference',
+        const span = viewWriter.createContainerElement("span", {
+          class: "letter-reference",
         });
 
-        return toWidget(span, viewWriter, { label: 'عطف به یک نامه' });
+        return toWidget(span, viewWriter, { label: "عطف به یک نامه" });
       },
     });
 
     // this will convert sth called reference to a span
-    conversion.for('upcast').elementToElement({
-      model: 'letter-number',
+    conversion.for("upcast").elementToElement({
+      model: "letter-number",
       view: {
-        name: 'u',
-        classes: 'letter-reference-underline',
+        name: "u",
+        classes: "letter-reference-underline",
       },
     });
 
-    conversion.for('dataDowncast').elementToElement({
-      model: 'letter-number',
+    conversion.for("dataDowncast").elementToElement({
+      model: "letter-number",
       view: {
-        name: 'u',
-        classes: 'letter-reference-underline',
+        name: "u",
+        classes: "letter-reference-underline",
       },
     });
 
-    conversion.for('editingDowncast').elementToElement({
-      model: 'letter-number',
+    conversion.for("editingDowncast").elementToElement({
+      model: "letter-number",
       view: (modelElement, { writer: viewWriter }) => {
-        const span = viewWriter.createContainerElement('u', {
-          class: 'letter-reference-underline',
+        const span = viewWriter.createContainerElement("u", {
+          class: "letter-reference-underline",
         });
 
-        return toWidget(span, viewWriter, { label: 'شماره نامه' });
+        return toWidget(span, viewWriter, { label: "شماره نامه" });
       },
     });
 
-    conversion.for('upcast').attributeToAttribute({
-      model: 'letterId',
-      view: 'letter-id',
+    conversion.for("upcast").attributeToAttribute({
+      model: "letterId",
+      view: "letter-id",
     });
 
-    conversion.for('dataDowncast').attributeToAttribute({
-      model: 'letterId',
-      view: 'letter-id',
+    conversion.for("dataDowncast").attributeToAttribute({
+      model: "letterId",
+      view: "letter-id",
     });
   }
 }

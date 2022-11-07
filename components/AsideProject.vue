@@ -24,34 +24,34 @@
   </a>
 </template>
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref, toRef, toRefs } from 'vue';
-import axios from 'axios';
+import { computed, defineComponent, onMounted, ref, toRef, toRefs } from "vue";
+import axios from "axios";
 
 export default defineComponent({
-  props: ['project'],
+  props: ["project"],
   setup(props) {
     const { project } = toRefs(props);
     const root = ref();
 
     const description = computed(() => {
       let text = project.value.description;
-      if (text == '') text = project.value.description;
+      if (text == "") text = project.value.description;
 
-      if (text == '') {
+      if (text == "") {
         if (project.value.tag_list && project.value.tag_list.length > 0) {
           text = project.value.tag_list[0];
         }
       }
 
-      if (text == '') {
-        text = 'داده اضافه';
+      if (text == "") {
+        text = "داده اضافه";
       }
       return text.slice(0, 15);
     });
 
     onMounted(() => {
       if (root.value) {
-        project.value['element'] = root.value;
+        project.value["element"] = root.value;
       }
     });
 

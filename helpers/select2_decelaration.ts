@@ -1,9 +1,9 @@
-import { ApiService } from '@/Defaults';
-import _$ from 'jquery';
-import 'select2/dist/js/select2.full';
-import '@/custom/css/select2.css';
-import JwtService from '@/custom/core/services/JwtService';
-import { ref } from 'vue';
+import { ApiService } from "@/Defaults";
+import _$ from "jquery";
+import "select2/dist/js/select2.full";
+import "@/custom/css/select2.css";
+import JwtService from "@/custom/core/services/JwtService";
+import { ref } from "vue";
 
 export const $ = _$;
 
@@ -14,8 +14,8 @@ export function select2(
   onTokenRefresh: () => void
 ) {
   const defaultOptions = {
-    dir: 'rtl',
-    placeholder: 'انتخاب کنید',
+    dir: "rtl",
+    placeholder: "انتخاب کنید",
     onParams: (_data) => {
       //
     },
@@ -28,26 +28,26 @@ export function select2(
   options = $.extend(true, defaultOptions, options);
 
   if (options)
-    options['language'] = {
+    options["language"] = {
       noResults: function () {
         if (options!.tags) {
-          return 'متن + Enter';
+          return "متن + Enter";
         }
-        return 'موردی موجود نمی‌باشد';
+        return "موردی موجود نمی‌باشد";
       },
     };
 
   const _count = ref(0);
 
-  if (typeof url === 'function') {
+  if (typeof url === "function") {
     const _urlGenerator = () => {
-      if (typeof url == 'function') return ApiService.base_url + url();
+      if (typeof url == "function") return ApiService.base_url + url();
       return ApiService.base_url + url;
     };
-    options!['ajax'] = {
+    options!["ajax"] = {
       url: _urlGenerator,
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       data: (params) => {
         const _data = {
@@ -55,8 +55,8 @@ export function select2(
           page: params.page || 1,
         };
 
-        if (_count.value > 0 && _data.page > 1) _data['count'] = _count.value;
-        (options!['onParams'] as any)(_data);
+        if (_count.value > 0 && _data.page > 1) _data["count"] = _count.value;
+        (options!["onParams"] as any)(_data);
         return _data;
       },
       success: (e) => {
@@ -66,11 +66,11 @@ export function select2(
         if (e.status === 401 && onTokenRefresh) onTokenRefresh();
       },
     };
-  } else if (url && url != '' && !options!['ajax']) {
-    options!['ajax'] = {
+  } else if (url && url != "" && !options!["ajax"]) {
+    options!["ajax"] = {
       url: url,
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       data: function (params) {
         const _data = {
@@ -78,8 +78,8 @@ export function select2(
           page: params.page || 1,
         };
 
-        if (_count.value > 0 && _data.page > 1) _data['count'] = _count.value;
-        (options!['onParams'] as any)(_data);
+        if (_count.value > 0 && _data.page > 1) _data["count"] = _count.value;
+        (options!["onParams"] as any)(_data);
         return _data;
       },
       success: (e) => {
@@ -94,8 +94,8 @@ export function select2(
   // console.log("select2", options);
   $.ajaxSetup({
     beforeSend: function (xhr) {
-      const token = 'Bearer ' + JwtService.getToken();
-      if (token) xhr.setRequestHeader('Authorization', token);
+      const token = "Bearer " + JwtService.getToken();
+      if (token) xhr.setRequestHeader("Authorization", token);
     },
   });
   return $(e).select2(options);
@@ -104,12 +104,12 @@ export function select2(
 export function userToSelect2(user) {
   if (user)
     return {
-      text: user.first_name + ' ' + user.last_name,
+      text: user.first_name + " " + user.last_name,
       value: user.id,
     };
 
   return {
-    text: '',
+    text: "",
     value: 0,
   };
 }
@@ -123,7 +123,7 @@ export function usersToSelect2(users) {
 }
 
 export function closeAllOpenInstance() {
-  document.querySelectorAll('.select2-dropdown').forEach((e) => {
+  document.querySelectorAll(".select2-dropdown").forEach((e) => {
     e.remove();
   });
 }

@@ -31,13 +31,13 @@
   <!--end::Modal - New Address-->
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { randomId } from '@/custom/helpers/random';
-import Modal from 'bootstrap/js/dist/modal';
-import { VueInstanceService } from '@/Defaults';
+import { defineComponent } from "vue";
+import { randomId } from "@/custom/helpers/random";
+import Modal from "bootstrap/js/dist/modal";
+import { VueInstanceService } from "@/Defaults";
 
 export default defineComponent({
-  name: 'static-back-drop-modal',
+  name: "static-back-drop-modal",
   data() {
     return {
       modal: null,
@@ -48,26 +48,26 @@ export default defineComponent({
   mounted() {
     console.log(this.$refs.modalEl);
     (async () => {
-      if (document.querySelector('#' + this.modalId)) {
-        this.modal = new Modal('#' + this.modalId, {
-          backdrop: 'static',
+      if (document.querySelector("#" + this.modalId)) {
+        this.modal = new Modal("#" + this.modalId, {
+          backdrop: "static",
           keyboard: false,
         });
         (this.$refs.modalEl as any).addEventListener(
-          'show.bs.modal',
-          this.emitEvent('open')
+          "show.bs.modal",
+          this.emitEvent("open")
         );
         (this.$refs.modalEl as any).addEventListener(
-          'shown.bs.modal',
-          this.emitEvent('opened')
+          "shown.bs.modal",
+          this.emitEvent("opened")
         );
         (this.$refs.modalEl as any).addEventListener(
-          'hide.bs.modal',
-          this.emitEvent('close')
+          "hide.bs.modal",
+          this.emitEvent("close")
         );
         (this.$refs.modalEl as any).addEventListener(
-          'hidden.bs.modal',
-          this.emitEvent('closed')
+          "hidden.bs.modal",
+          this.emitEvent("closed")
         );
       }
     })();
@@ -80,12 +80,12 @@ export default defineComponent({
         //
       }
     }
-    const modalE = document.querySelector('#' + this.modalId);
+    const modalE = document.querySelector("#" + this.modalId);
     if (modalE) modalE.remove();
   },
   props: {
     modalBodyClassExtra: {
-      default: '',
+      default: "",
     },
     modalId: {
       default: () => {
@@ -93,10 +93,10 @@ export default defineComponent({
       },
     },
     modalTitle: {
-      default: 'موضوع مدال',
+      default: "موضوع مدال",
     },
     modalSizeClass: {
-      default: 'mw-700px',
+      default: "mw-700px",
     },
     thinFooter: {
       default: false,

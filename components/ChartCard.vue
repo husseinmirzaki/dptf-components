@@ -29,25 +29,25 @@
   </Card>
 </template>
 <script>
-import Card from '@/custom/components/Card';
-import { MenuComponent } from '@/assets/ts/components';
-import ChartCardToolbarButtons from '@/custom/components/ChartCardToolbarButtons';
-import DropdownV2 from '@/custom/components/DropdownV2';
-import { onMounted, ref, watch } from 'vue';
+import Card from "@/custom/components/Card";
+import { MenuComponent } from "@/assets/ts/components";
+import ChartCardToolbarButtons from "@/custom/components/ChartCardToolbarButtons";
+import DropdownV2 from "@/custom/components/DropdownV2";
+import { onMounted, ref, watch } from "vue";
 
 export default {
   components: { DropdownV2, ChartCardToolbarButtons, Card },
-  emits: ['toggleStateChanged', 'reportStateChanged'],
+  emits: ["toggleStateChanged", "reportStateChanged"],
   setup(props, context) {
-    const toggleState = ref('chart');
-    const reportState = ref('weekly');
+    const toggleState = ref("chart");
+    const reportState = ref("weekly");
 
     watch(toggleState, () => {
-      context.emit('toggleStateChanged', toggleState.value);
+      context.emit("toggleStateChanged", toggleState.value);
     });
 
     watch(reportState, () => {
-      context.emit('reportStateChanged', reportState.value);
+      context.emit("reportStateChanged", reportState.value);
     });
 
     onMounted(() => {

@@ -1,7 +1,7 @@
-import { ApiService } from '@/Defaults';
+import { ApiService } from "@/Defaults";
 
 export class UserPreferencesTableApi extends ApiService {
-  static baseUrl = 'user_preferences/';
+  static baseUrl = "user_preferences/";
 
   public static getTableSettings(tableName) {
     return this.post(this.url + `get_setting/`, {

@@ -1,18 +1,18 @@
 <style lang="scss" src="./MapComponent.scss" />
 <script lang="ts">
-import 'leaflet/dist/leaflet.css';
-import { defineComponent, h, onMounted, ref, toRef, watch } from 'vue';
-import { LControlScale, LMap, LMarker } from '@vue-leaflet/vue-leaflet';
-import MapLatLngHolder from '@/custom/map/MapLatLngHolder.vue';
-import { ContextMenuService } from '@/custom/components/ContextMenuService';
-import MapTools from '@/custom/map/MapTools.vue';
-import MapStateHolder from '@/custom/map/MapStateHolder.vue';
-import { buildLayers, mapLayers } from '@/custom/map/MapLayers';
-import MapLayerChangerButton from '@/custom/map/MapLayerChangerButton.vue';
-import MapWindows from '@/custom/map/MapWindows.vue';
-import MapExtensions from '@/custom/map/MapExtensions.vue';
-import { buildEmitter } from '@/custom/map/utils/emitter';
-import { CustomLayerItems } from '@/custom/map/utils/CustomLayerItems';
+import "leaflet/dist/leaflet.css";
+import { defineComponent, h, onMounted, ref, toRef, watch } from "vue";
+import { LControlScale, LMap, LMarker } from "@vue-leaflet/vue-leaflet";
+import MapLatLngHolder from "@/custom/map/MapLatLngHolder.vue";
+import { ContextMenuService } from "@/custom/components/ContextMenuService";
+import MapTools from "@/custom/map/MapTools.vue";
+import MapStateHolder from "@/custom/map/MapStateHolder.vue";
+import { buildLayers, mapLayers } from "@/custom/map/MapLayers";
+import MapLayerChangerButton from "@/custom/map/MapLayerChangerButton.vue";
+import MapWindows from "@/custom/map/MapWindows.vue";
+import MapExtensions from "@/custom/map/MapExtensions.vue";
+import { buildEmitter } from "@/custom/map/utils/emitter";
+import { CustomLayerItems } from "@/custom/map/utils/CustomLayerItems";
 
 class PluginManager {
   plugins: any = {};
@@ -34,7 +34,7 @@ class PluginManager {
   }
 
   getMain() {
-    return this.plugins['LMap'].component.parent;
+    return this.plugins["LMap"].component.parent;
   }
 }
 
@@ -62,7 +62,7 @@ export default defineComponent({
       default: true,
     },
     state: {
-      default: 'یکی از ابزارها را استفاده کنید',
+      default: "یکی از ابزارها را استفاده کنید",
     },
     mapXY: {
       default: [35.632744348010625, 51.43146514892579],
@@ -77,7 +77,7 @@ export default defineComponent({
     const mapToolsRef = ref();
     const mapWindowsRef = ref();
     const mapExtensionsRef = ref();
-    const state = toRef(props, 'state');
+    const state = toRef(props, "state");
     const innerState = ref(state.value);
     const activeState = ref(props.defaultActiveState);
     const satellite = ref(false);
@@ -99,23 +99,23 @@ export default defineComponent({
     });
 
     const onMapReady = (e) => {
-      context.emit('mapReady', e);
-      emitTo('mapReady', null);
-      console.log('map cords', mapCenter.value);
+      context.emit("mapReady", e);
+      emitTo("mapReady", null);
+      console.log("map cords", mapCenter.value);
       // e.setView(mapCenter.value)
     };
 
     const onClick = (value) => {
-      emitTo('click', value);
+      emitTo("click", value);
     };
 
     const onMousemove = (value) => {
-      emitTo('mousemove', value);
+      emitTo("mousemove", value);
     };
 
     const setProperty = (key, value) => {
       switch (key) {
-        case 'activeWindow':
+        case "activeWindow":
           activeWindow.value = value;
           break;
       }
@@ -124,7 +124,7 @@ export default defineComponent({
     const onUpdateCenter = (value) => {
       if (value) {
         mapCenter.value = [value.lat, value.lng];
-        context.emit('update:center', mapCenter.value);
+        context.emit("update:center", mapCenter.value);
       }
     };
 
@@ -133,7 +133,7 @@ export default defineComponent({
         if (!event.originalEvent._alreadyFilled)
           ContextMenuService.set([
             {
-              text: 'test',
+              text: "test",
               onClick: () => {
                 //
               },
@@ -143,7 +143,7 @@ export default defineComponent({
     };
 
     const onUpdateState = (_state: string) => {
-      if (_state == '') {
+      if (_state == "") {
         innerState.value = state.value;
       } else {
         innerState.value = _state;
@@ -161,15 +161,15 @@ export default defineComponent({
     const outerLayers: any = [];
 
     for (let i = 0; i < slotLayers.length; i++) {
-      if (!slotLayers[i] || !slotLayers[i]['type'] || !slotLayers[i]['name']) {
+      if (!slotLayers[i] || !slotLayers[i]["type"] || !slotLayers[i]["name"]) {
         continue;
       }
 
-      if (!slotLayers[i]['props']) {
-        slotLayers[i]['props'] = {};
+      if (!slotLayers[i]["props"]) {
+        slotLayers[i]["props"] = {};
       }
 
-      slotLayers[i]['props']['mapInstance'] = mapRefs;
+      slotLayers[i]["props"]["mapInstance"] = mapRefs;
 
       customLayers.add(slotLayers[i]);
     }
@@ -221,24 +221,24 @@ export default defineComponent({
     const map = h(
       LMap,
       {
-        ref: 'mapRef',
+        ref: "mapRef",
         options: {
           attributionControl: false,
         },
-        style: 'width: 100%;height: 800px;',
+        style: "width: 100%;height: 800px;",
         maxZoom: this.maxZoom,
         minZoom: this.readOnly ? 15 : this.minZoom,
         zoom: this.zoom,
-        class: ['map-component-custom-class'],
+        class: ["map-component-custom-class"],
         center: this.mapCenter,
         onReady: this.onMapReady,
         onClick: this.onClick,
         onMousemove: this.onMousemove,
-        'onUpdate:center': this.onUpdateCenter,
+        "onUpdate:center": this.onUpdateCenter,
         onContextmenu: this.onContextmenu,
         // this will let us show a context menu
         // by filling ContextMenuService
-        'data-context-menu': 'true',
+        "data-context-menu": "true",
       },
       () => {
         const layers: any = [];
@@ -247,7 +247,7 @@ export default defineComponent({
           layers.push(
             ...this.$slots.default!().filter((slot) => {
               return (
-                slot && slot['type'] != null && slot['type']['name'] != null
+                slot && slot["type"] != null && slot["type"]["name"] != null
               );
             })
           );
@@ -269,7 +269,7 @@ export default defineComponent({
         // of map
         if (this.showXY && !this.readOnly) {
           const vNode = h(MapLatLngHolder, { xy: this.mapCenter });
-          this.plugins.register('MapLatLngHolder', vNode);
+          this.plugins.register("MapLatLngHolder", vNode);
           layers.push(vNode);
         }
 
@@ -280,7 +280,7 @@ export default defineComponent({
           const vNode = h(MapStateHolder, {
             state: this.activeState ? this.activeState : this.innerState,
           });
-          this.plugins.register('MapStateHolder', vNode);
+          this.plugins.register("MapStateHolder", vNode);
           layers.push(vNode);
         }
 
@@ -291,9 +291,9 @@ export default defineComponent({
         if (this.showLayers && !this.readOnly) {
           const vNode = h(MapLayerChangerButton, {
             modelValue: this.satellite,
-            'onUpdate:modelValue': (v) => (this.satellite = v),
+            "onUpdate:modelValue": (v) => (this.satellite = v),
           });
-          this.plugins.register('MapLayerChangerButton', vNode);
+          this.plugins.register("MapLayerChangerButton", vNode);
           layers.push(vNode);
         }
 
@@ -307,17 +307,17 @@ export default defineComponent({
           const vNode = h(
             MapTools,
             {
-              ref: 'mapToolsRef',
+              ref: "mapToolsRef",
               parent: this,
               modelValue: this.activeWindow,
-              'onUpdate:modelValue': (value) => (this.activeWindow = value),
-              'onUpdate:state': this.onUpdateState,
+              "onUpdate:modelValue": (value) => (this.activeWindow = value),
+              "onUpdate:state": this.onUpdateState,
             },
             {
               default: () => this.customLayers.mapToolsButton,
             }
           );
-          this.plugins.register('MapTools', vNode);
+          this.plugins.register("MapTools", vNode);
           layers.push(vNode);
         }
 
@@ -325,17 +325,17 @@ export default defineComponent({
           const vNode = h(
             MapWindows,
             {
-              ref: 'mapWindowsRef',
+              ref: "mapWindowsRef",
               parent: this,
             },
             {
               default: () =>
                 this.customLayers.mapToolWindow.filter(
-                  (item) => item.props['activation-key'] === this.activeWindow
+                  (item) => item.props["activation-key"] === this.activeWindow
                 ),
             }
           );
-          this.plugins.register('MapWindows', vNode);
+          this.plugins.register("MapWindows", vNode);
           layers.push(vNode);
         }
 
@@ -344,7 +344,7 @@ export default defineComponent({
             h(
               MapExtensions,
               {
-                ref: 'mapExtensionsRef',
+                ref: "mapExtensionsRef",
                 parent: this,
               },
               {
@@ -358,7 +358,7 @@ export default defineComponent({
       }
     );
 
-    this.plugins.register('LMap', map);
+    this.plugins.register("LMap", map);
     return map;
   },
 });

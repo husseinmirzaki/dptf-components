@@ -8,24 +8,24 @@
         <span>
           {{
             truncate(
-              computedValue ? computedValue : emptyCell ? emptyCell : '-'
+              computedValue ? computedValue : emptyCell ? emptyCell : "-"
             )
           }}
         </span>
       </el-tooltip>
       <span v-else>
-        {{ computedValue ? computedValue : emptyCell ? emptyCell : '-' }}
+        {{ computedValue ? computedValue : emptyCell ? emptyCell : "-" }}
       </span>
     </slot>
   </td>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
-import TableTDMixin from '@/custom/mixins/TableTDMixin';
+import { defineComponent } from "vue";
+import TableTDMixin from "@/custom/mixins/TableTDMixin";
 
 export default defineComponent({
   mixins: [TableTDMixin],
-  props: ['data', 'emptyCell'],
+  props: ["data", "emptyCell"],
   computed: {
     computedValue: function () {
       if (this.data) {
@@ -40,8 +40,8 @@ export default defineComponent({
   },
   methods: {
     truncate(data) {
-      if (data && data.length > 80 && typeof data === 'string') {
-        return data.substr(0, 80) + '...';
+      if (data && data.length > 80 && typeof data === "string") {
+        return data.substr(0, 80) + "...";
       }
       return data;
     },

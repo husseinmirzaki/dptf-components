@@ -14,14 +14,14 @@
 }
 </style>
 <script lang="ts">
-import { defineComponent } from 'vue';
-import TableTDMixin from '@/custom/mixins/TableTDMixin';
-import TableTD from '@/custom/components/table/tbody/TableTD.vue';
+import { defineComponent } from "vue";
+import TableTDMixin from "@/custom/mixins/TableTDMixin";
+import TableTD from "@/custom/components/table/tbody/TableTD.vue";
 
 export default defineComponent({
   components: { TableTD },
   mixins: [TableTDMixin],
-  props: ['data', 'emptyCell'],
+  props: ["data", "emptyCell"],
   computed: {
     computedValue: function () {
       if (this.data) {
@@ -37,7 +37,7 @@ export default defineComponent({
   methods: {
     truncate(data) {
       if (data && data.length > 80) {
-        return data.substr(0, 80) + '...';
+        return data.substr(0, 80) + "...";
       }
       return data;
     },

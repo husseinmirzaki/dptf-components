@@ -27,7 +27,7 @@
 </template>
 <script>
 export default {
-  props: ['active', 'badgeNumber', 'iconClass', 'badgeText'],
+  props: ["active", "badgeNumber", "iconClass", "badgeText"],
 };
 </script>
 <style lang="scss" scoped>

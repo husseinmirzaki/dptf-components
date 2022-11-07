@@ -7,7 +7,7 @@ export function formatCurrency(input, blur) {
   var input_val = input.value;
 
   // don't validate empty input
-  if (input_val === '') {
+  if (input_val === "") {
     return;
   }
 
@@ -18,11 +18,11 @@ export function formatCurrency(input, blur) {
   var caret_pos = input.selectionStart;
 
   // check for decimal
-  if (input_val.indexOf('.') >= 0) {
+  if (input_val.indexOf(".") >= 0) {
     // get position of first decimal
     // this prevents multiple decimals from
     // being entered
-    var decimal_pos = input_val.indexOf('.');
+    var decimal_pos = input_val.indexOf(".");
 
     // split number by decimal point
     var left_side = input_val.substring(0, decimal_pos);
@@ -38,13 +38,13 @@ export function formatCurrency(input, blur) {
     right_side = right_side.substring(0, 2);
 
     // join number by .
-    input_val = left_side + '';
+    input_val = left_side + "";
   } else {
     // no decimal entered
     // add commas to number
     // remove all non-digits
     input_val = formatNumber(input_val);
-    input_val = input_val + '';
+    input_val = input_val + "";
     // send updated string to input
     input.value = input_val;
 
@@ -54,16 +54,16 @@ export function formatCurrency(input, blur) {
     input.setSelectionRange(caret_pos, caret_pos);
   }
   if (!/[0-9]+/.test(input_val)) {
-    input.value = '';
+    input.value = "";
   }
 }
 
 function formatNumber(n) {
   // format number 1000000 to 1,234,567
-  return n.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 export function deformatNumber(n) {
   // format number 1000000 to 1,234,567
-  return n.replace(/\D/g, '').replace(',', '');
+  return n.replace(/\D/g, "").replace(",", "");
 }

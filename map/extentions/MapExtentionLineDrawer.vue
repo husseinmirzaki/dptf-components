@@ -9,12 +9,12 @@ import {
   ref,
   toRef,
   watch,
-} from 'vue';
-import { LMarker, LIcon } from '@vue-leaflet/vue-leaflet';
-import MapLine from '@/custom/map/MapLine.vue';
-import { buildEmitter } from '@/custom/map/utils/emitter';
-import { ContextMenuService } from '@/custom/components/ContextMenuService';
-import Swal from 'sweetalert2/dist/sweetalert2.js';
+} from "vue";
+import { LMarker, LIcon } from "@vue-leaflet/vue-leaflet";
+import MapLine from "@/custom/map/MapLine.vue";
+import { buildEmitter } from "@/custom/map/utils/emitter";
+import { ContextMenuService } from "@/custom/components/ContextMenuService";
+import Swal from "sweetalert2/dist/sweetalert2.js";
 
 interface LineInfo {
   strokeColor: string;
@@ -56,11 +56,11 @@ class DotDrawer {
       this.ld.mapToolsWindowLine.orderedList.remove(index);
     else {
       Swal.fire({
-        icon: 'warning',
-        title: 'آیا مطمئن هستید ؟',
-        text: 'به این عمل کل خط حذف میشود',
+        icon: "warning",
+        title: "آیا مطمئن هستید ؟",
+        text: "به این عمل کل خط حذف میشود",
         showCancelButton: true,
-        confirmButtonText: 'بله',
+        confirmButtonText: "بله",
         cancelButtonText: `خیر`,
       }).then((e) => {
         if (e.isConfirmed) {
@@ -85,15 +85,15 @@ class DotDrawer {
         contextMenuEvent.originalEvent._alreadyFilled = true;
         ContextMenuService.set([
           {
-            text: 'اضافه کردن نقطه',
+            text: "اضافه کردن نقطه",
             onClick: () => {
-              this.ld.mapToolsWindowLine.orderedList.addAfter('', index);
+              this.ld.mapToolsWindowLine.orderedList.addAfter("", index);
 
               this.ld.forceUpdateMapLinesData();
             },
           },
           {
-            text: 'حذف',
+            text: "حذف",
             onClick: () => {
               this.removeItem(index);
             },
@@ -121,7 +121,7 @@ class DotDrawer {
         LMarker,
         {
           // add index to avoid collision on updates
-          key: _key + '-' + index,
+          key: _key + "-" + index,
           latLng: latLng,
           onContextmenu: (contextMenuEvent) => {
             this.onContextMenu(contextMenuEvent, index);
@@ -131,7 +131,7 @@ class DotDrawer {
           },
         },
         h(LIcon, {
-          iconUrl: '/media/icons/duotune/abstract/abs050.svg',
+          iconUrl: "/media/icons/duotune/abstract/abs050.svg",
           iconSize: [25, 25],
         })
       );
@@ -142,7 +142,7 @@ class DotDrawer {
     // remove non-existing ones
     Object.keys(this.ld.icons.value)
       .filter((_key) => {
-        const s = _key.split(',');
+        const s = _key.split(",");
         return (
           this.lines.findIndex((item) => {
             return item[0] == Number(s[0]) && item[1] == Number(s[1]);
@@ -164,15 +164,15 @@ class LineDrawer {
   plugins: any;
 
   _lines: Ref<Record<string, LineInfo>>;
-  currentKey = '';
-  activeIndex = '';
+  currentKey = "";
+  activeIndex = "";
 
   icons: Ref<Record<string, any>> = ref({});
   layers: Ref<Record<string, any>> = ref({});
 
   constructor(props, context, lines: Ref<Record<string, LineInfo>>) {
     this.props = props;
-    this.plugins = toRef(this.props, 'plugins');
+    this.plugins = toRef(this.props, "plugins");
     this.context = context;
     this._lines = lines;
     this.dotDrawer = new DotDrawer(this);
@@ -196,7 +196,7 @@ class LineDrawer {
   }
 
   get _mapToolsWindowLine() {
-    return this.plugins.value.get('MapToolsWindowLine');
+    return this.plugins.value.get("MapToolsWindowLine");
   }
 
   get mapToolsWindowLine() {
@@ -204,7 +204,7 @@ class LineDrawer {
   }
 
   get mapToolsWindowLineRaw() {
-    return this.plugins.value.getRaw('MapToolsWindowLine');
+    return this.plugins.value.getRaw("MapToolsWindowLine");
   }
 
   setActiveInput(index) {
@@ -223,7 +223,7 @@ class LineDrawer {
   }
 
   forceUpdateMapLinesData() {
-    this.mapToolsWindowLine.emitTo('updateData', [
+    this.mapToolsWindowLine.emitTo("updateData", [
       this.mapToolsWindowLine.orderedList.orderedList(),
     ]);
   }
@@ -236,11 +236,11 @@ class LineDrawer {
     return (name, event) => {
       let _index = -1;
       switch (name) {
-        case 'focusin':
+        case "focusin":
           this.activeIndex = _index = event[0];
-          this.layers.value['marker'] = h(LMarker, {
+          this.layers.value["marker"] = h(LMarker, {
             draggable: true,
-            'onUpdate:latLng': (e) => {
+            "onUpdate:latLng": (e) => {
               this.lines[_index] = [e.lat, e.lng];
               this.mapToolsWindowLine.orderedList.setInitial(this.lines);
               this.dotDrawer.drawDots();
@@ -249,15 +249,15 @@ class LineDrawer {
             latLng: this.lines[_index],
           });
           break;
-        case 'update':
+        case "update":
           _index = event[0];
 
           if (this.lines[_index] != event[1]) this.lines[_index] = event[1];
 
           this.dotDrawer.drawDots();
           break;
-        case 'updateData':
-          var index = event[0].indexOf('' as any);
+        case "updateData":
+          var index = event[0].indexOf("" as any);
           if (index > -1) {
             if (event[0].length > 2) {
               if (index == 0) {
@@ -296,7 +296,7 @@ class LineDrawer {
                 });
               }
             } else {
-              event[0][0] = this.plugins.value.get('LMap').proxy.center;
+              event[0][0] = this.plugins.value.get("LMap").proxy.center;
               nextTick(() => {
                 this.setActiveInput(0);
               });
@@ -323,14 +323,14 @@ class LineDrawer {
 
   setLineDataOnWindow() {
     this.mapToolsWindowLine.orderedList.setInitial(this.lines);
-    this.mapToolsWindowLine.emitsTo['MapExtensionLineDrawer'] =
+    this.mapToolsWindowLine.emitsTo["MapExtensionLineDrawer"] =
       this.onMapToolsWindowEvent();
   }
 
   openDefaultWindow(forceReset = false) {
     return new Promise<void>((finished) => {
       if (!this.mapComponent.proxy.activeWindow) {
-        this.mapComponent.proxy.activeWindow = 'default-windows';
+        this.mapComponent.proxy.activeWindow = "default-windows";
         nextTick(() => {
           this.setLineDataOnWindow();
           this.dotDrawer.drawDots();
@@ -346,7 +346,7 @@ class LineDrawer {
 }
 
 export default defineComponent({
-  name: 'MapExtensionLineDrawer',
+  name: "MapExtensionLineDrawer",
   props: {
     plugins: {
       type: Object,
@@ -355,23 +355,23 @@ export default defineComponent({
   },
   setup(props, context) {
     const { emitTo, emitsTo } = buildEmitter();
-    const activeWindow = toRef(props.plugins.getMain().proxy, 'activeWindow');
+    const activeWindow = toRef(props.plugins.getMain().proxy, "activeWindow");
 
     /**
      * hold a set of unique lines which are shown
      * to user
      */
     const lines: Ref<Record<string, LineInfo>> = ref({
-      'line-1': {
-        strokeColor: '#000',
+      "line-1": {
+        strokeColor: "#000",
         lines: [
           [35.632744348010625, 51.43146514892579],
           [35.55010533588552, 51.22650146484375],
           [35.18278813800229, 50.86395263671875],
         ],
       },
-      'line-2': {
-        strokeColor: '#000',
+      "line-2": {
+        strokeColor: "#000",
         lines: [
           [35.632744348010625, 51.43146514892575],
           [35.55010533588552, 51.22650146484379],
@@ -392,7 +392,7 @@ export default defineComponent({
     });
 
     const sumOfLines = (points: Array<Array<number>>) => {
-      let sum = '';
+      let sum = "";
       for (let i = 0; i < Math.min(points.length, 5); i++) {
         sum += `${points[i][0]}${points[i][1]}`;
       }
@@ -403,39 +403,39 @@ export default defineComponent({
       const line = lines.value[key];
 
       return h(MapLine, {
-        strokeColor: line['strokeColor'],
+        strokeColor: line["strokeColor"],
         lines: line.lines,
         key: sumOfLines(line.lines),
         onEdit: () => {
           lineDrawer.icons.value = {};
           lineDrawer.layers.value = {};
           lineDrawer.currentKey = key;
-          lineDrawer.activeIndex = '';
+          lineDrawer.activeIndex = "";
           lineDrawer.openDefaultWindow(true);
         },
       });
     };
 
     const globalKeyDown = (e) => {
-      if (e.code == 'Escape') {
-        delete extraLayers.value['marker'];
-        const element = document.querySelector('input:focus') as any;
+      if (e.code == "Escape") {
+        delete extraLayers.value["marker"];
+        const element = document.querySelector("input:focus") as any;
         if (element) element?.blur();
       }
-      if (e.code == 'Delete') {
-        if (!extraLayers.value['marker']) return;
+      if (e.code == "Delete") {
+        if (!extraLayers.value["marker"]) return;
 
         lineDrawer.dotDrawer.removeItem(lineDrawer.activeIndex);
-        delete extraLayers.value['marker'];
+        delete extraLayers.value["marker"];
       }
     };
 
     onMounted(() => {
-      document.addEventListener('keydown', globalKeyDown);
+      document.addEventListener("keydown", globalKeyDown);
     });
 
     onUnmounted(() => {
-      document.removeEventListener('keydown', globalKeyDown);
+      document.removeEventListener("keydown", globalKeyDown);
     });
 
     return {
@@ -452,7 +452,7 @@ export default defineComponent({
   },
   render() {
     return h(
-      'div',
+      "div",
       {},
       {
         default: () => {

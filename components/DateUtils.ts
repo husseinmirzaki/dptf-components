@@ -70,7 +70,7 @@ function jalaliToGregorian(jy, jm, jd) {
 
 export function textPadding(data: any, maxLength = 2) {
   const stringData = String(data);
-  return stringData.padStart(maxLength, '0');
+  return stringData.padStart(maxLength, "0");
 }
 
 export function gregorianDateToJalali(date: Date, withTime = false) {
@@ -91,7 +91,7 @@ export function gregorianDateToJalali(date: Date, withTime = false) {
 }
 
 export function gregorianToPersianDate(value) {
-  return gregorianDateToJalali(new Date(value), value.split('-').length > 3);
+  return gregorianDateToJalali(new Date(value), value.split("-").length > 3);
 }
 
 export function gregorianIOSToPersianDate(value, withTime = false) {
@@ -103,7 +103,7 @@ export function currentPersianDate() {
 }
 
 export function persianStringDateToGregorian(dateString: string) {
-  const [year, month, day] = dateString.split('/');
+  const [year, month, day] = dateString.split("/");
   const [gYear, gMonth, gDay] = jalaliToGregorian(
     Number(year),
     Number(month),
