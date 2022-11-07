@@ -21,7 +21,7 @@ export class BatchDeleteHelper {
       cancelButtonText: `حدف نشود`,
       confirmButtonColor: "#F00",
       cancelButtonColor: "#0742c0",
-    });
+    } as any);
     if (modalResult.isConfirmed) {
       return await this.deleteAll();
     }
@@ -39,7 +39,7 @@ export class BatchDeleteHelper {
       cancelButtonText: `حدف نشود`,
       confirmButtonColor: "#F00",
       cancelButtonColor: "#0742c0",
-    });
+    } as any);
     if (modalResult.isConfirmed) {
       return await this.deleteSome(someIds);
     }
