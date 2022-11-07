@@ -427,14 +427,20 @@ export class CreateForm<T extends FieldsInterface = any> {
               addValidationToModes(
                 e.name,
                 Yup.array()
-                  .nullable()["checkSelect"]("حداقل یکی از موارد را انتخاب کنید").label(text)
+                  .nullable()
+                    // eslint-disable-next-line no-unexpected-multiline
+                  ["checkSelect"]("حداقل یکی از موارد را انتخاب کنید")
+                  .label(text)
               );
             } else if (required) {
               // if select doesn't have a multiple attribute
               addValidationToModes(
                 e.name,
                 Yup.string()
-                  .nullable()["checkSingleSelect"]("حداقل یکی از موارد را انتخاب کنید").label(text)
+                  .nullable()
+                    // eslint-disable-next-line no-unexpected-multiline
+                  ["checkSingleSelect"]("حداقل یکی از موارد را انتخاب کنید")
+                  .label(text)
               );
             }
           } else if ((fieldType == "file" || e["isFile"]) && required) {
