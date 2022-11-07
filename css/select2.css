@@ -1,27 +1,27 @@
 @font-face {
-  font-family: "BNazanin";
-  src: url("fonts/BNazanin.eot");
-  src: url("fonts/BNazanin.eot?#iefix") format("embedded-opentype"),
-    url("fonts/BNazanin.woff2") format("woff2"),
-    url("fonts/BNazanin.woff") format("woff"),
-    url("fonts/BNazanin.ttf") format("truetype");
+  font-family: 'BNazanin';
+  src: url('fonts/BNazanin.eot');
+  src: url('fonts/BNazanin.eot?#iefix') format('embedded-opentype'),
+    url('fonts/BNazanin.woff2') format('woff2'),
+    url('fonts/BNazanin.woff') format('woff'),
+    url('fonts/BNazanin.ttf') format('truetype');
 }
 
 @font-face {
-  font-family: "BTitr";
-  src: url("fonts/BTitrLight.ttf") format("truetype");
+  font-family: 'BTitr';
+  src: url('fonts/BTitrLight.ttf') format('truetype');
   font-weight: normal;
 }
 
 @font-face {
-  font-family: "BTitr";
-  src: url("fonts/BTitrBold.ttf") format("truetype");
+  font-family: 'BTitr';
+  src: url('fonts/BTitrBold.ttf') format('truetype');
   font-weight: bold;
 }
 
 @font-face {
-  font-family: "BKoodak";
-  src: url("fonts/BKoodakBold.ttf") format("truetype");
+  font-family: 'BKoodak';
+  src: url('fonts/BKoodakBold.ttf') format('truetype');
   font-weight: bold;
 }
 
@@ -59,7 +59,7 @@
   position: relative;
 }
 
-.select2-container[dir="rtl"]
+.select2-container[dir='rtl']
   .select2-selection--single
   .select2-selection__rendered {
   padding-left: 8px;
@@ -259,13 +259,13 @@
   width: 0;
 }
 
-.select2-container--default[dir="rtl"]
+.select2-container--default[dir='rtl']
   .select2-selection--single
   .select2-selection__clear {
   float: left;
 }
 
-.select2-container--default[dir="rtl"]
+.select2-container--default[dir='rtl']
   .select2-selection--single
   .select2-selection__arrow {
   left: 1px;
@@ -360,23 +360,23 @@
   color: #77793a;
 }
 
-.select2-container--default[dir="rtl"]
+.select2-container--default[dir='rtl']
   .select2-selection--multiple
   .select2-search--inline,
-.select2-container--default[dir="rtl"]
+.select2-container--default[dir='rtl']
   .select2-selection--multiple
   .select2-selection__choice {
   float: right;
 }
 
-.select2-container--default[dir="rtl"]
+.select2-container--default[dir='rtl']
   .select2-selection--multiple
   .select2-selection__choice {
   margin-left: 5px;
   margin-right: auto;
 }
 
-.select2-container--default[dir="rtl"]
+.select2-container--default[dir='rtl']
   .select2-selection--multiple
   .select2-selection__choice__remove {
   margin-left: 2px;
@@ -433,15 +433,15 @@
   overflow-y: auto;
 }
 
-.select2-container--default .select2-results__option[role="group"] {
+.select2-container--default .select2-results__option[role='group'] {
   padding: 0;
 }
 
-.select2-container--default .select2-results__option[aria-disabled="true"] {
+.select2-container--default .select2-results__option[aria-disabled='true'] {
   color: #999;
 }
 
-.select2-container--default .select2-results__option[aria-selected="true"] {
+.select2-container--default .select2-results__option[aria-selected='true'] {
   background-color: #ddd;
 }
 
@@ -600,13 +600,13 @@
   width: 0;
 }
 
-.select2-container--classic[dir="rtl"]
+.select2-container--classic[dir='rtl']
   .select2-selection--single
   .select2-selection__clear {
   float: left;
 }
 
-.select2-container--classic[dir="rtl"]
+.select2-container--classic[dir='rtl']
   .select2-selection--single
   .select2-selection__arrow {
   border: none;
@@ -724,7 +724,7 @@
   color: #555;
 }
 
-.select2-container--classic[dir="rtl"]
+.select2-container--classic[dir='rtl']
   .select2-selection--multiple
   .select2-selection__choice {
   float: right;
@@ -785,11 +785,11 @@
   overflow-y: auto;
 }
 
-.select2-container--classic .select2-results__option[role="group"] {
+.select2-container--classic .select2-results__option[role='group'] {
   padding: 0;
 }
 
-.select2-container--classic .select2-results__option[aria-disabled="true"] {
+.select2-container--classic .select2-results__option[aria-disabled='true'] {
   color: grey;
 }
 
@@ -877,8 +877,8 @@
 .select2-container--default
   .select2-selection--single
   .select2-selection__arrow:after {
-  font-family: "Font Awesome 5 Free";
-  content: "\f107";
+  font-family: 'Font Awesome 5 Free';
+  content: '\f107';
   font-size: 1rem;
   color: #7e8299;
 }
@@ -1025,7 +1025,7 @@
   padding: 0.65rem 1rem;
 }
 
-.select2-container--default .select2-results__option[aria-disabled="true"] {
+.select2-container--default .select2-results__option[aria-disabled='true'] {
   cursor: not-allowed;
 }
 
@@ -1053,12 +1053,12 @@
   color: #3f4254;
 }
 
-.select2-container--default .select2-results__option[aria-disabled="true"] {
+.select2-container--default .select2-results__option[aria-disabled='true'] {
   color: #3f4254;
   opacity: 0.6;
 }
 
-.select2-container--default .select2-results__option[aria-selected="true"] {
+.select2-container--default .select2-results__option[aria-selected='true'] {
   background: #ebedf3;
   color: #3f4254;
 }
@@ -1135,7 +1135,7 @@ select.select2 {
   .select2-selection__rendered
   .select2-selection__choice
   .select2-selection__choice__remove:before {
-  content: "";
+  content: '';
   background: red;
   width: 10px;
   height: 10px;
