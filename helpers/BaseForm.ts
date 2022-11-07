@@ -428,6 +428,7 @@ export class CreateForm<T extends FieldsInterface = any> {
                 e.name,
                 Yup.array()
                   .nullable()
+                    // eslint-disable-next-line no-unexpected-multiline
                   ["checkSelect"]("حداقل یکی از موارد را انتخاب کنید")
                   .label(text)
               );
@@ -437,6 +438,7 @@ export class CreateForm<T extends FieldsInterface = any> {
                 e.name,
                 Yup.string()
                   .nullable()
+                    // eslint-disable-next-line no-unexpected-multiline
                   ["checkSingleSelect"]("حداقل یکی از موارد را انتخاب کنید")
                   .label(text)
               );
