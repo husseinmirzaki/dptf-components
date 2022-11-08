@@ -1,12 +1,24 @@
 <template>
-  <div class="custom-tabs-container d-flex" :class="{
+  <div
+    class="custom-tabs-container d-flex"
+    :class="{
       'flex-column': !horizontal,
-    }">
-    <div class="custom-tab" :class="{
-      'tabs': tabs,
-      'horizontal': horizontal,
-      'active': button === selectedButton
-    }" v-for="button in buttons" :key="button.id" @click="selectedButton=button;$emit('selected', button)">
+    }"
+  >
+    <div
+      class="custom-tab"
+      :class="{
+        tabs: tabs,
+        horizontal: horizontal,
+        active: button === selectedButton,
+      }"
+      v-for="button in buttons"
+      :key="button.id"
+      @click="
+        selectedButton = button;
+        $emit('selected', button);
+      "
+    >
       {{ button.name }}
     </div>
   </div>
@@ -40,7 +52,7 @@
     overflow: hidden;
     &:after {
       position: absolute;
-      content: '';
+      content: "";
       width: 100%;
       height: 3px;
       background-color: #0b0e18;
@@ -55,7 +67,7 @@ export default {
   data() {
     return {
       selectedButton: {},
-    }
+    };
   },
   props: {
     tabs: {
@@ -69,7 +81,7 @@ export default {
     },
     selectedB: {
       default: () => {
-        return {}
+        return {};
       },
     },
   },
@@ -79,7 +91,7 @@ export default {
   watch: {
     selected: function () {
       this.selectedButton = this.selectedB;
-    }
-  }
-}
+    },
+  },
+};
 </script>

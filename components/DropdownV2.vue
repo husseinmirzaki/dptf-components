@@ -1,38 +1,31 @@
 <template>
   <!--begin::Menu 2-->
-  <div :id="dropdownId"
-       class="
-      menu
-      menu-sub
-      menu-sub-dropdown
-      menu-column
-      menu-rounded
-      menu-gray-600
-      menu-state-bg-light-primary
-      fw-bold
-      w-200px
-      pb-3
-    "
-       data-kt-menu="true"
-       v-bind="$attrs"
+  <div
+    :id="dropdownId"
+    class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold w-200px pb-3"
+    data-kt-menu="true"
+    v-bind="$attrs"
   >
     <!--begin::Menu item-->
     <div class="menu-item px-3">
-      <div class="menu-content fs-6 text-dark fw-bolder px-3 py-4 d-flex align-items-center justify-content-between">
+      <div
+        class="menu-content fs-6 text-dark fw-bolder px-3 py-4 d-flex align-items-center justify-content-between"
+      >
         <div class="d-flex">
           {{ title }}
-          <span class="text-muted  fs-9 ms-3" v-if="description">{{ description }}</span>
+          <span class="text-muted fs-9 ms-3" v-if="description">{{
+            description
+          }}</span>
         </div>
-        <slot name="icons"/>
+        <slot name="icons" />
       </div>
-
     </div>
     <!--end::Menu item-->
 
     <!--begin::Menu separator-->
     <div class="separator mb-3 opacity-75"></div>
     <!--end::Menu separator-->
-    <slot/>
+    <slot />
   </div>
   <div class="overlay"></div>
   <!--end::Menu 2-->
@@ -69,13 +62,13 @@
 }
 </style>
 <script lang="ts">
-import {defineComponent} from "vue";
-import {randomId} from "@/custom/helpers/random";
+import { defineComponent } from "vue";
+import { randomId } from "@/custom/helpers/random";
 
 export default defineComponent({
   props: {
     title: {
-      default: "ابزار"
+      default: "ابزار",
     },
     description: [String],
     dropdownId: {
@@ -84,6 +77,6 @@ export default defineComponent({
         return `id-dropdown-${randomId(3)}`;
       },
     },
-  }
+  },
 });
 </script>

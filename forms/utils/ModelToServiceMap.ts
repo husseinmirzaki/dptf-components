@@ -1,1 +1,1 @@
-export const modelToServiceMap: Record<string, any> = {}
+export const modelToServiceMap: Record<string, any> = {};

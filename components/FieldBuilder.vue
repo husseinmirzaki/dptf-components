@@ -1,26 +1,25 @@
 <template>
   <template v-if="cField.hasVModelKey">
     <field-component
-        ref="fieldComponent"
-        v-bind="cField.vBind"
-        :model-value="
-          cField.options['v-model'].value[cField.options['v-model-key']]
-        "
-        @update:modelValue="
-          cField.options['v-model'].value[cField.options['v-model-key']] =
-            $event
-        "
+      ref="fieldComponent"
+      v-bind="cField.vBind"
+      :model-value="
+        cField.options['v-model'].value[cField.options['v-model-key']]
+      "
+      @update:modelValue="
+        cField.options['v-model'].value[cField.options['v-model-key']] = $event
+      "
     />
   </template>
   <template v-else-if="cField.hasVModel">
     <field-component
-        ref="fieldComponent"
-        v-bind="cField.vBind"
-        v-model="cField.options['v-model'].value"
+      ref="fieldComponent"
+      v-bind="cField.vBind"
+      v-model="cField.options['v-model'].value"
     />
   </template>
   <template v-else>
-    <field-component ref="fieldComponent" v-bind="cField.vBind"/>
+    <field-component ref="fieldComponent" v-bind="cField.vBind" />
   </template>
 </template>
 <script type="ts">

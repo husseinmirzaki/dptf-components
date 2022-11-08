@@ -2,19 +2,20 @@
   <div class="row justify-content-center align-items-center">
     <div class="items-row">
       <div class="item-container">
-        <DivTreeItem v-bind="item" v-for="item in structure" :key="item"/>
+        <DivTreeItem v-bind="item" v-for="item in structure" :key="item" />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
+import { defineComponent } from "vue";
 import DivTreeItem from "@/custom/components/div-tree/DivTreeItem.vue";
 
 export default defineComponent({
-  components: {DivTreeItem},
-  props: ['structure']});
+  components: { DivTreeItem },
+  props: ["structure"],
+});
 </script>
 <style>
 /*
@@ -63,14 +64,14 @@ export default defineComponent({
   top: 0;
   left: 0;
   transform: translateX(50%) translateY(-100%);
-  content: '';
+  content: "";
   height: 20px;
   width: 100%;
   border-left: 1px solid black;
 }
 
 .items-row .item {
-  cursor:pointer;
+  cursor: pointer;
   /*user-select: none;*/
   direction: rtl;
   position: relative;
@@ -85,7 +86,7 @@ export default defineComponent({
 }
 
 .items-row .show-stuff .item:after {
-  content: '';
+  content: "";
   position: absolute;
   transform: translateX(50%) translateY(-100%);
   width: 100%;
@@ -98,7 +99,7 @@ export default defineComponent({
 }
 
 .items-row .show-stuff .item:before {
-  content: '';
+  content: "";
   position: absolute;
   transform: translateY(-100%);
   width: 100%;
@@ -132,18 +133,18 @@ export default defineComponent({
 
 .item-container > .item:after {
   border-right: none !important;
-  border-left: none !important;;
+  border-left: none !important;
   transform: translateX(-100%) translateY(-100%) !important;
 }
 
 .item-container > .item:before {
   border-right: 1px solid black;
-  border-left: none !important;;
+  border-left: none !important;
   transform: translateX(-50%) translateY(-100%) !important;
 }
 
 .item-children .item-container:before {
-  content: '';
+  content: "";
   position: absolute;
   width: 50%;
   height: 100%;
@@ -174,7 +175,7 @@ export default defineComponent({
 }
 
 .item-children:not(.show-stuff) > .item:after {
-  content: '';
+  content: "";
   position: absolute;
   width: 50%;
   height: calc(var(--height) + 20px);

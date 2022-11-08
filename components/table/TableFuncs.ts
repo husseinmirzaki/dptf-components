@@ -1,3 +1,3 @@
-export function onTHead () {
-    //
+export function onTHead() {
+  //
 }

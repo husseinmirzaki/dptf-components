@@ -1,5 +1,9 @@
 <template>
-  <button ref="submitButton" class="btn btn-primary" @click="onClickDelegation()">
+  <button
+    ref="submitButton"
+    class="btn btn-primary"
+    @click="onClickDelegation()"
+  >
     <span class="indicator-label"> {{ text }} </span>
     <span class="indicator-progress">
       {{ loadingText }}
@@ -10,9 +14,9 @@
   </button>
 </template>
 <script lang="ts">
-import {defineComponent, ref} from "vue";
-import {VueInstanceService} from "@/Defaults";
-import {Actions} from "@/custom/store/enums/StoreEnums";
+import { defineComponent, ref } from "vue";
+import { VueInstanceService } from "@/Defaults";
+import { Actions } from "@/custom/store/enums/StoreEnums";
 
 export default defineComponent({
   name: "promise-button",
@@ -30,8 +34,8 @@ export default defineComponent({
     },
     successMessage: {
       type: String,
-      default: 'با موفقیت انجام شد'
-    }
+      default: "با موفقیت انجام شد",
+    },
   },
   setup(props, context) {
     const submitButton = ref<any>();
@@ -54,37 +58,42 @@ export default defineComponent({
 
     const loading = (promise: Promise<any>) => {
       startLoading();
-      promise.then(() => stopLoading(), () => stopLoading()).finally(() => stopLoading());
+      promise
+        .then(
+          () => stopLoading(),
+          () => stopLoading()
+        )
+        .finally(() => stopLoading());
     };
 
     /**
      * this will return a function as event and it that
      */
     const onClickDelegation = () => {
-
       const delegation = (formContainsRef, formExtend) => {
-        loading((async () => {
-          await formContainsRef.submitForm();
+        loading(
+          (async () => {
+            await formContainsRef.submitForm();
             console.log(formContainsRef.errors);
-          if (Object.keys(formContainsRef.errors).length > 0) {
+            if (Object.keys(formContainsRef.errors).length > 0) {
+              return 0;
+            }
+            try {
+              const response = await formExtend.formInstance.submit();
+              setTimeout(() => {
+                context.emit("submitDone", response);
+                VueInstanceService.showSuccessMessage(props.successMessage);
+              }, 500);
+            } catch (e) {
+              console.error(e, formExtend);
+              VueInstanceService.store.dispatch(Actions.REQUEST_ERROR_TOAST);
+            }
             return 0;
-          }
-          try {
-            const response = await formExtend.formInstance.submit();
-            setTimeout(() => {
-              context.emit('submitDone', response);
-              VueInstanceService.showSuccessMessage(props.successMessage)
-            }, 500)
-          } catch (e) {
-            console.error(e, formExtend);
-            VueInstanceService.store.dispatch(Actions.REQUEST_ERROR_TOAST);
-          }
-          return 0;
-        })())
-      }
-      context.emit('clicked', delegation);
-
-    }
+          })()
+        );
+      };
+      context.emit("clicked", delegation);
+    };
 
     return {
       onClickDelegation,

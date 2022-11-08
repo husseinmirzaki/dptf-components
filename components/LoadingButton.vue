@@ -10,7 +10,7 @@
   </button>
 </template>
 <script lang="ts">
-import {defineComponent, ref, toRef, watch} from "vue";
+import { defineComponent, ref, toRef, watch } from "vue";
 
 export default defineComponent({
   name: "loading-button",
@@ -50,7 +50,10 @@ export default defineComponent({
 
     const loading = (promise: Promise<any>) => {
       startLoading();
-      promise.then(() => stopLoading(), () => stopLoading());
+      promise.then(
+        () => stopLoading(),
+        () => stopLoading()
+      );
     };
 
     watch(isLoading, (newValue) => {

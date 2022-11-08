@@ -1,8 +1,8 @@
 <template>
   <!--begin::Menu 1-->
   <div
-      class="menu menu-sub menu-sub-dropdown w-250px w-md-300px"
-      data-kt-menu="true"
+    class="menu menu-sub menu-sub-dropdown w-250px w-md-300px"
+    data-kt-menu="true"
   >
     <!--begin::Header-->
     <div class="px-7 py-5">
@@ -16,7 +16,7 @@
 
     <!--begin::Form-->
     <div class="px-7 py-5">
-      <slot/>
+      <slot />
     </div>
     <!--end::Form-->
   </div>
@@ -24,9 +24,9 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from "vue";
+import { defineComponent, ref } from "vue";
 
 export default defineComponent({
-  props: ['dropDownTitle'],
+  props: ["dropDownTitle"],
 });
 </script>

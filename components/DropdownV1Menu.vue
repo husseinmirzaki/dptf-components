@@ -1,19 +1,9 @@
 <template>
   <!--begin::Menu 2-->
-  <div :id="dropdownId"
-       class="
-      menu
-      menu-sub
-      menu-sub-dropdown
-      menu-column
-      menu-rounded
-      menu-gray-600
-      menu-state-bg-light-primary
-      fw-bold
-      w-200px
-      pb-3
-    "
-       data-kt-menu="true"
+  <div
+    :id="dropdownId"
+    class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold w-200px pb-3"
+    data-kt-menu="true"
   >
     <!--begin::Menu item-->
     <!--    <div class="menu-item px-3">-->
@@ -30,7 +20,9 @@
     <!--begin::Menu item-->
     <template v-for="(item, index) in items" :key="index">
       <div class="menu-item px-3" v-if="!item.isSeparator">
-        <router-link :to="{name: item.link}" class="menu-link px-3">{{ item.text }}</router-link>
+        <router-link :to="{ name: item.link }" class="menu-link px-3">{{
+          item.text
+        }}</router-link>
       </div>
       <div v-else-if="item.isSeparator" class="separator mb-3 opacity-75"></div>
     </template>
@@ -40,14 +32,14 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
-import {randomId} from "@/custom/helpers/random";
+import { defineComponent } from "vue";
+import { randomId } from "@/custom/helpers/random";
 import MenuItemModel from "@/custom/models/MenuItemModel";
 
 export default defineComponent({
   props: {
     title: {
-      default: "ابزار"
+      default: "ابزار",
     },
     dropdownId: {
       type: String,
@@ -69,7 +61,7 @@ export default defineComponent({
           },
         ];
       },
-    }
-  }
+    },
+  },
 });
 </script>

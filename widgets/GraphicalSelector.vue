@@ -1,13 +1,24 @@
 <template>
   <div class="card-xl-stretch mb-xl-8 bg-white card">
     <div class="card-body p-2 flex-grow-0">
-      <label for="province-search">{{label}}</label>
-      <input id="province-search" v-model="cityFilter" type="text" class="form-control">
+      <label for="province-search">{{ label }}</label>
+      <input
+        id="province-search"
+        v-model="cityFilter"
+        type="text"
+        class="form-control"
+      />
     </div>
     <div class="places">
-      <span class="place" v-for="city in computedCityData.slice(0, 20)" :key="city.id" @click="toggleItem(city)" :class="{
-        selected: selected.indexOf(city) > -1
-      }">
+      <span
+        class="place"
+        v-for="city in computedCityData.slice(0, 20)"
+        :key="city.id"
+        @click="toggleItem(city)"
+        :class="{
+          selected: selected.indexOf(city) > -1,
+        }"
+      >
         {{ city.name }}
       </span>
     </div>
@@ -15,7 +26,6 @@
 </template>
 <style lang="scss">
 .places {
-
   .place {
     padding: 5px 10px;
     margin: 5px;
@@ -38,9 +48,9 @@
 }
 </style>
 <script>
-import {cities} from "@/custom/widgets/GraphicalCitySelector/cities";
-import {provinces} from "@/custom/widgets/GraphicalCitySelector/provinces";
-import {computed, ref, toRef} from "vue";
+import { cities } from "@/custom/widgets/GraphicalCitySelector/cities";
+import { provinces } from "@/custom/widgets/GraphicalCitySelector/provinces";
+import { computed, ref, toRef } from "vue";
 
 export default {
   props: {
@@ -56,7 +66,7 @@ export default {
     },
   },
   setup(props, context) {
-    const dataList = toRef(props, 'dataList');
+    const dataList = toRef(props, "dataList");
     const cityFilter = ref("");
     const selected = ref([]);
 
@@ -69,26 +79,28 @@ export default {
       } else {
         selected.value.push(city);
       }
-      context.emit('selected', selected.value);
-    }
+      context.emit("selected", selected.value);
+    };
 
     const filter = (data, inputText) => {
       return data.name.search(inputText) > -1;
-    }
+    };
 
     const computedCityData = computed(() => {
       if (cityFilter.value == "") {
         return [].concat(dataList.value).splice(0, 20);
       }
-      return [].concat(dataList.value).filter((element) => filter(element, cityFilter.value));
+      return []
+        .concat(dataList.value)
+        .filter((element) => filter(element, cityFilter.value));
     });
 
     return {
       toggleItem,
       cityFilter,
       computedCityData,
-      selected
-    }
-  }
-}
+      selected,
+    };
+  },
+};
 </script>

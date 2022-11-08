@@ -1,15 +1,16 @@
 <template>
   <el-tooltip :content="hint">
     <div
-        @mouseenter="$emit('update:state', hint)"
-        @mouseleave="$emit('update:state', '')"
-        @click.stop="$emit('update:activeKey', windowActivationKey)"
-        :class="['icon', {active: isActive}]"
-        :style="style"></div>
+      @mouseenter="$emit('update:state', hint)"
+      @mouseleave="$emit('update:state', '')"
+      @click.stop="$emit('update:activeKey', windowActivationKey)"
+      :class="['icon', { active: isActive }]"
+      :style="style"
+    ></div>
   </el-tooltip>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
+import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "MapToolsButton",
@@ -24,16 +25,16 @@ export default defineComponent({
       type: String,
     },
     iconUrl: {
-      type: String
+      type: String,
     },
   },
   setup(props) {
     return {
       style: {
         backgroundImage: `url('${props.iconUrl}')`,
-      }
-    }
-  }
+      },
+    };
+  },
 });
 </script>
 <style lang="scss" scoped>
@@ -45,7 +46,7 @@ export default defineComponent({
   background-position: center;
   background-repeat: no-repeat;
   background-color: rgba(0, 0, 0, 0.1);
-  box-shadow: 0 0 1px rgba(0, 0, 0, .9);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.9);
   transition: all 120ms ease;
   background-size: 25px 25px;
 
@@ -58,6 +59,5 @@ export default defineComponent({
     background-color: rgba(255, 255, 255, 0.9);
     box-shadow: 0 0 3px rgba(0, 0, 0, 1) inset;
   }
-
 }
 </style>

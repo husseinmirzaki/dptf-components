@@ -1,53 +1,86 @@
 <template>
-  <div class="tab-item-v2" dir="rtl" :data-item-name="indexUniqueName" :class="{
-    active: parent && index == parent.activeItem,
-    iconOnly: iconOnly,
-    disable: disable,
-  }"
-       data-kt-stepper-element="nav"
-       @click="disable ? undefined : $emit('change', log(index))">
+  <div
+    class="tab-item-v2"
+    dir="rtl"
+    :data-item-name="indexUniqueName"
+    :class="{
+      active: parent && index == parent.activeItem,
+      iconOnly: iconOnly,
+      disable: disable,
+    }"
+    data-kt-stepper-element="nav"
+    @click="disable ? undefined : $emit('change', log(index))"
+  >
     <slot>
       <template v-if="iconOnly">
         <div class="d-flex flex-column align-items-center">
-          <div class="icon-container" :class="{active: parent && index == parent.activeItem}">
-          <span class="svg-icon svg-icon-2x" v-if="svgIcon"
-                :class="{'svg-icon-primary': parent && index == parent.activeItem}">
-            <inline-svg :src="svgIcon"/>
-          </span>
+          <div
+            class="icon-container"
+            :class="{ active: parent && index == parent.activeItem }"
+          >
+            <span
+              class="svg-icon svg-icon-2x"
+              v-if="svgIcon"
+              :class="{
+                'svg-icon-primary': parent && index == parent.activeItem,
+              }"
+            >
+              <inline-svg :src="svgIcon" />
+            </span>
           </div>
         </div>
       </template>
       <template v-if="!iconOnly">
         <div class="d-flex justify-content-between">
-        <span class="stepper-title" v-if="title">
-        {{ title }}
-      </span>
+          <span class="stepper-title" v-if="title">
+            {{ title }}
+          </span>
           <div class="d-flex">
-<span class="d-flex badge px-3 py-2 mt-1 align-items-center justify-content-center fw-light " :class="`badge-${badgeColor}`" v-if="badge">{{badge}}</span>
+            <span
+              class="d-flex badge px-3 py-2 mt-1 align-items-center justify-content-center fw-light"
+              :class="`badge-${badgeColor}`"
+              v-if="badge"
+              >{{ badge }}</span
+            >
 
-        <span class="svg-icon svg-icon-2x mx-4" v-if="svgIcon"
-              :class="{'svg-icon-success': parent && index == parent.activeItem}">
-          <inline-svg :src="svgIcon"/>
-        </span>
-            </div>
+            <span
+              class="svg-icon svg-icon-2x mx-4"
+              v-if="svgIcon"
+              :class="{
+                'svg-icon-success': parent && index == parent.activeItem,
+              }"
+            >
+              <inline-svg :src="svgIcon" />
+            </span>
+          </div>
         </div>
       </template>
     </slot>
   </div>
 </template>
 <script>
-import {onMounted, ref, toRef, watch} from "vue";
+import { onMounted, ref, toRef, watch } from "vue";
 
 export default {
-  props: ['title', 'active', 'parent', 'name', 'svgIcon', 'iconOnly', 'disable', 'badge', "badgeColor"],
+  props: [
+    "title",
+    "active",
+    "parent",
+    "name",
+    "svgIcon",
+    "iconOnly",
+    "disable",
+    "badge",
+    "badgeColor",
+  ],
   setup(props) {
     const index = ref(0);
-    const indexUniqueName = ref('');
-    const parent = toRef(props, 'parent');
+    const indexUniqueName = ref("");
+    const parent = toRef(props, "parent");
 
     const log = (_index) => {
       parent.value.setActiveItem(_index);
-    }
+    };
 
     onMounted(() => {
       const introduced = parent.value.introduce(props.name);
@@ -58,10 +91,10 @@ export default {
     return {
       indexUniqueName,
       index,
-      log
-    }
-  }
-}
+      log,
+    };
+  },
+};
 </script>
 <style lang="scss">
 $active-color: #0d8ddc;
@@ -100,7 +133,7 @@ $active-color: #0d8ddc;
   margin-bottom: 5px;
 
   &:after {
-    content: '';
+    content: "";
     position: absolute;
     top: 4px;
     left: 0;
@@ -116,7 +149,8 @@ $active-color: #0d8ddc;
     background-color: #373636;
 
     svg {
-      rect, path {
+      rect,
+      path {
         fill: #f2f2f2 !important;
       }
     }
@@ -145,13 +179,14 @@ $active-color: #0d8ddc;
     animation-fill-mode: both;
     margin: 0;
     background-image: linear-gradient(
-            -30deg,
-            rgba(0, 0, 0, 0) var(--percentage),
-            rgba(0, 0, 0, .06) var(--percentage),
-            rgba(0, 0, 0, .07) calc(var(--percentage) + 15%),
-            rgba(0, 0, 0, .07) calc(var(--percentage) + 15%),
-            rgba(0, 0, 0, 0) calc(var(--percentage) + 5%),
-            rgba(0, 0, 0, 0));
+      -30deg,
+      rgba(0, 0, 0, 0) var(--percentage),
+      rgba(0, 0, 0, 0.06) var(--percentage),
+      rgba(0, 0, 0, 0.07) calc(var(--percentage) + 15%),
+      rgba(0, 0, 0, 0.07) calc(var(--percentage) + 15%),
+      rgba(0, 0, 0, 0) calc(var(--percentage) + 5%),
+      rgba(0, 0, 0, 0)
+    );
   }
 
   &.selected-this-one {
@@ -174,8 +209,8 @@ $active-color: #0d8ddc;
   }
 }
 .is-vertical .tab-item-v2:after {
-      border-bottom: none !important;
-      border-right: 1px solid $active-color;
+  border-bottom: none !important;
+  border-right: 1px solid $active-color;
 }
 .disable .stepper-title {
   color: #a6a6a6 !important;

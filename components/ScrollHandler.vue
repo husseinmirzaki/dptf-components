@@ -1,21 +1,24 @@
 <template>
   <div>
     <div
-        ref="root"
-        class="hover-scroll-y bg-transparent p-2"
-        :class="[{
+      ref="root"
+      class="hover-scroll-y bg-transparent p-2"
+      :class="[
+        {
           'flex-column-fluid': isFluid,
-        }, paddingClass]"
-        @scroll="$emit('scroll', $event)"
-        :id="bodyId"
-        data-kt-scroll="true"
-        data-kt-scroll-activate="true"
-        :data-kt-scroll-max-height="maxHeight"
-        :data-kt-scroll-dependencies="dependencies"
-        :data-kt-scroll-wrappers="wrappers"
-        :data-kt-scroll-offset="`${offset}px`"
+        },
+        paddingClass,
+      ]"
+      @scroll="$emit('scroll', $event)"
+      :id="bodyId"
+      data-kt-scroll="true"
+      data-kt-scroll-activate="true"
+      :data-kt-scroll-max-height="maxHeight"
+      :data-kt-scroll-dependencies="dependencies"
+      :data-kt-scroll-wrappers="wrappers"
+      :data-kt-scroll-offset="`${offset}px`"
     >
-      <slot/>
+      <slot />
     </div>
   </div>
 </template>
@@ -71,6 +74,4 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -1,11 +1,11 @@
 <template>
   <div :id="tabContainerId" class="tab-content">
-    <slot/>
+    <slot />
   </div>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
-import {randomId} from "@/custom/helpers/random";
+import { defineComponent } from "vue";
+import { randomId } from "@/custom/helpers/random";
 
 export default defineComponent({
   props: {
@@ -15,6 +15,6 @@ export default defineComponent({
         return `id-tab-container-${randomId(3)}`;
       },
     },
-  }
+  },
 });
 </script>

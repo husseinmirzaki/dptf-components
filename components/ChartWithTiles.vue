@@ -1,26 +1,21 @@
 <template>
   <!--begin::Mixed Widget 1-->
-  <card
-      ref="root"
-      class="card card-xxl-stretch"
-      body-padding-class="p-0"
-  >
+  <card ref="root" class="card card-xxl-stretch" body-padding-class="p-0">
     <template v-slot:card-header>
       <div :class="`bg-${widgetColor}`" class="card-header border-0 py-5">
         <h3 class="card-title fw-bolder text-white">{{ cardTitle }}</h3>
       </div>
     </template>
     <template v-slot:card-content>
-
       <!--begin::Chart-->
       <apexchart
-          :class="`bg-${widgetColor}`"
-          class="mixed-widget-2-chart card-rounded-bottom"
-          :options="chartOptions"
-          :series="series"
-          height="150"
-          style="padding-bottom: 50px"
-          type="area"
+        :class="`bg-${widgetColor}`"
+        class="mixed-widget-2-chart card-rounded-bottom"
+        :options="chartOptions"
+        :series="series"
+        height="150"
+        style="padding-bottom: 50px"
+        type="area"
       ></apexchart>
       <!--end::Chart-->
       <!--begin::Stats-->
@@ -29,21 +24,27 @@
         <div class="row m-0">
           <div class="col bg-light-warning px-6 py-8 rounded-2 text-center">
             <span class="svg-icon svg-icon-3x svg-icon-warning d-block my-2">
-              <inline-svg src="media/icons/duotune/general/gen032.svg"/>
+              <inline-svg src="media/icons/duotune/general/gen032.svg" />
             </span>
-            <router-link to="/letter/view" class="text-black-50 fw-bold fs-6">صندوق موجودیت</router-link>
-          </div>
-          <div class="col bg-light-primary px-6 py-8 rounded-2 mx-3 text-center">
-            <span class="svg-icon svg-icon-3x svg-icon-primary d-block my-2">
-              <inline-svg src="media/icons/duotune/communication/com002.svg"/>
-            </span>
-            <router-link to="/letter/send" class="text-primary fw-bold fs-6"> ارسال موجودیت جدید </router-link>
+            <router-link to="/letter/view" class="text-black-50 fw-bold fs-6"
+              >صندوق موجودیت</router-link
+            >
           </div>
           <div
-              class="col bg-secondary px-6 py-8 rounded-2 text-center bgi-no-repeat bgi-size-cover"
+            class="col bg-light-primary px-6 py-8 rounded-2 mx-3 text-center"
+          >
+            <span class="svg-icon svg-icon-3x svg-icon-primary d-block my-2">
+              <inline-svg src="media/icons/duotune/communication/com002.svg" />
+            </span>
+            <router-link to="/letter/send" class="text-primary fw-bold fs-6">
+              ارسال موجودیت جدید
+            </router-link>
+          </div>
+          <div
+            class="col bg-secondary px-6 py-8 rounded-2 text-center bgi-no-repeat bgi-size-cover"
           >
             <span class="svg-icon svg-icon-3x svg-icon-successs d-block my-2">
-              <inline-svg src="media/icons/duotune/communication/com006.svg"/>
+              <inline-svg src="media/icons/duotune/communication/com006.svg" />
             </span>
             <a href="#" class="text-primary fw-bold fs-6"> ایجاد کاربر جدید </a>
           </div>
@@ -52,21 +53,19 @@
       </div>
       <!--end::Stats-->
       <!--end::Body-->
-
     </template>
   </card>
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, ref, watch} from "vue";
-import {MenuComponent} from "@/assets/ts/components/MenuComponent";
-import {getCSSVariableValue} from "@/assets/ts/_utils";
+import { defineComponent, onMounted, ref, watch } from "vue";
+import { MenuComponent } from "@/assets/ts/components/MenuComponent";
+import { getCSSVariableValue } from "@/assets/ts/_utils";
 import Card from "@/custom/components/Card.vue";
 import CardMixin from "@/custom/mixins/CardMixin";
-import {minimizedAsideSecondary} from "@/core/helpers/config";
 
 export default defineComponent({
-  components: {Card},
+  components: { Card },
   mixins: [CardMixin],
   props: {
     widgetClasses: String,
@@ -196,7 +195,7 @@ export default defineComponent({
               "آذر",
               "دی",
               "بهمن",
-              "اسفند"
+              "اسفند",
             ][val - 1];
           },
         },
