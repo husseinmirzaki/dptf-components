@@ -6,7 +6,7 @@
         <div v-else class="menu-item d-flex flex-row align-items-center" @click="clicked(item)">
           <div class="menu-icon d-flex align-items-center justify-content-center">
             <span class="svg-icon svg-icon-1" v-if="item['icon'] || item['svgIcon']">
-              <inline-svg :src="item['icon'] ? item['icon'] : item['svgIcon']"/>
+              <inline-svg :src="item['icon'] ? item['icon'] : item['svgIcon'].src"/>
             </span>
             <i v-if="item.faIcon" class="text-dark" :class="item.faIcon"></i>
           </div>
