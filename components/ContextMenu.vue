@@ -16,7 +16,7 @@
               v-if="item['icon'] || item['svgIcon']"
             >
               <inline-svg
-                :src="item['icon'] ? item['icon'] : item['svgIcon']"
+                :src="item['icon'] ? item['icon'] : typeof item['svgIcon'] == 'string' ? item['svgIcon']:item['svgIcon'].src"
               />
             </span>
             <i v-if="item.faIcon" class="text-dark" :class="item.faIcon"></i>

@@ -14,9 +14,7 @@ export function buildSelectOption(data) {
 
 export function selectFormDataV2(formInstance: any, serverData: any) {
   serverData = Object.assign({}, serverData);
-  console.log("jigar - serverData", serverData);
   formInstance.activeFields.value.forEach((e: FieldComponentPropsInterface) => {
-    console.log("jigar - e", e);
     if (e.field_type == "select" && e.select_multiple) {
       if (serverData[e.name]) {
         serverData[e.name] = serverData[e.name].map(buildSelectOption);

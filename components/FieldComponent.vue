@@ -650,14 +650,20 @@ export default defineComponent({
 
         const date = new Date(data);
         const persian = gregorianToJalali(
-          date.getFullYear(),
-          date.getMonth() + 1,
-          date.getDate()
+            date.getFullYear(),
+            date.getMonth() + 1,
+            date.getDate()
         );
-        context.emit(
-          "update:modelValue",
-          `${persian[0]}/${persian[1]}/${persian[2]}`
-        );
+        if (props.dateTimeType == "datetime")
+          context.emit(
+              "update:modelValue",
+              `${persian[0]}/${persian[1]}/${persian[2]} ${date.getHours()}:${date.getMinutes()}`
+          );
+        else
+          context.emit(
+              "update:modelValue",
+              `${persian[0]}/${persian[1]}/${persian[2]}`
+          );
       } else {
         if (field.value) {
           if (field.value.$el) {
