@@ -225,7 +225,7 @@ export default defineComponent({
         options: {
           attributionControl: false,
         },
-        style: "width: 100%;height: 800px;",
+        style: "width: 100%;height: 700px;",
         maxZoom: this.maxZoom,
         minZoom: this.readOnly ? 15 : this.minZoom,
         zoom: this.zoom,
