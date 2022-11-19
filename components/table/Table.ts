@@ -39,6 +39,10 @@ export class Table {
     };
   }
 
+  onTableMounted() {
+    //
+  }
+
   _fieldsCache: any = {};
 
   getFieldByName(name: string) {

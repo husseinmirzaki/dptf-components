@@ -328,8 +328,7 @@ export default {
             "یک فیلتر را انتخاب کنید"
           )
         );
-      } else {
-        console.log("here", lastRequestedField);
+      } else if(lastRequestedField){
         const fieldProps = {
           placeholder: lastRequestedField["label"],
           modelValue: currentData.value,
@@ -367,6 +366,7 @@ export default {
       }
       const compField = h(FieldComponent, {
         ref: (el) => (compFieldInstance = el),
+        name: "comp",
         modal_id: ".filter-container-like-model",
         modelValue: currentComp.value,
         "onUpdate:modelValue": (v) => (currentComp.value = v),

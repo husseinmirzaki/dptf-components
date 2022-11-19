@@ -583,6 +583,7 @@ export default defineComponent({
           }
         }
       });
+      defaultConfig.onTableMounted();
       // getTableSettings().then(({data}) => {
       //     if (data.value) {
       //       const value = JSON.parse(data.value);
