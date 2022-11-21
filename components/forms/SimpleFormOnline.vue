@@ -10,6 +10,10 @@ import FixedHeightLoader from "@/custom/components/forms/FixedHeightLoader.vue";
 import {DEFAULT_BUTTONS} from "@/custom/helpers/RenderFunctionHelpers";
 import Modal from "@/custom/components/model/Modal.vue";
 
+export class ModelCache {
+  public static formInformation: Record<string, any> = {};
+}
+
 export default {
   components: {Card, PromiseButton, FormContainer, FormBuilder},
   props: [
