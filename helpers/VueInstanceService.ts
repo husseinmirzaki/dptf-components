@@ -6,6 +6,8 @@ import {Actions} from "@/store/enums/StoreEnums";
 import mitt from "mitt";
 import {DragService} from "@/custom/components/DragService";
 import {ApiService} from "@/Defaults";
+import VueViewer from "v-viewer";
+import VueSweetalert2 from "vue-sweetalert2";
 
 export default class VueInstanceService {
     public static pageIsLoading = ref(false);
@@ -22,6 +24,8 @@ export default class VueInstanceService {
         const emitter = mitt();
         instance.config.globalProperties.emitter = emitter;
         VueInstanceService.vue = instance;
+        instance.use(VueViewer);
+        instance.use(VueSweetalert2);
         setLocale({
             mixed: {
                 required: "فیلد `${path}` باید استفاده شود",
