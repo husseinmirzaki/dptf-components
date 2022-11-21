@@ -219,8 +219,7 @@ export default defineComponent({
           onFormReady: onFormReadyC,
           showCancelButton:
             formReady.value &&
-              formInstance.formInstance.update.value &&
-              !props.showCancelButton,
+              formInstance.formInstance.update.value,
           onFields: onFieldsC,
           onBuildFields: props.onBuildFields,
           onAfterSubmit: props.onAfterSubmit,
