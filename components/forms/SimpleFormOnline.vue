@@ -11,7 +11,7 @@ import {DEFAULT_BUTTONS} from "@/custom/helpers/RenderFunctionHelpers";
 import Modal from "@/custom/components/model/Modal.vue";
 
 export class ModelCache {
-  public static formInformation: Record<string, any> = {};
+  public static pending: Record<string, any> = {};
 }
 
 export default {

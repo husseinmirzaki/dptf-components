@@ -3,6 +3,7 @@ import {CreateForm, CreateFormExtend} from "@/custom/helpers/BaseForm";
 import {modelToServiceMap} from "@/ModelToServiceMap";
 import {FieldsApiService} from "@/custom/services/FieldsApiService";
 import {ModelCache} from "@/custom/components/forms/SimpleFormOnline.vue";
+import {TaskManager} from "@/custom/helpers/MiltiTasking";
 
 // تمام چیزی که این خط داره انجام میده اینه که به کامپایلر
 // میگه که ما یک ورودی میگیریم و هرچیزی رو ممکنه که خروجی بدیم
@@ -31,6 +32,8 @@ class BuildByModelName {
 
     isUsingModal: boolean;
 
+    taskManager = new TaskManager();
+
     constructor(modelName: string, options: Record<string, any> = {}) {
         const defaultOptions: Record<string, any> = {
             isUsingModal: false,
@@ -57,18 +60,19 @@ class BuildByModelName {
     }
 
     getFields(buildExtend = true) {
-        let promise: any;
-
-        if (ModelCache.formInformation[this.modelName])
-            promise = ModelCache.formInformation[this.modelName];
-        else {
-            promise = FieldsApiService.getFieldsConfig(this.modelName);
-            ModelCache.formInformation[this.modelName] = promise;
+        if (ModelCache.pending[this.modelName]) {
+            ModelCache.pending[this.modelName].then(({data}) => {
+                this.buildFields(JSON.parse(JSON.stringify(data)), buildExtend)
+            });
+            return ModelCache.pending[this.modelName];
         }
+
+        const promise = FieldsApiService.getFieldsConfig(this.modelName);
+        ModelCache.pending[this.modelName] = promise;
 
         promise.then(
             ({data}) => {
-                this.buildFields(data, buildExtend);
+                this.buildFields(JSON.parse(JSON.stringify(data)), buildExtend);
             },
             ({response}) => {
                 if (response.status >= 400 && response.status < 500) {
