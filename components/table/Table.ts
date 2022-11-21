@@ -702,7 +702,7 @@ export class Table {
     else if (this.orderedField.value["order"] == "desc") {
       this.orderedField.value = {};
     } else this.orderedField.value["order"] = "asc";
-    console.log(this.orderedField);
+    // console.log(this.orderedField);
     this.refresh();
   }
 

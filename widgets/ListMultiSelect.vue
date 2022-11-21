@@ -59,13 +59,13 @@ export default {
         for (let i = 0; i < keys.length; i++) {
           if (selectedData.value[keys[i]]) {
             considerAll.value = false;
-            console.log("all not false");
+            // console.log("all not false");
             allFalse = false;
             break;
           }
         }
         if (allFalse) {
-          console.log("all false");
+          // console.log("all false");
           considerAll.value = true;
         }
         context.emit("change", [considerAll.value, selectedData.value]);

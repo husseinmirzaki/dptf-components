@@ -101,7 +101,7 @@ export default defineComponent({
     const onMapReady = (e) => {
       context.emit("mapReady", e);
       emitTo("mapReady", null);
-      console.log("map cords", mapCenter.value);
+      // console.log("map cords", mapCenter.value);
       // e.setView(mapCenter.value)
     };
 

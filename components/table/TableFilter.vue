@@ -256,7 +256,7 @@ export default {
               const modelName = props.defaultConfig.modelName;
               FieldsApiService.getFieldConfig(modelName, event.fieldName).then(
                 ({ data }) => {
-                  console.log(data);
+                  // console.log(data);
                   lastRequestedField = data;
                   loadingField.value = false;
                   getFilters();

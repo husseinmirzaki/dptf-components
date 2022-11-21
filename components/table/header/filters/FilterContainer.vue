@@ -152,7 +152,7 @@ export default {
       }
       if (show.value) {
         setPositionInterval = setInterval(() => {
-          console.log("test");
+          // console.log("test");
           calcPosition();
         }, 200);
         document.addEventListener("click", windowClickListener, {

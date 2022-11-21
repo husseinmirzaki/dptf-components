@@ -107,11 +107,11 @@ export default {
 
     const removeItem = (e) => {
       const found = list.value.findIndex((item) => {
-        console.log(item["key"] === e["key"]);
+        // console.log(item["key"] === e["key"]);
         return item["key"] === e["key"];
       });
-      console.log(list.value, e);
-      console.log("e['key']", found);
+      // console.log(list.value, e);
+      // console.log("e['key']", found);
       if (found > -1) {
         list.value.splice(found, 1);
       }

@@ -46,7 +46,7 @@ export default defineComponent({
     };
   },
   mounted() {
-    console.log(this.$refs.modalEl);
+    // console.log(this.$refs.modalEl);
     (async () => {
       if (document.querySelector("#" + this.modalId)) {
         this.modal = new Modal("#" + this.modalId, {

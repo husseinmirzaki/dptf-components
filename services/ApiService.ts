@@ -348,7 +348,7 @@ class ApiService {
         ...params["data"],
         ...this.extraParams,
       };
-      console.log(this.extraParams, params);
+      // console.log(this.extraParams, params);
     }
 
     if (params && params["data"]) {
