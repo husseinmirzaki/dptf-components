@@ -218,7 +218,9 @@ export default defineComponent({
           disableDrag: true,
           onFormReady: onFormReadyC,
           showCancelButton:
-            formReady.value && formInstance.formInstance.update.value,
+            formReady.value &&
+              formInstance.formInstance.update.value &&
+              !props.showCancelButton,
           onFields: onFieldsC,
           onBuildFields: props.onBuildFields,
           onAfterSubmit: props.onAfterSubmit,

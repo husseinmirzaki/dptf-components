@@ -1,21 +1,22 @@
 <script lang="ts">
-import { h, nextTick, watch } from "vue";
+import {h, nextTick, watch} from "vue";
 import Card from "@/custom/components/Card.vue";
 import FormBuilder from "@/custom/components/FormBuilder.vue";
 import FormContainer from "@/custom/components/FormContainer.vue";
 import PromiseButton from "@/custom/components/PromiseButton.vue";
-import { BuildByModelName } from "@/custom/forms/utils/BuildByModelName";
+import {BuildByModelName} from "@/custom/forms/utils/BuildByModelName";
 import FixedHeightAccess from "@/custom/components/forms/FixedHeightAccess.vue";
 import FixedHeightLoader from "@/custom/components/forms/FixedHeightLoader.vue";
-import { DEFAULT_BUTTONS } from "@/custom/helpers/RenderFunctionHelpers";
+import {DEFAULT_BUTTONS} from "@/custom/helpers/RenderFunctionHelpers";
 import Modal from "@/custom/components/model/Modal.vue";
 
 export default {
-  components: { Card, PromiseButton, FormContainer, FormBuilder },
+  components: {Card, PromiseButton, FormContainer, FormBuilder},
   props: [
     "modelName",
     "overrideOptions",
     "showCancelButton",
+    "dontShowCancelButton",
     "onBuildFields",
     "onFields",
     "onOrderField",
@@ -63,13 +64,13 @@ export default {
       nextTick(() => {
         if (!buildByModelName.formInstance!.obj.value["id"]) {
           buildByModelName.formInstance!.formInstance.fields.forEach(
-            (field) => {
-              if (field.default !== undefined) {
-                const s: any = {};
-                s[field.name] = field.default;
-                buildByModelName.formInstance!.formInstance.setValues(s);
+              (field) => {
+                if (field.default !== undefined) {
+                  const s: any = {};
+                  s[field.name] = field.default;
+                  buildByModelName.formInstance!.formInstance.setValues(s);
+                }
               }
-            }
           );
         }
       });
@@ -116,14 +117,14 @@ export default {
 
       return [
         h(
-          FormContainer,
-          {
-            validationSchema: buildByModelName.formInstance?.activeSchema,
-            ref: (el) => (formInstance = el),
-          },
-          {
-            default: formBuilder,
-          }
+            FormContainer,
+            {
+              validationSchema: buildByModelName.formInstance?.activeSchema,
+              ref: (el) => (formInstance = el),
+            },
+            {
+              default: formBuilder,
+            }
         ),
         context.slots["multiForm"] ? context.slots["multiForm"]() : undefined,
       ];
@@ -147,51 +148,53 @@ export default {
       });
 
       if (
-        !(
-          props.showCancelButton || buildByModelName.formInstance?.update.value
-        ) ||
-        props.formAsModal
+          !(
+              props.showCancelButton || buildByModelName.formInstance?.update.value
+          ) ||
+          props.formAsModal
+          ||
+          props.dontShowCancelButton
       )
         return promiseButton;
 
       const cancelButton = DEFAULT_BUTTONS.danger(
-        {
-          onClick: () => {
-            context.emit("cancel");
+          {
+            onClick: () => {
+              context.emit("cancel");
+            },
           },
-        },
-        "لغو"
+          "لغو"
       );
 
       return [promiseButton, cancelButton];
     };
     return () => {
       return !props.formAsModal
-        ? h(
-            Card,
-            {},
-            {
-              "card-content": cardContent,
-              "card-footer": cardFooter,
-            }
+          ? h(
+              Card,
+              {},
+              {
+                "card-content": cardContent,
+                "card-footer": cardFooter,
+              }
           )
-        : h(
-            Modal,
-            {
-              modalTitle: context.attrs["cardTitle"],
-              thinFooter: true,
-              onClose: () => context.emit("cancel"),
-              ref: (el) => {
-                modalInstance = el;
-                context.expose({
-                  modal: el,
-                });
+          : h(
+              Modal,
+              {
+                modalTitle: context.attrs["cardTitle"],
+                thinFooter: true,
+                onClose: () => context.emit("cancel"),
+                ref: (el) => {
+                  modalInstance = el;
+                  context.expose({
+                    modal: el,
+                  });
+                },
               },
-            },
-            {
-              "modal-content": cardContent,
-              "modal-footer": cardFooter,
-            }
+              {
+                "modal-content": cardContent,
+                "modal-footer": cardFooter,
+              }
           );
     };
   },
