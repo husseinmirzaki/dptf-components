@@ -102,8 +102,8 @@ export function currentPersianDate() {
   return gregorianDateToJalali(new Date());
 }
 
-export function persianStringDateToGregorian(dateString: string) {
-  const [year, month, day] = dateString.split("/");
+export function persianStringDateToGregorian(dateString: string, seprator = "/") {
+  const [year, month, day] = dateString.split(seprator);
   const [gYear, gMonth, gDay] = jalaliToGregorian(
     Number(year),
     Number(month),
