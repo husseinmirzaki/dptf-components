@@ -175,6 +175,23 @@ table {
   box-shadow: 0 0 3px black !important;
   transform: rotateZ(5deg) !important;
 }
+
+//.table-responsive::-webkit-scrollbar{
+//  width: auto !important;
+//  height: auto !important;
+//}
+//
+//.table-responsive::-webkit-scrollbar-thumb {
+//  background-color: #d4d6d9 !important;
+//}
+//
+//.table-responsive:hover{
+//  scrollbar-color: #a4a4a4 transparent !important;
+//}
+//
+//.table-responsive:hover::-webkit-scrollbar-thumb {
+//  background-color: #cacdd0 !important;
+//}
 </style>
 <script lang="ts">
 import {
@@ -278,23 +295,23 @@ export default defineComponent({
     const cacheSelected = {};
 
     watch(
-      checkedDataList,
-      () => {
-        Object.keys(checkedDataList.value).forEach((key) => {
-          if (checkedDataList.value[key] && !cacheSelected[key]) {
-            const currentKeyId = key.split("_")[1];
-            const dataIndex = dList.value.findIndex(
-              (item) => item["id"] == Number(currentKeyId)
-            );
-            cacheSelected[key] = dList.value[dataIndex];
-          } else if (!checkedDataList.value[key] && cacheSelected[key]) {
-            delete cacheSelected[key];
-          }
-        });
-      },
-      {
-        deep: true,
-      }
+        checkedDataList,
+        () => {
+          Object.keys(checkedDataList.value).forEach((key) => {
+            if (checkedDataList.value[key] && !cacheSelected[key]) {
+              const currentKeyId = key.split("_")[1];
+              const dataIndex = dList.value.findIndex(
+                  (item) => item["id"] == Number(currentKeyId)
+              );
+              cacheSelected[key] = dList.value[dataIndex];
+            } else if (!checkedDataList.value[key] && cacheSelected[key]) {
+              delete cacheSelected[key];
+            }
+          });
+        },
+        {
+          deep: true,
+        }
     );
 
     let drag: SimpleDrag | null = null;
@@ -312,41 +329,41 @@ export default defineComponent({
     };
 
     watch(
-      conf,
-      () => {
-        defaultConfig = initializeConfig();
+        conf,
+        () => {
+          defaultConfig = initializeConfig();
 
-        checkAll.value = false;
-        changedHeaders.value = [];
-        headerVisibility.value = {};
-        checkedDataList.value = {};
-        Object.keys(Object.assign(cacheSelected)).forEach((e) => {
-          delete cacheSelected[e];
-        });
+          checkAll.value = false;
+          changedHeaders.value = [];
+          headerVisibility.value = {};
+          checkedDataList.value = {};
+          Object.keys(Object.assign(cacheSelected)).forEach((e) => {
+            delete cacheSelected[e];
+          });
 
-        mount();
-      },
-      {
-        deep: true,
-      }
+          mount();
+        },
+        {
+          deep: true,
+        }
     );
 
     watch(
-      dList,
-      () => {
-        if (dList.value) {
-          dList.value.forEach((data: any) => {
-            if (
-              checkedDataList.value[`check_${data.id}`] == undefined ||
-              checkedDataList.value[`check_${data.id}`] == null
-            )
-              checkedDataList.value[`check_${data.id}`] = checkAll.value;
-          });
+        dList,
+        () => {
+          if (dList.value) {
+            dList.value.forEach((data: any) => {
+              if (
+                  checkedDataList.value[`check_${data.id}`] == undefined ||
+                  checkedDataList.value[`check_${data.id}`] == null
+              )
+                checkedDataList.value[`check_${data.id}`] = checkAll.value;
+            });
+          }
+        },
+        {
+          deep: true,
         }
-      },
-      {
-        deep: true,
-      }
     );
 
     watch(list, () => {
@@ -381,11 +398,11 @@ export default defineComponent({
       return new Promise<void>((resolve) => {
         if (defaultConfig.canUseUrl) {
           defaultConfig.onGetData().then(
-            (e) => {
-              dList.value = e;
-              resolve();
-            },
-            () => resolve()
+              (e) => {
+                dList.value = e;
+                resolve();
+              },
+              () => resolve()
           );
         }
       });
@@ -394,18 +411,18 @@ export default defineComponent({
     let defaultConfig: Table = initializeConfig();
 
     const preferencesManager = new UserPreferencesManager(
-      `${defaultConfig.preferencesPrefixKey}${defaultConfig.tableName}`
+        `${defaultConfig.preferencesPrefixKey}${defaultConfig.tableName}`
     );
 
     preferencesManager.get();
 
     watch(
-      preferencesManager.value,
-      (e) => {
-        buildPrimaryTableInfo(e);
-        tableSetup(false);
-      },
-      { deep: true }
+        preferencesManager.value,
+        (e) => {
+          buildPrimaryTableInfo(e);
+          tableSetup(false);
+        },
+        { deep: true }
     );
 
     const headers = computed(() => {
@@ -427,12 +444,12 @@ export default defineComponent({
 
     const getTableSettings = () => {
       preferencesManager.get().then(
-        () => {
-          tableSetup();
-        },
-        () => {
-          tableSetup();
-        }
+          () => {
+            tableSetup();
+          },
+          () => {
+            tableSetup();
+          }
       );
     };
 
@@ -451,7 +468,7 @@ export default defineComponent({
       if (value.defaultHeaders && value.defaultHeaders.indexOf) {
         for (let i = 0; i < defaultConfig.defaultHeaders.length; i++) {
           if (
-            value.defaultHeaders.indexOf(defaultConfig.defaultHeaders[i]) == -1
+              value.defaultHeaders.indexOf(defaultConfig.defaultHeaders[i]) == -1
           ) {
             newHeaders.push(defaultConfig.defaultHeaders[i]);
           }
@@ -478,13 +495,13 @@ export default defineComponent({
 
     let watchHeaderVisibility = false;
     watch(
-      headerVisibility,
-      () => {
-        if (watchHeaderVisibility) saveTableSettings();
-      },
-      {
-        deep: true,
-      }
+        headerVisibility,
+        () => {
+          if (watchHeaderVisibility) saveTableSettings();
+        },
+        {
+          deep: true,
+        }
     );
 
     const tableSetup = (getData = true) => {
@@ -557,13 +574,13 @@ export default defineComponent({
         if (e[0] == "refresh-one") {
           const _data: any = e[1];
           const found = dList.value.findIndex(
-            (item) => item["id"] && item["id"] == _data["id"]
+              (item) => item["id"] && item["id"] == _data["id"]
           );
           if (found > -1) {
             dList.value.splice(found, 1, _data);
             nextTick(() => {
               const a = document.querySelector(
-                `[item-data-id="${_data["id"]}"]`
+                  `[item-data-id="${_data["id"]}"]`
               );
               if (a) {
                 a.classList.add("notify-longer");
@@ -571,12 +588,12 @@ export default defineComponent({
                 clearTimeout(lastTimeoutNotify);
                 clearTimeout(lastTimeoutNotifyLonger);
                 lastTimeoutNotify = setTimeout(
-                  () => a.classList.remove("notify"),
-                  6000
+                    () => a.classList.remove("notify"),
+                    6000
                 );
                 lastTimeoutNotifyLonger = setTimeout(
-                  () => a.classList.remove("notify-longer"),
-                  12000
+                    () => a.classList.remove("notify-longer"),
+                    12000
                 );
               }
             });
@@ -659,236 +676,236 @@ export default defineComponent({
       // headers might be changed
       // so consider that as well
       const headersToIterate =
-        changedHeaders.value.length > 0 ? changedHeaders.value : headers.value;
+          changedHeaders.value.length > 0 ? changedHeaders.value : headers.value;
 
       const checkBoxes = defaultConfig.checkAble
-        ? h(
-            "th",
-            {
-              class: "check-stuff",
-              "ignore-drags": 1,
-            },
-            h(FieldComponent, {
-              modelValue: checkAll.value,
-              col_class: "",
-              input_container_class: "test",
-              defaultInputClasses: "",
-              show_errors: false,
-              field_type: "checkbox",
-            })
+          ? h(
+              "th",
+              {
+                class: "check-stuff",
+                "ignore-drags": 1,
+              },
+              h(FieldComponent, {
+                modelValue: checkAll.value,
+                col_class: "",
+                input_container_class: "test",
+                defaultInputClasses: "",
+                show_errors: false,
+                field_type: "checkbox",
+              })
           )
-        : undefined;
+          : undefined;
 
       const actualHeaders = headersToIterate
-        .filter((header) => headerVisibility.value[header])
-        .map((header, index) => {
-          return h(defaultConfig.onTHeadComponent(header, index), {
-            key: header,
-            onShowFilter: () => defaultConfig.onShowFilter(header, index),
-            onToggleOrder: () => defaultConfig.toggleOrder(header),
-            moveable: "moveable",
-            isFiltered:
-              defaultConfig.filteredHeaders.value.indexOf(header) > -1,
-            sortDirection:
-              defaultConfig.orderedField.value["name"] === header
-                ? defaultConfig.orderedField.value["order"]
-                : undefined,
-            "header-name": header,
-            group: defaultConfig.tableName,
-            ...defaultConfig.onTHeadProps(header, index),
+          .filter((header) => headerVisibility.value[header])
+          .map((header, index) => {
+            return h(defaultConfig.onTHeadComponent(header, index), {
+              key: header,
+              onShowFilter: () => defaultConfig.onShowFilter(header, index),
+              onToggleOrder: () => defaultConfig.toggleOrder(header),
+              moveable: "moveable",
+              isFiltered:
+                  defaultConfig.filteredHeaders.value.indexOf(header) > -1,
+              sortDirection:
+                  defaultConfig.orderedField.value["name"] === header
+                      ? defaultConfig.orderedField.value["order"]
+                      : undefined,
+              "header-name": header,
+              group: defaultConfig.tableName,
+              ...defaultConfig.onTHeadProps(header, index),
+            });
           });
-        });
 
       const actionButtons = defaultConfig.showActionButtons
-        ? h(defaultConfig.onTHeadComponent("table-action", -1), {
+          ? h(defaultConfig.onTHeadComponent("table-action", -1), {
             disableFilters: 1,
             "ignore-drags": 1,
             "header-name": "table-action",
             group: defaultConfig.tableName,
             ...defaultConfig.onTHeadProps("table-action", -1),
           })
-        : undefined;
+          : undefined;
 
       return h(
-        "thead",
-        {
-          onUpdate: withModifiers(() => {
-            //
-          }, ["stop", "prevent"]),
-        },
-        h(
-          "tr",
+          "thead",
           {
-            ref: (el) => (headersRef = el),
-            class: "fw-bolder text-muted bg-light",
+            onUpdate: withModifiers(() => {
+              //
+            }, ["stop", "prevent"]),
           },
-          [
-            // action buttons
-            actionButtons,
-            // actual headers
-            ...actualHeaders.reverse(),
-            // checkboxes
-            checkBoxes,
-          ]
-        )
+          h(
+              "tr",
+              {
+                ref: (el) => (headersRef = el),
+                class: "fw-bolder text-muted bg-light",
+              },
+              [
+                // action buttons
+                actionButtons,
+                // actual headers
+                ...actualHeaders.reverse(),
+                // checkboxes
+                checkBoxes,
+              ]
+          )
       );
     };
 
     const buildTBody = () => {
       const headersToIterate =
-        changedHeaders.value.length > 0 ? changedHeaders.value : headers.value;
+          changedHeaders.value.length > 0 ? changedHeaders.value : headers.value;
       let tr: any;
       if (!dList.value || dList.value.length == 0) {
         tr = h(
-          "tr",
-          {},
-          h(
-            "td",
-            {
-              dir: "rtl",
-              colspan: headersToIterate.filter(
-                (header) => headerVisibility.value[header]
-              ).length,
-            },
-            context.slots["empty"]
-              ? context.slots["empty"]()
-              : "داده ای برای نمایش موجود نمی‌باشد ؟"
-          )
+            "tr",
+            {},
+            h(
+                "td",
+                {
+                  dir: "rtl",
+                  colspan: headersToIterate.filter(
+                      (header) => headerVisibility.value[header]
+                  ).length,
+                },
+                context.slots["empty"]
+                    ? context.slots["empty"]()
+                    : "داده ای برای نمایش موجود نمی‌باشد ؟"
+            )
         );
       } else {
         tr = dList.value.map((item, index) => {
           return h(
-            defaultConfig.onTBodyRowComponent(item, index),
-            {
-              key: item["id"] ? "tr_" + item["id"] : "tr_index_" + index,
-              "data-context-menu": "true",
-              "item-data-id": item["id"] ? item["id"] : index,
-              onContextmenu: () => contextMenu(item),
-              onMouseenter: () => {
-                checkCheckFieldData(`check_${item["id"]}`);
+              defaultConfig.onTBodyRowComponent(item, index),
+              {
+                key: item["id"] ? "tr_" + item["id"] : "tr_index_" + index,
+                "data-context-menu": "true",
+                "item-data-id": item["id"] ? item["id"] : index,
+                onContextmenu: () => contextMenu(item),
+                onMouseenter: () => {
+                  checkCheckFieldData(`check_${item["id"]}`);
+                },
+                onClick: () => {
+                  context.emit("on-row-selected", item);
+                },
+                ...defaultConfig.onTBodyRowBinds(item, index),
               },
-              onClick: () => {
-                context.emit("on-row-selected", item);
-              },
-              ...defaultConfig.onTBodyRowBinds(item, index),
-            },
-            {
-              default: () => {
-                const checkBox = defaultConfig.checkAble
-                  ? h(
-                      "td",
-                      {
-                        onMousemove: () => {
-                          checkCheckFieldData(`check_${item["id"]}`);
-                        },
-                        onMouseenter: () => {
-                          checkCheckFieldData(`check_${item["id"]}`);
-                        },
-                        onClick: () =>
-                          (checkedDataList[`check_${item["id"]}`] =
-                            !checkedDataList[`check_${item["id"]}`]),
-                      },
-                      h(FieldComponent, {
-                        modelValue: checkedDataList[`check_${item["id"]}`],
-                        col_class: "",
-                        input_container_class: "",
-                        defaultInputClasses: "",
-                        show_errors: false,
-                        field_type: "checkbox",
-                      })
-                    )
-                  : undefined;
-
-                const dataTds = headersToIterate
-                  .filter((header) => headerVisibility.value[header])
-                  .map((header, headerIndex) => {
-                    const props = defaultConfig.onTBodyProps(
-                      item,
-                      header,
-                      headerIndex,
-                      index
-                    );
-                    let key =
-                      String(item["id"] ? "td_" + item["id"] : "td_" + index) +
-                      header +
-                      headerIndex;
-                    if (props["data"]) {
-                      key += String(props["data"]);
-                    }
-                    return h(
-                      defaultConfig.onTBodyComponent(
-                        item,
-                        header,
-                        headerIndex,
-                        index
-                      ),
-                      {
-                        key: key,
-                        ...props,
-                      }
-                    );
-                  });
-
-                const actionButtons = defaultConfig.showActionButtons
-                  ? h(
-                      "td",
-                      {
-                        class: "pe-2 text-nowrap text-center",
-                      },
-                      defaultConfig
-                        .getContextMenuItems(item)
-                        .map((contextMenuItem, contextMenuIndex) => {
-                          return DEFAULT_BUTTONS.default(
-                            {
-                              class: [
-                                `btn-sm p-1 btn-${
-                                  contextMenuItem.state
-                                    ? contextMenuItem.state
-                                    : "primary"
-                                }`,
-                                {
-                                  "ms-1": contextMenuIndex > 0,
-                                },
-                              ],
-                              onClick: () => {
-                                if (contextMenuItem.onClick)
-                                  contextMenuItem.onClick(item);
-                              },
+              {
+                default: () => {
+                  const checkBox = defaultConfig.checkAble
+                      ? h(
+                          "td",
+                          {
+                            onMousemove: () => {
+                              checkCheckFieldData(`check_${item["id"]}`);
                             },
-                            [
-                              //<i v-if="item.icon" :class="item.icon"></i>
-                              contextMenuItem.faIcon
-                                ? h("i", { class: contextMenuItem.faIcon })
-                                : undefined,
-                              contextMenuItem.svgIcon
-                                ? h(
-                                    "span",
+                            onMouseenter: () => {
+                              checkCheckFieldData(`check_${item["id"]}`);
+                            },
+                            onClick: () =>
+                                (checkedDataList[`check_${item["id"]}`] =
+                                    !checkedDataList[`check_${item["id"]}`]),
+                          },
+                          h(FieldComponent, {
+                            modelValue: checkedDataList[`check_${item["id"]}`],
+                            col_class: "",
+                            input_container_class: "",
+                            defaultInputClasses: "",
+                            show_errors: false,
+                            field_type: "checkbox",
+                          })
+                      )
+                      : undefined;
+
+                  const dataTds = headersToIterate
+                      .filter((header) => headerVisibility.value[header])
+                      .map((header, headerIndex) => {
+                        const props = defaultConfig.onTBodyProps(
+                            item,
+                            header,
+                            headerIndex,
+                            index
+                        );
+                        let key =
+                            String(item["id"] ? "td_" + item["id"] : "td_" + index) +
+                            header +
+                            headerIndex;
+                        if (props["data"]) {
+                          key += String(props["data"]);
+                        }
+                        return h(
+                            defaultConfig.onTBodyComponent(
+                                item,
+                                header,
+                                headerIndex,
+                                index
+                            ),
+                            {
+                              key: key,
+                              ...props,
+                            }
+                        );
+                      });
+
+                  const actionButtons = defaultConfig.showActionButtons
+                      ? h(
+                          "td",
+                          {
+                            class: "pe-2 text-nowrap text-center",
+                          },
+                          defaultConfig
+                              .getContextMenuItems(item)
+                              .map((contextMenuItem, contextMenuIndex) => {
+                                return DEFAULT_BUTTONS.default(
                                     {
                                       class: [
-                                        "svg-icon me-4",
-                                        `svg-icon-${
-                                          contextMenuItem.state
-                                            ? contextMenuItem.state
-                                            : "primary"
+                                        `btn-sm p-1 btn-${
+                                            contextMenuItem.state
+                                                ? contextMenuItem.state
+                                                : "primary"
                                         }`,
-                                        contextMenuItem.svgIcon.spanClass,
+                                        {
+                                          "ms-1": contextMenuIndex > 0,
+                                        },
                                       ],
+                                      onClick: () => {
+                                        if (contextMenuItem.onClick)
+                                          contextMenuItem.onClick(item);
+                                      },
                                     },
-                                    h(resolveComponent("inline-svg"), {
-                                      src: contextMenuItem.svgIcon.src,
-                                    })
-                                  )
-                                : undefined,
-                              contextMenuItem.text,
-                            ]
-                          );
-                        })
-                    )
-                  : undefined;
+                                    [
+                                      //<i v-if="item.icon" :class="item.icon"></i>
+                                      contextMenuItem.faIcon
+                                          ? h("i", { class: contextMenuItem.faIcon })
+                                          : undefined,
+                                      contextMenuItem.svgIcon
+                                          ? h(
+                                              "span",
+                                              {
+                                                class: [
+                                                  "svg-icon me-4",
+                                                  `svg-icon-${
+                                                      contextMenuItem.state
+                                                          ? contextMenuItem.state
+                                                          : "primary"
+                                                  }`,
+                                                  contextMenuItem.svgIcon.spanClass,
+                                                ],
+                                              },
+                                              h(resolveComponent("inline-svg"), {
+                                                src: contextMenuItem.svgIcon.src,
+                                              })
+                                          )
+                                          : undefined,
+                                      contextMenuItem.text,
+                                    ]
+                                );
+                              })
+                      )
+                      : undefined;
 
-                return [actionButtons, ...dataTds.reverse(), checkBox];
-              },
-            }
+                  return [actionButtons, ...dataTds.reverse(), checkBox];
+                },
+              }
           );
         });
       }
@@ -898,72 +915,72 @@ export default defineComponent({
 
     const buildTable = () => {
       return h(
-        "div",
-        {
-          ref: (el) => (tableRef = el),
-          class: "table-responsive table-container",
-        },
-        // table
-        h(
-          "table",
+          "div",
           {
-            class: [
-              "table table-bordered align-middle ge-4 gy-4 table-hover table table-v2-custom",
-              {
-                "mb-0": !defaultConfig.showPagination,
-                "with-action-buttons": defaultConfig.showActionButtons,
-              },
-            ],
+            ref: (el) => (tableRef = el),
+            class: "table-responsive table-container",
           },
-          [buildTHead(), buildTBody()]
-        )
+          // table
+          h(
+              "table",
+              {
+                class: [
+                  "table table-bordered align-middle ge-4 gy-4 table-hover table table-v2-custom",
+                  {
+                    "mb-0": !defaultConfig.showPagination,
+                    "with-action-buttons": defaultConfig.showActionButtons,
+                  },
+                ],
+              },
+              [buildTHead(), buildTBody()]
+          )
       );
     };
 
     const buildCardBody = () => {
       return h(
-        Spinner,
-        {
-          loading: defaultConfig.isLoading.value,
-        },
-        {
-          default: () => {
-            const table = buildTable();
-
-            const cardBody = h(
-              "div",
-              {
-                class: ["card-body m-0 p-0", context.attrs["bodyClass"]],
-              },
-              [
-                table,
-                defaultConfig.showPagination
-                  ? (() => {
-                      const paginator = h(TablePagination, {
-                        key:
-                          defaultConfig.defaultTableName +
-                          `_pagination_${defaultConfig.count.value}`,
-                        currentPage: defaultConfig.currentPage.value,
-                        count: defaultConfig.count.value,
-                        onPageSelected: onPage,
-                      });
-                      if (defaultConfig.teleportPaginationToSelector != "") {
-                        const elementToTeleportTo = document.querySelector(
-                          defaultConfig.teleportPaginationToSelector
-                        );
-                        if (elementToTeleportTo) {
-                          render(paginator, elementToTeleportTo);
-                          return undefined;
-                        }
-                      }
-                      return paginator;
-                    })()
-                  : undefined,
-              ]
-            );
-            return cardBody;
+          Spinner,
+          {
+            loading: defaultConfig.isLoading.value,
           },
-        }
+          {
+            default: () => {
+              const table = buildTable();
+
+              const cardBody = h(
+                  "div",
+                  {
+                    class: ["card-body m-0 p-0", context.attrs["bodyClass"]],
+                  },
+                  [
+                    table,
+                    defaultConfig.showPagination
+                        ? (() => {
+                          const paginator = h(TablePagination, {
+                            key:
+                                defaultConfig.defaultTableName +
+                                `_pagination_${defaultConfig.count.value}`,
+                            currentPage: defaultConfig.currentPage.value,
+                            count: defaultConfig.count.value,
+                            onPageSelected: onPage,
+                          });
+                          if (defaultConfig.teleportPaginationToSelector != "") {
+                            const elementToTeleportTo = document.querySelector(
+                                defaultConfig.teleportPaginationToSelector
+                            );
+                            if (elementToTeleportTo) {
+                              render(paginator, elementToTeleportTo);
+                              return undefined;
+                            }
+                          }
+                          return paginator;
+                        })()
+                        : undefined,
+                  ]
+              );
+              return cardBody;
+            },
+          }
       );
     };
 
@@ -974,91 +991,91 @@ export default defineComponent({
 
       if (!props.disableDropdown) {
         const headersToIterate =
-          changedHeaders.value.length > 0
-            ? changedHeaders.value
-            : headers.value;
+            changedHeaders.value.length > 0
+                ? changedHeaders.value
+                : headers.value;
         slots["dropDown"] = h(
-          DropdownV2,
-          {},
-          {
-            icons: () => {
-              return h(
-                "div",
-                {
-                  class: "me-n4",
-                },
-                h(
-                  "button",
-                  {
-                    type: "button",
-                    class:
-                      "btn btn-sm btn-icon btn-color-primary btn-active-light-primary",
-                    onClick: () => defaultConfig.requestExport(),
-                  },
-                  h(
-                    "span",
+            DropdownV2,
+            {},
+            {
+              icons: () => {
+                return h(
+                    "div",
                     {
-                      class: "svg-icon svg-icon-2",
+                      class: "me-n4",
                     },
                     h(
-                      resolveComponent("ElTooltip"),
-                      {
-                        content: "خروجی اکسل",
-                      },
-                      h(resolveComponent("inline-svg"), {
-                        src: "media/icons/duotune/files/fil021.svg",
-                      })
+                        "button",
+                        {
+                          type: "button",
+                          class:
+                              "btn btn-sm btn-icon btn-color-primary btn-active-light-primary",
+                          onClick: () => defaultConfig.requestExport(),
+                        },
+                        h(
+                            "span",
+                            {
+                              class: "svg-icon svg-icon-2",
+                            },
+                            h(
+                                resolveComponent("ElTooltip"),
+                                {
+                                  content: "خروجی اکسل",
+                                },
+                                h(resolveComponent("inline-svg"), {
+                                  src: "media/icons/duotune/files/fil021.svg",
+                                })
+                            )
+                        )
                     )
-                  )
-                )
-              );
-            },
-            default: () => {
-              return h(
-                "div",
-                {
-                  onUpdate: withModifiers(() => {
-                    //
-                  }, ["stop", "prevent"]),
-                  class: "items-container",
-                  ref: (el) => (filtersRef = el),
-                },
-                headersToIterate.map((header, index) =>
-                  h(FieldComponent, {
-                    key: header,
-                    name: header,
-                    modelValue: headerVisibility.value[header],
-                    placeholder: defaultConfig.onTHeadProps(header, index)
-                      .header,
-                    field_type: "checkbox",
-                    "onUpdate:modelValue": (e) =>
-                      (headerVisibility.value[header] = e),
-                  })
-                )
-              );
-            },
-          }
+                );
+              },
+              default: () => {
+                return h(
+                    "div",
+                    {
+                      onUpdate: withModifiers(() => {
+                        //
+                      }, ["stop", "prevent"]),
+                      class: "items-container",
+                      ref: (el) => (filtersRef = el),
+                    },
+                    headersToIterate.map((header, index) =>
+                        h(FieldComponent, {
+                          key: header,
+                          name: header,
+                          modelValue: headerVisibility.value[header],
+                          placeholder: defaultConfig.onTHeadProps(header, index)
+                              .header,
+                          field_type: "checkbox",
+                          "onUpdate:modelValue": (e) =>
+                              (headerVisibility.value[header] = e),
+                        })
+                    )
+                );
+              },
+            }
         );
       }
 
       slots["card-body"] = buildCardBody;
 
       const card = h(
-        Card,
-        {
-          cardTitle: context.attrs["cardTitle"]
-            ? context.attrs.cardTitle
-            : props.title,
-          cardDescription: props.description,
-          icon: props.icon,
-          disableCard: props.disableCard,
-          disableDrag: props.disableDrag,
-          navItems: props.navItems,
-          bodyPaddingClass: "m-0",
-          onSelectedNavItem: (e) => context.emit("selectedNavItem", e),
-          ...context.attrs,
-        },
-        slots
+          Card,
+          {
+            cardTitle: context.attrs["cardTitle"]
+                ? context.attrs.cardTitle
+                : props.title,
+            cardDescription: props.description,
+            icon: props.icon,
+            disableCard: props.disableCard,
+            disableDrag: props.disableDrag,
+            navItems: props.navItems,
+            bodyPaddingClass: "m-0",
+            onSelectedNavItem: (e) => context.emit("selectedNavItem", e),
+            ...context.attrs,
+          },
+          slots
       );
 
       return [card, h(TableFilter, { defaultConfig: defaultConfig })];
