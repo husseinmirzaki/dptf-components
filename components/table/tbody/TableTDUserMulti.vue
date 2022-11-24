@@ -5,7 +5,7 @@
       @click="
         $viewerApi({
           images: firstThree.map((e) =>
-            e.avatar ? e.avatar : 'media/avatars/blank.png'
+            e.avatar ? e.avatar : 'media/avatars/blank2.jpg'
           ),
         })
       "
@@ -17,7 +17,7 @@
         title="User profile"
       >
         <img
-          :src="user.avatar ? user.avatar : 'media/avatars/blank.png'"
+          :src="user.avatar ? user.avatar : 'media/avatars/blank2.jpg'"
           alt="metronic"
         />
       </div>
