@@ -176,22 +176,22 @@ table {
   transform: rotateZ(5deg) !important;
 }
 
-//.table-responsive::-webkit-scrollbar{
-//  width: auto !important;
-//  height: auto !important;
-//}
-//
-//.table-responsive::-webkit-scrollbar-thumb {
-//  background-color: #d4d6d9 !important;
-//}
-//
-//.table-responsive:hover{
-//  scrollbar-color: #a4a4a4 transparent !important;
-//}
-//
-//.table-responsive:hover::-webkit-scrollbar-thumb {
-//  background-color: #cacdd0 !important;
-//}
+.table-responsive::-webkit-scrollbar{
+  width: auto !important;
+  height: auto !important;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+  background-color: #d4d6d9 !important;
+}
+
+.table-responsive:hover{
+  scrollbar-color: #a4a4a4 transparent !important;
+}
+
+.table-responsive:hover::-webkit-scrollbar-thumb {
+  background-color: #cacdd0 !important;
+}
 </style>
 <script lang="ts">
 import {
