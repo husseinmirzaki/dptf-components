@@ -1,24 +1,24 @@
 <template>
   <div class="parent custom-auto-complete" :class="{ focus: isFocused }">
     <input
-      class="form-control"
-      type="text"
-      :value="fieldText"
-      :placeholder="placeholder"
-      @keyup="fieldData = $event.target.value"
-      @keyup.down="oneDown"
-      @keyup.up="oneUp"
-      @keyup.enter="selectOne"
-      @keyup.esc="isFocused = false"
-      @focusin="isFocused = true"
+        class="form-control"
+        type="text"
+        :value="fieldText"
+        :placeholder="placeholder"
+        @keyup="fieldData = $event.target.value"
+        @keyup.down="oneDown"
+        @keyup.up="oneUp"
+        @keyup.enter="selectOne"
+        @keyup.esc="isFocused = false"
+        @focusin="isFocused = true"
     />
     <div class="item-viewer" ref="itemContainer">
       <div
-        class="item"
-        v-for="info in data"
-        :key="info.id"
-        :data-id="info.id"
-        @click="
+          class="item"
+          v-for="info in data"
+          :key="info.id"
+          :data-id="info.id"
+          @click="
           $event.target.classList.add('active');
           selectOne();
         "
@@ -83,9 +83,9 @@
 }
 </style>
 <script lang="ts">
-import { onBeforeUnmount, onMounted, Ref, ref, toRef, watch } from "vue";
-import { ApiService } from "@/Defaults";
-import { findClassInParent } from "@/custom/helpers/DomHelpers";
+import {onBeforeUnmount, onMounted, Ref, ref, toRef, watch} from "vue";
+import {ApiService} from "@/Defaults";
+import {findClassInParent} from "@/custom/helpers/DomHelpers";
 
 interface AutoCompleteOptions {
   url?: string;
@@ -101,7 +101,8 @@ interface AutoCompleteResults {
 }
 
 export default {
-  props: ["modeValue", "options", "placeholder"],
+  props: ["modeValue", "options", "placeholder", "name"],
+  emits: ['update:modelValue'],
   setup(props, context) {
     const options = toRef(props, "options");
     const modeValue = toRef(props, "modeValue");
@@ -132,16 +133,18 @@ export default {
 
     const sendInformation = (text) => {
       if (defaultOptions.value.url) {
-        const textData = new URLSearchParams({ search: text });
         let url = defaultOptions.value.url;
 
-        if (url.search(/\?/) == -1) {
-          url += "?" + textData;
-        } else if (url.search(/\?/)) {
-          url += "&" + textData;
+        if (text && text != "") {
+          const textData = new URLSearchParams({search: text});
+          if (url.search(/\?/) == -1) {
+            url += "?" + textData;
+          } else if (url.search(/\?/)) {
+            url += "&" + textData;
+          }
         }
 
-        ApiService.get<AutoCompleteResults>(url).then(({ data: info }) => {
+        ApiService.get<AutoCompleteResults>(url).then(({data: info}) => {
           data.value.splice(0);
           data.value.push(...info.results);
         });
@@ -219,6 +222,10 @@ export default {
       document.removeEventListener("click", globalOnClick);
     });
 
+    const updateFieldInformation = () => {
+      context.emit("update:modelValue", inputDate.value);
+    }
+
     return {
       // data
       fieldText,
@@ -226,6 +233,7 @@ export default {
       inputDate,
       isFocused,
       data,
+      updateFieldInformation,
 
       // refs
       itemContainer,
