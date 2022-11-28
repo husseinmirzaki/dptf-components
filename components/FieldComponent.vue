@@ -1,25 +1,25 @@
 <template>
   <div
-    class="field fv-row"
-    :class="[col_class_c, { row: one_line }]"
-    ref="root"
+      class="field fv-row"
+      :class="[col_class_c, { row: one_line }]"
+      ref="root"
   >
     <!--begin::Label-->
     <div class="d-flex align-items-end">
       <div class="add-icon-item" v-if="canAddItem">
         <el-tooltip content="اضافه کردن">
           <span
-            class="svg-icon svg-icon-3 svg-icon-primary"
-            @click="onAddClick"
+              class="svg-icon svg-icon-3 svg-icon-primary"
+              @click="onAddClick"
           >
-            <inline-svg src="media/icons/duotune/arrows/arr013.svg" />
+            <inline-svg src="media/icons/duotune/arrows/arr013.svg"/>
           </span>
         </el-tooltip>
       </div>
       <label
-        class="fs-5 fw-bold mb-2 font-weight-bolder text-dark"
-        :class="[{ required: required }, one_line_label_classes_c, label_class]"
-        v-if="
+          class="fs-5 fw-bold mb-2 font-weight-bolder text-dark"
+          :class="[{ required: required }, one_line_label_classes_c, label_class]"
+          v-if="
           label != null &&
           label !== '' &&
           field_type != 'separator' &&
@@ -32,30 +32,30 @@
     <!--end::Label-->
     <!--begin::Input-->
     <div
-      :class="[one_line_field_classes_c, field_container_classes]"
-      class="position-relative"
-      :show-help="showHelp"
+        :class="[one_line_field_classes_c, field_container_classes]"
+        class="position-relative"
+        :show-help="showHelp"
     >
       <template v-if="field_type === 'select'">
         <div>
           <Field
-            :class="[defaultInputClasses, input_class]"
-            :id="field_id"
-            :placeholder="placeholder"
-            :validateOnModelUpdate="true"
-            :multiple="select_multiple"
-            :as="field_type"
-            :name="name"
-            :modelValue="this.$props.modelValue"
-            style="width: 100%"
-            ref="fieldRef"
+              :class="[defaultInputClasses, input_class]"
+              :id="field_id"
+              :placeholder="placeholder"
+              :validateOnModelUpdate="true"
+              :multiple="select_multiple"
+              :as="field_type"
+              :name="name"
+              :modelValue="this.$props.modelValue"
+              style="width: 100%"
+              ref="fieldRef"
           >
             <template v-if="select_data">
               <template v-for="value in select_data" :key="value[0]">
                 <option
-                  :value="value[0]"
-                  selected="selected"
-                  v-if="value[2] === 'selected'"
+                    :value="value[0]"
+                    selected="selected"
+                    v-if="value[2] === 'selected'"
                 >
                   {{ value[1] }} {{ value[2] }}
                 </option>
@@ -68,99 +68,99 @@
         </div>
         <div class="floating-icon">
           <span class="svg-icon svg-icon-3 svg-icon-primary">
-            <inline-svg src="media/icons/duotune/arrows/arr082.svg" />
+            <inline-svg src="media/icons/duotune/arrows/arr082.svg"/>
           </span>
         </div>
       </template>
       <template v-else-if="field_type === 'select-v2'">
         <Field
-          :class="[defaultInputClasses, input_class]"
-          :id="field_id"
-          :placeholder="placeholder"
-          :validateOnModelUpdate="true"
-          :multiple="select_multiple"
-          :as="field_type"
-          :name="name"
-          style="width: 100%"
-          ref="fieldRef"
+            :class="[defaultInputClasses, input_class]"
+            :id="field_id"
+            :placeholder="placeholder"
+            :validateOnModelUpdate="true"
+            :multiple="select_multiple"
+            :as="field_type"
+            :name="name"
+            style="width: 100%"
+            ref="fieldRef"
         >
           <Select2AlternativeField
-            :url="$props.select_url"
-            :config="$props.selectV2Config"
-            :multiple="$props.select_multiple"
-            :model-value="this.$props.modelValue"
-            @update:modelValue="$emit('update:modelValue', $event)"
+              :url="$props.select_url"
+              :config="$props.selectV2Config"
+              :multiple="$props.select_multiple"
+              :model-value="this.$props.modelValue"
+              @update:modelValue="$emit('update:modelValue', $event)"
           />
         </Field>
       </template>
       <template v-else-if="field_type === 'textarea'">
         <Field
-          :class="[defaultInputClasses, input_class]"
-          :id="field_id"
-          :readonly="processedReadOnly()"
-          :placeholder="placeholder"
-          :as="field_type"
-          :name="name"
-          :modelValue="this.$props.modelValue"
-          @change="$emit('update:modelValue', $event.target.value)"
-          ref="fieldRef"
+            :class="[defaultInputClasses, input_class]"
+            :id="field_id"
+            :readonly="processedReadOnly()"
+            :placeholder="placeholder"
+            :as="field_type"
+            :name="name"
+            :modelValue="this.$props.modelValue"
+            @change="$emit('update:modelValue', $event.target.value)"
+            ref="fieldRef"
         >
         </Field>
       </template>
       <template v-else-if="field_type === 'p-date-time'">
         <Field
-          :class="[defaultInputClasses, input_class]"
-          :id="field_id"
-          :name="name"
-          :modelValue="this.$props.modelValue"
-          @update:modelValue="
+            :class="[defaultInputClasses, input_class]"
+            :id="field_id"
+            :name="name"
+            :modelValue="this.$props.modelValue"
+            @update:modelValue="
             $emit('update:modelValue', fieldRef.outputValue[0])
           "
         >
           <DatePicker
-            :name="name"
-            :readonly="processedReadOnly()"
-            :disabled="processedReadOnly()"
-            :placeholder="placeholder"
-            :modelValue="this.$props.modelValue"
-            :type="$props.dateTimeType"
-            :format="
+              :name="name"
+              :readonly="processedReadOnly()"
+              :disabled="processedReadOnly()"
+              :placeholder="placeholder"
+              :modelValue="this.$props.modelValue"
+              :type="$props.dateTimeType"
+              :format="
               $props.dateTimeType == 'datetime'
                 ? 'jYYYY/jMM/jDD HH:mm'
                 : 'jYYYY/jMM/jDD'
             "
-            @update:modelValue="
+              @update:modelValue="
               $emit('update:modelValue', fieldRef.outputValue[0])
             "
-            @change="$emit('update:modelValue', fieldRef.outputValue[0])"
-            ref="fieldRef"
+              @change="$emit('update:modelValue', fieldRef.outputValue[0])"
+              ref="fieldRef"
           />
         </Field>
       </template>
       <template v-else-if="field_type === 'checkbox'">
         <div
-          :class="[
+            :class="[
             input_container_class
               ? input_container_class
               : 'form-check m-3 me-4',
           ]"
-          style="padding-right: 0 !important"
+            style="padding-right: 0 !important"
         >
           <Field
-            :class="['form-check-input', defaultInputClasses, input_class]"
-            :id="field_id"
-            :name="name"
-            type="checkbox"
-            :value="this.$props.modelValue"
-            :modelValue="this.$props.modelValue"
+              :class="['form-check-input', defaultInputClasses, input_class]"
+              :id="field_id"
+              :name="name"
+              type="checkbox"
+              :value="this.$props.modelValue"
+              :modelValue="this.$props.modelValue"
           >
             <input
-              class="form-check-input"
-              type="checkbox"
-              :name="name"
-              :checked="this.$props.modelValue"
-              @change="$emit('update:modelValue', fieldRef.checked)"
-              ref="fieldRef"
+                class="form-check-input"
+                type="checkbox"
+                :name="name"
+                :checked="this.$props.modelValue"
+                @change="$emit('update:modelValue', fieldRef.checked)"
+                ref="fieldRef"
             />
           </Field>
           <label class="form-check-label">
@@ -170,102 +170,104 @@
       </template>
       <template v-else-if="field_type === 'component'">
         <Field
-          :class="[defaultInputClasses, input_class]"
-          :name="name"
-          :value="this.$props.modelValue"
-          :modelValue="this.$props.modelValue"
-          @update:modelValue="$emit('update:modelValue', $event)"
-        >
-          <component
-            :id="field_id"
             :class="[defaultInputClasses, input_class]"
-            :is="selected_component"
-            :readonly="processedReadOnly()"
-            :placeholder="placeholder"
             :name="name"
+            :value="this.$props.modelValue"
             :modelValue="this.$props.modelValue"
             @update:modelValue="$emit('update:modelValue', $event)"
-            ref="fieldRef"
+        >
+          <component
+              :id="field_id"
+              :class="[defaultInputClasses, input_class]"
+              :is="selected_component"
+              :readonly="processedReadOnly()"
+              :placeholder="placeholder"
+              :name="name"
+              :modelValue="this.$props.modelValue"
+              @update:modelValue="$emit('update:modelValue', $event)"
+              ref="fieldRef"
           />
         </Field>
       </template>
       <template v-else-if="field_type === 'file'">
         <Field
-          :class="[defaultInputClasses, input_class]"
-          :readonly="processedReadOnly()"
-          :placeholder="placeholder"
-          :type="field_type"
-          :name="name"
-          :modelValue="this.$props.modelValue"
-          :multiple="multiple"
-          @change="$emit('update:modelValue', getFile($event.target))"
-          ref="fieldRef"
+            :class="[defaultInputClasses, input_class]"
+            :readonly="processedReadOnly()"
+            :placeholder="placeholder"
+            :type="field_type"
+            :name="name"
+            :modelValue="this.$props.modelValue"
+            :multiple="multiple"
+            @change="$emit('update:modelValue', getFile($event.target))"
+            ref="fieldRef"
         />
       </template>
       <template v-else-if="field_type === 'separator'">
         <div
-          class="w-100 border-top-0 border-left-0 border-right-0 border-bottom-3 border-dark border mt-9 mb-3"
+            class="w-100 border-top-0 border-left-0 border-right-0 border-bottom-3 border-dark border mt-9 mb-3"
         >
           <h3 class="pb-0 mb-2">{{ label }}</h3>
         </div>
       </template>
       <template v-else-if="field_type === 'auto-complete'">
         <Field
-          :class="[defaultInputClasses, input_class]"
-          :id="field_id"
-          :name="name"
-          type="checkbox"
-          :value="this.$props.modelValue"
+            :class="[defaultInputClasses, input_class]"
+            :id="field_id"
+            :name="name"
+            :modelValue="this.$props.modelValue"
+            :value="this.$props.modelValue"
+            type="checkbox"
         >
           <auto-complete
-            :placeholder="placeholder"
-            :options="{
+              :placeholder="placeholder"
+              :name="name"
+              :options="{
               url: select_url,
             }"
-            :modelValue="this.$props.modelValue"
-            @update:modelValue="$emit('update:modelValue', $event)"
-            ref="fieldRef"
+              :modelValue="this.$props.modelValue"
+              @update:modelValue="$emit('update:modelValue', $event)"
+              ref="fieldRef"
           />
         </Field>
       </template>
       <template v-else-if="field_type === 'currency'">
         <Field
-          :class="[defaultInputClasses, input_class]"
-          :readonly="processedReadOnly()"
-          :placeholder="placeholder"
-          type="text"
-          :name="name"
-          :modelValue="this.$props.modelValue"
-          ref="fieldRef"
+            :class="[defaultInputClasses, input_class]"
+            :readonly="processedReadOnly()"
+            :placeholder="placeholder"
+            type="text"
+            :name="name"
+            :modelValue="this.$props.modelValue"
+            ref="fieldRef"
         >
           <input
-            type="text"
-            :readonly="processedReadOnly()"
-            @keyup="formatCurrency($refs.fieldRef.$el.nextElementSibling)"
-            :class="[defaultInputClasses, input_class]"
-            v-model="currency"
+              type="text"
+              :readonly="processedReadOnly()"
+              @keyup="formatCurrency($refs.fieldRef.$el.nextElementSibling)"
+              :class="[defaultInputClasses, input_class]"
+              v-model="currency"
           />
         </Field>
       </template>
       <template v-else>
         <Field
-          :class="[defaultInputClasses, input_class]"
-          :readonly="processedReadOnly()"
-          :placeholder="placeholder"
-          :type="field_type"
-          :name="name"
-          :modelValue="this.$props.modelValue"
-          @focusin="$emit('focusin')"
-          @change="$emit('update:modelValue', $event.target.value)"
-          ref="fieldRef"
+            :class="[defaultInputClasses, input_class]"
+            :readonly="processedReadOnly()"
+            :placeholder="placeholder"
+            :type="field_type"
+            :name="name"
+            :modelValue="this.$props.modelValue"
+            @focusin="$emit('focusin')"
+            @change="$emit('update:modelValue', $event.target.value)"
+            ref="fieldRef"
         />
       </template>
       <div
-        class="fv-plugins-message-container"
-        v-if="showError && field_type != 'separator'"
+          class="fv-plugins-message-container"
+          v-if="showError && field_type != 'separator'"
       >
         <div class="fv-help-block">
-          <ErrorMessage :name="name" />
+          <ErrorMessage :name="name"/>
         </div>
       </div>
     </div>
@@ -283,21 +285,21 @@ import {
   toRef,
   watch,
 } from "vue";
-import { ErrorMessage, Field } from "vee-validate";
-import { $, select2 } from "@/custom/helpers/select2_decelaration";
+import {ErrorMessage, Field} from "vee-validate";
+import {$, select2} from "@/custom/helpers/select2_decelaration";
 import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
-import { Actions } from "@/custom/store/enums/StoreEnums";
+import {Actions} from "@/custom/store/enums/StoreEnums";
 import Vue3PersianDatetimePicker from "vue3-persian-datetime-picker";
-import { gregorianToJalali } from "@/custom/components/DateUtils";
-import { findClassInParent } from "@/custom/helpers/DomHelpers";
-import { VueInstanceService } from "@/Defaults";
+import {gregorianToJalali} from "@/custom/components/DateUtils";
+import {findClassInParent} from "@/custom/helpers/DomHelpers";
+import {VueInstanceService} from "@/Defaults";
 import AutoComplete from "@/custom/components/forms/AutoComplete.vue";
 import {
   deformatNumber,
   formatCurrency,
 } from "@/custom/components/FieldComponentCurrency.js";
 import Select2AlternativeField from "@/custom/components/Select2AlternativeField.vue";
-import { read } from "@popperjs/core";
+import {read} from "@popperjs/core";
 
 export default defineComponent({
   name: "field-component",
@@ -474,15 +476,15 @@ export default defineComponent({
     watch(modelValue, (e) => {
       showError.value = true;
       if (
-        field_type.value == "select" &&
-        !modelValue.value &&
-        select2Instance.value
+          field_type.value == "select" &&
+          !modelValue.value &&
+          select2Instance.value
       ) {
         // select2Instance.value.val('').change();
       } else if (
-        field_type.value == "checkbox" &&
-        !modelValue.value &&
-        field.value
+          field_type.value == "checkbox" &&
+          !modelValue.value &&
+          field.value
       ) {
         field.value.checked = false;
       } else if (select2Instance.value) {
@@ -572,7 +574,7 @@ export default defineComponent({
 
         if (modal_id.value) {
           select_options.value["dropdownParent"] = $(
-            document.querySelector(`${modal_id.value}`)
+              document.querySelector(`${modal_id.value}`)
           );
         }
 
@@ -585,12 +587,12 @@ export default defineComponent({
         else url = null;
 
         select2Instance.value = select2(
-          (field.value as { $el: HTMLSelectElement }).$el,
-          url,
-          select_options.value,
-          () => {
-            VueInstanceService.store.dispatch(Actions.ASK_NEW_TOKEN);
-          }
+            (field.value as { $el: HTMLSelectElement }).$el,
+            url,
+            select_options.value,
+            () => {
+              VueInstanceService.store.dispatch(Actions.ASK_NEW_TOKEN);
+            }
         );
 
         select2Instance.value?.change((e) => {
@@ -616,7 +618,7 @@ export default defineComponent({
       if (typeof data === "boolean") {
         if (data != undefined) data = data ? 1 : 0;
       }
-      if (field_type.value === "select") {
+      if (field_type.value === "select" || field_type.value == "auto-complete") {
         nextTick(() => {
           setOptions(data);
         });
@@ -641,8 +643,8 @@ export default defineComponent({
 
       if (field_type.value === "p-date-time") {
         if (
-          typeof data == "string" &&
-          data.match(/^\d{4}\/\d{1,2}\/\d{1,2}$/)
+            typeof data == "string" &&
+            data.match(/^\d{4}\/\d{1,2}\/\d{1,2}$/)
         ) {
           context.emit("update:modelValue", data);
           return;
@@ -674,7 +676,7 @@ export default defineComponent({
               nextTick(() => {
                 formatCurrency(field.value.$el.nextElementSibling);
                 field.value.$el.nextElementSibling.dispatchEvent(
-                  new Event("change")
+                    new Event("change")
                 );
                 field.value.$el.dispatchEvent(new Event("change"));
                 currency.value = field.value.$el.nextElementSibling.value;
@@ -691,33 +693,50 @@ export default defineComponent({
     };
 
     const setOptions = (
-      options:
-        | Array<{ value: number | string; text: string }>
-        | Array<string>
-        | Array<number>
+        options:
+            | Array<{ value: number | string; text: string }>
+            | Array<string>
+            | Array<number>
     ) => {
-      if (options == null || options == undefined) {
+      if ((options == null || options == undefined) && field_type.value != "auto-complete") {
         select2Instance.value?.val(null);
         select2Instance.value?.change();
         return;
       }
 
       if (options.length > 0 && options[0] && !options[0]["text"]) {
-        select2Instance.value?.val(options);
+        if (field_type.value == "auto-complete") {
+          field.value.fieldText = options;
+          field.value.inputDate = options;
+          field.value.updateFieldInformation();
+        } else
+          select2Instance.value?.val(options);
       } else if (!Array.isArray(options)) {
-        select2Instance.value?.val(String(options));
+        if (field_type.value == "auto-complete") {
+          field.value.fieldText = options["text"];
+          field.value.inputDate = options["value"];
+          field.value.updateFieldInformation();
+        } else
+          select2Instance.value?.val(String(options));
       } else
         options.forEach((data) => {
           if (!data) return;
-          if (data["text"] && data["value"])
-            select2Instance.value?.append(
-              new Option(
-                String(data["text"]),
-                String(data["value"]),
-                true,
-                true
-              )
-            );
+          if (data["text"] && data["value"]) {
+            if (field_type.value == "auto-complete") {
+              field.value.fieldText = data["text"];
+              field.value.inputDate = data["value"];
+              field.value.updateFieldInformation();
+            } else {
+              select2Instance.value?.append(
+                  new Option(
+                      String(data["text"]),
+                      String(data["value"]),
+                      true,
+                      true
+                  )
+              );
+            }
+          }
         });
       select2Instance.value?.change();
     };
@@ -788,7 +807,7 @@ export class FieldComponentProps {
 }
 
 export function fieldC(
-  options: FieldComponentPropsInterface
+    options: FieldComponentPropsInterface
 ): FieldComponentProps {
   return new FieldComponentProps(options);
 }

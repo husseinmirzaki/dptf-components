@@ -19,7 +19,7 @@ export function selectFormDataV2(formInstance: any, serverData: any) {
       if (serverData[e.name]) {
         serverData[e.name] = serverData[e.name].map(buildSelectOption);
       }
-    } else if (e.field_type == "select" && !e.select_multiple) {
+    } else if ((e.field_type == "select" || e.field_type == "auto-complete") && !e.select_multiple) {
       if (serverData[e.name]) {
         const serverInfo = serverData[e.name];
         if (
