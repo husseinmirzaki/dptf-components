@@ -449,7 +449,7 @@ export class Table {
     index,
     rowIndex: string | number | undefined = undefined
   ): any {
-    let itemElement = Object.assign(item);
+    let itemElement:any = JSON.parse(JSON.stringify(item));
     if (header.search(/\./) > -1) {
       const s = header.split(".");
       for (const i in s) {
@@ -488,6 +488,7 @@ export class Table {
     index,
     rowIndex: string | number | undefined = undefined
   ) {
+    item = JSON.parse(JSON.stringify(item))
     if (this.tBodyComponents[header]) {
       return this.tBodyComponents[header];
     }
