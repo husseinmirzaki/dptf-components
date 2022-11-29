@@ -80,7 +80,7 @@ export default defineComponent({
     const state = toRef(props, "state");
     const innerState = ref(state.value);
     const activeState = ref(props.defaultActiveState);
-    const satellite = ref(false);
+    const satellite = ref(true);
     const mapCenter = ref(props.mapXY);
     const activeWindow = ref();
 
@@ -242,6 +242,7 @@ export default defineComponent({
       },
       () => {
         const layers: any = [];
+
 
         if (this.$slots.default) {
           layers.push(

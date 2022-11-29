@@ -2,11 +2,11 @@
   <table-t-d>
     <div class="cursor-pointer symbol symbol-40px">
       <img
-        src="media/avatars/150-26.jpg"
+        src="media/avatars/blank2.jpg"
         alt="metronic"
         @click="
           $viewerApi({
-            images: ['media/avatars/150-26.jpg'],
+            images: ['media/avatars/blank2.jpg'],
           })
         "
       />
