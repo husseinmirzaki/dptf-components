@@ -31,7 +31,7 @@ export default defineComponent({
       if (data && data.length > maxLength && typeof data === "string") {
         return data.substr(0, maxLength) + "...";
       }
-      return data;
+      return String(data);
     };
     const len = (data) => {
       if (data && data.length) {
@@ -46,9 +46,11 @@ export default defineComponent({
       const data = isRef(props.data) ? props.data.value : props.data;
       const lastData = data ? data : props.emptyCell ? props.emptyCell : '-';
 
+
       let toShow: any;
+
       if (defaultSlot)
-        toShow = defaultSlot();
+        toShow = defaultSlot(lastData);
       else if (len(lastData) > maxTextLength)
         toShow = h(
             resolveComponent('el-tooltip'),
@@ -63,7 +65,8 @@ export default defineComponent({
       else
         toShow = h(
             'span',
-            lastData,
+            {},
+            String(lastData),
         )
 
       return h(
