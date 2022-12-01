@@ -205,7 +205,7 @@ export default {
       clearTimeout(changeTriggerTimeout);
       changeTriggerTimeout = setTimeout(() => {
         sendInformation(textData);
-      }, 200);
+      }, 260);
     });
 
     const globalOnClick = (e) => {
