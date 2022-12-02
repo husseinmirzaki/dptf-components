@@ -86,7 +86,7 @@ export default {
       }
       return false;
     });
-    console.log(file.value);
+    // console.log(file.value);
     return {
       isZip,
     };

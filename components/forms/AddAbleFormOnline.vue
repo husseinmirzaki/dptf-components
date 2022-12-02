@@ -49,8 +49,6 @@ export default defineComponent({
       // set select_url
       if (f["rel_model"] && !f["select_url"]) {
         if (modelToServiceMap[f["rel_model"]]) {
-          console.log("we are here for ", f["label"]);
-          console.log("we are here for ", f);
           f["select_url"] = modelToServiceMap[f["rel_model"]].selectUrl;
           f["canAddItem"] = true;
           f["onAddClick"] = () => {
@@ -218,7 +216,8 @@ export default defineComponent({
           disableDrag: true,
           onFormReady: onFormReadyC,
           showCancelButton:
-            formReady.value && formInstance.formInstance.update.value,
+            formReady.value &&
+              formInstance.formInstance.update.value,
           onFields: onFieldsC,
           onBuildFields: props.onBuildFields,
           onAfterSubmit: props.onAfterSubmit,

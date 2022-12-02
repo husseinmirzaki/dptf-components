@@ -42,7 +42,7 @@ export default defineComponent({
 
       if (slots["modalButton"]) {
         slots["toolbar0"] = () => {
-          console.log(slots);
+          // console.log(slots);
           return slots["modalButton"](expose);
         };
       }

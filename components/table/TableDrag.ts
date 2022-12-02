@@ -226,7 +226,7 @@ export class SimpleDrag {
           cloned.addEventListener("mouseup", (e) => {
             const marker1 = document.createElement("div");
             const marker2 = document.createElement("div");
-            console.log(this.lastTargetDrag!, element);
+            // console.log(this.lastTargetDrag!, element);
             this.lastTargetDrag!.before(marker1);
             element.before(marker2);
 

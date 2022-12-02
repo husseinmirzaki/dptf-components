@@ -1,5 +1,5 @@
 export function formatCurrency(input, blur) {
-  console.log(input);
+  // console.log(input);
   // appends $ to value, validates decimal side
   // and puts cursor back in right position.
 

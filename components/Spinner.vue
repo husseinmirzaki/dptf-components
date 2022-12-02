@@ -31,7 +31,7 @@ export default defineComponent({
     });
 
     watch(promise, () => {
-      console.log("new promise");
+      // console.log("new promise");
       localLoading.value = true;
       promise.value
         .then(() => (localLoading.value = false))

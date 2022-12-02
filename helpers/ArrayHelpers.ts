@@ -41,7 +41,7 @@ function buildFormData(formData, data, parentKey?) {
     });
   } else {
     const value = data == null ? "" : data;
-    console.log(parentKey, value);
+    // console.log(parentKey, value);
     formData.append(parentKey, value);
   }
 }

@@ -79,7 +79,7 @@ export const DEFAULT_BUTTONS = {
         "btn-sm btn-icon btn-color-primary btn-active-light-primary ms-2",
       ];
 
-    console.log("props", buttonProps);
+    // console.log("props", buttonProps);
 
     return DEFAULT_BUTTONS.icon(buttonProps, iconProps);
   },
@@ -105,7 +105,7 @@ export const DROPDOWN_BUTTONS = {
         "btn-sm btn-icon btn-color-primary btn-active-light-primary ms-2",
       ];
 
-    console.log("props", buttonProps);
+    // console.log("props", buttonProps);
 
     return DROPDOWN_BUTTONS.icon(buttonProps, iconProps);
   },

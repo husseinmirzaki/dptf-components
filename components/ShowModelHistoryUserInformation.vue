@@ -43,7 +43,7 @@ export default defineComponent({
         if (e.modalId == modalInstance.modalId) {
           promise.value = getPaginatedData(tableName, page.value);
           promise.value.then(({ data: info }) => {
-            console.log(info);
+            // console.log(info);
             data.value = info.results;
             totalCount.value = info.count;
           });
