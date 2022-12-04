@@ -705,6 +705,8 @@ export default defineComponent({
         return;
       }
 
+      if (!options) return;
+
       if (options.length > 0 && options[0] && !options[0]["text"]) {
         if (field_type.value == "auto-complete") {
           field.value.fieldText = options;

@@ -159,15 +159,7 @@ export class CreateForm<T extends FieldsInterface = any> {
         this.refs[mode].value["id"] = id;
     }
 
-    /**
-     * returns an array which could be used in form
-     * `concatFields` method
-     *
-     * flattens an object of key/value to an array of
-     * [key, value].
-     * @param option
-     */
-    optionToSelect2Option(
+    static optionToSelect2Option(
         option: Record<string, any>,
         selectedValue: null | string = null
     ) {
@@ -180,6 +172,21 @@ export class CreateForm<T extends FieldsInterface = any> {
             ]);
         });
         return extracted;
+    }
+
+    /**
+     * returns an array which could be used in form
+     * `concatFields` method
+     *
+     * flattens an object of key/value to an array of
+     * [key, value].
+     * @param option
+     */
+    optionToSelect2Option(
+        option: Record<string, any>,
+        selectedValue: null | string = null
+    ) {
+        return CreateForm.optionToSelect2Option(option, selectedValue);
     }
 
     private filterMode(searchMode: string) {
