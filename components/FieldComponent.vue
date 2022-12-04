@@ -698,6 +698,7 @@ export default defineComponent({
             | Array<string>
             | Array<number>
     ) => {
+      debugger;
       if ((options == null || options == undefined) && field_type.value != "auto-complete") {
         select2Instance.value?.val(null);
         select2Instance.value?.change();
