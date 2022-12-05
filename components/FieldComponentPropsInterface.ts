@@ -1,6 +1,7 @@
 import { Ref } from "vue";
 
 export default interface FieldComponentPropsInterface {
+  input_class?: string;
   defaultInputClasses?: string;
   select_filter_id?: string;
   select_filter_key?: string;

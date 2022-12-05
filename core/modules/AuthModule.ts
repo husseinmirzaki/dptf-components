@@ -20,7 +20,6 @@ import { Module, Action, Mutation, VuexModule } from "vuex-module-decorators";
 import { VueInstanceService } from "@/Defaults";
 import { UserApiService } from "@/custom/services/UserApiService";
 import { fullNameGenerator } from "@/custom/helpers/UserHelpers";
-import { useI18n } from "vue-i18n";
 
 export interface User {
   avatar?: string;
