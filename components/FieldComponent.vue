@@ -721,15 +721,13 @@ export default defineComponent({
             | Array<string>
             | Array<number>
     ) => {
-      if ((options == null || options == undefined) && field_type.value != "auto-complete") {
+      if ((options === null || options === undefined) && field_type.value != "auto-complete") {
         select2Instance.value?.val(null);
         select2Instance.value?.change();
         return;
       }
 
-      if (!options) return;
-
-      if (options.length > 0 && options[0] && !options[0]["text"]) {
+      if (Array.isArray(options) && options.length > 0 && options[0] && !options[0]["text"]) {
         if (field_type.value == "auto-complete") {
           field.value.fieldText = options;
           field.value.inputDate = options;
