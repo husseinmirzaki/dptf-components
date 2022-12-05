@@ -230,6 +230,22 @@
           />
         </Field>
       </template>
+      <template v-else-if="field_type === 'color'">
+        <Field
+            :class="[defaultInputClasses, input_class]"
+            :id="field_id"
+            :name="name"
+            :modelValue="this.$props.modelValue"
+            :value="this.$props.modelValue"
+        >
+          <FieldColorPicker
+              :name="name"
+              :modelValue="this.$props.modelValue"
+              @update:modelValue="$emit('update:modelValue', $event)"
+              ref="fieldRef"
+          />
+        </Field>
+      </template>
       <template v-else-if="field_type === 'currency'">
         <Field
             :class="[defaultInputClasses, input_class]"
@@ -299,16 +315,19 @@ import {
   formatCurrency,
 } from "@/custom/components/FieldComponentCurrency.js";
 import Select2AlternativeField from "@/custom/components/Select2AlternativeField.vue";
-import {read} from "@popperjs/core";
+import {ColorPicker} from 'vue-accessible-color-picker'
+import FieldColorPicker from "@/custom/components/FieldColorPicker.vue";
 
 export default defineComponent({
   name: "field-component",
   inheritAttrs: false,
   components: {
+    FieldColorPicker,
     Select2AlternativeField,
     AutoComplete,
     Field,
     ErrorMessage,
+    ColorPicker,
     DatePicker: Vue3PersianDatetimePicker,
   },
   props: {
@@ -610,6 +629,12 @@ export default defineComponent({
     });
 
     const setValue = (data) => {
+      if (field_type.value == "color") {
+        if (field.value) {
+            field.value.setColor(data);
+        }
+        return;
+      }
       if (field_type.value == "component") {
         if (field.value && field.value.setData) {
           field.value.setData(data);
@@ -635,12 +660,10 @@ export default defineComponent({
             return;
         }
       }
-
       if (field_type.value === "checkbox") {
         field.value.checked = data;
         context.emit("update:modelValue", data);
       }
-
       if (field_type.value === "p-date-time") {
         if (
             typeof data == "string" &&
