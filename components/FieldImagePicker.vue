@@ -1,12 +1,13 @@
 <script lang="ts">
-import { defineComponent, h, onUnmounted, ref, resolveComponent } from "vue";
+import {defineComponent, h, onUnmounted, ref, resolveComponent} from "vue";
 import Cropper from "cropperjs";
-import { DEFAULT_COLS } from "@/custom/helpers/RenderFunctionHelpers";
+import {DEFAULT_COLS} from "@/custom/helpers/RenderFunctionHelpers";
 
 export default defineComponent({
   setup(props, context) {
     let lastRequest: any;
     const selectedFile = ref(false);
+    const alreadyUploadedFile = ref();
     const build = (fileRef) => {
       if (fileRef) {
         const cropper = new Cropper(fileRef, {
@@ -17,13 +18,13 @@ export default defineComponent({
             lastRequest = setTimeout(() => {
               const canvas = cropper.getCroppedCanvas();
               canvas.toBlob(
-                function (blob: any) {
-                  context.emit("update:modelValue", [
-                    new File([blob], "fileName.jpg", { type: "image/png" }),
-                  ]);
-                },
-                "image/png",
-                1
+                  function (blob: any) {
+                    context.emit("update:modelValue", [
+                      new File([blob], "fileName.jpg", {type: "image/png"}),
+                    ]);
+                  },
+                  "image/png",
+                  1
               );
             }, 500);
           },
@@ -46,6 +47,16 @@ export default defineComponent({
       }
     }
 
+    context.expose({
+      /**
+       * address of already selected file
+       * @param e
+       */
+      setData: (e) => {
+        alreadyUploadedFile.value = e;
+      }
+    })
+
     return () => {
       const layers: any = [
         h("input", {
@@ -59,59 +70,75 @@ export default defineComponent({
         }),
       ];
 
+      const deleteButton = () => layers.push(
+          h(
+              "div",
+              {
+                class: "btn btn-sm btn-icon btn-danger close-button",
+                onClick: () => {
+                  if (selectedFile.value) {
+                    selectedFile.value = false;
+                    if (alreadyUploadedFile.value)
+                      context.emit("update:modelValue", undefined);
+                    else
+                      context.emit("update:modelValue", "r");
+                  } else {
+                    selectedFile.value = false;
+                    alreadyUploadedFile.value = false;
+                    context.emit("update:modelValue", "r");
+                  }
+                },
+              },
+              h(
+                  "span",
+                  {
+                    class: "svg-icon svg-icon-1",
+                  },
+                  h(resolveComponent("inline-svg"), {
+                    src: "media/icons/duotune/arrows/arr061.svg",
+                  })
+              )
+          )
+      )
+
       if (!selectedFile.value) {
         layers.push(
-          h(
-            "div",
-            {
-              class: "d-flex align-items-center justify-content-center",
-              style: {
-                height: "100px !important",
-              },
-              onClick: () => {
-                lastFileInputInstance.click();
-              },
-            },
-            "یک تصویر انتخاب کنید"
-          )
+            h(
+                "div",
+                {
+                  class: "d-flex align-items-center justify-content-center",
+                  style: {
+                    height: "100px !important",
+                    background: alreadyUploadedFile.value ? `url(${alreadyUploadedFile.value})` : undefined,
+                    backgroundSize: 'contain',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                  },
+                  onClick: () => {
+                    lastFileInputInstance.click();
+                  },
+                },
+                alreadyUploadedFile.value ? "" : "یک تصویر انتخاب کنید"
+            )
         );
+        if (alreadyUploadedFile.value)
+          deleteButton();
       } else {
         layers.push(
-          DEFAULT_COLS.col12(
-            h("img", {
-              style: {
-                maxHeight: "250px",
-              },
-              ref: build,
-              src: lastFileInputInstance.getAttribute("src"),
-            })
-          )
-        );
-
-        layers.push(
-          h(
-            "div",
-            {
-              class: "btn btn-sm btn-icon btn-danger close-button",
-              onClick: () => {
-                selectedFile.value = false;
-                context.emit("update:modelValue", undefined);
-              },
-            },
-            h(
-              "span",
-              {
-                class: "svg-icon svg-icon-1",
-              },
-              h(resolveComponent("inline-svg"), {
-                src: "media/icons/duotune/arrows/arr061.svg",
-              })
+            DEFAULT_COLS.col12(
+                h("img", {
+                  style: {
+                    maxHeight: "250px",
+                  },
+                  ref: build,
+                  src: lastFileInputInstance.getAttribute("src"),
+                })
             )
-          )
         );
+        deleteButton();
       }
 
-      return h("div", { class: "field-image-cropper" }, layers);
+      return h("div", {class: "field-image-cropper"}, layers);
     };
   },
 });
