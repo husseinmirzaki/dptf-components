@@ -4,6 +4,7 @@ export interface UserInfoInterface {
 }
 
 export function fullNameGenerator(obj?: UserInfoInterface) {
+  console.log(obj);
   if (obj) {
     if (
       obj.first_name &&
