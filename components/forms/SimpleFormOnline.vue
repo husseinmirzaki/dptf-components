@@ -137,7 +137,7 @@ export default {
       if (!(buildByModelName.formBuilt.value && !props.isReadOnly)) return;
 
       const promiseButton = h(PromiseButton, {
-        text: "ثبت",
+        text: buildByModelName.formInstance?.update.value ? "ویرایش" : "ثبت",
         onSubmitDone: (e) => {
           context.emit("done", e, buildByModelName);
           if (props.formAsModal) {
