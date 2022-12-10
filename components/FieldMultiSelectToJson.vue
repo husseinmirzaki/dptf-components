@@ -10,6 +10,8 @@ export default defineComponent({
 
     context.expose({
       setData: (d) => {
+        if (typeof d == "string")
+          d = JSON.parse(d);
         refField.setValue(d);
       }
     })
