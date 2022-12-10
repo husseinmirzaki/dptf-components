@@ -36,7 +36,7 @@ export default {
     name: String,
     readonly: Boolean,
     modelValue: {
-      default: "34.0136278,51.3639472",
+      default: "35.688733628305066,51.385374832560466",
       type: String,
     },
   },
