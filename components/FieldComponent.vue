@@ -631,7 +631,7 @@ export default defineComponent({
     const setValue = (data) => {
       if (field_type.value == "color") {
         if (field.value) {
-            field.value.setColor(data);
+          field.value.setColor(data);
         }
         return;
       }
@@ -721,10 +721,14 @@ export default defineComponent({
             | Array<string>
             | Array<number>
     ) => {
-      if ((options === null || options === undefined) && field_type.value != "auto-complete") {
-        select2Instance.value?.val(null);
-        select2Instance.value?.change();
-        return;
+      if ((options === null || options === undefined)) {
+        if (select2Instance.value) {
+          select2Instance.value?.val(null);
+          select2Instance.value?.change();
+          return;
+        } else if (field_type.value == "auto-complete") {
+          return;
+        }
       }
 
       if (Array.isArray(options) && options.length > 0 && options[0] && !options[0]["text"]) {
