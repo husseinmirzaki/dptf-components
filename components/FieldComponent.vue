@@ -17,7 +17,7 @@
         </el-tooltip>
       </div>
       <label
-          class="fs-5 fw-bold mb-2 font-weight-bolder text-dark"
+          class="fs-5 fw-bold mb-2 font-weight-bolder text-dark field-input-label"
           :class="[{ required: required }, one_line_label_classes_c, label_class]"
           v-if="
           label != null &&
