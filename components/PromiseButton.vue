@@ -1,7 +1,7 @@
 <template>
   <button
     ref="submitButton"
-    class="btn btn-primary"
+    class="btn btn-primary mx-2"
     @click="onClickDelegation()"
   >
     <span class="indicator-label"> {{ text }} </span>
