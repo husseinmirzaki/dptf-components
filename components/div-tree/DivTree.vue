@@ -118,6 +118,12 @@ export default defineComponent({
   border-top: 1px solid black;
   transform: translateX(50%) translateY(-100%);
 }
+.items-row .show-stuff.only-one .item:before, .items-row .show-stuff.only-one .item:after {
+  display: none;
+}
+.items-row .show-stuff.only-one .item {
+  margin-top: 0;
+}
 
 .items-row .show-stuff .item:last-child:after {
   border-right: 1px solid black;
