@@ -90,28 +90,30 @@ export default defineComponent({
         }
 
         onTBodyProps(item, header, index): any {
-          const field = fields.find((_field) => _field.name == header);
-          if (field) {
-            if (field.field_type == "select" && !field["rel_model"]) {
-              if (item[header]) {
-                const found = field.select_data.find(
-                  (_item) => _item[0] == item[header]
-                );
-                if (found)
-                  return {
-                    data: found[1],
-                  };
+          if (header !== 'row_number') {
+            const field = fields.find((_field) => _field.name == header);
+            if (field) {
+              if (field.field_type == "select" && !field["rel_model"]) {
+                if (item[header]) {
+                  const found = field.select_data.find(
+                      (_item) => _item[0] == item[header]
+                  );
+                  if (found)
+                    return {
+                      data: found[1],
+                    };
+                }
               }
-            }
 
-            if (defaultTableOptions.onTBodyProps) {
-              const data: any = defaultTableOptions.onTBodyProps(
-                item,
-                header,
-                index
-              );
-              if (data) {
-                return data;
+              if (defaultTableOptions.onTBodyProps) {
+                const data: any = defaultTableOptions.onTBodyProps(
+                    item,
+                    header,
+                    index
+                );
+                if (data) {
+                  return data;
+                }
               }
             }
           }

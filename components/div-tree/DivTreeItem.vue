@@ -14,7 +14,7 @@
   </div>
   <div
     class="item-children"
-    :class="{ 'show-stuff': children.length > 0 }"
+    :class="{ 'show-stuff': children.length > 0, 'only-one':children.length == 1 }"
     v-if="children.length > 0"
   >
     <DivTreeItem v-bind="item" v-for="item in children" :key="item" />

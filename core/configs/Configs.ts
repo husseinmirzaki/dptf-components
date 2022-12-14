@@ -4,6 +4,7 @@ export default {
     name: "dashboard",
   },
   showTableActionButtons: false,
+  showTableRowNumberHeader: true,
   cardsAreDraggable: true,
   cardsHideCardIcon: false,
 };

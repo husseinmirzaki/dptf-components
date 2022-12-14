@@ -192,6 +192,10 @@ export class Table {
     return Configs.showTableActionButtons;
   }
 
+  get showRowNumberHeader() {
+    return Configs.showTableRowNumberHeader;
+  }
+
   get showContextMenuView() {
     return true;
   }
@@ -362,14 +366,19 @@ export class Table {
   }
 
   headers(list) {
-    if (this.defaultHeaders.length > 0) return this.defaultHeaders;
+    let finalList = [] as any
+    if (this.defaultHeaders.length > 0)
+      finalList = this.defaultHeaders;
 
     if (list && list.length > 0) {
       this.defaultHeaders = Object.keys(list[0]);
-      return this.defaultHeaders;
+      finalList = this.defaultHeaders;
     }
 
-    return [];
+    if (this.showRowNumberHeader)
+      finalList.unshift('row_number')
+
+    return finalList;
   }
 
   get menuEnabled() {
