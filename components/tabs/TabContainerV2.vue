@@ -1,45 +1,46 @@
 <template>
   <div
-    :class="{
+      ref="mainContainer"
+      :class="{
       'd-flex': vertical,
     }"
   >
     <div
-      dir="ltr"
-      class="d-flex tab-items-container w-100"
-      :class="{
+        dir="ltr"
+        class="d-flex tab-items-container w-100"
+        :class="{
         'flex-column justify-content-start align-items-end is-vertical':
           vertical,
         'justify-content-center align-items-center': !vertical,
       }"
-      ref="container"
+        ref="container"
     >
-      <slot name="tabs" v-if="show" :setActiveItem="setActiveItem" />
+      <slot name="tabs" v-if="show" :setActiveItem="setActiveItem"/>
     </div>
     <div
-      class="d-flex justify-content-center align-items-center w-100 pb-7 tab-content-container"
-      ref="tabContainerBody"
+        class="d-flex justify-content-center align-items-center w-100 pb-7 tab-content-container"
+        ref="tabContainerBody"
     >
       <slot
-        name="tab-container"
-        :tabNames="tabNames"
-        :activeItem="activeItem"
-        :routerMode="routerMode"
-        :bodyHeight="bodyHeight"
+          name="tab-container"
+          :tabNames="tabNames"
+          :activeItem="activeItem"
+          :routerMode="routerMode"
+          :bodyHeight="bodyHeight"
       >
-        <router-view v-if="routerMode && !disableRouterView" />
-        <slot v-else-if="!disableRouterView" :name="tabNames[activeItem]" />
+        <router-view v-if="routerMode && !disableRouterView"/>
+        <slot v-else-if="!disableRouterView" :name="tabNames[activeItem]"/>
       </slot>
     </div>
   </div>
 </template>
 <script>
-import { nextTick, onMounted, ref, watch } from "vue";
-import { VueInstanceService } from "@/Defaults";
-import { SimpleDrag } from "@/custom/components/table/TableDrag";
-import { UserPreferencesManager } from "@/custom/services/UserPreferencesV2Api";
-import { findClassInParent } from "@/custom/helpers/DomHelpers";
-import { useRoute } from "vue-router";
+import {nextTick, onMounted, onUnmounted, ref, watch} from "vue";
+import {VueInstanceService} from "@/Defaults";
+import {SimpleDrag} from "@/custom/components/table/TableDrag";
+import {UserPreferencesManager} from "@/custom/services/UserPreferencesV2Api";
+import {findClassInParent} from "@/custom/helpers/DomHelpers";
+import {useRoute} from "vue-router";
 import Sortable from "sortablejs";
 
 export default {
@@ -71,11 +72,13 @@ export default {
     const activeContent = ref("");
     const activeItem = ref(props.activeIndex);
     const container = ref();
+    const mainContainer = ref();
     const tabContainerBody = ref();
     const bodyHeight = ref(0);
+    let minWidth = 0;
 
     const preferencesManager = new UserPreferencesManager(
-      `tab_container_${props.routerPrefix}`
+        `tab_container_${props.routerPrefix}`
     );
 
     if (!props.disablePreferences) {
@@ -201,8 +204,8 @@ export default {
 
     const updateBodyHeight = () => {
       const cardBodyParent = findClassInParent(
-        tabContainerBody.value,
-        "card-body"
+          tabContainerBody.value,
+          "card-body"
       );
       if (!cardBodyParent) return;
       const myStyle = getComputedStyle(tabContainerBody.value);
@@ -213,15 +216,44 @@ export default {
       bodyHeight.value = cardBodyHeight - extraHeight - 80;
     };
 
+    const decideOverFlowState = () => {
+      if (!props.vertical) {
+        mainContainer.value.style.maxWidth = "100%";
+        container.value.style.maxWidth = "100%";
+
+        if (innerWidth - 30 < mainContainer.value.scrollWidth) {
+          container.value.style.overflowX = 'scroll';
+        } else {
+          container.value.style.overflowX = 'visible';
+        }
+
+      }
+    }
+
+    const globalOnScroll = () => {
+      decideOverFlowState();
+    }
+
     onMounted(() => {
       updateBodyHeight();
       tabNames.value = [];
       show.value = true;
+      window.addEventListener('resize', globalOnScroll);
+      nextTick(() => {
+        nextTick(() => {
+          decideOverFlowState();
+        })
+      })
     });
+
+    onUnmounted(() => {
+      window.removeEventListener('resize', globalOnScroll);
+    })
 
     return {
       // ref
       container,
+      mainContainer,
       tabContainerBody,
 
       // data
