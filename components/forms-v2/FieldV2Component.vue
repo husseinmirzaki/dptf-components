@@ -33,23 +33,36 @@ export default defineComponent({
             field,
             {
               onData: onData,
-              ...props
+              ...props,
             }
         )
+
+      const defaultProps = {
+        value: props.defaultValue,
+        placeholder: props.placeholder,
+        onChange: (e) => onData(e.target.value),
+        class: [
+          'form-control field-v2-form-control',
+          {
+            'form-control-sm': props.size == 'sm',
+            'form-control-lg': props.size == 'lg',
+          }
+        ],
+      }
 
       if (props.type == "textarea")
         return h(
             "textarea",
             {
-              class: 'form-control',
+              ...defaultProps,
             }
         )
 
       return h(
           "input",
           {
-            class: 'form-control',
             type: props.type,
+            ...defaultProps,
           },
       )
 
@@ -57,3 +70,16 @@ export default defineComponent({
   }
 })
 </script>
+<style lang="scss">
+.field-v2-form-control {
+  font-size: 13px;
+  padding: 5px 6px;
+  &.form-control-sm {
+    font-size:11px;
+    padding: 4px 5px;
+  }
+  &.form-control-lg {
+    font-size:14px;
+  }
+}
+</style>

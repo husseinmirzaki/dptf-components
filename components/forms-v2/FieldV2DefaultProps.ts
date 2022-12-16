@@ -6,11 +6,18 @@ export const FieldV2DefaultProps = {
         type: String,
         default: () => "field_" + randomId()
     },
+    size: {
+        type: Object as PropType<"sm" | "md" | "lg">,
+        default: "",
+    },
     name: String,
     label: String,
     placeholder: String,
-    type: Object as PropType<"text" | "number"| "textarea" | "checkbox" | "radio">,
+    type: Object as PropType<"text" | "number" | "textarea" | "checkbox" | "radio">,
     defaultValue: Object,
+    fieldClasses: String,
+    disabled: Boolean,
+    readonly: Boolean,
 };
 
 export const FieldV2DefaultEmits = [

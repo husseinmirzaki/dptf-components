@@ -4,6 +4,12 @@ import Cropper from "cropperjs";
 import {DEFAULT_COLS} from "@/custom/helpers/RenderFunctionHelpers";
 
 export default defineComponent({
+  props: {
+    ratio: {
+      type: Number,
+      default: 1,
+    }
+  },
   setup(props, context) {
     let lastRequest: any;
     const selectedFile = ref(false);
@@ -11,8 +17,8 @@ export default defineComponent({
     const build = (fileRef) => {
       if (fileRef) {
         const cropper = new Cropper(fileRef, {
-          aspectRatio: 1,
-          initialAspectRatio: 1,
+          aspectRatio: props.ratio,
+          initialAspectRatio: props.ratio,
           crop: (e) => {
             clearTimeout(lastRequest);
             lastRequest = setTimeout(() => {
@@ -47,13 +53,33 @@ export default defineComponent({
       }
     }
 
+    function getBase64(file) {
+      return new Promise<any>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function () {
+          resolve(reader.result);
+        };
+        reader.onerror = function (error) {
+          reject(error);
+        };
+      });
+    }
+
     context.expose({
       /**
        * address of already selected file
        * @param e
        */
       setData: (e) => {
-        alreadyUploadedFile.value = e;
+        if (Array.isArray(e) && e[0] instanceof File)
+          getBase64(e[0]).then((result) => {
+            alreadyUploadedFile.value = result;
+            lastFileInputInstance.setAttribute("src", result);
+            selectedFile.value = true;
+          });
+        else
+          alreadyUploadedFile.value = e;
       }
     })
 

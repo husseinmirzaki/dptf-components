@@ -222,8 +222,10 @@ export default {
 
         if (innerWidth - 30 < mainContainer.value.scrollWidth) {
           container.value.style.overflowX = 'scroll';
+          container.value.classList.add('scrollable');
         } else {
           container.value.style.overflowX = 'visible';
+          container.value.classList.remove('scrollable');
         }
 
       }
@@ -237,7 +239,7 @@ export default {
       updateBodyHeight();
       tabNames.value = [];
       show.value = true;
-      window.addEventListener('resize', globalOnScroll);
+      // window.addEventListener('resize', globalOnScroll);
       nextTick(() => {
         nextTick(() => {
           decideOverFlowState();
@@ -246,7 +248,7 @@ export default {
     });
 
     onUnmounted(() => {
-      window.removeEventListener('resize', globalOnScroll);
+      // window.removeEventListener('resize', globalOnScroll);
     })
 
     return {
@@ -270,6 +272,10 @@ export default {
 };
 </script>
 <style lang="scss">
+.scrollable {
+  display: flex !important;
+  flex-direction: column-reverse;
+}
 .tab-items-container {
   &.is-vertical {
     .tab-item-v2 {
