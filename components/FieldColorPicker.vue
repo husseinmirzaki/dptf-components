@@ -37,11 +37,12 @@ export default defineComponent({
 
     const fixColor = (color) => {
       if (!color || color.trim() == "" || color == "transparent")
-        color = "rgba(0,0,0,0)";
+        color = "rgba(255,255,255,1)";
       refSelectedColor.value = color;
     }
     const setColor = (color) => {
       fixColor(color);
+      context.emit('update:modelValue', refSelectedColor.value);
     };
 
     const closeAllColorPickers = () => {
