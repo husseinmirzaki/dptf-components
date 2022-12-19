@@ -34,19 +34,29 @@
   }
 }
 </style>
-<script>
-import FieldComponent from "../FieldComponent";
-import { h, nextTick, onMounted, ref, watch } from "vue";
-import { VueInstanceService } from "@/Defaults";
-import { Table } from "@/custom/components/table/Table";
-import { FieldsApiService } from "@/custom/services/FieldsApiService";
-import { modelToServiceMap } from "@/ModelToServiceMap";
-import { DEFAULT_BUTTONS } from "@/custom/helpers/RenderFunctionHelpers";
+<script lang="ts">
+import FieldComponent from "../FieldComponent.vue";
+import {h, nextTick, onMounted, Ref, ref, watch} from "vue";
+import {VueInstanceService} from "@/Defaults";
+import {Table} from "@/custom/components/table/Table";
+import {FieldsApiService} from "@/custom/services/FieldsApiService";
+import {modelToServiceMap} from "@/ModelToServiceMap";
+import {DEFAULT_BUTTONS} from "@/custom/helpers/RenderFunctionHelpers";
 import InlineSvg from "vue-inline-svg";
-import { randomId } from "@/custom/helpers/random";
+import {randomId} from "@/custom/helpers/random";
+import {sleep} from "@/custom/helpers/MiltiTasking";
+
+type Comp = undefined | null | number;
+
+export interface BuiltFilter {
+  text: Ref<string>;
+  comp: Comp;
+  value: any;
+  id: string;
+}
 
 export default {
-  components: { FieldComponent },
+  components: {FieldComponent},
   props: {
     defaultConfig: Table,
   },
@@ -92,10 +102,22 @@ export default {
       [7, "کوچکتر مساوی"],
     ];
 
-    // current data
-    const currentData = ref();
-    const currentComp = ref();
-    const reRendered = ref(0);
+    /**
+     * Holds current visible information
+     * on input field which user selected
+     */
+    const currentData: Ref = ref();
+
+    /**
+     * Holds current comparing method which
+     * user selected
+     */
+    const currentComp: Ref<Comp> = ref();
+
+    /**
+     * increasing this number will cause a rebuilding
+     */
+    const reRendered: Ref<number> = ref(0);
 
     // element refs
     let filterContainer;
@@ -106,16 +128,33 @@ export default {
     // data from outside
 
     let lastRequestedField;
-    const loadingField = ref(false);
-    const currentFilters = ref([]);
 
+    /**
+     * whether we are loading field information
+     * or not this is used to show a loading
+     * animation or text
+     */
+    const loadingField: Ref<boolean> = ref(false);
+
+    /**
+     * currently applied and non applied
+     * filters lets say it only shows them
+     * submitting filters is done in Table class
+     */
+    const currentFilters: Ref<Array<BuiltFilter>> = ref([]);
+
+    /**
+     * enables or disables filter buttons
+     *
+     * if a comparing option and filter is specified
+     * buttons will be enabled otherwise they will be disabled
+     */
     const checkFilterButtonStatus = () => {
       if (
-        currentData.value == "" ||
-        currentData.value == undefined ||
-        currentData.value == null ||
-        currentComp.value == "" ||
-        !currentComp.value
+          currentData.value === "" ||
+          currentData.value === null ||
+          currentData.value === undefined ||
+          !currentComp.value
       ) {
         if (addButtonInstance) {
           addButtonInstance.disabled = true;
@@ -127,14 +166,21 @@ export default {
       }
     };
 
+    /**
+     * updates currentFilters list
+     *
+     * in case user is adding multiple filters
+     * in one go we need to get currently set filters
+     * from Table class and show them to user
+     */
     const getFilters = () => {
       let fieldName = lastRequestedField.name;
       if (fieldName) {
         const data = props.defaultConfig.jsonFilters[fieldName];
         if (data && Array.isArray(data)) {
           currentFilters.value = Object.assign(
-            [],
-            props.defaultConfig.jsonFilters[fieldName]
+              [],
+              props.defaultConfig.jsonFilters[fieldName]
           );
         } else {
           currentFilters.value = [];
@@ -142,19 +188,30 @@ export default {
       }
     };
 
-    const showFilters = () => {
+    /**
+     * shows the floating filter container
+     * this container contains a selection
+     * for comparing and an input for filter
+     */
+    const showFilters = async () => {
       if (!filterContainer) {
+        // if we do not have any filterContainers
+        // what we do is we will try to rerender
+        // the whole thing so its reference is
+        // created
         reRendered.value++;
-        nextTick(() => {
-          if (filterContainer) filterContainer.style.display = "block";
-          else
-            nextTick(() => {
-              filterContainer.style.display = "block";
-            });
-        });
+        while (!filterContainer) {
+          await sleep(10);
+          await nextTick();
+        }
+        filterContainer.style.display = "block";
       } else filterContainer.style.display = "block";
     };
 
+    /**
+     * closes floating filter container
+     * and resetting settings to default state
+     */
     const hideFilters = () => {
       filterContainer.style.display = "none";
       lastRequestedField = undefined;
@@ -166,45 +223,65 @@ export default {
       });
     };
 
+    /**
+     * remove a filter from currentFilters list
+     *
+     * the removed filters will not be removed from
+     * Table class until user click on apply
+     * @param id
+     */
     const removeFilter = (id) => {
-      const index = currentFilters.value.findIndex((item) => item.id == id);
+      const index = currentFilters.value.findIndex((item) => item['id'] == id);
 
       if (index > -1) {
         currentFilters.value.splice(index, 1);
       }
     };
 
+    /**
+     * set the removed, added filters to Table class
+     * and refresh the table
+     *
+     * pay attention if any filter is removed from currentFilters
+     * list now will be gone same goes for newly added fields
+     */
     const applyFilters = () => {
       props.defaultConfig.applyFilter(
-        lastRequestedField.name,
-        Object.assign([], currentFilters.value)
+          lastRequestedField.name,
+          Object.assign([], currentFilters.value)
       );
       hideFilters();
       props.defaultConfig.refresh(true);
     };
 
+    /**
+     * users selects a comp and value this two are
+     * used to filter table data
+     */
     const addFilter = () => {
       if (lastRequestedField["rel_model"]) {
         const response = ref("در حال لود");
         modelToServiceMap[lastRequestedField["rel_model"]]
-          .getOne(currentData.value)
-          .then(({ data }) => {
-            if (data.name) {
-              response.value = name;
-            } else if (data.first_name && data.last_name) {
-              response.value = data.first_name + " " + data.last_name;
-            } else if (data.first_name) {
-              response.value = data.first_name;
-            } else if (data.last_name) {
-              response.value = data.last_name;
-            } else if (data.title) {
-              response.value = data.title;
-            } else if (data.number) {
-              response.value = data.number;
-            } else if (data.serial) {
-              response.value = data.serial;
-            }
-          });
+            .getOne(currentData.value)
+            .then(({data: info}) => {
+              if (info.name) {
+                response.value = info.name;
+              } else if (info.first_name && info.last_name) {
+                response.value = info.first_name + " " + info.last_name;
+              } else if (info.first_name) {
+                response.value = info.first_name;
+              } else if (info.last_name) {
+                response.value = info.last_name;
+              } else if (info.title) {
+                response.value = info.title;
+              } else if (info.number) {
+                response.value = info.number;
+              } else if (info.serial) {
+                response.value = info.serial;
+              } else {
+                response.value = JSON.stringify(info);
+              }
+            });
         currentFilters.value.push({
           text: response,
           value: currentData.value,
@@ -226,51 +303,67 @@ export default {
     };
 
     watch(
-      currentData,
-      (e) => {
-        checkFilterButtonStatus(e);
-      },
-      {
-        deep: true,
-      }
+        currentData,
+        (e) => {
+          checkFilterButtonStatus();
+        },
+        // TODO: this is not required
+        {
+          deep: true,
+        }
     );
 
     watch(
-      currentComp,
-      (e) => {
-        checkFilterButtonStatus(e);
-      },
-      {
-        deep: true,
-      }
+        currentComp,
+        (e) => {
+          checkFilterButtonStatus();
+        },
+        // TODO: this is not required
+        {
+          deep: true,
+        }
     );
 
-    onMounted(() => {
+    const currentFilterEventName = () => `show-table-filter-${props.defaultConfig.tableName}`;
+
+    const listenForIncomingFilterRequest = () => {
       VueInstanceService.on(
-        `show-table-filter-${props.defaultConfig.tableName}`,
-        (event) => {
-          if (event) {
-            showFilters();
-            loadingField.value = true;
-            if (event.fieldName) {
-              const modelName = props.defaultConfig.modelName;
-              FieldsApiService.getFieldConfig(modelName, event.fieldName).then(
-                ({ data }) => {
-                  // console.log(data);
-                  lastRequestedField = data;
-                  loadingField.value = false;
-                  getFilters();
-                }
-              );
-            } else {
-              lastRequestedField = event.customFilterField;
-              getFilters();
-              loadingField.value = false;
+          currentFilterEventName(),
+          async (event) => {
+            if (event) {
+              await showFilters();
+              loadingField.value = true;
+              if (event.fieldName) {
+                // incase a fieldName was provided
+                // it means that the developer is
+                // asking us to create new field automatically
+                // model name can be provided by developer
+                // using modelName key on event
+                const modelName = event['modelName'] || props.defaultConfig.modelName;
+
+                // we must get field information from server
+                FieldsApiService.getFieldConfig(modelName, event.fieldName).then(
+                    ({data}) => {
+                      // console.log(data);
+                      lastRequestedField = data;
+                      loadingField.value = false;
+                      getFilters();
+                    }
+                );
+              } else {
+                // developer created a new customFilterField
+                // which will be used to render input field
+                lastRequestedField = event.customFilterField;
+                getFilters();
+                loadingField.value = false;
+              }
             }
           }
-        }
       );
-      checkFilterButtonStatus(currentData.value);
+    }
+    onMounted(() => {
+      listenForIncomingFilterRequest();
+      checkFilterButtonStatus();
     });
 
     return () => {
@@ -293,42 +386,42 @@ export default {
         return FOREIGN_COMP_SELECTS;
       })();
 
-      let dynamicField = undefined;
+      let dynamicField: any = undefined;
       if (loadingField.value) {
         dynamicField = h(
-          "div",
-          {
-            class: "d-flex justify-content-center align-items-center",
-            style: {
-              height: "39px",
-            },
-          },
-          h(
-            "p",
+            "div",
             {
-              class: "p-0 m-0",
+              class: "d-flex justify-content-center align-items-center",
+              style: {
+                height: "39px",
+              },
             },
-            "درحال لود فیلتر"
-          )
+            h(
+                "p",
+                {
+                  class: "p-0 m-0",
+                },
+                "درحال لود فیلتر"
+            )
         );
       } else if (!loadingField.value && !lastRequestedField) {
         dynamicField = h(
-          "div",
-          {
-            class: "d-flex justify-content-center align-items-center",
-            style: {
-              height: "39px",
-            },
-          },
-          h(
-            "p",
+            "div",
             {
-              class: "p-0 m-0",
+              class: "d-flex justify-content-center align-items-center",
+              style: {
+                height: "39px",
+              },
             },
-            "یک فیلتر را انتخاب کنید"
-          )
+            h(
+                "p",
+                {
+                  class: "p-0 m-0",
+                },
+                "یک فیلتر را انتخاب کنید"
+            )
         );
-      } else if(lastRequestedField){
+      } else if (lastRequestedField) {
         const fieldProps = {
           placeholder: lastRequestedField["label"],
           modelValue: currentData.value,
@@ -339,10 +432,10 @@ export default {
           fieldProps["field_type"] = "select";
           fieldProps["modal_id"] = ".filter-container-like-model";
           fieldProps["select_multiple"] =
-            !!lastRequestedField["select_multiple"];
+              !!lastRequestedField["select_multiple"];
           if (lastRequestedField["rel_model"]) {
             fieldProps["select_url"] =
-              modelToServiceMap[lastRequestedField["rel_model"]].selectUrl;
+                modelToServiceMap[lastRequestedField["rel_model"]].selectUrl;
             fieldProps["select_options"] = {
               onParams: (e) => {
                 e.by_id = 1;
@@ -364,7 +457,7 @@ export default {
 
         dynamicField = h(FieldComponent, fieldProps);
       }
-      const compField = h(FieldComponent, {
+      const compField = h(FieldComponent as any, {
         ref: (el) => (compFieldInstance = el),
         name: "comp",
         modal_id: ".filter-container-like-model",
@@ -379,119 +472,121 @@ export default {
       });
 
       const currentFilter = h(
-        "div",
-        {
-          class: "d-flex",
-        },
-        [
-          h(
-            "div",
-            {
-              style: { width: "200px" },
-            },
-            dynamicField
-          ),
-          h(
-            "div",
-            {
-              class: "ms-1",
-              style: { width: "90px" },
-            },
-            compField
-          ),
-        ]
-      );
-
-      const addFilterButton = [
-        DEFAULT_BUTTONS.primary(
-          {
-            class: "btn-sm add-filter-button",
-            ref: (el) => (addButtonInstance = el),
-            onClick: addFilter,
-          },
-          "اضافه کردن فیلتر"
-        ),
-        DEFAULT_BUTTONS.primary(
-          {
-            class: "btn-sm add-filter-button ms-1",
-            onClick: applyFilters,
-          },
-          "اعمال"
-        ),
-      ];
-
-      const currentlySelectedFilters = currentFilters.value.map((e) =>
-        h(
           "div",
           {
-            key: e.id,
             class: "d-flex",
           },
           [
             h(
-              "div",
-              {
-                style: {
-                  "flex-grow": 1,
+                "div",
+                {
+                  style: {width: "200px"},
                 },
-              },
-              e.text
+                dynamicField
             ),
             h(
+                "div",
+                {
+                  class: "ms-1",
+                  style: {width: "90px"},
+                },
+                compField
+            ),
+          ]
+      );
+
+      const addFilterButton = [
+        DEFAULT_BUTTONS.primary(
+            {
+              class: "btn-sm add-filter-button",
+              ref: (el) => (addButtonInstance = el),
+              onClick: addFilter,
+            },
+            "اضافه کردن فیلتر"
+        ),
+        DEFAULT_BUTTONS.primary(
+            {
+              class: "btn-sm add-filter-button ms-1",
+              onClick: applyFilters,
+            },
+            "اعمال"
+        ),
+      ];
+
+      const currentlySelectedFilters = currentFilters.value.map((e) =>
+          h(
               "div",
               {
-                style: {
-                  "flex-grow": 1,
-                },
+                key: e.id,
+                class: "d-flex",
               },
-              (() => {
-                const found = CURRENT_COMP_SELECT.find((s) => s[0] == e.comp);
-                if (found) {
-                  return found[1];
-                }
-                return "بدون";
-              })()
-            ),
-            h(InlineSvg, {
-              onClick: () => {
-                removeFilter(e.id);
-              },
-              style: {
-                width: "18px",
-              },
-              src: "media/icons/duotune/arrows/arr061.svg",
-            }),
-          ]
-        )
+              [
+                h(
+                    "div",
+                    {
+                      style: {
+                        "flex-grow": 1,
+                      },
+                    },
+                    e.text as any
+                ),
+                h(
+                    "div",
+                    {
+                      style: {
+                        "flex-grow": 1,
+                      },
+                    },
+                    String((() => {
+                      const found = CURRENT_COMP_SELECT.find((s) => s[0] == e.comp);
+                      if (found) {
+                        return found[1];
+                      }
+                      return "بدون";
+                    })())
+                ),
+                h(InlineSvg, {
+                  onClick: () => {
+                    removeFilter(e.id);
+                  },
+                  style: {
+                    width: "18px",
+                  },
+                  src: "media/icons/duotune/arrows/arr061.svg",
+                }),
+              ]
+          )
       );
 
       return h(
-        "div",
-        {
-          onClick: () => {
-            hideFilters();
-          },
-          class: "position-fixed table-v1-filter-holder",
-          ref: (el) => (filterContainer = el),
-        },
-        h(
           "div",
           {
-            onClick: (e) => {
-              e.stopPropagation();
+            onClick: () => {
+              hideFilters();
             },
-            class: "filter-container filter-container-like-model",
+            class: "position-fixed table-v1-filter-holder",
+            ref: (el) => (filterContainer = el),
           },
-          currentFilter,
-          currentlySelectedFilters,
           h(
-            "div",
-            {
-              class: "d-flex align-items-end justify-content-end add-button",
-            },
-            addFilterButton
+              "div",
+              {
+                onClick: (e) => {
+                  e.stopPropagation();
+                },
+                class: "filter-container filter-container-like-model",
+              },
+              [
+                currentFilter,
+                currentlySelectedFilters,
+                h(
+                    "div",
+                    {
+                      class: "d-flex align-items-end justify-content-end add-button",
+                    },
+                    addFilterButton
+                )
+              ]
           )
-        )
       );
     };
   },
