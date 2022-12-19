@@ -456,6 +456,30 @@ export class CreateForm<T extends FieldsInterface = any> {
                         // as output, so we should use mixed
                         // validation schema for it
                         addValidationToModes(e.name, Yup.mixed().required().label(text));
+                    } else if (fieldType == "negative-number" && required) {
+                        // we expect number fieldType to return
+                        // a number so number validation schema
+                        // is used
+                        addValidationToModes(
+                            e.name,
+                            Yup.number()
+                                .transform((e) => (isNaN(e) ? undefined : e))
+                                .max(0)
+                                .required()
+                                .label(text)
+                        );
+                    } else if (fieldType == "positive-number" && required) {
+                        // we expect number fieldType to return
+                        // a number so number validation schema
+                        // is used
+                        addValidationToModes(
+                            e.name,
+                            Yup.number()
+                                .transform((e) => (isNaN(e) ? undefined : e))
+                                .min(0)
+                                .required()
+                                .label(text)
+                        );
                     } else if (fieldType == "number" && required) {
                         // we expect number fieldType to return
                         // a number so number validation schema

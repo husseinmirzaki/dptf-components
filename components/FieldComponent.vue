@@ -270,7 +270,7 @@
             :class="[defaultInputClasses, input_class]"
             :readonly="processedReadOnly()"
             :placeholder="placeholder"
-            :type="field_type"
+            :type="mutateDefaultTypes()"
             :name="name"
             :modelValue="this.$props.modelValue"
             @focusin="$emit('focusin')"
@@ -296,14 +296,14 @@ import {
   defineComponent,
   isRef,
   nextTick,
-  onMounted,
+  onMounted, PropType,
   ref,
   toRef,
   watch,
 } from "vue";
 import {ErrorMessage, Field} from "vee-validate";
 import {$, select2} from "@/custom/helpers/select2_decelaration";
-import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
+import FieldComponentPropsInterface, {FieldTypes} from "@/custom/components/FieldComponentPropsInterface";
 import {Actions} from "@/custom/store/enums/StoreEnums";
 import Vue3PersianDatetimePicker from "vue3-persian-datetime-picker";
 import {gregorianToJalali} from "@/custom/components/DateUtils";
@@ -432,8 +432,8 @@ export default defineComponent({
       type: String,
     },
     field_type: {
-      type: String,
-      default: "text",
+      type: Object as PropType<FieldTypes>,
+      default: () => "text" as any,
     },
     file_accept: {
       type: String,
@@ -781,6 +781,16 @@ export default defineComponent({
       return null;
     };
 
+    const mutateDefaultTypes = () => {
+      switch (field_type.value) {
+        case "positive-number":
+        case "negative-number":
+        case "number":
+          return "number"
+      }
+      return field_type
+    }
+
     const sendToUser = {
       // methods
       setValue,
@@ -789,6 +799,7 @@ export default defineComponent({
       empty,
       testConsole,
       formatCurrency,
+      mutateDefaultTypes,
       // ref
       root,
       showError,
