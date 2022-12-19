@@ -6,6 +6,7 @@
   >
     <!--begin::Label-->
     <div class="d-flex align-items-end">
+      <slot name="before-add-icon"/>
       <div class="add-icon-item" v-if="canAddItem">
         <el-tooltip content="اضافه کردن">
           <span
@@ -16,6 +17,7 @@
           </span>
         </el-tooltip>
       </div>
+      <slot name="before-label"/>
       <label
           class="fs-5 fw-bold mb-2 font-weight-bolder text-dark field-input-label"
           :class="[{ required: required }, one_line_label_classes_c, label_class]"
@@ -28,6 +30,7 @@
       >
         {{ label }}
       </label>
+      <slot name="after-label"/>
     </div>
     <!--end::Label-->
     <!--begin::Input-->
