@@ -791,7 +791,7 @@ export default defineComponent({
         case "number":
           return "number"
       }
-      return field_type
+      return field_type.value;
     }
 
     const sendToUser = {
