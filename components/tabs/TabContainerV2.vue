@@ -102,7 +102,8 @@ export default {
     const goToRoute = (index) => {
       VueInstanceService.router.push({
         name: tabNames.value[index],
-        query: VueInstanceService.router.query,
+        query: route.query,
+        params: route.params,
       });
     };
 
