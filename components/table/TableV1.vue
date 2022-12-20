@@ -58,7 +58,7 @@ tbody .table-row-container {
 
   &:hover {
     z-index: 2;
-    outline: 3px solid rgba(0, 0, 0, 0.5);
+    //outline: 3px solid rgba(0, 0, 0, 0.5);
   }
 }
 
@@ -156,7 +156,8 @@ table {
 
     &:hover {
       z-index: 2;
-      outline: 3px solid rgba(0, 0, 0, 0.5);
+      box-shadow: 0 2px 3px -3px rgba(0, 0, 0, 1) inset,
+      0 -3px 3px -3px rgba(0, 0, 0, 1) inset;
     }
   }
 }
@@ -176,7 +177,7 @@ table {
   transform: rotateZ(5deg) !important;
 }
 
-.table-responsive::-webkit-scrollbar{
+.table-responsive::-webkit-scrollbar {
   width: auto !important;
   height: auto !important;
 }
@@ -185,7 +186,7 @@ table {
   background-color: #d4d6d9 !important;
 }
 
-.table-responsive:hover{
+.table-responsive:hover {
   scrollbar-color: #a4a4a4 transparent !important;
 }
 
@@ -207,22 +208,22 @@ import {
   watch,
   withModifiers,
 } from "vue";
-import { Table } from "@/custom/components/table/Table";
+import {Table} from "@/custom/components/table/Table";
 import TablePagination from "@/custom/components/table/TablePagination.vue";
 import Card from "@/custom/components/Card.vue";
-import { ContextMenuService } from "@/custom/components/ContextMenuService";
+import {ContextMenuService} from "@/custom/components/ContextMenuService";
 import Spinner from "@/custom/components/Spinner.vue";
 import FieldComponent from "@/custom/components/FieldComponent.vue";
-import { DragHandler, SimpleDrag } from "@/custom/components/table/TableDrag";
+import {DragHandler, SimpleDrag} from "@/custom/components/table/TableDrag";
 import DropdownV2 from "@/custom/components/DropdownV2.vue";
-import { MenuComponent } from "@/assets/ts/components";
-import { mobileCheck } from "@/custom/helpers/MobileHelpers";
-import { UserPreferencesManager } from "@/custom/services/UserPreferencesV2Api";
-import { Configs } from "@/Configs";
-import { DEFAULT_BUTTONS } from "@/custom/helpers/RenderFunctionHelpers";
+import {MenuComponent} from "@/assets/ts/components";
+import {mobileCheck} from "@/custom/helpers/MobileHelpers";
+import {UserPreferencesManager} from "@/custom/services/UserPreferencesV2Api";
+import {Configs} from "@/Configs";
+import {DEFAULT_BUTTONS} from "@/custom/helpers/RenderFunctionHelpers";
 import TableFilter from "@/custom/components/table/TableFilter.vue";
 import Sortable from "sortablejs";
-import { VueInstanceService } from "@/Defaults";
+import {VueInstanceService} from "@/Defaults";
 
 export default defineComponent({
   props: {
@@ -422,7 +423,7 @@ export default defineComponent({
           buildPrimaryTableInfo(e);
           tableSetup(false);
         },
-        { deep: true }
+        {deep: true}
     );
 
     const headers = computed(() => {
@@ -875,7 +876,7 @@ export default defineComponent({
                                     [
                                       //<i v-if="item.icon" :class="item.icon"></i>
                                       contextMenuItem.faIcon
-                                          ? h("i", { class: contextMenuItem.faIcon })
+                                          ? h("i", {class: contextMenuItem.faIcon})
                                           : undefined,
                                       contextMenuItem.svgIcon
                                           ? h(
@@ -1078,7 +1079,7 @@ export default defineComponent({
           slots
       );
 
-      return [card, h(TableFilter, { defaultConfig: defaultConfig })];
+      return [card, h(TableFilter, {defaultConfig: defaultConfig})];
     };
   },
 });
