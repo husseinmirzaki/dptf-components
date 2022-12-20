@@ -156,8 +156,11 @@ table {
 
     &:hover {
       z-index: 2;
-      box-shadow: 0 2px 3px -3px rgba(0, 0, 0, 1) inset,
-      0 -3px 3px -3px rgba(0, 0, 0, 1) inset;
+
+      td {
+        box-shadow: 0 2px 3px -3px rgba(0, 0, 0, 1) inset,
+        0 -3px 3px -3px rgba(0, 0, 0, 1) inset;
+      }
     }
   }
 }
@@ -766,7 +769,8 @@ export default defineComponent({
                   dir: "rtl",
                   colspan: headersToIterate.filter(
                       (header) => headerVisibility.value[header]
-                  ).length,
+                  ).length + (defaultConfig.showActionButtons ? 1 : 0),
+                  class: ["text-center"]
                 },
                 context.slots["empty"]
                     ? context.slots["empty"]()
