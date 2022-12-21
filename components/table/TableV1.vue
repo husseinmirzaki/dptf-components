@@ -196,6 +196,12 @@ table {
 .table-responsive:hover::-webkit-scrollbar-thumb {
   background-color: #cacdd0 !important;
 }
+
+[header-name="row_number"] {
+  min-width: 40px !important;
+  width: 40px;
+  max-width: 90px !important;
+}
 </style>
 <script lang="ts">
 import {
@@ -203,12 +209,12 @@ import {
   defineComponent,
   h,
   nextTick,
-  onMounted,
+  onMounted, onUnmounted,
   ref,
   render,
   resolveComponent,
   toRef,
-  watch,
+  watch, WatchStopHandle,
   withModifiers,
 } from "vue";
 import {Table} from "@/custom/components/table/Table";
@@ -280,6 +286,9 @@ export default defineComponent({
     };
   },
   setup(props, context) {
+    // issue #8
+    const _watchList: Array<WatchStopHandle> = [];
+
     const isMobile = mobileCheck();
     const conf = toRef(props, "conf");
     const list = toRef(props, "list");
@@ -298,7 +307,24 @@ export default defineComponent({
     const checkedDataList = ref<Record<string, boolean>>({});
     const cacheSelected = {};
 
-    watch(
+    let drag: SimpleDrag | null = null;
+
+    const checksDragHandler = new DragHandler();
+
+    const initializeConfig = () => {
+      if (!conf.value)
+        return new Table(props, context, {
+          onGetData: onGetData,
+        });
+      return new conf.value(props, context, {
+        onGetData: onGetData,
+      });
+    };
+
+    /**
+     * when sth is checked
+     */
+    _watchList.push(watch(
         checkedDataList,
         () => {
           Object.keys(checkedDataList.value).forEach((key) => {
@@ -316,23 +342,12 @@ export default defineComponent({
         {
           deep: true,
         }
-    );
+    ));
 
-    let drag: SimpleDrag | null = null;
-
-    const checksDragHandler = new DragHandler();
-
-    const initializeConfig = () => {
-      if (!conf.value)
-        return new Table(props, context, {
-          onGetData: onGetData,
-        });
-      return new conf.value(props, context, {
-        onGetData: onGetData,
-      });
-    };
-
-    watch(
+    /**
+     * in case conf suddenly changed
+     */
+    _watchList.push(watch(
         conf,
         () => {
           defaultConfig = initializeConfig();
@@ -350,9 +365,13 @@ export default defineComponent({
         {
           deep: true,
         }
-    );
+    ));
 
-    watch(
+    /**
+     * when current data changes here we will check
+     * which of items are supposed to be checked or not
+     */
+    _watchList.push(watch(
         dList,
         () => {
           if (dList.value) {
@@ -368,21 +387,28 @@ export default defineComponent({
         {
           deep: true,
         }
-    );
+    ));
 
-    watch(list, () => {
-      dList.value = list.value;
-    });
-
-    watch(checkAll, (e) => {
-      Object.keys(checkedDataList.value).forEach((e) => {
-        checkedDataList.value[e] = checkAll.value;
-      });
-    });
-
-    watch(url, () => {
-      onGetData();
-    });
+    _watchList.push(watch(
+        list,
+        () => {
+          dList.value = list.value;
+        }
+    ));
+    _watchList.push(watch(
+        checkAll,
+        (e) => {
+          Object.keys(checkedDataList.value).forEach((e) => {
+            checkedDataList.value[e] = checkAll.value;
+          });
+        }
+    ));
+    _watchList.push(watch(
+        url,
+        () => {
+          onGetData();
+        }
+    ));
 
     const checkedAnyItems = computed(() => {
       let oneIsChecked = false;
@@ -420,14 +446,14 @@ export default defineComponent({
 
     preferencesManager.get();
 
-    watch(
+    _watchList.push(watch(
         preferencesManager.value,
         (e) => {
           buildPrimaryTableInfo(e);
           tableSetup(false);
         },
         {deep: true}
-    );
+    ));
 
     const headers = computed(() => {
       if (changedHeaders.value.length > 0) return changedHeaders.value;
@@ -498,7 +524,7 @@ export default defineComponent({
     buildPrimaryTableInfo({});
 
     let watchHeaderVisibility = false;
-    watch(
+    _watchList.push(watch(
         headerVisibility,
         () => {
           if (watchHeaderVisibility) saveTableSettings();
@@ -506,7 +532,7 @@ export default defineComponent({
         {
           deep: true,
         }
-    );
+    ));
 
     const tableSetup = (getData = true) => {
       watchHeaderVisibility = false;
@@ -550,7 +576,7 @@ export default defineComponent({
           },
         });
 
-      if (!props.disableDropdown && filtersRef)
+      if (!props.disableDropdown && !defaultConfig.disableDropdown && filtersRef)
         Sortable.create(filtersRef, {
           group: defaultConfig.tableName,
           draggable: ".field",
@@ -621,6 +647,15 @@ export default defineComponent({
     };
 
     onMounted(mount);
+    onUnmounted(() => {
+      _watchList.forEach((w) => {
+        try {
+          w();
+        } catch (e) {
+          //
+        }
+      });
+    })
 
     const noHeaderSelected = computed(() => {
       const keys = Object.keys(headerVisibility.value);
@@ -707,7 +742,9 @@ export default defineComponent({
               key: header,
               onShowFilter: () => defaultConfig.onShowFilter(header, index),
               onToggleOrder: () => defaultConfig.toggleOrder(header),
-              moveable: "moveable",
+              moveable: defaultConfig.disabledDrags.indexOf(header) > -1 ? undefined : "moveable",
+              disableFilters: defaultConfig.disabledFilters.indexOf(header) > -1 ? 1 : undefined,
+              "ignore-drags": defaultConfig.disabledDrags.indexOf(header) > -1 ? 1 : undefined,
               isFiltered:
                   defaultConfig.filteredHeaders.value.indexOf(header) > -1,
               sortDirection:
@@ -989,12 +1026,26 @@ export default defineComponent({
       );
     };
 
+    const headerIconButton = (svgIcon) => {
+      return DEFAULT_BUTTONS.default(
+          {class: 'btn-icon btn-sm', style: {'padding':'0px !important'}},
+          h(
+              resolveComponent("inline-svg"),
+              {
+                width: "15px",
+                height: "15px",
+                src: svgIcon,
+              }
+          ),
+      );
+    }
+
     return () => {
       const slots: Record<string, any> = {
         ...context.slots,
       };
 
-      if (!props.disableDropdown) {
+      if (!props.disableDropdown && !defaultConfig.disableDropdown) {
         const headersToIterate =
             changedHeaders.value.length > 0
                 ? changedHeaders.value
@@ -1049,6 +1100,8 @@ export default defineComponent({
                         h(FieldComponent, {
                           key: header,
                           name: header,
+                          disableFilters: defaultConfig.disabledFilters.indexOf(header) > -1 ? 1 : undefined,
+                          "ignore-drags": defaultConfig.disabledDrags.indexOf(header) > -1 ? 1 : undefined,
                           modelValue: headerVisibility.value[header],
                           placeholder: defaultConfig.onTHeadProps(header, index)
                               .header,
@@ -1062,6 +1115,12 @@ export default defineComponent({
             }
         );
       }
+      // else {
+      //   slots["toolbar1"] = [
+      //     headerIconButton("media/icons/light/filter.svg"),
+      //     headerIconButton("media/icons/light/file-arrow-down.svg"),
+      //   ];
+      // }
 
       slots["card-body"] = buildCardBody;
 

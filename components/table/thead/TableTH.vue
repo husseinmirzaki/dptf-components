@@ -114,7 +114,7 @@ th.custom-table-th {
   align-items: start;
   p {
     font-size: 15px;
-    font-weight: 300 !important;
+    font-weight: 500 !important;
   }
 
   &:hover {
