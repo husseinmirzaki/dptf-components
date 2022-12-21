@@ -203,12 +203,12 @@ import {
   defineComponent,
   h,
   nextTick,
-  onMounted,
+  onMounted, onUnmounted,
   ref,
   render,
   resolveComponent,
   toRef,
-  watch,
+  watch, WatchStopHandle,
   withModifiers,
 } from "vue";
 import {Table} from "@/custom/components/table/Table";
@@ -280,6 +280,9 @@ export default defineComponent({
     };
   },
   setup(props, context) {
+    // issue #8
+    const _watchList: Array<WatchStopHandle> = [];
+
     const isMobile = mobileCheck();
     const conf = toRef(props, "conf");
     const list = toRef(props, "list");
@@ -298,7 +301,24 @@ export default defineComponent({
     const checkedDataList = ref<Record<string, boolean>>({});
     const cacheSelected = {};
 
-    watch(
+    let drag: SimpleDrag | null = null;
+
+    const checksDragHandler = new DragHandler();
+
+    const initializeConfig = () => {
+      if (!conf.value)
+        return new Table(props, context, {
+          onGetData: onGetData,
+        });
+      return new conf.value(props, context, {
+        onGetData: onGetData,
+      });
+    };
+
+    /**
+     * when sth is checked
+     */
+    _watchList.push(watch(
         checkedDataList,
         () => {
           Object.keys(checkedDataList.value).forEach((key) => {
@@ -316,23 +336,12 @@ export default defineComponent({
         {
           deep: true,
         }
-    );
+    ));
 
-    let drag: SimpleDrag | null = null;
-
-    const checksDragHandler = new DragHandler();
-
-    const initializeConfig = () => {
-      if (!conf.value)
-        return new Table(props, context, {
-          onGetData: onGetData,
-        });
-      return new conf.value(props, context, {
-        onGetData: onGetData,
-      });
-    };
-
-    watch(
+    /**
+     * in case conf suddenly changed
+     */
+    _watchList.push(watch(
         conf,
         () => {
           defaultConfig = initializeConfig();
@@ -350,9 +359,13 @@ export default defineComponent({
         {
           deep: true,
         }
-    );
+    ));
 
-    watch(
+    /**
+     * when current data changes here we will check
+     * which of items are supposed to be checked or not
+     */
+    _watchList.push(watch(
         dList,
         () => {
           if (dList.value) {
@@ -368,21 +381,28 @@ export default defineComponent({
         {
           deep: true,
         }
-    );
+    ));
 
-    watch(list, () => {
-      dList.value = list.value;
-    });
-
-    watch(checkAll, (e) => {
-      Object.keys(checkedDataList.value).forEach((e) => {
-        checkedDataList.value[e] = checkAll.value;
-      });
-    });
-
-    watch(url, () => {
-      onGetData();
-    });
+    _watchList.push(watch(
+        list,
+        () => {
+          dList.value = list.value;
+        }
+    ));
+    _watchList.push(watch(
+        checkAll,
+        (e) => {
+          Object.keys(checkedDataList.value).forEach((e) => {
+            checkedDataList.value[e] = checkAll.value;
+          });
+        }
+    ));
+    _watchList.push(watch(
+        url,
+        () => {
+          onGetData();
+        }
+    ));
 
     const checkedAnyItems = computed(() => {
       let oneIsChecked = false;
@@ -420,14 +440,14 @@ export default defineComponent({
 
     preferencesManager.get();
 
-    watch(
+    _watchList.push(watch(
         preferencesManager.value,
         (e) => {
           buildPrimaryTableInfo(e);
           tableSetup(false);
         },
         {deep: true}
-    );
+    ));
 
     const headers = computed(() => {
       if (changedHeaders.value.length > 0) return changedHeaders.value;
@@ -498,7 +518,7 @@ export default defineComponent({
     buildPrimaryTableInfo({});
 
     let watchHeaderVisibility = false;
-    watch(
+    _watchList.push(watch(
         headerVisibility,
         () => {
           if (watchHeaderVisibility) saveTableSettings();
@@ -506,7 +526,7 @@ export default defineComponent({
         {
           deep: true,
         }
-    );
+    ));
 
     const tableSetup = (getData = true) => {
       watchHeaderVisibility = false;
@@ -621,6 +641,15 @@ export default defineComponent({
     };
 
     onMounted(mount);
+    onUnmounted(() => {
+      _watchList.forEach((w) => {
+        try {
+          w();
+        } catch (e) {
+          //
+        }
+      });
+    })
 
     const noHeaderSelected = computed(() => {
       const keys = Object.keys(headerVisibility.value);
