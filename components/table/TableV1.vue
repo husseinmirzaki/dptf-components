@@ -196,6 +196,12 @@ table {
 .table-responsive:hover::-webkit-scrollbar-thumb {
   background-color: #cacdd0 !important;
 }
+
+[header-name="row_number"] {
+  min-width: 40px !important;
+  width: 40px;
+  max-width: 90px !important;
+}
 </style>
 <script lang="ts">
 import {
@@ -570,7 +576,7 @@ export default defineComponent({
           },
         });
 
-      if (!props.disableDropdown && filtersRef)
+      if (!props.disableDropdown && !defaultConfig.disableDropdown && filtersRef)
         Sortable.create(filtersRef, {
           group: defaultConfig.tableName,
           draggable: ".field",
@@ -1025,7 +1031,7 @@ export default defineComponent({
         ...context.slots,
       };
 
-      if (!props.disableDropdown) {
+      if (!props.disableDropdown && !defaultConfig.disableDropdown) {
         const headersToIterate =
             changedHeaders.value.length > 0
                 ? changedHeaders.value

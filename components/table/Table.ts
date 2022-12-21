@@ -33,11 +33,15 @@ export class Table {
         return false;
     }
 
-  getFilterForm(): any {
-    return {
-      obj: ref({}),
-    };
-  }
+    get disableDropdown() {
+        return !Configs.showTableDropdown;
+    }
+
+    getFilterForm(): any {
+        return {
+            obj: ref({}),
+        };
+    }
 
     onTableMounted() {
         //

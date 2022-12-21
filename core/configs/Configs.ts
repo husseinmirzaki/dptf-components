@@ -5,6 +5,7 @@ export default {
   },
   showTableActionButtons: false,
   showTableRowNumberHeader: true,
+  showTableDropdown: true,
   cardsAreDraggable: true,
   cardsHideCardIcon: false,
 };
