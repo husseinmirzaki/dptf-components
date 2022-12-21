@@ -1026,6 +1026,20 @@ export default defineComponent({
       );
     };
 
+    const headerIconButton = (svgIcon) => {
+      return DEFAULT_BUTTONS.default(
+          {class: 'btn-icon btn-sm', style: {'padding':'0px !important'}},
+          h(
+              resolveComponent("inline-svg"),
+              {
+                width: "15px",
+                height: "15px",
+                src: svgIcon,
+              }
+          ),
+      );
+    }
+
     return () => {
       const slots: Record<string, any> = {
         ...context.slots,
@@ -1101,6 +1115,12 @@ export default defineComponent({
             }
         );
       }
+      // else {
+      //   slots["toolbar1"] = [
+      //     headerIconButton("media/icons/light/filter.svg"),
+      //     headerIconButton("media/icons/light/file-arrow-down.svg"),
+      //   ];
+      // }
 
       slots["card-body"] = buildCardBody;
 

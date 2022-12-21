@@ -699,7 +699,15 @@ export class Table {
         index: any = undefined,
         customFilterField: any | FieldComponentPropsInterface = undefined
     ) {
-        if (customFilterField) {
+        if (header == "row_number") {
+            VueInstanceService.emit(`show-table-filter-${this.tableName}`, {
+                customFilterField: {
+                    name: 'row_number',
+                    field_type: 'number',
+                    label: 'ردیف',
+                },
+            });
+        } else if (customFilterField) {
             VueInstanceService.emit(`show-table-filter-${this.tableName}`, {
                 customFilterField,
             });
