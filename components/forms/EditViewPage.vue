@@ -13,6 +13,7 @@
         :onTableCreation="onReadTableCreation"
         :onFormReady="onFormReadyRead"
         :model-name="modelName"
+        :backButtonRoute="'../../items'"
         :show-edit-button="true"
         @edit="$refs.sMananger.activeState = 'edit'"
       />
@@ -27,6 +28,7 @@
         :onFields="onFieldsAdd"
         :onOrderField="onOrderAdd"
         :onFormReady="onFormReadyAdd"
+        :backButtonRoute="'../../items'"
         @cancel="$refs.sMananger.activeState = 'view'"
         @done="
           $refs.sMananger.activeState = 'view';
