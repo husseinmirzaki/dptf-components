@@ -736,7 +736,9 @@ export default defineComponent({
               key: header,
               onShowFilter: () => defaultConfig.onShowFilter(header, index),
               onToggleOrder: () => defaultConfig.toggleOrder(header),
-              moveable: "moveable",
+              moveable: defaultConfig.disabledDrags.indexOf(header) > -1 ? undefined : "moveable",
+              disableFilters: defaultConfig.disabledFilters.indexOf(header) > -1 ? 1 : undefined,
+              "ignore-drags": defaultConfig.disabledDrags.indexOf(header) > -1 ? 1 : undefined,
               isFiltered:
                   defaultConfig.filteredHeaders.value.indexOf(header) > -1,
               sortDirection:
@@ -1078,6 +1080,8 @@ export default defineComponent({
                         h(FieldComponent, {
                           key: header,
                           name: header,
+                          disableFilters: defaultConfig.disabledFilters.indexOf(header) > -1 ? 1 : undefined,
+                          "ignore-drags": defaultConfig.disabledDrags.indexOf(header) > -1 ? 1 : undefined,
                           modelValue: headerVisibility.value[header],
                           placeholder: defaultConfig.onTHeadProps(header, index)
                               .header,
