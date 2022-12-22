@@ -477,6 +477,7 @@ export class CreateForm<T extends FieldsInterface = any> {
                             Yup.number()
                                 .transform((e) => (isNaN(e) ? undefined : e))
                                 .min(0)
+                                .required()
                                 .label(text)
                         );
                     } else if (fieldType == "number" && required) {
