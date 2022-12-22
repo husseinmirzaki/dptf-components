@@ -1,15 +1,15 @@
 <script lang="ts">
 import SimpleFormOnline from "@/custom/components/forms/SimpleFormOnline.vue";
-import { modelToServiceMap } from "@/ModelToServiceMap";
-import { defineComponent, h, reactive, Ref, ref } from "vue";
+import {modelToServiceMap} from "@/ModelToServiceMap";
+import {defineComponent, h, onMounted, reactive, Ref, ref} from "vue";
 import ModalFormOnline from "@/custom/components/forms/ModalFormOnline.vue";
 import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
-import { fieldFieldSelect } from "@/custom/components/forms/utils/fixers";
-import { Configs, VueInstanceService } from "@/Defaults";
-import { buildSelectOption } from "@/custom/forms/utils/SelectUtils";
+import {fieldFieldSelect} from "@/custom/components/forms/utils/fixers";
+import {Configs, VueInstanceService} from "@/Defaults";
+import {buildSelectOption} from "@/custom/forms/utils/SelectUtils";
 
 export default defineComponent({
-  components: { ModalFormOnline, SimpleFormOnline },
+  components: {ModalFormOnline, SimpleFormOnline},
   props: [
     "onFields",
     "onFormModalField",
@@ -109,11 +109,11 @@ export default defineComponent({
     const localModalOnBuildFields = (modalName) => {
       return (fields: Array<FieldComponentPropsInterface>, instance) => {
         const notHiddenFields = fields.filter(
-          (e) => e.field_type != "hidden"
+            (e) => e.field_type != "hidden"
         ).length;
         if (notHiddenFields <= 2) {
           const notHiddenIndex = fields.findIndex(
-            (e) => e.field_type != "hidden"
+              (e) => e.field_type != "hidden"
           );
           if (notHiddenIndex > -1) {
             // fields[notHiddenIndex]['col_class'] = 'col-12'
@@ -144,9 +144,9 @@ export default defineComponent({
           });
 
           const onFormModalField = props.onFormModalField(
-            field,
-            modalsToCreate,
-            modal
+              field,
+              modalsToCreate,
+              modal
           );
 
           if (modalsToCreate[modal]["maximize"]) {
@@ -186,8 +186,8 @@ export default defineComponent({
         return h(ModalFormOnline, {
           key: modal,
           modalTitle: Configs["addAbleFormOnlineHideInnerModalTitle"]
-            ? " "
-            : localModalTitle(modal),
+              ? " "
+              : localModalTitle(modal),
           onFields: localModalField(modal),
           onBuildFields: localModalOnBuildFields(modal),
           onFormReady: localModalFormReady(modal),
@@ -201,40 +201,40 @@ export default defineComponent({
       });
 
       const onlineForm = h(
-        SimpleFormOnline,
-        {
-          ref: (el) => {
-            context.expose({
-              simpleFormOnline: el,
-            });
+          SimpleFormOnline,
+          {
+            ref: (el) => {
+              context.expose({
+                simpleFormOnline: el,
+              });
+            },
+            formAsModal: props.formAsModal,
+            cardTitle: props.cardTitle,
+            modelName: props.modelName || props.modelMainName,
+            onCancel: (e) => context.emit("cancel", e, formInstance),
+            onDone: (e) => context.emit("done", e, formInstance),
+            disableDrag: true,
+            onFormReady: onFormReadyC,
+            showCancelButton:
+                formReady.value &&
+                formInstance.formInstance.update.value,
+            onFields: onFieldsC,
+            onBuildFields: props.onBuildFields,
+            onAfterSubmit: props.onAfterSubmit,
+            onOrderField: props.onOrderField,
+            onSend: props.onFormSend,
+            onModes: props.onModes,
+            onBeforeSubmit: props.onBeforeSubmit,
+            ...context.attrs,
           },
-          formAsModal: props.formAsModal,
-          cardTitle: props.cardTitle,
-          modelName: props.modelName || props.modelMainName,
-          onCancel: (e) => context.emit("cancel", e, formInstance),
-          onDone: (e) => context.emit("done", e, formInstance),
-          disableDrag: true,
-          onFormReady: onFormReadyC,
-          showCancelButton:
-            formReady.value &&
-              formInstance.formInstance.update.value,
-          onFields: onFieldsC,
-          onBuildFields: props.onBuildFields,
-          onAfterSubmit: props.onAfterSubmit,
-          onOrderField: props.onOrderField,
-          onSend: props.onFormSend,
-          onModes: props.onModes,
-          onBeforeSubmit: props.onBeforeSubmit,
-          ...context.attrs,
-        },
-        {
-          multiForm: () => {
-            if (context.slots && context.slots.default) {
-              return context.slots.default();
-            }
-          },
-          ...context.slots,
-        }
+          {
+            multiForm: () => {
+              if (context.slots && context.slots.default) {
+                return context.slots.default();
+              }
+            },
+            ...context.slots,
+          }
       );
 
       return [
