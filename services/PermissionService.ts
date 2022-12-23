@@ -1,7 +1,7 @@
 import { Ref, ref, watch } from "vue";
 import { UserApiService } from "@/custom/services/UserApiService";
 
-export class PermissionService {
+export class PermissionComponentService {
   public static isCheckingForRole: Ref<boolean> = ref(false);
   public static roleCheckFailed: Ref<boolean> = ref(false);
   public static possibleRoles: Ref<Array<string>> = ref([]);
@@ -11,6 +11,7 @@ export class PermissionService {
     UserApiService.getCurrentUserRoles().then(
       ({ data }) => {
         this.possibleRoles.value = data;
+        console.log(data),
         this.isCheckingForRole.value = false;
         this.roleCheckFailed.value = false;
       },
@@ -35,7 +36,7 @@ export function hasPerm(permission: string | Array<string>) {
     }
     return true;
   }
-  return PermissionService.possibleRoles.value.indexOf(permission) > -1;
+  return PermissionComponentService.possibleRoles.value.indexOf(permission) > -1;
 }
 
 /**
@@ -55,19 +56,19 @@ export function hasAnyPerm(permission: string | Array<string>) {
 }
 
 export function hasAnyRole() {
-  return PermissionService.possibleRoles.value.length > 0;
+  return PermissionComponentService.possibleRoles.value.length > 0;
 }
 
 export function isCheckingRole() {
-  return PermissionService.isCheckingForRole.value;
+  return PermissionComponentService.isCheckingForRole.value;
 }
 
 export function onRoleCheckFinished(f: (e: Array<string>) => void) {
   if (!isCheckingRole()) {
-    f(PermissionService.possibleRoles.value);
+    f(PermissionComponentService.possibleRoles.value);
   } else {
-    watch(PermissionService.isCheckingForRole, (e) => {
-      f(PermissionService.possibleRoles.value);
+    watch(PermissionComponentService.isCheckingForRole, (e) => {
+      f(PermissionComponentService.possibleRoles.value);
     });
   }
 }
