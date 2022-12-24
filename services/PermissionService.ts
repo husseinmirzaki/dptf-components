@@ -1,7 +1,7 @@
 import { Ref, ref, watch } from "vue";
 import { UserApiService } from "@/custom/services/UserApiService";
 
-export class PermissionComponentService {
+export class  PermissionService {
   public static isCheckingForRole: Ref<boolean> = ref(false);
   public static roleCheckFailed: Ref<boolean> = ref(false);
   public static possibleRoles: Ref<Array<string>> = ref([]);
@@ -36,7 +36,7 @@ export function hasPerm(permission: string | Array<string>) {
     }
     return true;
   }
-  return PermissionComponentService.possibleRoles.value.indexOf(permission) > -1;
+  return PermissionService.possibleRoles.value.indexOf(permission) > -1;
 }
 
 /**
@@ -56,19 +56,19 @@ export function hasAnyPerm(permission: string | Array<string>) {
 }
 
 export function hasAnyRole() {
-  return PermissionComponentService.possibleRoles.value.length > 0;
+  return PermissionService.possibleRoles.value.length > 0;
 }
 
 export function isCheckingRole() {
-  return PermissionComponentService.isCheckingForRole.value;
+  return PermissionService.isCheckingForRole.value;
 }
 
 export function onRoleCheckFinished(f: (e: Array<string>) => void) {
   if (!isCheckingRole()) {
-    f(PermissionComponentService.possibleRoles.value);
+    f(PermissionService.possibleRoles.value);
   } else {
-    watch(PermissionComponentService.isCheckingForRole, (e) => {
-      f(PermissionComponentService.possibleRoles.value);
+    watch(PermissionService.isCheckingForRole, (e) => {
+      f(PermissionService.possibleRoles.value);
     });
   }
 }
