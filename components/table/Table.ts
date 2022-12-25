@@ -37,6 +37,10 @@ export class Table {
         return !Configs.showTableDropdown;
     }
 
+    get showOptionsInHeader() {
+        return !Configs.showTableOptionsInHeader;
+    }
+
     getFilterForm(): any {
         return {
             obj: ref({}),

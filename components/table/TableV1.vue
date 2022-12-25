@@ -217,22 +217,24 @@ import {
   watch, WatchStopHandle,
   withModifiers,
 } from "vue";
-import {Table} from "@/custom/components/table/Table";
-import TablePagination from "@/custom/components/table/TablePagination.vue";
 import Card from "@/custom/components/Card.vue";
-import {ContextMenuService} from "@/custom/components/ContextMenuService";
 import Spinner from "@/custom/components/Spinner.vue";
-import FieldComponent from "@/custom/components/FieldComponent.vue";
-import {DragHandler, SimpleDrag} from "@/custom/components/table/TableDrag";
 import DropdownV2 from "@/custom/components/DropdownV2.vue";
-import {MenuComponent} from "@/assets/ts/components";
-import {mobileCheck} from "@/custom/helpers/MobileHelpers";
-import {UserPreferencesManager} from "@/custom/services/UserPreferencesV2Api";
-import {Configs} from "@/Configs";
-import {DEFAULT_BUTTONS} from "@/custom/helpers/RenderFunctionHelpers";
 import TableFilter from "@/custom/components/table/TableFilter.vue";
-import Sortable from "sortablejs";
+import FieldComponent from "@/custom/components/FieldComponent.vue";
+import TablePagination from "@/custom/components/table/TablePagination.vue";
+import TableV1OptionsInHeader from "@/custom/components/table/TableV1OptionsInHeader.vue";
+
+import {Table} from "@/custom/components/table/Table";
+import {Configs} from "@/Configs";
+import {mobileCheck} from "@/custom/helpers/MobileHelpers";
+import {MenuComponent} from "@/assets/ts/components";
+import {DEFAULT_BUTTONS} from "@/custom/helpers/RenderFunctionHelpers";
 import {VueInstanceService} from "@/Defaults";
+import {ContextMenuService} from "@/custom/components/ContextMenuService";
+import {UserPreferencesManager} from "@/custom/services/UserPreferencesV2Api";
+import {DragHandler, SimpleDrag} from "@/custom/components/table/TableDrag";
+import Sortable from "sortablejs";
 
 export default defineComponent({
   props: {
@@ -271,6 +273,9 @@ export default defineComponent({
       default: false,
     },
     disableDropdown: {
+      default: false,
+    },
+    optionsInHeader: {
       default: false,
     },
     list: {
@@ -1028,7 +1033,7 @@ export default defineComponent({
 
     const headerIconButton = (svgIcon) => {
       return DEFAULT_BUTTONS.default(
-          {class: 'btn-icon btn-sm', style: {'padding':'0px !important'}},
+          {class: 'btn-icon btn-sm', style: {'padding': '0px !important'}},
           h(
               resolveComponent("inline-svg"),
               {
@@ -1115,11 +1120,10 @@ export default defineComponent({
             }
         );
       }
+      if (props.optionsInHeader || defaultConfig.showOptionsInHeader) {
+        slots["toolbar0"] = h(TableV1OptionsInHeader);
+      }
       // else {
-      //   slots["toolbar1"] = [
-      //     headerIconButton("media/icons/light/filter.svg"),
-      //     headerIconButton("media/icons/light/file-arrow-down.svg"),
-      //   ];
       // }
 
       slots["card-body"] = buildCardBody;
