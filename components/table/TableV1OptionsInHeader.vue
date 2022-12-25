@@ -44,6 +44,7 @@ import {onMounted, ref} from "vue";
 import Sortable from "sortablejs";
 import FieldComponent from "@/custom/components/FieldComponent.vue";
 
+const animationDuration = 175;
 const refExportButton = ref();
 const refFilterButton = ref();
 const refFilterV2Container = ref();
@@ -64,7 +65,20 @@ const toggleExportButton = () => {
   //
 }
 
+const openOrderContainer = () => {
+  refFilterV2Container.value.classList.add('d-block', 'open');
+}
+
+const closeOrderContainer = () => {
+  refFilterV2Container.value.classList.remove('open');
+  refFilterV2Container.value.classList.add('close-animation');
+  setTimeout(() => {
+    refFilterV2Container.value.classList.remove('d-block', 'close-animation');
+  }, animationDuration);
+}
+
 onMounted(() => {
+  document.documentElement.style.setProperty("--filter-v2-open-close-animation-duration", animationDuration + "ms");
   goToButton(refFilterV2Container, refFilterButton);
   const filterContainerItems = refFilterV2Container.value.querySelector('.items');
   Sortable.create(filterContainerItems, {
@@ -86,7 +100,13 @@ onMounted(() => {
         // saveTableSettings();
       });
     },
-  })
+  });
+  setTimeout(() => {
+    openOrderContainer();
+  }, 1000);
+  setTimeout(() => {
+    closeOrderContainer();
+  }, 3000);
 });
 
 
@@ -96,6 +116,7 @@ onMounted(() => {
   position: relative;
 
   .table-v1-filter-v2 {
+    display: none;
     min-width: 300px;
     background: #F3F6F9;
     position: fixed;
@@ -104,6 +125,15 @@ onMounted(() => {
     z-index: 9999;
     padding: 3px;
     box-shadow: 0 0 2px black;
+
+    &.open {
+      animation: open-animation var(--filter-v2-open-close-animation-duration) ease-in-out;
+    }
+
+    &.close-animation {
+      animation: close-animation var(--filter-v2-open-close-animation-duration) ease-in-out;
+      opacity: 0;
+    }
 
     .input-filter {
       display: flex;
@@ -180,6 +210,28 @@ onMounted(() => {
         }
       }
     }
+  }
+}
+
+@keyframes open-animation {
+  from {
+    transform: translateY(10px) translateX(10px) scale(.98);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes close-animation {
+  from {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-10px) translateX(-10px) scale(1.02);
+    opacity: 0;
   }
 }
 </style>
