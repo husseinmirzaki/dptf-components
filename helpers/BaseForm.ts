@@ -468,7 +468,7 @@ export class CreateForm<T extends FieldsInterface = any> {
                                 .required()
                                 .label(text)
                         );
-                    } else if (fieldType == "positive-number") {
+                    } else if (fieldType == "positive-number" && required) {
                         // we expect number fieldType to return
                         // a number so number validation schema
                         // is used
@@ -478,6 +478,17 @@ export class CreateForm<T extends FieldsInterface = any> {
                                 .transform((e) => (isNaN(e) ? undefined : e))
                                 .min(0)
                                 .required()
+                                .label(text)
+                        );
+                    } else if (fieldType == "positive-number") {
+                        // we expect number fieldType to return
+                        // a number so number validation schema
+                        // is used
+                        addValidationToModes(
+                            e.name,
+                            Yup.number()
+                                .transform((e) => (isNaN(e) ? undefined : e))
+                                .min(0)
                                 .label(text)
                         );
                     } else if (fieldType == "number" && required) {
