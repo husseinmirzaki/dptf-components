@@ -1,5 +1,6 @@
 <template>
-  <div
+  <component
+      :is="fieldContainer || 'div'"
       class="field fv-row"
       :class="[col_class_c, { row: one_line }]"
       ref="root"
@@ -295,7 +296,7 @@
       </div>
     </div>
     <!--end::Input-->
-  </div>
+  </component>
 </template>
 <script lang="ts">
 import {
@@ -338,6 +339,9 @@ export default defineComponent({
     DatePicker: Vue3PersianDatetimePicker,
   },
   props: {
+    fieldContainer: {
+      type: Object as PropType<any>
+    },
     defaultInputClasses: {
       default: "form-control h-auto py-3 px-2 rounded-lg",
     },
