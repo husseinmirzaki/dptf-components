@@ -37,7 +37,7 @@ import {defineComponent, ref} from "vue";
 import Sortable from "sortablejs";
 
 export default defineComponent({
-  emits: ["state"],
+  emits: ["state", "defaultConfig", "actualHeaders"],
   props: {
     animationDuration: {
       default: 180,
@@ -49,6 +49,8 @@ export default defineComponent({
      * for hiding element
      */
     let timeoutClose: any;
+
+    let sortableInstance: Sortable;
 
     /**
      * this will be used to filter which field user
@@ -68,7 +70,7 @@ export default defineComponent({
     const openOrderContainer = () => {
       refOrderV2Container.value.classList.add('d-block', 'open');
       const filterContainerItems = refOrderV2Container.value.querySelector('.items');
-      Sortable.create(filterContainerItems, {
+      sortableInstance = Sortable.create(filterContainerItems, {
         // group: defaultConfig.tableName,
         draggable: ".item",
         handle: ".anchor",
@@ -88,23 +90,37 @@ export default defineComponent({
           });
         },
       });
+      console.log(sortableInstance);
+
+      return refOrderV2Container.value;
     }
 
     /**
      * closes container
      */
     const closeOrderContainer = () => {
+      if (sortableInstance)
+        sortableInstance.destroy()
+      sortableInstance = null;
       refOrderV2Container.value.classList.remove('open');
       refOrderV2Container.value.classList.add('close-animation');
       timeoutClose = setTimeout(() => {
         refOrderV2Container.value.classList.remove('d-block', 'close-animation');
       }, props.animationDuration);
+
+      return null;
     }
 
-
+    const toggle = () => {
+      if (refOrderV2Container.value.classList.contains('open'))
+        return closeOrderContainer();
+      else
+        return openOrderContainer();
+    }
     return {
       dVisibleItemsOrder,
       refOrderV2Container,
+      toggle
     };
   }
 });

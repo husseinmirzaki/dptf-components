@@ -137,7 +137,9 @@ export class Table {
 
     orderedField: any = ref({});
     filteredHeaders: any = ref([]);
-
+    clearFilters () {
+        this.jsonFilters = {};
+    }
     addJsonFilter(key, data) {
         if (!this.jsonFilters[key]) {
             this.jsonFilters[key] = [];

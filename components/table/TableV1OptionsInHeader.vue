@@ -7,7 +7,8 @@
       <inline-svg src="media/icons/light/file-arrow-down.svg" width="15px" height="15px"/>
     </Button>
     <Button class="btn btn-sm btn-icon"
-            :class="{active: filterIsOpen}">
+            :class="{active: filterIsOpen}"
+            @click="filterIsOpen=!filterIsOpen;$emit('showRowFilter', filterIsOpen);">
       <inline-svg src="media/icons/light/filter.svg" width="15px" height="15px"/>
     </Button>
     <Button class="btn btn-sm btn-icon"
@@ -22,7 +23,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {onMounted, ref} from "vue";
+import {isRef, onMounted, ref} from "vue";
 import TableV1OptionsInHeaderOrder from "@/custom/components/table/TableV1OptionsInHeaderOrder.vue";
 
 const animationDuration = 175;
@@ -35,18 +36,18 @@ const exportIsOpen = ref(false);
 
 const goToButton = (containerRef, buttonRef) => {
   const buttonBB = buttonRef.value.getBoundingClientRect();
-  const e = containerRef.value;
+  let e: any;
+  if (isRef(containerRef)) e = containerRef.value;
+  else e = containerRef;
   e.style.top = `${buttonBB.top + buttonBB.height}px`;
   e.style.left = `${buttonBB.left}px`;
 }
 
 const toggleOrderButton = (event: MouseEvent) => {
-  goToButton(refOrderV2Container, refOrderButton);
-  clearTimeout(timeoutClose);
-  if (refOrderV2Container.value.classList.contains('open'))
-    closeOrderContainer();
-  else
-    openOrderContainer();
+
+  const container = refOrderV2Container.value.toggle();
+  if (container)
+    goToButton(container, refOrderButton);
 }
 
 const toggleExportButton = () => {
@@ -182,6 +183,7 @@ onMounted(() => {
   > button {
     &.active {
       background: #6a6a6a;
+
       svg {
         fill: white;
       }
