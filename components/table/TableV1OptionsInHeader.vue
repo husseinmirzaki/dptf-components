@@ -2,8 +2,7 @@
   <div class="table-v1-options-in-header">
 
     <Button class="btn btn-sm btn-icon"
-            :class="{active: exportIsOpen}"
-            ref="refExportButton" @click="toggleExportButton">
+            ref="refExportButton" @click="$emit('export')">
       <inline-svg src="media/icons/light/file-arrow-down.svg" width="15px" height="15px"/>
     </Button>
     <Button class="btn btn-sm btn-icon"
@@ -17,15 +16,19 @@
       <inline-svg src="media/icons/light/arrow-down-wide-short.svg" width="15px" height="15px"/>
     </Button>
     <div class="body-containers" @change.stop @update.stop>
-      <TableV1OptionsInHeaderOrder ref="refOrderV2Container"/>
+      <TableV1OptionsInHeaderOrder :default-config="defaultConfig" ref="refOrderV2Container"/>
     </div>
 
   </div>
 </template>
 <script lang="ts" setup>
-import {isRef, onMounted, ref} from "vue";
+import {defineProps, isRef, onMounted, ref} from "vue";
 import TableV1OptionsInHeaderOrder from "@/custom/components/table/TableV1OptionsInHeaderOrder.vue";
+import {Table} from "@/custom/components/table/Table";
 
+defineProps<{
+  defaultConfig: Table
+}>();
 const animationDuration = 175;
 const refExportButton = ref();
 const refOrderButton = ref();

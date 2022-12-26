@@ -70,45 +70,6 @@ tbody .table-row-container {
   background-color: #c76969;
 }
 
-// //these part is used to make filters look better
-//$height: 42px;
-//.table-v2-custom {
-//  .filters-container {
-//    td {
-//      min-width: 50px;
-//      padding: 1px !important;
-//      font-size: 13px !important;
-//        font-weight: 400 !important;
-//
-//      input {
-//        border-radius: 0;
-//        font-size: 13px !important;
-//        font-weight: 400 !important;
-//        box-shadow: none !important;
-//      }
-//
-//      input[type="text"]  {
-//        height: $height !important;
-//      }
-//      .fv-plugins-message-container {
-//        display: none !important;
-//      }
-//      .select2-container, .select2-selection {
-//        border-radius: 0 !important;
-//        min-height: $height !important;
-//        box-shadow: none !important;
-//      }
-//      .select2-selection--multiple {
-//        min-height: $height !important;
-//        box-shadow: none !important;
-//      }
-//      .fv-row {
-//        padding: 0 !important;
-//        margin: 0 !important;
-//      }
-//    }
-//  }
-//}
 </style>
 <style lang="scss" scoped>
 table {
@@ -197,7 +158,12 @@ table {
   background-color: #cacdd0 !important;
 }
 
-[header-name="row_number"] {
+.is-showing-filter {
+  min-width: 100px !important;
+  width: 100px !important;
+}
+
+td:not(.is-showing-filter) [header-name="row_number"] {
   min-width: 40px !important;
   width: 40px;
   max-width: 90px !important;
@@ -224,6 +190,7 @@ import TableFilter from "@/custom/components/table/TableFilter.vue";
 import FieldComponent from "@/custom/components/FieldComponent.vue";
 import TablePagination from "@/custom/components/table/TablePagination.vue";
 import TableV1OptionsInHeader from "@/custom/components/table/TableV1OptionsInHeader.vue";
+import TableV1OptionsInHeaderRow from "@/custom/components/table/TableV1OptionsInHeaderRow.vue";
 
 import {Table} from "@/custom/components/table/Table";
 import {Configs} from "@/Configs";
@@ -304,7 +271,7 @@ export default defineComponent({
     let filtersRef: any;
 
     const dList: any = ref(list.value);
-
+    const showInlineFilter = ref(false);
     const checkAll = ref(false);
     const changedHeaders = ref<Array<any>>([]);
     const headerVisibility = ref<Record<string, any>>({});
@@ -324,7 +291,7 @@ export default defineComponent({
       return new conf.value(props, context, {
         onGetData: onGetData,
       });
-    };
+    }
 
     /**
      * when sth is checked
@@ -445,6 +412,14 @@ export default defineComponent({
 
     let defaultConfig: Table = initializeConfig();
 
+    watch(defaultConfig.headerVisibility, (e) => {
+      headerVisibility.value = e;
+    });
+
+    watch(defaultConfig.changedHeader, (e) => {
+      changedHeaders.value = defaultConfig.changedHeader;
+    });
+
     const preferencesManager = new UserPreferencesManager(
         `${defaultConfig.preferencesPrefixKey}${defaultConfig.tableName}`
     );
@@ -521,8 +496,14 @@ export default defineComponent({
         newHeaders.forEach((e) => (headerVisibility.value[e] = true));
       } else {
         headerVisibility.value = {};
-        headers.value.forEach((e) => (headerVisibility.value[e] = true));
-        newHeaders.forEach((e) => (headerVisibility.value[e] = true));
+        headers.value.forEach((e) => {
+          headerVisibility.value[e] = true;
+          defaultConfig.headerVisibility[e] = true;
+        });
+        newHeaders.forEach((e) => {
+          headerVisibility.value[e] = true
+          defaultConfig.headerVisibility[e] = true;
+        });
       }
     };
 
@@ -758,7 +739,15 @@ export default defineComponent({
                       : undefined,
               "header-name": header,
               group: defaultConfig.tableName,
-              ...defaultConfig.onTHeadProps(header, index),
+              ...((d) => {
+                if (!d['class']) {
+                  d['class'] = [];
+                }
+                d['class'].push({
+                  'is-showing-filter': showInlineFilter.value
+                } as any);
+                return d;
+              })(defaultConfig.onTHeadProps(header, index)),
             });
           });
 
@@ -779,21 +768,26 @@ export default defineComponent({
               //
             }, ["stop", "prevent"]),
           },
-          h(
-              "tr",
-              {
-                ref: (el) => (headersRef = el),
-                class: "fw-bolder text-muted bg-light",
-              },
-              [
-                // action buttons
-                actionButtons,
-                // actual headers
-                ...actualHeaders.reverse(),
-                // checkboxes
-                checkBoxes,
-              ]
-          )
+          [
+            h(
+                "tr",
+                {
+                  ref: (el) => (headersRef = el),
+                  class: "fw-bolder text-muted bg-light",
+                },
+                [
+                  // action buttons
+                  actionButtons,
+                  // actual headers
+                  ...actualHeaders.reverse(),
+                  // checkboxes
+                  checkBoxes,
+                ]
+            ),
+            defaultConfig.showOptionsInHeader && showInlineFilter.value ? h(TableV1OptionsInHeaderRow, {
+              defaultConfig, actualHeaders
+            }) : undefined,
+          ]
       );
     };
 
@@ -1031,20 +1025,6 @@ export default defineComponent({
       );
     };
 
-    const headerIconButton = (svgIcon) => {
-      return DEFAULT_BUTTONS.default(
-          {class: 'btn-icon btn-sm', style: {'padding': '0px !important'}},
-          h(
-              resolveComponent("inline-svg"),
-              {
-                width: "15px",
-                height: "15px",
-                src: svgIcon,
-              }
-          ),
-      );
-    }
-
     return () => {
       const slots: Record<string, any> = {
         ...context.slots,
@@ -1121,7 +1101,15 @@ export default defineComponent({
         );
       }
       if (props.optionsInHeader || defaultConfig.showOptionsInHeader) {
-        slots["toolbar0"] = h(TableV1OptionsInHeader);
+        slots["toolbar2"] = h(TableV1OptionsInHeader, {
+          defaultConfig,
+          onShowRowFilter: (e) => {
+            showInlineFilter.value = e;
+          },
+          onExport: () => {
+            defaultConfig.requestExport()
+          }
+        });
       }
       // else {
       // }
@@ -1146,7 +1134,10 @@ export default defineComponent({
           slots
       );
 
-      return [card, h(TableFilter, {defaultConfig: defaultConfig})];
+      return [
+        card,
+        defaultConfig.showOptionsInHeader ? undefined : h(TableFilter, {defaultConfig: defaultConfig})
+      ];
     };
   },
 });
