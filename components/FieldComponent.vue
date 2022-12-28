@@ -1,5 +1,6 @@
 <template>
-  <div
+  <component
+      :is="fieldContainer || 'div'"
       class="field fv-row"
       :class="[col_class_c, { row: one_line }]"
       ref="root"
@@ -280,6 +281,10 @@
             @change="$emit('update:modelValue', $event.target.value)"
             ref="fieldRef"
         />
+        <div class="eye-ball" @click="passwordVisible = !passwordVisible" v-if="field_type == 'password'">
+          <inline-svg src="media/icons/light/eye.svg" v-if="passwordVisible"/>
+          <inline-svg src="media/icons/light/eye-slash.svg" v-if="!passwordVisible"/>
+        </div>
       </template>
       <div
           class="fv-plugins-message-container"
@@ -291,7 +296,7 @@
       </div>
     </div>
     <!--end::Input-->
-  </div>
+  </component>
 </template>
 <script lang="ts">
 import {
@@ -334,6 +339,9 @@ export default defineComponent({
     DatePicker: Vue3PersianDatetimePicker,
   },
   props: {
+    fieldContainer: {
+      type: Object as PropType<any>
+    },
     defaultInputClasses: {
       default: "form-control h-auto py-3 px-2 rounded-lg",
     },
@@ -482,6 +490,7 @@ export default defineComponent({
     const file_accept = toRef(props, "file_accept");
     const placeholder = toRef(props, "placeholder");
     const modelValue = toRef(props, "modelValue");
+    const passwordVisible = ref(false);
 
     const field = ref<any>(null);
     const root = ref<any>(null);
@@ -785,6 +794,10 @@ export default defineComponent({
     };
 
     const mutateDefaultTypes = () => {
+
+      if (passwordVisible.value)
+        return "text";
+
       switch (field_type.value) {
         case "positive-number":
         case "negative-number":
@@ -809,6 +822,7 @@ export default defineComponent({
       fieldRef: field,
       select2Instance,
       show_errors,
+      passwordVisible,
       // data
       currency,
       col_class_c,
@@ -865,6 +879,36 @@ input[type="color"] {
   transform: translateY(-50%);
   left: 5px;
   pointer-events: none;
+}
+
+.eye-ball {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  z-index: 99;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 5px;
+  width: 30px;
+  height: 30px;
+  transition: background-color ease-in-out 175ms;
+  background: rgba(153, 153, 153, 0);
+
+  &:hover {
+    background: rgba(153, 153, 153, 0.68);
+
+    svg {
+      fill: white !important;
+    }
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+    transition: fill ease-in-out 175ms;
+  }
+
 }
 
 label {
