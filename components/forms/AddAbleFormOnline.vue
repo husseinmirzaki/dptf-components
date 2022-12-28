@@ -187,7 +187,7 @@ export default defineComponent({
               ? " "
               : localModalTitle(modal);
         return h(ModalFormOnline, {
-          key: modal,
+          key: modal + modalTitle,
           modalTitle: modalTitle,
           onFields: localModalField(modal),
           onBuildFields: localModalOnBuildFields(modal),
