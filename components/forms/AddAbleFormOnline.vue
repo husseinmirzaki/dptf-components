@@ -183,11 +183,12 @@ export default defineComponent({
     return () => {
       const modalNames = Object.keys(modalsToCreate);
       const modals = modalNames.map((modal) => {
-        return h(ModalFormOnline, {
-          key: modal,
-          modalTitle: Configs["addAbleFormOnlineHideInnerModalTitle"]
+        const modalTitle = Configs["addAbleFormOnlineHideInnerModalTitle"]
               ? " "
-              : localModalTitle(modal),
+              : localModalTitle(modal);
+        return h(ModalFormOnline, {
+          key: modal + modalTitle,
+          modalTitle: modalTitle,
           onFields: localModalField(modal),
           onBuildFields: localModalOnBuildFields(modal),
           onFormReady: localModalFormReady(modal),
