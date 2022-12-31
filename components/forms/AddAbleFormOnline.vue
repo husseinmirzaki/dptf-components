@@ -33,6 +33,11 @@ export default defineComponent({
     let formInstance: any;
     const formReady: Ref<boolean> = ref(false);
     const modalsToCreate: Record<string, any> = reactive({});
+    const delimiter = "____";
+
+    const buildModalName = (f) => {
+      return f["rel_model"] + delimiter + f['name'];
+    }
 
     const onFormReadyC = (f) => {
       formInstance = f;
@@ -52,10 +57,10 @@ export default defineComponent({
           f["select_url"] = modelToServiceMap[f["rel_model"]].selectUrl;
           f["canAddItem"] = true;
           f["onAddClick"] = () => {
-            modalsToCreate[f["rel_model"]].ref.open();
+            modalsToCreate[buildModalName(f)].ref.open();
             const myFunction = (e) => {
               if (e && e.data && e.data.data) {
-                const { data: info } = e.data;
+                const {data: info} = e.data;
                 b.formInstance.formInstance.elementRefs[f["name"]].setValue([
                   buildSelectOption(info),
                 ]);
@@ -64,10 +69,10 @@ export default defineComponent({
             };
             VueInstanceService.on("closed.bs.modal", myFunction);
           };
-          if (!modalsToCreate[f["rel_model"]]) {
-            modalsToCreate[f["rel_model"]] = {};
+          if (!modalsToCreate[buildModalName(f)]) {
+            modalsToCreate[buildModalName(f)] = {};
           }
-          modalsToCreate[f["rel_model"]]["title"] = f["label"];
+          modalsToCreate[buildModalName(f)]["title"] = f["label"];
         } else console.warn("Add required service for", f["rel_model"]);
       }
 
@@ -135,9 +140,9 @@ export default defineComponent({
           field = fieldFieldSelect(field, (f) => {
             field["canAddItem"] = true;
             field["onAddClick"] = () => {
-              modalsToCreate[field["rel_model"]].open();
+              modalsToCreate[buildModalName(field)].open();
             };
-            modalsToCreate[field["rel_model"]] = {
+            modalsToCreate[buildModalName(field)] = {
               title: field["label"],
             };
             return field;
@@ -160,9 +165,9 @@ export default defineComponent({
         field = fieldFieldSelect(field, (f) => {
           field["canAddItem"] = true;
           field["onAddClick"] = () => {
-            modalsToCreate[field["rel_model"]].open();
+            modalsToCreate[buildModalName(field)].open();
           };
-          modalsToCreate[field["rel_model"]] = {
+          modalsToCreate[buildModalName(field)] = {
             title: field["label"],
           };
           return field;
@@ -193,7 +198,7 @@ export default defineComponent({
           onFormReady: localModalFormReady(modal),
           onOrderField: localOrderField(modal),
           onModes: localModes(modal),
-          modelName: modal,
+          modelName: modal.split(delimiter)[0],
           ref: (el) => {
             modalsToCreate[modal]["ref"] = el;
           },

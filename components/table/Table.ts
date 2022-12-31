@@ -1,7 +1,7 @@
 import TableHeader from "@/custom/components/table/header/TableHeader.vue";
 import TableTH from "@/custom/components/table/thead/TableTH.vue";
 import TableTD from "@/custom/components/table/tbody/TableTD.vue";
-import {Ref, ref, toRefs, watch} from "vue";
+import {reactive, Ref, ref, toRefs, watch} from "vue";
 import {ApiService, Configs, VueInstanceService} from "@/Defaults";
 import TableTDUser from "@/custom/components/table/tbody/TableTDUser.vue";
 import TableTDUserMulti from "@/custom/components/table/tbody/TableTDUserMulti.vue";
@@ -35,6 +35,10 @@ export class Table {
 
     get disableDropdown() {
         return !Configs.showTableDropdown;
+    }
+
+    get showOptionsInHeader() {
+        return Configs.showTableOptionsInHeader;
     }
 
     getFilterForm(): any {
@@ -73,7 +77,20 @@ export class Table {
      */
     tHeadComponent = TableTH;
 
-    headerVisibility = {};
+    headerVisibility = reactive({});
+    changedHeader: any = reactive([]);
+
+    setVisibleHeaders(e) {
+        console.log(e, this.headerVisibility);
+        Object.keys(e).forEach((key) => {
+            this.headerVisibility[key] = e[key];
+        });
+    }
+
+    setNewOrder(e) {
+        this.changedHeader.splice(0, 999);
+        e.forEach((d) => this.changedHeader.push(d));
+    }
 
     /**
      * Default table data component for each
@@ -133,6 +150,10 @@ export class Table {
 
     orderedField: any = ref({});
     filteredHeaders: any = ref([]);
+
+    clearFilters() {
+        this.jsonFilters = {};
+    }
 
     addJsonFilter(key, data) {
         if (!this.jsonFilters[key]) {
@@ -385,8 +406,8 @@ export class Table {
             finalList = this.defaultHeaders;
         }
 
-        if (this.showRowNumberHeader)
-            finalList.unshift('row_number')
+        if (this.showRowNumberHeader && finalList.indexOf("row_number") == -1)
+            finalList.unshift('row_number');
 
         return finalList;
     }
