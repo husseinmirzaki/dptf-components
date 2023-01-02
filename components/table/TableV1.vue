@@ -85,8 +85,10 @@ table {
     max-width: 200px;
     padding: 6px !important;
 
-    &.check-stuff:first-child {
-      min-width: 50px;
+    &.check-stuff {
+      width: 50px !important;
+      max-width: 50px !important;
+      min-width: 50px !important;
     }
 
     &:last-child {
@@ -106,6 +108,10 @@ table {
 
     &:last-child {
       border-left: none;
+    }
+
+    &.check-stuff-items {
+      padding: 0 5px!important;
     }
 
     padding-bottom: 0 !important;
@@ -202,6 +208,8 @@ import {ContextMenuService} from "@/custom/components/ContextMenuService";
 import {UserPreferencesManager} from "@/custom/services/UserPreferencesV2Api";
 import {DragHandler, SimpleDrag} from "@/custom/components/table/TableDrag";
 import Sortable from "sortablejs";
+import {hooks} from "prismjs";
+import all = hooks.all;
 
 export default defineComponent({
   props: {
@@ -277,7 +285,6 @@ export default defineComponent({
     const headerVisibility = ref<Record<string, any>>({});
 
     const checkedDataList = ref<Record<string, boolean>>({});
-    const cacheSelected = {};
 
     let drag: SimpleDrag | null = null;
 
@@ -293,6 +300,9 @@ export default defineComponent({
       });
     }
 
+    let skipCheckAll = false;
+    let skipCheckedDataList = false;
+    let skipCheckedDataListTime: any;
     /**
      * when sth is checked
      */
@@ -300,15 +310,23 @@ export default defineComponent({
         checkedDataList,
         () => {
           Object.keys(checkedDataList.value).forEach((key) => {
-            if (checkedDataList.value[key] && !cacheSelected[key]) {
-              const currentKeyId = key.split("_")[1];
-              const dataIndex = dList.value.findIndex(
-                  (item) => item["id"] == Number(currentKeyId)
-              );
-              cacheSelected[key] = dList.value[dataIndex];
-            } else if (!checkedDataList.value[key] && cacheSelected[key]) {
-              delete cacheSelected[key];
+            const values = Object.values(checkedDataList.value);
+            for (let i=0; i < values.length; i++) {
+              if (!values[i]) {
+                if (skipCheckedDataList) {
+                  clearTimeout(skipCheckedDataListTime);
+                  skipCheckedDataListTime = setTimeout(() => {
+                    skipCheckedDataList = false;
+                  }, 100);
+                  skipCheckAll = true;
+                } else  {
+                  skipCheckAll = true;
+                }
+                checkAll.value = false;
+                return;
+              }
             }
+            checkAll.value = true;
           });
         },
         {
@@ -328,9 +346,6 @@ export default defineComponent({
           changedHeaders.value = [];
           headerVisibility.value = {};
           checkedDataList.value = {};
-          Object.keys(Object.assign(cacheSelected)).forEach((e) => {
-            delete cacheSelected[e];
-          });
 
           mount();
         },
@@ -345,16 +360,16 @@ export default defineComponent({
      */
     _watchList.push(watch(
         dList,
-        () => {
-          if (dList.value) {
-            dList.value.forEach((data: any) => {
-              if (
-                  checkedDataList.value[`check_${data.id}`] == undefined ||
-                  checkedDataList.value[`check_${data.id}`] == null
-              )
-                checkedDataList.value[`check_${data.id}`] = checkAll.value;
-            });
-          }
+        (e) => {
+          // if (dList.value) {
+          //   dList.value.forEach((data: any) => {
+          //     if (
+          //         checkedDataList.value[`check_${data.id}`] == undefined ||
+          //         checkedDataList.value[`check_${data.id}`] == null
+          //     )
+          //       checkedDataList.value[`check_${data.id}`] = checkAll.value;
+          //   });
+          // }
         },
         {
           deep: true,
@@ -369,9 +384,19 @@ export default defineComponent({
     ));
     _watchList.push(watch(
         checkAll,
-        (e) => {
-          Object.keys(checkedDataList.value).forEach((e) => {
-            checkedDataList.value[e] = checkAll.value;
+        (eee) => {
+          if (skipCheckAll) {
+            skipCheckAll = false;
+            return;
+          }
+          if (!eee) {
+            skipCheckedDataList = true;
+          }
+          // all previous checks
+          Object.keys(checkedDataList.value).forEach((ee) => checkedDataList.value[ee] = checkAll.value);
+          // new data
+          dList.value.forEach((e) => {
+            checkedDataList.value[`check_${e.id}`] = checkAll.value;
           });
         }
     ));
@@ -678,7 +703,6 @@ export default defineComponent({
       defaultConfig,
       changedHeaders,
       headerVisibility,
-      cacheSelected,
 
       // computed
       headers,
@@ -712,8 +736,9 @@ export default defineComponent({
               },
               h(FieldComponent, {
                 modelValue: checkAll.value,
+                'onUpdate:modelValue': (ee) => checkAll.value=ee,
                 col_class: "",
-                input_container_class: "test",
+                input_container_class: "",
                 defaultInputClasses: "",
                 show_errors: false,
                 field_type: "checkbox",
@@ -836,6 +861,7 @@ export default defineComponent({
                       ? h(
                           "td",
                           {
+                            class: "check-stuff-items",
                             onMousemove: () => {
                               checkCheckFieldData(`check_${item["id"]}`);
                             },
@@ -843,11 +869,11 @@ export default defineComponent({
                               checkCheckFieldData(`check_${item["id"]}`);
                             },
                             onClick: () =>
-                                (checkedDataList[`check_${item["id"]}`] =
-                                    !checkedDataList[`check_${item["id"]}`]),
+                                (checkedDataList.value[`check_${item["id"]}`] =
+                                    !checkedDataList.value[`check_${item["id"]}`]),
                           },
                           h(FieldComponent, {
-                            modelValue: checkedDataList[`check_${item["id"]}`],
+                            modelValue: checkedDataList.value[`check_${item["id"]}`],
                             col_class: "",
                             input_container_class: "",
                             defaultInputClasses: "",
