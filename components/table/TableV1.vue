@@ -742,6 +742,7 @@ export default defineComponent({
                 defaultInputClasses: "",
                 show_errors: false,
                 field_type: "checkbox",
+                name: `main-in-header-checkbox-${defaultConfig.tableName}`,
               })
           )
           : undefined;
@@ -879,6 +880,7 @@ export default defineComponent({
                             defaultInputClasses: "",
                             show_errors: false,
                             field_type: "checkbox",
+                            name: `in-row-${item["id"]}-${defaultConfig.tableName}`,
                           })
                       )
                       : undefined;
