@@ -13,7 +13,7 @@
         :onTableCreation="onReadTableCreation"
         :onFormReady="onFormReadyRead"
         :model-name="modelName"
-        :backButtonRoute="{name: 'technical-items'}"
+        :backButtonRoute="backButtonRoute"
         :show-edit-button="true"
         @edit="$refs.sMananger.activeState = 'edit'"
       />
@@ -28,7 +28,7 @@
         :onFields="onFieldsAdd"
         :onOrderField="onOrderAdd"
         :onFormReady="onFormReadyAdd"
-        :backButtonRoute="{name: 'technical-items'}"
+        :backButtonRoute="backButtonRoute"
         @cancel="$refs.sMananger.activeState = 'view'"
         @done="
           $refs.sMananger.activeState = 'view';
@@ -61,6 +61,7 @@ export default defineComponent({
     "onReadBuildFields",
     "onModes",
     "onReadModes",
+    "backButtonRoute"
   ],
   components: { StateManager, SimpleReadOnlyFormOnline, AddAbleFormOnline },
 });

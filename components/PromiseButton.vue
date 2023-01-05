@@ -74,8 +74,8 @@ export default defineComponent({
         loading(
           (async () => {
             await formContainsRef.submitForm();
-            // console.log(formContainsRef.errors);
             if (Object.keys(formContainsRef.errors).length > 0) {
+              console.error("form error",formContainsRef.errors);
               return 0;
             }
             try {
