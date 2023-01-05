@@ -18,7 +18,7 @@ export class BatchDeleteHelper {
       showCancelButton: true,
       showDenyButton: true,
       confirmButtonText: "حذف شود",
-      cancelButtonText: `حدف نشود`,
+      cancelButtonText: `حذف نشود`,
       confirmButtonColor: "#F00",
       cancelButtonColor: "#0742c0",
     } as any);
@@ -36,7 +36,7 @@ export class BatchDeleteHelper {
       showCancelButton: true,
       showDenyButton: true,
       confirmButtonText: "حذف شود",
-      cancelButtonText: `حدف نشود`,
+      cancelButtonText: `حذف نشود`,
       confirmButtonColor: "#F00",
       cancelButtonColor: "#0742c0",
     } as any);
