@@ -269,6 +269,24 @@
           />
         </Field>
       </template>
+      <template v-else-if="field_type === 'positive-number'">
+        <Field
+            style="direction: rtl"
+            :class="[defaultInputClasses, input_class]"
+            :readonly="processedReadOnly()"
+            :placeholder="placeholder"
+            :type="mutateDefaultTypes()"
+            :name="name"
+            :modelValue="this.$props.modelValue"
+            @focusin="$emit('focusin')"
+            @change="$emit('update:modelValue', $event.target.value)"
+            ref="fieldRef"
+        />
+        <div class="eye-ball" @click="passwordVisible = !passwordVisible" v-if="field_type == 'password'">
+          <inline-svg src="media/icons/light/eye.svg" v-if="passwordVisible"/>
+          <inline-svg src="media/icons/light/eye-slash.svg" v-if="!passwordVisible"/>
+        </div>
+      </template>
       <template v-else>
         <Field
             :class="[defaultInputClasses, input_class]"
