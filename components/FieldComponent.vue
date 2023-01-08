@@ -54,8 +54,8 @@
               style="width: 100%"
               ref="fieldRef"
           >
-            <template v-if="select_data">
-              <template v-for="value in select_data" :key="value[0]">
+            <template v-if="selectedData()">
+              <template v-for="value in selectedData()" :key="value[0]">
                 <option
                     :value="value[0]"
                     selected="selected"
@@ -816,6 +816,12 @@ export default defineComponent({
       testConsole,
       formatCurrency,
       mutateDefaultTypes,
+      selectedData: () => {
+        if (isRef(props.select_data)) {
+          return props.select_data.value
+        }
+        return props.select_data;
+      },
       // ref
       root,
       showError,

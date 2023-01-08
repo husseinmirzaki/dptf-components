@@ -263,7 +263,7 @@ export class Table {
             text: "توجه کنید بعد از حذف کردن این مورد دیگر قادر به بازگردانی داده های موجود در آن نمیباشید",
             showCancelButton: true,
             confirmButtonText: "حذف شود",
-            cancelButtonText: `حدف نشود`,
+            cancelButtonText: `حذف نشود`,
             confirmButtonColor: "#F00",
             cancelButtonColor: "#0742c0",
         }).then((e) => {

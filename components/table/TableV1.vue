@@ -111,7 +111,7 @@ table {
     }
 
     &.check-stuff-items {
-      padding: 0 5px!important;
+      padding: 0 5px !important;
     }
 
     padding-bottom: 0 !important;
@@ -311,7 +311,7 @@ export default defineComponent({
         () => {
           Object.keys(checkedDataList.value).forEach((key) => {
             const values = Object.values(checkedDataList.value);
-            for (let i=0; i < values.length; i++) {
+            for (let i = 0; i < values.length; i++) {
               if (!values[i]) {
                 if (skipCheckedDataList) {
                   clearTimeout(skipCheckedDataListTime);
@@ -319,7 +319,7 @@ export default defineComponent({
                     skipCheckedDataList = false;
                   }, 100);
                   skipCheckAll = true;
-                } else  {
+                } else {
                   skipCheckAll = true;
                 }
                 checkAll.value = false;
@@ -736,12 +736,13 @@ export default defineComponent({
               },
               h(FieldComponent, {
                 modelValue: checkAll.value,
-                'onUpdate:modelValue': (ee) => checkAll.value=ee,
+                'onUpdate:modelValue': (ee) => checkAll.value = ee,
                 col_class: "",
                 input_container_class: "",
                 defaultInputClasses: "",
                 show_errors: false,
                 field_type: "checkbox",
+                name: `main-in-header-checkbox-${defaultConfig.tableName}`,
               })
           )
           : undefined;
@@ -879,6 +880,7 @@ export default defineComponent({
                             defaultInputClasses: "",
                             show_errors: false,
                             field_type: "checkbox",
+                            name: `in-row-${item["id"]}-${defaultConfig.tableName}`,
                           })
                       )
                       : undefined;
@@ -1168,3 +1170,12 @@ export default defineComponent({
   },
 });
 </script>
+<style scoped>
+table tr th:first-child, table td:first-child {
+  position: sticky;
+  width: 100px;
+  left: 0;
+  z-index: 10;
+  background: #fff;
+}
+</style>

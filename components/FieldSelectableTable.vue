@@ -10,7 +10,7 @@ import {onMounted, ref, watch} from "vue";
 
 export default {
   emits: ['update:modelValue'],
-  props: ['conf', 'url'],
+  props: ['conf', 'url', 'name'],
   components: {TableV1},
   setup(props, context) {
     const refTable = ref();
