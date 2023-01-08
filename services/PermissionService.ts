@@ -1,7 +1,7 @@
 import { Ref, ref, watch } from "vue";
 import { UserApiService } from "@/custom/services/UserApiService";
 
-export class PermissionService {
+export class  PermissionService {
   public static isCheckingForRole: Ref<boolean> = ref(false);
   public static roleCheckFailed: Ref<boolean> = ref(false);
   public static possibleRoles: Ref<Array<string>> = ref([]);
@@ -11,6 +11,7 @@ export class PermissionService {
     UserApiService.getCurrentUserRoles().then(
       ({ data }) => {
         this.possibleRoles.value = data;
+        console.log(data),
         this.isCheckingForRole.value = false;
         this.roleCheckFailed.value = false;
       },
