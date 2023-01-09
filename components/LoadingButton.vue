@@ -11,12 +11,13 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref, toRef, watch } from "vue";
+import {Configs} from "@/Configs";
 
 export default defineComponent({
   name: "loading-button",
   props: {
     text: {
-      default: "ارسال",
+      default: Configs.defaultTexts.submit,
       type: String,
     },
     isLoading: {

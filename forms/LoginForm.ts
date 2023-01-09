@@ -30,7 +30,7 @@ export default class LoginForm extends CreateForm {
                 title: "کد تایید را وارد کنید",
                 html: '<input id="swal-input-code" class="swal2-input">',
                 focusConfirm: true,
-                confirmButtonText: "ارسال",
+                confirmButtonText: Configs.defaultTexts.submit,
                 preConfirm: () => {
                   const element: any =
                     document.getElementById("swal-input-code");

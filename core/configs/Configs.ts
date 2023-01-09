@@ -9,4 +9,7 @@ export default {
   showTableOptionsInHeader: false,
   cardsAreDraggable: true,
   cardsHideCardIcon: false,
+  defaultTexts: {
+    submit: 'ارسال',
+  }
 };
