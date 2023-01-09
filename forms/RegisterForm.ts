@@ -1,7 +1,7 @@
 import { CreateForm } from "@/custom/helpers/BaseForm";
 import FieldComponentProps from "@/custom/components/FieldComponentPropsInterface";
 import { UserApiService } from "@/custom/services/UserApiService";
-import { VueInstanceService } from "@/Defaults";
+import {Configs, VueInstanceService} from "@/Defaults";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import { Actions } from "@/custom/store/enums/StoreEnums";
 import * as Yup from "yup";
@@ -34,7 +34,7 @@ export default class RegisterForm extends CreateForm {
     Swal.fire({
       icon: "question",
       title: "کد تایید را وارد کنید",
-      confirmButtonText: "ارسال",
+      confirmButtonText: Configs.defaultTexts.submit,
       html: '<input id="swal-input-code" class="swal2-input">',
       focusConfirm: true,
       preConfirm: () => {

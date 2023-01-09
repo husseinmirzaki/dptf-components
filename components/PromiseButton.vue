@@ -15,18 +15,18 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import { VueInstanceService } from "@/Defaults";
+import {Configs, VueInstanceService} from "@/Defaults";
 import { Actions } from "@/custom/store/enums/StoreEnums";
 
 export default defineComponent({
   name: "promise-button",
   props: {
     text: {
-      default: "ارسال",
+      default: Configs.defaultTexts.submit,
       type: String,
     },
     loadingText: {
-      default: "درحال ارسال ...",
+      default: `درحال ${Configs.defaultTexts.submit} ...`,
       type: String,
     },
     promise: {
