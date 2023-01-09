@@ -1,7 +1,7 @@
 <template>
   <th class="custom-table-th" @click="$emit('toggleOrder')">
     <div
-      class="custom-table-th-second d-flex flex-row position-relative align-items-center justify-content-start"
+      class="custom-table-th-second d-flex flex-row position-relative align-items-center justify-content-center"
     >
       <div
         v-if="!disableFilters"

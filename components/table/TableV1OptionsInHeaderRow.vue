@@ -16,6 +16,8 @@ import FormBuilder from "@/custom/components/FormBuilder.vue";
 import TableV1OptionsInHeaderRowFieldContainer
   from "@/custom/components/table/TableV1OptionsInHeaderRowFieldContainer.vue";
 import TableV1OptionsInHeaderRowEmpty from "@/custom/components/table/TableV1OptionsInHeaderRowEmpty.vue";
+import {modelToServiceMap} from "@/ModelToServiceMap";
+import FieldComponentPropsInterface from "@/custom/components/FieldComponentPropsInterface";
 
 export default defineComponent({
   components: {FormBuilder},
@@ -38,11 +40,25 @@ export default defineComponent({
         Object.keys(e).forEach((key) => {
           if (!e[key] || e[key] == "")
             return;
-          props.defaultConfig.applyFilter(key, [{
-            "text": e[key],
-            "value": e[key],
-            "comp": "1",
-          }]);
+
+          const filters: any = [];
+
+          if (Array.isArray(e[key])) {
+            e[key].forEach((filterValue) => {
+              filters.push({
+                "text": filterValue,
+                "value": filterValue,
+                "comp": "1",
+              });
+            });
+          } else {
+            filters.push({
+              "text": e[key],
+              "value": e[key],
+              "comp": "1",
+            });
+          }
+          props.defaultConfig.applyFilter(key, filters);
         });
         props.defaultConfig.refresh();
       })
@@ -64,9 +80,19 @@ export default defineComponent({
         FieldsApiService.getFieldConfig(modelName, event.fieldName).then(
             ({data}) => {
               fields[index] = data;
+              if (data["rel_model"]) {
+                const service = modelToServiceMap[data["rel_model"]];
+                data["field_type"] = "select";
+                data["select_url"] = service.selectUrl;
+              }
+              if (data["field_type"] == "select") {
+                if (!data["select_options"]) {
+                  data["select_options"] = {};
+                }
+                data["select_multiple"] = true;
+              }
               if (onlineFields.length == 1) {
                 buildExtend();
-                console.log(fields);
               }
               onlineFields.pop();
             }

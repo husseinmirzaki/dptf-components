@@ -20,6 +20,12 @@ export function select2(
         onParams: (_data) => {
             //
         },
+        processResults: (_data) => {
+            console.log(_data);
+            return {
+                results: _data.results,
+            }
+        }
     };
 
     // console.log("select2 before", options);
@@ -50,6 +56,7 @@ export function select2(
             headers: {
                 "Content-Type": "application/json",
             },
+            processResults: options!["processResults"],
             data: (params) => {
                 const _data = {
                     search: params.term,
@@ -73,6 +80,7 @@ export function select2(
             headers: {
                 "Content-Type": "application/json",
             },
+            processResults: options!["processResults"],
             data: function (params) {
                 const _data = {
                     search: params.term,
