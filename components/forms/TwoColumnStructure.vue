@@ -68,7 +68,7 @@ export default defineComponent({
             },
             {
               toolbar0: () =>
-                Configs["showModelHistoryButton"]
+                Configs.showTableHistoryButton
                   ? h(ShowModelHistoryButton, {
                       modelName: props.tableModel,
                     })

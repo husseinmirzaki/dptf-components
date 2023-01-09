@@ -1073,7 +1073,7 @@ export default defineComponent({
                     {
                       class: "me-n4",
                     },
-                    h(
+                    Configs.showTableExportButton ? h(
                         "button",
                         {
                           type: "button",
@@ -1096,7 +1096,7 @@ export default defineComponent({
                                 })
                             )
                         )
-                    )
+                    ) : undefined
                 );
               },
               default: () => {

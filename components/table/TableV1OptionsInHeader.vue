@@ -2,7 +2,7 @@
   <div class="table-v1-options-in-header">
 
     <Button class="btn btn-sm btn-icon"
-            ref="refExportButton" @click="$emit('export')">
+            ref="refExportButton" @click="$emit('export')" v-if="config.showTableExportButton">
       <inline-svg src="media/icons/light/file-arrow-down.svg" width="15px" height="15px"/>
     </Button>
     <Button class="btn btn-sm btn-icon"
@@ -25,6 +25,7 @@
 import {defineProps, isRef, onMounted, ref} from "vue";
 import TableV1OptionsInHeaderOrder from "@/custom/components/table/TableV1OptionsInHeaderOrder.vue";
 import {Table} from "@/custom/components/table/Table";
+import {Configs} from "@/Configs";
 
 defineProps<{
   defaultConfig: Table
@@ -32,6 +33,7 @@ defineProps<{
 const animationDuration = 175;
 const refExportButton = ref();
 const refOrderButton = ref();
+const config = Configs;
 
 const orderIsOpen = ref(false);
 const filterIsOpen = ref(false);
