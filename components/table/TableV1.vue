@@ -25,7 +25,7 @@
     padding: 3px;
     position: sticky;
     left: 0;
-    background: white !important;
+    //background: white !important;
     top: 0;
     z-index: 1;
     width: 25vw;
