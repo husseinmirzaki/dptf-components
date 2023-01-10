@@ -245,7 +245,7 @@ export default defineComponent({
       default: !Configs["cardsAreDraggable"],
     },
     userPreferences: {
-      default: false,
+      default: Configs.enableTableUserPreferences,
     },
     disableDropdown: {
       default: false,
@@ -449,7 +449,9 @@ export default defineComponent({
         `${defaultConfig.preferencesPrefixKey}${defaultConfig.tableName}`
     );
 
-    preferencesManager.get();
+
+    if (props.userPreferences)
+      preferencesManager.get();
 
     _watchList.push(watch(
         preferencesManager.value,
@@ -478,6 +480,10 @@ export default defineComponent({
     };
 
     const getTableSettings = () => {
+      if (!props.userPreferences) {
+        tableSetup();
+        return;
+      }
       preferencesManager.get().then(
           () => {
             tableSetup();
@@ -489,6 +495,7 @@ export default defineComponent({
     };
 
     const saveTableSettings = () => {
+      if (!props.userPreferences) return;
       preferencesManager.set({
         defaultHeaders: Object.assign({}, defaultConfig.defaultHeaders),
         headers: Object.assign([], headers.value),
@@ -983,6 +990,10 @@ export default defineComponent({
     };
 
     const buildTable = () => {
+      console.log({
+        "mb-0": !defaultConfig.showPagination,
+        "with-action-buttons": defaultConfig.showActionButtons,
+      });
       return h(
           "div",
           {
@@ -1170,12 +1181,3 @@ export default defineComponent({
   },
 });
 </script>
-<style scoped>
-table tr th:first-child, table td:first-child {
-  position: sticky;
-  width: 100px;
-  left: 0;
-  z-index: 10;
-  background: #fff;
-}
-</style>
