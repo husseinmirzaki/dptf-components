@@ -3,6 +3,8 @@ export default {
   defaultAfterLogin: {
     name: "dashboard",
   },
+  showTableExportButton: false,
+  showTableHistoryButton: false,
   showTableActionButtons: false,
   showTableRowNumberHeader: true,
   showTableDropdown: true,
