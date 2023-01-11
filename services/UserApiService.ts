@@ -131,9 +131,4 @@ export class UserApiService extends ApiService {
   public static getCurrentUserRoles() {
     return ApiService.get(`${this.baseUrl}get_user_possible_roles/`);
   }
-
-  public static getMotamedList(){
-    console.log('aa',ApiService.list(`${this.baseUrl}motamed_list/`))
-    return ApiService.list(`${this.baseUrl}motamed_list/`);
-  }
 }
