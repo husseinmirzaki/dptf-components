@@ -370,8 +370,8 @@ export default {
       container.value.addEventListener("mouseleave", () => {
         clearTimeout(lastTimeout);
         mapToolTip.value.style.opacity = 0;
-        mapToolTip.value.style.left = "-1000px";
-        mapToolTip.value.style.top = "-1000px";
+        // mapToolTip.value.style.left = "-1000px";
+        // mapToolTip.value.style.top = "-1000px";
       });
 
       data.addEventListener("mousemove", (event) => {
