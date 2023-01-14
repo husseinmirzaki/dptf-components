@@ -21,10 +21,7 @@ export function select2(
             //
         },
         processResults: (_data) => {
-            console.log(_data);
-            return {
-                results: _data.results,
-            }
+            return _data;
         }
     };
 
