@@ -4,6 +4,7 @@ export default {
     name: "dashboard",
   },
   showTableExportButton: false,
+  enableTableUserPreferences: false,
   showTableHistoryButton: false,
   showTableActionButtons: false,
   showTableRowNumberHeader: true,
