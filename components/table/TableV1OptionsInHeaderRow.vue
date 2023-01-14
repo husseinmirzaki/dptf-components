@@ -48,14 +48,14 @@ export default defineComponent({
               filters.push({
                 "text": filterValue,
                 "value": filterValue,
-                "comp": "1",
+                "comp": "auto",
               });
             });
           } else {
             filters.push({
               "text": e[key],
               "value": e[key],
-              "comp": "1",
+              "comp": "auto",
             });
           }
           props.defaultConfig.applyFilter(key, filters);
