@@ -297,6 +297,7 @@
             :modelValue="this.$props.modelValue"
             @focusin="$emit('focusin')"
             @change="$emit('update:modelValue', $event.target.value)"
+            @keyup="emitOnKeyup ? $emit('update:modelValue', $event.target.value) : undefined"
             ref="fieldRef"
         />
         <div class="eye-ball" @click="passwordVisible = !passwordVisible" v-if="field_type == 'password'">
@@ -487,6 +488,9 @@ export default defineComponent({
     },
     select_data: {
       type: Array,
+    },
+    emitOnKeyup: {
+      type: Boolean,
     },
   },
   setup(props, context) {

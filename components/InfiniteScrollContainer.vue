@@ -13,24 +13,54 @@ export default defineComponent({
     },
     list: {
       type: Array,
-      default: () => [],
     },
     filter: {
       type: Object as PropType<Array<any>>,
-      default: () => ({}),
     }
   },
   setup(props) {
-    const items: Ref<Array<any>> = ref([]);
+    let list: Ref<any>;
+    if (props.list) {
+      if (isRef(props.list)) {
+        list = props.list;
+      } else {
+        list = ref(props.list);
+      }
+    } else if (props.conf.list) {
+      if (isRef(props.conf.list)) {
+        console.log("infinite", props.conf.list);
+        list = props.conf.list;
+      } else {
+        list = ref(props.conf.list);
+      }
+    } else {
+      list = ref([]);
+    }
+    let filter: Ref<any>;
+    if (props.filter) {
+      if (isRef(props.filter)) {
+        filter = props.filter;
+      } else {
+        filter = ref(props.filter);
+      }
+    } else if (props.conf.filter) {
+      if (isRef(props.conf.filter)) {
+        filter = props.conf.filter;
+      } else {
+        filter = ref(props.conf.filter);
+      }
+    } else {
+      filter = ref({});
+    }
 
-    const list: Ref<any> = isRef(props.list) ? props.list : ref(props.list);
-    const filter: Ref<any> = isRef(props.filter) ? props.filter : ref(props.filter);
 
     let finished = false;
     let loading = ref(false);
     let page = 1;
+    let viewItems: Array<any> = [];
 
     let timer: any;
+    let filterChangeTimer: any;
     let infiniteItemsContainer: any;
     let infiniteItemsInnerContainer: any;
 
@@ -65,7 +95,7 @@ export default defineComponent({
         const filters = Object.keys(filter.value);
         viewItems = list.value.filter((item) => {
 
-          if (filters.length == 0) return  true;
+          if (filters.length == 0) return true;
 
           let isOk = true;
 
@@ -79,6 +109,8 @@ export default defineComponent({
         }).map((item) => {
           return buildItem(item);
         });
+        return;
+
       }
 
       if (page == 1) {
@@ -90,7 +122,7 @@ export default defineComponent({
         ...filter.value,
         ...{page}
       }).then(({data}) => {
-        items.value.push(...data.results);
+        list.value.push(...data.results);
         data.results.forEach((item) => {
           viewItems.push(buildItem(item));
         });
@@ -107,15 +139,30 @@ export default defineComponent({
       infiniteItemsInnerContainer = document.querySelector(".infinite-scroll-inner-items-container")!;
     }
 
-    watch(items.value, () => {
-      if (infiniteItemsContainer == null || infiniteItemsInnerContainer == null) {
-        nextTick(() => loadElement());
-      }
-    }, {
-      deep: true,
-    });
-
     onMounted(() => {
+
+      watch(filter, () => {
+
+        clearTimeout(filterChangeTimer);
+        filterChangeTimer = setTimeout(() => {
+          page = 1;
+          finished = false;
+          loading.value = false;
+          loadData();
+        }, 300);
+      }, {
+        deep: true,
+      })
+
+      watch(list, () => {
+        if (!props.conf.service) loadData();
+        if (infiniteItemsContainer == null || infiniteItemsInnerContainer == null) {
+          nextTick(() => loadElement());
+        }
+      }, {
+        deep: true,
+      });
+
       loadElement();
 
       loadData();
@@ -129,12 +176,12 @@ export default defineComponent({
       });
     });
 
-
-    // stuff
-    let viewItems: Array<any> = [];
     const cardContent = () => {
 
-      if (items.value.length === 0) {
+      if (props.conf.filterCounter.value % 2 != 0)
+        return;
+
+      if (list.value.length === 0 || viewItems.length === 0) {
         return h(
             'div',
             {
@@ -143,8 +190,6 @@ export default defineComponent({
             [
               h(resolveComponent("inline-svg",), {
                 src: "media/icons/light/inbox.svg",
-                width: 100,
-                height: 100,
               }),
               h("p", {class: "error-text"}, "هیچ داده ای برای نمایش وجود ندارد")
             ]
@@ -157,8 +202,8 @@ export default defineComponent({
             class: 'infinite-scroll-inner-items-container',
           },
           [
-            ...viewItems,
-            loading.value ? h(Spinner, {}, h(
+            ...viewItems.filter(props.conf.filterViews),
+            loading.value && props.conf.service ? h(Spinner, {}, h(
                 'div',
                 {
                   class: 'infinite-scroll-item',
@@ -185,15 +230,10 @@ export default defineComponent({
   padding: 0 !important;
 
   .infinite-scroll-item-container {
-    padding: 6px !important;
+    padding: 6px 0 !important;
     margin: 0 !important;
     max-height: 300px;
     overflow-y: scroll;
-
-    .infinite-scroll-item {
-      padding: 10px;
-      margin: 2px;
-    }
   }
 
   .infinite-scroll-empty-container {
@@ -203,6 +243,9 @@ export default defineComponent({
     justify-content: center;
 
     svg {
+      width: 100px;
+      height: 100px;
+
       path, g {
         fill: red;
       }
