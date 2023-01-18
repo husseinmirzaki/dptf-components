@@ -2,19 +2,51 @@
   <div class="row justify-content-center align-items-center">
     <div class="items-row">
       <div class="item-container">
-        <DivTreeItem v-bind="item" v-for="item in structure" :key="item" />
+        <template v-if="!isEmpty">
+          <DivTreeItem v-bind="item" v-for="item in modifiedStructure" :key="item"/>
+        </template>
+        <template v-else>
+          <h2>شما به این بخش دسترسی ندارید</h2>
+        </template>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import {defineComponent, onMounted, ref, toRef} from "vue";
 import DivTreeItem from "@/custom/components/div-tree/DivTreeItem.vue";
+import {VueInstanceService} from "@/Defaults";
 
 export default defineComponent({
-  components: { DivTreeItem },
+  components: {DivTreeItem},
   props: ["structure"],
+  setup(props) {
+    const modifiedStructure = ref(props.structure);
+    const isEmpty = ref(false);
+
+    onMounted(()=> {
+      const count = modifiedStructure.value.length;
+      for (let i = 0; i < count; i++) {
+        modifiedStructure.value[i].children = modifiedStructure.value[i].children.filter((child) => {
+          const permissionName = VueInstanceService.router.resolve({name: child.routerName}).meta["permissionName"];
+
+          if (permissionName) {
+            if (!VueInstanceService.hasPermission(permissionName as any, (e) => e.startsWith("view_")))
+              return false;
+          }
+
+          return true;
+        });
+        isEmpty.value = modifiedStructure.value[i].children.length == 0;
+      }
+    });
+
+    return {
+      modifiedStructure,
+      isEmpty
+    }
+  }
 });
 </script>
 <style>
@@ -118,9 +150,11 @@ export default defineComponent({
   border-top: 1px solid black;
   transform: translateX(50%) translateY(-100%);
 }
+
 .items-row .show-stuff.only-one .item:before, .items-row .show-stuff.only-one .item:after {
   display: none;
 }
+
 .items-row .show-stuff.only-one .item {
   margin-top: 0;
 }

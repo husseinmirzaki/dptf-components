@@ -369,7 +369,6 @@ export class Table {
                 },
             });
         }
-        9;
 
         if (this.showContextMenuUpdate) {
             items.push({
