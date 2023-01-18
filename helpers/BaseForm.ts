@@ -391,9 +391,13 @@ export class CreateForm<T extends FieldsInterface = any> {
             if (d) {
                 // console.log("custom validations", d);
                 if (Array.isArray(d)) {
-                    d.forEach((validation) => {
-                        fieldsValidations["basic"][e.name] = validation;
-                    });
+                    Object.keys(fieldsValidations).forEach((fieldValidationMode) => {
+                        const indexOf  = this.modeFields[fieldValidationMode].findIndex((ee) => ee.name == e.name);
+                        if (indexOf > -1)
+                            d.forEach((validation) => {
+                                fieldsValidations[fieldValidationMode][e.name] = validation;
+                            });
+                    })
                 } else {
                     Object.keys(d).forEach((modeName) => {
                         fieldsValidations[modeName][e.name] = d[modeName];
