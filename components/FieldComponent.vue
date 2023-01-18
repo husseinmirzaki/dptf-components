@@ -344,6 +344,7 @@ import {
 import Select2AlternativeField from "@/custom/components/Select2AlternativeField.vue";
 import {ColorPicker} from 'vue-accessible-color-picker'
 import FieldColorPicker from "@/custom/components/FieldColorPicker.vue";
+import {random} from "@/custom/helpers/random";
 
 export default defineComponent({
   name: "field-component",
@@ -437,6 +438,7 @@ export default defineComponent({
     },
     name: {
       type: String,
+      default: () => random(3),
     },
     required: {
       type: Boolean,
@@ -576,7 +578,8 @@ export default defineComponent({
       }
 
       if (field_type.value == "hidden") {
-        root.value.style.display = "none";
+        if (root.value && root.value.style)
+          root.value.style.display = "none";
       }
 
       if (outerAccess.value) {

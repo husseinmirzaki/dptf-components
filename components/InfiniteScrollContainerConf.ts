@@ -1,5 +1,5 @@
 import {ApiService, VueInstanceService} from "@/Defaults";
-import {nextTick, ref, Ref, watch} from "vue";
+import {h, nextTick, ref, Ref, watch} from "vue";
 import InfiniteScrollItem from "@/custom/components/InfiniteScrollItem.vue";
 import {randomId} from "@/custom/helpers/random";
 
@@ -64,5 +64,34 @@ export class InfiniteScrollContainerConf {
 
     toText(item): string {
         return String(item.id);
+    }
+
+    buildItem(item): any {
+        return h(
+            this.itemComponent,
+            {
+                key: "item-" + item.id,
+                conf: this,
+                data: item
+            }
+        )
+    }
+
+    getData(filter, page): Promise<any> | null | undefined {
+        return this.service?.list(undefined, {
+            ...filter.value,
+            ...{page}
+        });
+    }
+
+    buildData(data, list, viewItems) {
+        list.value.push(...data.results);
+        data.results.forEach((item) => {
+            viewItems.push(this.buildItem(item));
+        });
+    }
+
+    updateModelValue(context, selectedItemsList) {
+        context.emit("update:modelValue", Object.assign([], selectedItemsList));
     }
 }

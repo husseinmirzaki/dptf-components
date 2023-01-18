@@ -1,11 +1,13 @@
 <script lang="ts">
-import { defineComponent, h, ref, toRef } from "vue";
+import {defineComponent, h, ref, toRef} from "vue";
 import TableV1 from "@/custom/components/table/TableV1.vue";
 import FixedHeightLoader from "@/custom/components/forms/FixedHeightLoader.vue";
 import FixedHeightAccess from "@/custom/components/forms/FixedHeightAccess.vue";
-import { modelToServiceMap } from "@/ModelToServiceMap";
-import { Table } from "@/custom/components/table/Table";
-import { FieldsApiService } from "@/custom/services/FieldsApiService";
+import {modelToServiceMap} from "@/ModelToServiceMap";
+import {Table} from "@/custom/components/table/Table";
+import {FieldsApiService} from "@/custom/services/FieldsApiService";
+import {ContextMenuItem} from "@/custom/components/ContextMenuService";
+import {VueInstanceService} from "@/Defaults";
 
 export default defineComponent({
   props: [
@@ -55,6 +57,23 @@ export default defineComponent({
         extendClass = props.extendClass;
       }
 
+      const permissions: Array<string> = [];
+
+      if (VueInstanceService.route.meta && VueInstanceService.route.meta["permissionName"]) {
+        const builtPermissions = VueInstanceService.buildPermissions(VueInstanceService.route.meta["permissionName"]);
+        if (Array.isArray(builtPermissions)) {
+          builtPermissions.forEach((permission) => {
+            if (VueInstanceService.hasPermission(permission)) {
+              permissions.push(permission);
+            }
+          })
+        } else {
+          if (VueInstanceService.hasPermission(builtPermissions)) {
+            permissions.push(builtPermissions);
+          }
+        }
+      }
+
       class TableClass extends extendClass {
         constructor(props, context, extra) {
           super(props, context, extra);
@@ -78,9 +97,9 @@ export default defineComponent({
         onTBodyComponent(item, header, index): any {
           if (defaultTableOptions.onTBodyComponent) {
             const data: any = defaultTableOptions.onTBodyComponent(
-              item,
-              header,
-              index
+                item,
+                header,
+                index
             );
             if (data) {
               return data;
@@ -119,6 +138,36 @@ export default defineComponent({
           }
           return super.onTBodyProps(item, header, index);
         }
+
+
+        getContextMenuItems(data: any = undefined): Array<ContextMenuItem> {
+
+          const contextMenuItems = super.getContextMenuItems(data);
+          const alreadyHas = contextMenuItems.length > 0;
+
+          if (permissions.length > 0 && permissions.findIndex((permission) => permission.startsWith("delete_")) == -1) {
+            const indexOf = contextMenuItems.findIndex((item) => item["text"] === "حذف");
+            if (indexOf > -1) {
+              contextMenuItems.splice(indexOf, 1);
+            }
+          }
+
+          if (permissions.length > 0 && permissions.findIndex((permission) => permission.startsWith("change_")) == -1) {
+            const indexOf = contextMenuItems.findIndex((item) => item["text"] === "ویرایش");
+            if (indexOf > -1) {
+              contextMenuItems.splice(indexOf, 1);
+            }
+          }
+
+          if (alreadyHas && contextMenuItems.length == 0) {
+            contextMenuItems.push({
+              text: "بدون دسترسی",
+              state: "danger",
+            });
+          }
+
+          return contextMenuItems;
+        }
       }
 
       if (props.extendFromClass) {
@@ -130,14 +179,14 @@ export default defineComponent({
     };
 
     promise.then(
-      ({ data }) => {
-        tableClass(data);
-      },
-      ({ response }) => {
-        // if (response.status >= 400 && response.status < 500) {
-        //     this.formFound.value = false;
-        // }
-      }
+        ({data}) => {
+          tableClass(data);
+        },
+        ({response}) => {
+          // if (response.status >= 400 && response.status < 500) {
+          //     this.formFound.value = false;
+          // }
+        }
     );
 
     return () => {
@@ -164,17 +213,17 @@ export default defineComponent({
         let url = `${service.baseUrl}?${urlSearch}`;
 
         return h(
-          TableV1,
-          {
-            disableDrag: true,
-            cardTitle: props.title,
-            description: props.description ? props.description : "",
-            disableDropdown: false,
-            url,
-            class: "custom-field-class",
-            conf: table,
-          },
-          context.slots
+            TableV1,
+            {
+              disableDrag: true,
+              cardTitle: props.title,
+              description: props.description ? props.description : "",
+              disableDropdown: false,
+              url,
+              class: "custom-field-class",
+              conf: table,
+            },
+            context.slots
         );
       } else if (!loadingFailed.value) {
         return h(FixedHeightLoader);

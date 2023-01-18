@@ -8,7 +8,6 @@
               <FieldComponent
                   :emit-on-keyup="true"
                   v-model="filterMain"
-                  @update:modelValue.stop
                   placeholder="جستجو"/>
               <InfiniteScrollContainer :conf="inputScroll"/>
             </template>
@@ -29,7 +28,6 @@
               <FieldComponent
                   :emit-on-keyup="true"
                   v-model="filterSelected"
-                  @update:modelValue.stop
                   placeholder="جستجو"/>
               <InfiniteScrollContainer :conf="selectedScroll"/>
             </template>
@@ -55,70 +53,93 @@
 <script lang="ts">
 import Card from "@/custom/components/Card.vue";
 import FieldComponent from "@/custom/components/FieldComponent.vue";
-import {computed, onMounted, onUnmounted, PropType, ref, watch} from "vue";
+import {computed, onMounted, onUnmounted, PropType, Ref, ref, watch} from "vue";
 import InfiniteScrollContainer from "@/custom/components/InfiniteScrollContainer.vue";
 import {InfiniteScrollContainerConf} from "@/custom/components/InfiniteScrollContainerConf";
 import {ProvinceApiService} from "@/metronic_custom/services/ProvinceApiService";
 import {VueInstanceService} from "@/Defaults";
 
+export class BaseToText extends InfiniteScrollContainerConf {
+
+  toText(item) {
+    return item.title;
+  }
+
+}
+
+export function fieldTwoColumnInput(selectedItemsList: Ref<Array<any>>, filterMain: Ref<string>, filterSelected: Ref<string>) {
+  class InputScroll extends BaseToText {
+    filterViews(item) {
+      return selectedItemsList.value.findIndex((e) => e["id"] === item.props.data["id"]) === -1;
+    }
+
+    get filter() {
+      return computed(() => ({
+        search: filterMain.value
+      }));
+    }
+  }
+
+  return InputScroll;
+}
+
+export function fieldTwoColumnSelected(selectedItemsList: Ref<Array<any>>, filterMain: Ref<string>, filterSelected: Ref<string>) {
+  class SelectedScroll extends BaseToText {
+
+    filterViews(item) {
+      if (filterSelected.value === "")
+        return true;
+      return item.props.data.title.search(filterSelected.value) > -1;
+    }
+
+    get list() {
+      return selectedItemsList;
+    }
+
+  }
+
+  return SelectedScroll;
+}
+
+
 export default {
   components: {InfiniteScrollContainer, FieldComponent, Card},
+  emits: ['builtInputScroll', 'builtSelectedScroll','update:modelValue'],
   props: {
-    inputScrollConf: {
-      type: Object as PropType<InfiniteScrollContainerConf>,
+    buildInputScroll: {
+      type: Object as PropType<(selectedItemsList: Ref<Array<any>>, filterMain: Ref<string>, filterSelected: Ref<string>) => typeof InfiniteScrollContainerConf>,
+      default: () => fieldTwoColumnInput,
     },
-    selectedScrollConf: {
-      type: Object as PropType<InfiniteScrollContainerConf>,
+    buildSelectedScroll: {
+      type: Object as PropType<(selectedItemsList: Ref<Array<any>>, filterMain: Ref<string>, filterSelected: Ref<string>) => typeof InfiniteScrollContainerConf>,
+      default: () => fieldTwoColumnSelected,
     },
   },
   setup(props, context) {
-    const selectedItemsList = ref([]);
+    const selectedItemsList: Ref<Array<any>> = ref([]);
     const filterMain = ref("");
     const filterSelected = ref("");
     const enableMoveLeft = ref(false);
     const enableMoveRight = ref(false);
 
-    class BaseToText extends InfiniteScrollContainerConf {
+    const InputScroll = props.buildInputScroll(selectedItemsList, filterMain, filterSelected);
+    const SelectedScroll = props.buildSelectedScroll(selectedItemsList, filterMain, filterSelected);
 
-      toText(item) {
-        return item.title;
-      }
+    const inputScroll = new InputScroll();
+    const selectedScroll = new SelectedScroll();
 
+    context.emit("builtInputScroll", inputScroll);
+    context.emit("builtSelectedScroll", selectedScroll);
+
+    const setData = (e) => {
+      console.log("setting data", e);
+      selectedItemsList.value = e;
     }
 
-    class InputScroll extends BaseToText {
-
-      filterViews(item) {
-        return selectedItemsList.value.findIndex((e) => e["id"] === item.props.data["id"]) === -1;
-      }
-
-      get service() {
-        return ProvinceApiService;
-      }
-
-      get filter() {
-        return computed(() => ({
-          search: filterMain.value
-        }));
-      }
+    const resetData = (e) => {
+      console.log("reset data", e);
+      selectedItemsList.value = [];
     }
-
-    class SelectedScroll extends BaseToText {
-
-      filterViews(item) {
-        if (filterSelected.value === "")
-          return true;
-        return item.props.data.title.search(filterSelected.value) > -1;
-      }
-
-      get list() {
-        return selectedItemsList;
-      }
-
-    }
-
-    const inputScroll = props.inputScrollConf ? props.inputScrollConf : new InputScroll();
-    const selectedScroll = props.selectedScrollConf ? props.selectedScrollConf : new SelectedScroll();
 
     const onInputScrollSelected = () => {
       enableMoveLeft.value = inputScroll.selectedItems.value.length > 0;
@@ -128,10 +149,11 @@ export default {
     };
 
     const moveToLeft = () => {
-      selectedItemsList.value = Object.assign([], inputScroll.selectedItems.value);
+      const selected = Object.assign([], inputScroll.selectedItems.value);
+      selected.forEach((e) => selectedItemsList.value.push(e));
       inputScroll.selectedItems.value = [];
       inputScroll.notifyFilterViews();
-      context.emit("update:modelValue", Object.assign([], selectedItemsList.value));
+      selectedScroll.updateModelValue(context, selectedItemsList.value);
     }
 
     const moveToRight = () => {
@@ -145,7 +167,7 @@ export default {
       });
       selectedScroll.selectedItems.value = [];
       inputScroll.notifyFilterViews();
-      context.emit("update:modelValue", Object.assign([], selectedItemsList.value));
+      selectedScroll.updateModelValue(context, selectedItemsList.value);
     }
 
     let filterSelectedTimer;
@@ -171,6 +193,8 @@ export default {
       selectedScroll,
       enableMoveLeft,
       enableMoveRight,
+      setData,
+      resetData,
       moveToLeft,
       moveToRight,
     }

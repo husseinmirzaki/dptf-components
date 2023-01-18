@@ -2,6 +2,7 @@
   <tr>
     <td v-if="onlineFields.length > 0">loading</td>
     <template v-else-if="noRefs['extend']">
+      <th></th>
       <FormBuilder :fields="noRefs['extend'].activeFields" :fieldContainer="TableV1OptionsInHeaderRowEmpty"/>
     </template>
   </tr>

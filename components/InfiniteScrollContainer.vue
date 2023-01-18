@@ -20,35 +20,18 @@ export default defineComponent({
   },
   setup(props) {
     let list: Ref<any>;
+    let filter: Ref<any>;
     if (props.list) {
-      if (isRef(props.list)) {
-        list = props.list;
-      } else {
-        list = ref(props.list);
-      }
+      list = ref(props.list);
     } else if (props.conf.list) {
-      if (isRef(props.conf.list)) {
-        console.log("infinite", props.conf.list);
-        list = props.conf.list;
-      } else {
-        list = ref(props.conf.list);
-      }
+      list = ref(props.conf.list);
     } else {
       list = ref([]);
     }
-    let filter: Ref<any>;
     if (props.filter) {
-      if (isRef(props.filter)) {
-        filter = props.filter;
-      } else {
-        filter = ref(props.filter);
-      }
+      filter = ref(props.filter);
     } else if (props.conf.filter) {
-      if (isRef(props.conf.filter)) {
-        filter = props.conf.filter;
-      } else {
-        filter = ref(props.conf.filter);
-      }
+      filter = ref(props.conf.filter);
     } else {
       filter = ref({});
     }
@@ -76,16 +59,6 @@ export default defineComponent({
 
     };
 
-    const buildItem = (item) => {
-      return h(
-          props.conf.itemComponent,
-          {
-            conf: props.conf,
-            data: item
-          }
-      );
-    }
-
     const loadData = () => {
       if (!props.conf.service && !list.value) {
         return;
@@ -107,7 +80,7 @@ export default defineComponent({
 
           return isOk;
         }).map((item) => {
-          return buildItem(item);
+          return props.conf.buildItem(item);
         });
         return;
 
@@ -118,14 +91,8 @@ export default defineComponent({
       }
 
       loading.value = true;
-      props.conf.service?.list(undefined, {
-        ...filter.value,
-        ...{page}
-      }).then(({data}) => {
-        list.value.push(...data.results);
-        data.results.forEach((item) => {
-          viewItems.push(buildItem(item));
-        });
+      props.conf.getData(filter, page)?.then(({data}) => {
+        props.conf.buildData(data, list, viewItems);
         loading.value = false;
         page++;
       }, (error) => {
@@ -142,7 +109,6 @@ export default defineComponent({
     onMounted(() => {
 
       watch(filter, () => {
-
         clearTimeout(filterChangeTimer);
         filterChangeTimer = setTimeout(() => {
           page = 1;
