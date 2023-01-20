@@ -1,4 +1,4 @@
-import {App, ref, toRef, watch} from "vue";
+import {App, computed, Ref, ref, toRef, watch} from "vue";
 import * as Yup from "yup";
 import {addMethod, setLocale} from "yup";
 import {Router} from "vue-router";
@@ -17,6 +17,10 @@ export default class VueInstanceService {
     public static vue: App;
 
     public static ignoreServerError = false;
+
+    static loadingPermissions = ref(false);
+    static permissions: Ref<Array<string>> = ref([]);
+
 
     public static init(instance: App) {
         DragService.init();
@@ -142,4 +146,134 @@ export default class VueInstanceService {
             func(this.store.getters.currentUser);
         }
     }
+    public static getPermissions() {
+        this.loadingPermissions.value = true;
+        // AcuApiService.permissions().then(({data}) => {
+        //     this.permissions.value = data.split(",");
+        //     this.loadingPermissions.value = false;
+        // }, () => this.loadingPermissions.value = false);
+    }
+
+    public static buildPermissions(permission: string | Array<string>): string | Array<string> {
+        if (Array.isArray(permission)) {
+            permission = permission.map((p) => this.buildPermissions(p) as string);
+        } else {
+            if (permission.startsWith("[]")) {
+                permission = permission.substr(2);
+                const toListenTo = ["add", "change", "view", "delete"];
+                return toListenTo.map((e) => e + "_" + permission)
+            }
+        }
+        return permission;
+    }
+
+    public static onLoadedPermissions(_watch: (permissions: Array<string>) => void) {
+        if (this.loadingPermissions.value == false) {
+            _watch(this.permissions.value);
+            return;
+        }
+        watch(this.loadingPermissions, (e) => {
+            if (!e) {
+                _watch(this.permissions.value);
+            }
+        });
+    }
+
+    public static watchLoadingPermission() {
+        return computed(() => {
+            return !this.loadingPermissions.value;
+        });
+    }
+
+    public static watchPermission(permission: string) {
+        if (permission.startsWith("[]")) {
+            return this.watchPermissions(this.buildPermissions(permission))
+        }
+        return computed(() => {
+            return this.permissions.value.indexOf(permission) > -1;
+        });
+    }
+
+    public static watchPermissions(permissions: Array<any> | string) {
+        return computed(() => {
+            return this.hasAnyPermission(permissions);
+        });
+    }
+
+    public static hasPermission(permission: string | Array<string>, filter: ((e: string) => boolean) | undefined = undefined) {
+        if (Array.isArray(permission)) {
+            if (filter) {
+                permission = permission.filter(filter);
+            }
+            for (let i = 0; i < permission.length; i++) {
+                if (!this.hasPermission(permission[i]))
+                    return false;
+            }
+            return true;
+        } else if (permission.startsWith("[]")) {
+            const builtPermissions = this.buildPermissions(permission);
+            if (filter && Array.isArray(builtPermissions))
+                return this.hasPermission(builtPermissions.filter(filter));
+            return this.hasPermission(builtPermissions);
+        }
+        return this.permissions.value.indexOf(permission) > -1;
+    }
+
+    public static hasAnyPermission(permission: string | Array<string>, filter: ((e: string) => boolean) | undefined = undefined) {
+        if (Array.isArray(permission)) {
+            if (filter) {
+                permission = permission.filter(filter);
+            }
+
+            for (let i = 0; i < permission.length; i++) {
+                if (this.hasAnyPermission(permission[i]))
+                    return true;
+            }
+            return false;
+        } else if (permission.startsWith("[]")) {
+            const builtPermissions = this.buildPermissions(permission);
+            if (filter && Array.isArray(builtPermissions)) {
+                return this.hasAnyPermission(builtPermissions.filter(filter));
+            }
+            return this.hasAnyPermission(builtPermissions);
+        }
+        return this.permissions.value.indexOf(permission) > -1;
+    }
+
+    public static getRoutePermissions() {
+        return this.route.meta["permissionName"];
+    }
+
+    public static routeHasViewPermission(showError = true) {
+        const hasAnyPermission = this.hasAnyPermission(this.getRoutePermissions(), (e) => e.startsWith("view_"));
+        if (!hasAnyPermission && showError) {
+            VueInstanceService.showErrorMessage("شما دسترسی نمایش دادن ندارید");
+        }
+        return hasAnyPermission;
+    }
+
+    public static routeHasDeletePermission(showError = true) {
+        const hasAnyPermission = this.hasAnyPermission(this.getRoutePermissions(), (e) => e.startsWith("delete_"));
+        if (!hasAnyPermission && showError) {
+            VueInstanceService.showErrorMessage("شما دسترسی حذف کردن ندارید");
+        }
+        return hasAnyPermission;
+    }
+
+    public static routeHasChangePermission(showError = true) {
+        const hasAnyPermission = this.hasAnyPermission(this.getRoutePermissions(), (e) => e.startsWith("change_"));
+        if (!hasAnyPermission && showError) {
+            VueInstanceService.showErrorMessage("شما دسترسی ویرایش کردن ندارید");
+        }
+        return hasAnyPermission;
+    }
+
+    public static routeHasAddPermission(showError = true) {
+        const hasAnyPermission = this.hasAnyPermission(this.getRoutePermissions(), (e) => e.startsWith("add_"));
+        if (!hasAnyPermission && showError) {
+            VueInstanceService.showErrorMessage("شما دسترسی اضافه کردن ندارید");
+        }
+        return hasAnyPermission;
+    }
+
 }
