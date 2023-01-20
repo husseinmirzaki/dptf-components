@@ -41,7 +41,7 @@ export class UserApiService extends ApiService {
   }
 
   public static delete(id) {
-    if (id.search("user") > -1) {
+    if (typeof id === "string" && id.search("user") > -1) {
       return ApiService.delete(`${id}`);
     }
     return ApiService.delete(`${this.baseUrl}${id}`);
