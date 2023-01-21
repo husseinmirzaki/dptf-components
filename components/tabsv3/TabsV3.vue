@@ -27,8 +27,10 @@ export default defineComponent({
     const state = reactive({
       selectedIndex: 0,
       tabs: [] as VNode<TabProps>[],
-      count: 0
-    });
+      count: 0,
+    }) as any;
+
+    const thatSlots = slots as any
 
     provide("TabsProvider", state);
 
@@ -38,7 +40,7 @@ export default defineComponent({
 
     onBeforeMount(() => {
       if (slots.default) {
-        state.tabs = slots.default().filter((child) => child.type.name === "Tab");
+        state.tabs = thatSlots.default().filter((child) => child.type.name === "Tab");
       }
     });
 

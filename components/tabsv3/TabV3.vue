@@ -8,7 +8,7 @@ export default defineComponent({
     const index = ref(0);
     const isActive = ref(false);
 
-    const tabs = inject("TabsProvider");
+    const tabs = inject("TabsProvider") as any;
 
     watch(
         () => tabs.selectedIndex,
