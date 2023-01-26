@@ -308,26 +308,37 @@ export default defineComponent({
      */
     _watchList.push(watch(
         checkedDataList,
-        () => {
-          Object.keys(checkedDataList.value).forEach((key) => {
-            const values = Object.values(checkedDataList.value);
+        (currentCheckDataList) => {
+          console.log("currentCheckDataList", currentCheckDataList)
+          clearTimeout(skipCheckedDataListTime);
+          skipCheckedDataListTime = setTimeout(() => {
+            if (skipCheckedDataList) {
+              skipCheckedDataList = false;
+              return;
+            }
+            const currentFullData: Record<string, any> = {};
+            Object.keys(currentCheckDataList).forEach((e) => {
+              currentFullData[e] = currentCheckDataList[e];
+            })
+            dList.value.forEach((data) => {
+              if (currentFullData[`check_${data.id}`] === undefined) {
+                currentFullData[`check_${data.id}`] = false;
+              }
+            })
+
+            const values = Object.values(currentFullData);
+            console.log(currentFullData);
             for (let i = 0; i < values.length; i++) {
               if (!values[i]) {
-                if (skipCheckedDataList) {
-                  clearTimeout(skipCheckedDataListTime);
-                  skipCheckedDataListTime = setTimeout(() => {
-                    skipCheckedDataList = false;
-                  }, 100);
-                  skipCheckAll = true;
-                } else {
-                  skipCheckAll = true;
-                }
+                skipCheckAll = checkAll.value;
                 checkAll.value = false;
                 return;
               }
             }
+
+            skipCheckAll = !checkAll.value;
             checkAll.value = true;
-          });
+          }, 10);
         },
         {
           deep: true,
@@ -385,13 +396,12 @@ export default defineComponent({
     _watchList.push(watch(
         checkAll,
         (eee) => {
+          console.log("skipCheckAll", skipCheckAll);
           if (skipCheckAll) {
             skipCheckAll = false;
             return;
           }
-          if (!eee) {
-            skipCheckedDataList = true;
-          }
+          skipCheckedDataList = true;
           // all previous checks
           Object.keys(checkedDataList.value).forEach((ee) => checkedDataList.value[ee] = checkAll.value);
           // new data
@@ -876,9 +886,11 @@ export default defineComponent({
                             onMouseenter: () => {
                               checkCheckFieldData(`check_${item["id"]}`);
                             },
-                            onClick: () =>
-                                (checkedDataList.value[`check_${item["id"]}`] =
-                                    !checkedDataList.value[`check_${item["id"]}`]),
+                            onClick: () => {
+                              (checkedDataList.value[`check_${item["id"]}`] =
+                                  !checkedDataList.value[`check_${item["id"]}`]);
+                              // context.emit("itemCheckChanged", [item, checkedDataList.value[`check_${item["id"]}`]])
+                            },
                           },
                           h(FieldComponent, {
                             modelValue: checkedDataList.value[`check_${item["id"]}`],
