@@ -11,8 +11,8 @@ import TableV1 from "./table/TableV1";
 import {onMounted, ref, watch} from "vue";
 
 export default {
-  emits: ['update:modelValue'],
-  props: ['conf', 'url', 'name', 'list'],
+  emits: ['update:modelValue', 'rowSelected'],
+  props: ['conf', 'url', 'name', 'list', 'onPopulate'],
   components: {TableV1},
   setup(props, context) {
     const refTable = ref();
@@ -26,11 +26,17 @@ export default {
         Object.keys(toSet).forEach((ee) => refTable.value.checkedDataList[ee] = toSet[ee]);
       }
     }
-
+    const populateResults = async () => {
+      const checkItems = refTable.value.checkedDataList;
+      let ids = Object.keys(checkItems).filter((ee) => checkItems[ee]).map((ee) => ee.replace("check_", ""));
+      if (props.onPopulate) {
+        ids = await props.onPopulate( refTable.value, ids);
+      }
+      context.emit("update:modelValue",ids);
+  }
     onMounted(() => {
       watch(refTable.value.checkedDataList, (e) => {
-        const ids = Object.keys(e).filter((ee) => e[ee]).map((ee) => ee.replace("check_", ""));
-        context.emit("update:modelValue", ids);
+        populateResults();
       });
     });
 

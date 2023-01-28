@@ -760,6 +760,9 @@ export default defineComponent({
                 show_errors: false,
                 field_type: "checkbox",
                 name: `main-in-header-checkbox-${defaultConfig.tableName}`,
+                onClick: () => {
+                  context.emit("checkAllChanged")
+                },
               })
           )
           : undefined;
@@ -889,7 +892,7 @@ export default defineComponent({
                             onClick: () => {
                               (checkedDataList.value[`check_${item["id"]}`] =
                                   !checkedDataList.value[`check_${item["id"]}`]);
-                              // context.emit("itemCheckChanged", [item, checkedDataList.value[`check_${item["id"]}`]])
+                              context.emit("itemCheckChanged", [item, checkedDataList.value[`check_${item["id"]}`]])
                             },
                           },
                           h(FieldComponent, {
