@@ -1,20 +1,27 @@
 <template>
   <div class="table-v1-options-in-header">
-
+    <!-- BEGIN:EXPORT BUTTON -->
     <Button class="btn btn-sm btn-icon"
             ref="refExportButton" @click="$emit('export')" v-if="config.showTableExportButton">
       <inline-svg src="media/icons/light/file-arrow-down.svg" width="15px" height="15px"/>
     </Button>
+    <!-- END:EXPORT BUTTON -->
+    <!-- BEGIN:FILTER_BUTTON -->
     <Button class="btn btn-sm btn-icon"
             :class="{active: filterIsOpen}"
+            title="فیلتر داده ها"
             @click="filterIsOpen=!filterIsOpen;$emit('showRowFilter', filterIsOpen);">
       <inline-svg src="media/icons/light/filter.svg" width="15px" height="15px"/>
     </Button>
+    <!-- END:FILTER_BUTTON -->
+    <!-- BEGIN:ORDER_BUTTON -->
     <Button class="btn btn-sm btn-icon"
             :class="{active: orderIsOpen}"
+            title="تغییر مکان"
             ref="refOrderButton" @click="toggleOrderButton">
       <inline-svg src="media/icons/light/arrow-down-wide-short.svg" width="15px" height="15px"/>
     </Button>
+    <!-- BEGIN:ORDER_BUTTON -->
     <div class="body-containers" @change.stop @update.stop>
       <TableV1OptionsInHeaderOrder :default-config="defaultConfig" ref="refOrderV2Container"/>
     </div>

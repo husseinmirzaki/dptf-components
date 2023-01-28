@@ -2,6 +2,7 @@
   <component
       :is="fieldContainer || 'div'"
       class="field fv-row"
+      :field-instance="$props"
       :class="[col_class_c, { row: one_line }]"
       ref="root"
   >

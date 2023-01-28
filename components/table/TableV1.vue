@@ -84,6 +84,7 @@ table {
     min-width: 130px;
     max-width: 200px;
     padding: 6px !important;
+    background: #f5f8fa;
 
     &.check-stuff {
       width: 50px !important;
@@ -165,8 +166,8 @@ table {
 }
 
 .is-showing-filter {
-  min-width: 100px !important;
-  width: 100px !important;
+  min-width: 150px !important;
+  width: 150px !important;
 }
 
 td:not(.is-showing-filter) [header-name="row_number"] {
