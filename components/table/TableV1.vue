@@ -165,8 +165,8 @@ table {
 }
 
 .is-showing-filter {
-  min-width: 100px !important;
-  width: 100px !important;
+  min-width: 150px !important;
+  width: 150px !important;
 }
 
 td:not(.is-showing-filter) [header-name="row_number"] {

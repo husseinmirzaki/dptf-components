@@ -40,21 +40,15 @@
         />
         <div
           class="icon"
-          v-if="isFiltered !== true"
+          v-if="isFiltered !== true && !$attrs['disableFiltered']"
           @click.stop="$emit('showFilter', header)"
-          style="
-            background-image: url(/media/icons/table/no-filter.png);
-            background-size: 12px 12px;
-          "
+          style="background-image: url(/media/icons/table/no-filter.png);background-size: 12px 12px;"
         ></div>
         <div
           class="icon d-block"
-          v-if="isFiltered === true"
+          v-if="isFiltered === true && !$attrs['disableFiltered']"
           @click.stop="$emit('showFilter', header)"
-          style="
-            background-image: url(/media/icons/table/has-filter.png);
-            background-size: 12px 12px;
-          "
+          style="background-image: url(/media/icons/table/has-filter.png);background-size: 12px 12px;"
         ></div>
       </div>
       <slot name="extra-part-0" />

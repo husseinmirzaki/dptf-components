@@ -471,7 +471,7 @@ export class Table {
         return this.headerComponent;
     }
 
-    onTHeadProps(header, index) {
+    onTHeadProps(header, index): any {
         let translate = "";
         if (this.headerTranslate[header]) {
             translate = this.headerTranslate[header];
@@ -486,6 +486,7 @@ export class Table {
         }
 
         return {
+            disableFiltered: this.disableDropdown,
             class: [
                 "align-middle pe-2 text-nowrap",
                 {
