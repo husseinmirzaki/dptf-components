@@ -320,14 +320,15 @@ export default defineComponent({
             Object.keys(currentCheckDataList).forEach((e) => {
               currentFullData[e] = currentCheckDataList[e];
             })
+            if (dList.value.length ==0)
+              return;
             dList.value.forEach((data) => {
-              if (currentFullData[`check_${data.id}`] === undefined) {
+              if (!currentFullData[`check_${data.id}`]) {
                 currentFullData[`check_${data.id}`] = false;
               }
             })
 
             const values = Object.values(currentFullData);
-            console.log(currentFullData);
             for (let i = 0; i < values.length; i++) {
               if (!values[i]) {
                 skipCheckAll = checkAll.value;
@@ -431,7 +432,6 @@ export default defineComponent({
     });
 
     const onGetData = () => {
-      console.debug("here");
       return new Promise<void>((resolve) => {
         if (defaultConfig.canUseUrl) {
           defaultConfig.onGetData().then(
