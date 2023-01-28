@@ -84,6 +84,7 @@ table {
     min-width: 130px;
     max-width: 200px;
     padding: 6px !important;
+    background: #f5f8fa;
 
     &.check-stuff {
       width: 50px !important;
