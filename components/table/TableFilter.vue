@@ -1,4 +1,4 @@
-<style lang="scss">
+  <style lang="scss">
 .table-v1-filter-holder {
   display: none;
   position: fixed;
