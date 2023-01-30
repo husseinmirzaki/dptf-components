@@ -256,37 +256,64 @@ export class Table {
         return data.id;
     }
 
-    onDeleteClicked(data) {
-        Swal.fire({
-            icon: "warning",
-            title: "آیا تمایل داید که این داده را حذف کنید",
-            text: "توجه کنید بعد از حذف کردن این مورد دیگر قادر به بازگردانی داده های موجود در آن نمیباشید",
-            showCancelButton: true,
-            confirmButtonText: "حذف شود",
-            cancelButtonText: `حذف نشود`,
-            confirmButtonColor: "#F00",
-            cancelButtonColor: "#0742c0",
-        }).then((e) => {
-            if (this.props.url.value != "") {
-                if (e.value) {
-                    this.service.deleteOne(this.getDeleteItemId(data)).then(
-                        () => {
-                            this.onDataDeleted(data);
-                        },
-                        (e) => {
-                            Swal.fire({
-                                icon: "error",
-                                title: "توجه کنید",
-                                text: "داده ای که می خواهید آنرا پاک کنید در بخش های دیگری استفاده شده لطفا اول آن موارد را پاک کنید",
-                                confirmButtonText: "حذف شود",
-                            });
-                        }
-                    );
-                }
-            } else {
-                this.context.emit("delete", data);
+    onDeleteClicked(data, force=false): any {
+        return new Promise<boolean>((res) => {
+            if (force) {
+                this.service.deleteOne(this.getDeleteItemId(data)).then(
+                    () => {
+                        this.onDataDeleted(data);
+                        res(true);
+                    },
+                    (e) => {
+                        Swal.fire({
+                            icon: "error",
+                            title: "توجه کنید",
+                            text: "داده ای که می خواهید آنرا پاک کنید در بخش های دیگری استفاده شده لطفا اول آن موارد را پاک کنید",
+                            confirmButtonText: "حذف شود",
+                        });
+                        res(false);
+                    }
+                );
+
+                return;
             }
-        });
+            Swal.fire({
+                icon: "warning",
+                title: "آیا تمایل داید که این داده را حذف کنید",
+                text: "توجه کنید بعد از حذف کردن این مورد دیگر قادر به بازگردانی داده های موجود در آن نمیباشید",
+                showCancelButton: true,
+                confirmButtonText: "حذف شود",
+                cancelButtonText: `حذف نشود`,
+                confirmButtonColor: "#F00",
+                cancelButtonColor: "#0742c0",
+            }).then((e) => {
+                if (this.props.url.value != "") {
+                    if (e.value) {
+                        this.service.deleteOne(this.getDeleteItemId(data)).then(
+                            () => {
+                                this.onDataDeleted(data);
+                                res(true);
+                            },
+                            (e) => {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "توجه کنید",
+                                    text: "داده ای که می خواهید آنرا پاک کنید در بخش های دیگری استفاده شده لطفا اول آن موارد را پاک کنید",
+                                    confirmButtonText: "حذف شود",
+                                });
+
+                                res(false);
+                            }
+                        );
+                    }else {
+                        res(false);
+                    }
+                } else {
+                    this.context.emit("delete", data);
+                    res(true);
+                }
+            });
+        })
     }
 
     onDataDeleted(data) {
@@ -327,6 +354,9 @@ export class Table {
                 this.refresh();
             } else if (e[0] == "export") {
                 this.requestExport();
+            }  else if (e[0] == "delete-item") {
+                console.log(e)
+                this.onDeleteClicked(e[1], !!e[2]);
             } else {
                 this.onTableEvent(e);
             }
@@ -441,7 +471,7 @@ export class Table {
         return this.headerComponent;
     }
 
-    onTHeadProps(header, index) {
+    onTHeadProps(header, index): any {
         let translate = "";
         if (this.headerTranslate[header]) {
             translate = this.headerTranslate[header];
@@ -456,6 +486,7 @@ export class Table {
         }
 
         return {
+            disableFiltered: this.disableDropdown,
             class: [
                 "align-middle pe-2 text-nowrap",
                 {

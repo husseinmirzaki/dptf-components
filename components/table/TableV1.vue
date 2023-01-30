@@ -84,6 +84,7 @@ table {
     min-width: 130px;
     max-width: 200px;
     padding: 6px !important;
+    background: #f5f8fa;
 
     &.check-stuff {
       width: 50px !important;
@@ -165,8 +166,8 @@ table {
 }
 
 .is-showing-filter {
-  min-width: 100px !important;
-  width: 100px !important;
+  min-width: 150px !important;
+  width: 150px !important;
 }
 
 td:not(.is-showing-filter) [header-name="row_number"] {
@@ -308,26 +309,38 @@ export default defineComponent({
      */
     _watchList.push(watch(
         checkedDataList,
-        () => {
-          Object.keys(checkedDataList.value).forEach((key) => {
-            const values = Object.values(checkedDataList.value);
+        (currentCheckDataList) => {
+          console.log("currentCheckDataList", currentCheckDataList)
+          clearTimeout(skipCheckedDataListTime);
+          skipCheckedDataListTime = setTimeout(() => {
+            if (skipCheckedDataList) {
+              skipCheckedDataList = false;
+              return;
+            }
+            const currentFullData: Record<string, any> = {};
+            Object.keys(currentCheckDataList).forEach((e) => {
+              currentFullData[e] = currentCheckDataList[e];
+            })
+            if (dList.value.length ==0)
+              return;
+            dList.value.forEach((data) => {
+              if (!currentFullData[`check_${data.id}`]) {
+                currentFullData[`check_${data.id}`] = false;
+              }
+            })
+
+            const values = Object.values(currentFullData);
             for (let i = 0; i < values.length; i++) {
               if (!values[i]) {
-                if (skipCheckedDataList) {
-                  clearTimeout(skipCheckedDataListTime);
-                  skipCheckedDataListTime = setTimeout(() => {
-                    skipCheckedDataList = false;
-                  }, 100);
-                  skipCheckAll = true;
-                } else {
-                  skipCheckAll = true;
-                }
+                skipCheckAll = checkAll.value;
                 checkAll.value = false;
                 return;
               }
             }
+
+            skipCheckAll = !checkAll.value;
             checkAll.value = true;
-          });
+          }, 10);
         },
         {
           deep: true,
@@ -385,13 +398,12 @@ export default defineComponent({
     _watchList.push(watch(
         checkAll,
         (eee) => {
+          console.log("skipCheckAll", skipCheckAll);
           if (skipCheckAll) {
             skipCheckAll = false;
             return;
           }
-          if (!eee) {
-            skipCheckedDataList = true;
-          }
+          skipCheckedDataList = true;
           // all previous checks
           Object.keys(checkedDataList.value).forEach((ee) => checkedDataList.value[ee] = checkAll.value);
           // new data
@@ -421,7 +433,6 @@ export default defineComponent({
     });
 
     const onGetData = () => {
-      console.debug("here");
       return new Promise<void>((resolve) => {
         if (defaultConfig.canUseUrl) {
           defaultConfig.onGetData().then(
@@ -750,6 +761,9 @@ export default defineComponent({
                 show_errors: false,
                 field_type: "checkbox",
                 name: `main-in-header-checkbox-${defaultConfig.tableName}`,
+                onClick: () => {
+                  context.emit("checkAllChanged")
+                },
               })
           )
           : undefined;
@@ -876,9 +890,11 @@ export default defineComponent({
                             onMouseenter: () => {
                               checkCheckFieldData(`check_${item["id"]}`);
                             },
-                            onClick: () =>
-                                (checkedDataList.value[`check_${item["id"]}`] =
-                                    !checkedDataList.value[`check_${item["id"]}`]),
+                            onClick: () => {
+                              (checkedDataList.value[`check_${item["id"]}`] =
+                                  !checkedDataList.value[`check_${item["id"]}`]);
+                              context.emit("itemCheckChanged", [item, checkedDataList.value[`check_${item["id"]}`]])
+                            },
                           },
                           h(FieldComponent, {
                             modelValue: checkedDataList.value[`check_${item["id"]}`],

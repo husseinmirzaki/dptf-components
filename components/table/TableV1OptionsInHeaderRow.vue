@@ -3,13 +3,13 @@
     <td v-if="onlineFields.length > 0">loading</td>
     <template v-else-if="noRefs['extend']">
       <th v-if="defaultConfig.showActionButtons"></th>
-      <FormBuilder :fields="noRefs['extend'].activeFields" :fieldContainer="TableV1OptionsInHeaderRowEmpty"/>
+      <FormBuilder @compChanged="compChanged" :fields="noRefs['extend'].activeFields" :fieldContainer="TableV1OptionsInHeaderRowEmpty"/>
     </template>
   </tr>
 </template>
 <script lang="ts">
 
-import {defineComponent, onMounted, onUnmounted, reactive, watch} from "vue";
+import {defineComponent, onMounted, onUnmounted, reactive, watch, Ref, ref} from "vue";
 import {VueInstanceService} from "@/Defaults";
 import {FieldsApiService} from "@/custom/services/FieldsApiService";
 import {CreateForm} from "@/custom/helpers/BaseForm";
@@ -24,39 +24,53 @@ export default defineComponent({
   components: {FormBuilder},
   props: ['defaultConfig', 'actualHeaders'],
   setup(props) {
+    let toUnMount: Array<{key: string, toCall: (any) => void}> = [];
     const onlineFields: any = reactive([]);
     const noRefs: any = reactive({});
-    const fields: any = [];
+    let fields: Array<FieldComponentPropsInterface> = [];
+    let changedMode: Ref<Record<string, any>> = ref({});
 
     const buildExtend = () => {
       fields.forEach((e) => {
+        const key = `${e['name']}-comp`;
+        const toCall = (newMode) => {
+          console.log("new mode", newMode);
+          
+          changedMode.value[e['name']] = newMode;
+        };
+        VueInstanceService.on(key, toCall);
+        toUnMount.push({key, toCall});
         e['fieldContainer'] = TableV1OptionsInHeaderRowFieldContainer;
         if (!e['placeholder'] && e['label'])
           e['placeholder'] = e['label'];
         delete e['label'];
       });
       noRefs['extend'] = new CreateForm(fields).extend();
-      watch(noRefs['extend'].obj, (e) => {
+      watch([noRefs['extend'].obj, changedMode.value], (e) => {
+        const data = noRefs['extend'].obj;
+        const keys = Object.keys(data);
+        if (keys.length == 0) return;
+
         props.defaultConfig.clearFilters();
-        Object.keys(e).forEach((key) => {
-          if (!e[key] || e[key] == "")
+        keys.forEach((key) => {
+          if (!data[key] || data[key] == "")
             return;
 
           const filters: any = [];
 
-          if (Array.isArray(e[key])) {
-            e[key].forEach((filterValue) => {
+          if (Array.isArray(data[key])) {
+            data[key].forEach((filterValue) => {
               filters.push({
                 "text": filterValue,
                 "value": filterValue,
-                "comp": "auto",
+                "comp": String(changedMode.value[key] || "auto"),
               });
             });
           } else {
             filters.push({
-              "text": e[key],
-              "value": e[key],
-              "comp": "auto",
+              "text": data[key],
+              "value": data[key],
+              "comp": String(changedMode.value[key] || "auto"),
             });
           }
           props.defaultConfig.applyFilter(key, filters);
@@ -110,6 +124,10 @@ export default defineComponent({
       }
     }
 
+    const compChanged = () => {
+      console.log("here");
+    }
+
     onMounted(() => {
       VueInstanceService.on(`show-table-filter-${props.defaultConfig.tableName}`, onFieldInformation);
       props.actualHeaders.forEach((field, index) => {
@@ -118,10 +136,17 @@ export default defineComponent({
       VueInstanceService.off(`show-table-filter-${props.defaultConfig.tableName}`, onFieldInformation);
     })
 
+    onUnmounted(() => {
+      toUnMount.forEach((e) => {
+        VueInstanceService.off(e.key, e.toCall);
+      });
+    });
+
 
     return {
       onlineFields,
       noRefs,
+      compChanged,
       TableV1OptionsInHeaderRowEmpty,
     }
   }

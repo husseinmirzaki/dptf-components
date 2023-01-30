@@ -2,7 +2,9 @@
   <TableV1
       ref="refTable"
       :conf="conf"
-      :url="url"/>
+      :url="url"
+      :list="list"
+  />
 </template>
 <script>
 import TableV1 from "./table/TableV1";
@@ -10,7 +12,7 @@ import {onMounted, ref, watch} from "vue";
 
 export default {
   emits: ['update:modelValue'],
-  props: ['conf', 'url', 'name'],
+  props: ['conf', 'url', 'name', 'list'],
   components: {TableV1},
   setup(props, context) {
     const refTable = ref();

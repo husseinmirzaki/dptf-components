@@ -1,6 +1,7 @@
 <template>
   <div class="table-v1-order-v2" ref="refOrderV2Container">
-    <div class="input-filter">
+    <!-- TODO: fix filters to filter between current table columns -->
+    <div class="input-filter d-none">
       <FieldComponent
           placeholder="نام فیلد"
           input_class="form-control-sm"
