@@ -56,7 +56,6 @@ import FieldComponent from "@/custom/components/FieldComponent.vue";
 import {computed, onMounted, onUnmounted, PropType, Ref, ref, watch} from "vue";
 import InfiniteScrollContainer from "@/custom/components/InfiniteScrollContainer.vue";
 import {InfiniteScrollContainerConf} from "@/custom/components/InfiniteScrollContainerConf";
-import {ProvinceApiService} from "@/metronic_custom/services/ProvinceApiService";
 import {VueInstanceService} from "@/Defaults";
 
 export class BaseToText extends InfiniteScrollContainerConf {
