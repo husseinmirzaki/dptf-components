@@ -8,6 +8,10 @@ export class UserApiService extends ApiService {
     return ApiService.get(this.baseUrl + "me/");
   }
 
+  public static get selectCreateAddOnUrl() {
+    return this.baseUrl + "select_create_add_on/";
+  }
+
   public static getUser(id) {
     return ApiService.get(this.baseUrl + `info/${id}/`);
   }
@@ -131,4 +135,6 @@ export class UserApiService extends ApiService {
   public static getCurrentUserRoles() {
     return ApiService.get(`${this.baseUrl}get_user_possible_roles/`);
   }
+
+
 }
