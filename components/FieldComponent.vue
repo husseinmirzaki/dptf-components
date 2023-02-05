@@ -100,6 +100,7 @@
       </template>
       <template v-else-if="field_type === 'textarea'">
         <Field
+            autocomplete="off"
             :class="[defaultInputClasses, input_class]"
             :id="field_id"
             :readonly="processedReadOnly()"
@@ -272,6 +273,7 @@
       </template>
       <template v-else-if="field_type === 'positive-number'">
         <Field
+            autocomplete="off"
             style="direction: rtl"
             :class="[defaultInputClasses, input_class]"
             :readonly="processedReadOnly()"
@@ -290,6 +292,7 @@
       </template>
       <template v-else>
         <Field
+            autocomplete="off"
             :class="[defaultInputClasses, input_class]"
             :readonly="processedReadOnly()"
             :placeholder="placeholder"
