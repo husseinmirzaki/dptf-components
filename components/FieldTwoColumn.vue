@@ -136,13 +136,13 @@ export default {
     }
 
     const resetData = (e) => {
-      console.log("reset data", e);
       selectedItemsList.value = [];
     }
 
     const onInputScrollSelected = () => {
       enableMoveLeft.value = inputScroll.selectedItems.value.length > 0;
     };
+
     const onSelectedScrollSelected = () => {
       enableMoveRight.value = selectedScroll.selectedItems.value.length > 0;
     };
@@ -170,6 +170,7 @@ export default {
     }
 
     let filterSelectedTimer;
+
     onMounted(() => {
       watch(filterSelected, () => {
         clearTimeout(filterSelectedTimer);
@@ -180,6 +181,7 @@ export default {
       VueInstanceService.on(inputScroll.eventEmitter, onInputScrollSelected);
       VueInstanceService.on(selectedScroll.eventEmitter, onSelectedScrollSelected);
     });
+
     onUnmounted(() => {
       VueInstanceService.off(inputScroll.eventEmitter, onInputScrollSelected);
       VueInstanceService.off(selectedScroll.eventEmitter, onSelectedScrollSelected);
