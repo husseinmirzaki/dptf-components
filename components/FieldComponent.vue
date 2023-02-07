@@ -282,6 +282,8 @@
             :type="mutateDefaultTypes()"
             :name="name"
             :modelValue="this.$props.modelValue"
+            min = "0"
+            @keydown="avoidNegative"
             @focusin="$emit('focusin')"
             @change="$emit('update:modelValue', $event.target.value)"
             ref="fieldRef"
@@ -837,8 +839,16 @@ export default defineComponent({
       return field_type.value;
     }
 
+    const avoidNegative = (event) => {
+      // arrow keys , ctrl, numbers
+      if (event.ctrlKey || event.altKey || event.key == "ArrowUp"|| event.key == "ArrowDown"|| event.key == "ArrowRight"|| event.key == "ArrowLeft")
+        return;
+      if (isNaN(Number(event.key)))
+        event.preventDefault();
+    }
     const sendToUser = {
       // methods
+      avoidNegative,
       setValue,
       setOptions,
       getFile,
