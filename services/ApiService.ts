@@ -196,7 +196,6 @@ class ApiService {
                             VueInstanceService.showErrorMessage(
                                 "مشکلی در اتصال به سرور رخ داد",
                                 "مشکل اتصال",
-                                0
                             );
                         else VueInstanceService.ignoreServerError = false;
                         reject(result);
@@ -209,7 +208,6 @@ class ApiService {
                         VueInstanceService.showErrorMessage(
                             "بنظر مشکلی در اتصال به اینترنت رخ داده است",
                             "مشکل اتصال",
-                            0
                         );
                     }
                     reject(result);
