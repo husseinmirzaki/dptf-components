@@ -52,14 +52,14 @@ export default {
     },
   },
   setup(props, context) {
-    const show = ref(false);
-    const activeContent = ref("");
-    const activeItem = ref(props.activeIndex);
-    const container = ref();
-    const mainContainer = ref();
-    const tabContainerBody = ref();
-    const bodyHeight = ref(0);
-    let minWidth = 0;
+    const show: any = ref(false);
+    const activeContent: any = ref("");
+    const activeItem: any= ref(props.activeIndex);
+    const container: any = ref();
+    const mainContainer: any = ref();
+    const tabContainerBody: any = ref();
+    const bodyHeight: any = ref(0);
+    let minWidth: any = 0;
 
     const preferencesManager = new UserPreferencesManager(
       `tab_container_${props.routerPrefix}`
@@ -72,17 +72,17 @@ export default {
       preferencesManager.get();
     }
 
-    let lastIntroduceActivity = null;
-    let childCounter = 0;
-    const tabNames = ref([]);
-    const route = useRoute();
+    let lastIntroduceActivity: any = null;
+    let childCounter: any = 0;
+    const tabNames: any = ref([]);
+    const route: any = useRoute();
 
     /**
      *
      * @type {SimpleDrag}
      */
-    let dragInstance = null;
-    let isGoingToRoute = false;
+    let dragInstance: any = null;
+    let isGoingToRoute: any = false;
 
     const goToRoute = async (index) => {
       isGoingToRoute = true;
