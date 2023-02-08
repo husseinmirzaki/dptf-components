@@ -10,7 +10,7 @@ you can download it from [link](https://nodejs.org/download/release/v14.14.0/)
 
 ## required packages
 ```shell
-npm install cropperjs@1.5.12 axios-mock-adapter@1.21.2 @vue-leaflet/vue-leaflet@0.6.1 v-viewer@3.0.10 sweetalert2@11.4.38 sortablejs@1.15.0 select2@4.0.7-rc.0 jquery@3.6.0 jquery-extend@2.0.3 vue3-persian-datetime-picker@1.2.2
+npm install cropperjs@1.5.12 axios-mock-adapter@1.21.2 leaflet@1.9.3 @vue-leaflet/vue-leaflet@0.6.1 v-viewer@3.0.10 sweetalert2@11.4.38 sortablejs@1.15.0 select2@4.0.7-rc.0 jquery@3.6.0 jquery-extend@2.0.3 vue3-persian-datetime-picker@1.2.2
 ```
 
 ## Exports
