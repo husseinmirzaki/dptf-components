@@ -40,6 +40,11 @@
   }
 }
 
+th:last-child,
+td:last-child {
+  min-width: 65px !important;
+}
+
 th:first-child {
   .filter-place-holder .fixed-filter-container {
     right: auto !important;
