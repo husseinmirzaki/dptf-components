@@ -32,7 +32,7 @@ export default defineComponent({
           const permissionName = VueInstanceService.router.resolve({name: child.routerName}).meta["permissionName"];
 
           if (permissionName) {
-            if (!VueInstanceService.hasPermission(permissionName as any, (e) => e.startsWith("view_")))
+            if (!VueInstanceService.hasPermission(permissionName as any))
               return false;
           }
 
