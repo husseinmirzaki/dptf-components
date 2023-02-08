@@ -236,8 +236,8 @@
   </div>
 </template>
 <style lang="scss" scoped>
-$colors: #bf360c, #d84315, #e64a19, #f4511e, #ff5722, #ff7043, #ff8a65, #ffab91,
-  #ffccbc, #fbe9e7;
+$colors: #0e3c0a, #155b10, #1c7915, #23971a, #2bb620, #32d425, #4bdd40, #68e25e,
+  #84e87c, #a1ed9b;
 svg {
   .border,
   .lake,
