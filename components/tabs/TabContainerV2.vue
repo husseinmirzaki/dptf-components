@@ -1,46 +1,30 @@
 <template>
-  <div
-      ref="mainContainer"
-      :class="{
-      'd-flex': vertical,
-    }"
-  >
-    <div
-        dir="ltr"
-        class="d-flex tab-items-container w-100"
-        :class="{
-        'flex-column justify-content-start align-items-end is-vertical':
-          vertical,
-        'justify-content-center align-items-center': !vertical,
-      }"
-        ref="container"
-    >
-      <slot name="tabs" v-if="show" :setActiveItem="setActiveItem"/>
+  <div ref="mainContainer" :class="{
+    'd-flex': vertical,
+  }">
+    <div dir="ltr" class="d-flex tab-items-container w-100" :class="{
+      'flex-column justify-content-start align-items-end is-vertical':
+        vertical,
+      'justify-content-center align-items-center': !vertical,
+    }" ref="container">
+      <slot name="tabs" v-if="show" :setActiveItem="setActiveItem" />
     </div>
-    <div
-        class="d-flex justify-content-center align-items-center w-100 pb-7 tab-content-container"
-        ref="tabContainerBody"
-    >
-      <slot
-          name="tab-container"
-          :tabNames="tabNames"
-          :activeItem="activeItem"
-          :routerMode="routerMode"
-          :bodyHeight="bodyHeight"
-      >
-        <router-view v-if="routerMode && !disableRouterView"/>
-        <slot v-else-if="!disableRouterView" :name="tabNames[activeItem]"/>
+    <div class="d-flex justify-content-center align-items-center w-100 pb-7 tab-content-container"
+      ref="tabContainerBody">
+      <slot name="tab-container" :tabNames="tabNames" :activeItem="activeItem" :routerMode="routerMode"
+        :bodyHeight="bodyHeight">
+        <router-view v-if="routerMode && !disableRouterView" />
+        <slot v-else-if="!disableRouterView" :name="tabNames[activeItem]" />
       </slot>
     </div>
   </div>
 </template>
-<script>
-import {nextTick, onMounted, onUnmounted, ref, watch} from "vue";
-import {VueInstanceService} from "@/Defaults";
-import {SimpleDrag} from "@/custom/components/table/TableDrag";
-import {UserPreferencesManager} from "@/custom/services/UserPreferencesV2Api";
-import {findClassInParent} from "@/custom/helpers/DomHelpers";
-import {useRoute} from "vue-router";
+<script lang="ts">
+import { nextTick, onMounted, onUnmounted, ref, watch } from "vue";
+import { VueInstanceService } from "@/Defaults";
+import { UserPreferencesManager } from "@/custom/services/UserPreferencesV2Api";
+import { findClassInParent } from "@/custom/helpers/DomHelpers";
+import { useRoute } from "vue-router";
 import Sortable from "sortablejs";
 
 export default {
@@ -78,7 +62,7 @@ export default {
     let minWidth = 0;
 
     const preferencesManager = new UserPreferencesManager(
-        `tab_container_${props.routerPrefix}`
+      `tab_container_${props.routerPrefix}`
     );
 
     if (!props.disablePreferences) {
@@ -98,14 +82,26 @@ export default {
      * @type {SimpleDrag}
      */
     let dragInstance = null;
+    let isGoingToRoute = false;
 
-    const goToRoute = (index) => {
-      VueInstanceService.router.push({
+    const goToRoute = async (index) => {
+      isGoingToRoute = true;
+      await VueInstanceService.router.push({
         name: tabNames.value[index],
         query: route.query,
         params: route.params,
       });
+      isGoingToRoute = false;
     };
+
+    watch(route, (e) => {
+      if (!isGoingToRoute && e) {
+        const indexOf = tabNames.value.indexOf(e.name);
+        if (indexOf > -1) {
+          setActiveItem(indexOf);
+        }
+      }
+    });
 
     const setActiveItem = (index) => {
       activeItem.value = index;
@@ -204,8 +200,8 @@ export default {
 
     const updateBodyHeight = () => {
       const cardBodyParent = findClassInParent(
-          tabContainerBody.value,
-          "card-body"
+        tabContainerBody.value,
+        "card-body"
       );
       if (!cardBodyParent) return;
       const myStyle = getComputedStyle(tabContainerBody.value);
@@ -277,6 +273,7 @@ export default {
   display: flex !important;
   flex-direction: column-reverse;
 }
+
 .tab-items-container {
   &.is-vertical {
     .tab-item-v2 {
