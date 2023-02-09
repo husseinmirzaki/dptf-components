@@ -31,8 +31,9 @@ export default defineComponent({
         modifiedStructure.value[i].children = modifiedStructure.value[i].children.filter((child) => {
           const permissionName = VueInstanceService.router.resolve({name: child.routerName}).meta["permissionName"];
 
+          console.log("permission_name", permissionName);
           if (permissionName) {
-            if (!VueInstanceService.hasPermission(permissionName as any))
+            if (!VueInstanceService.hasPermission(permissionName as any, (e) => e.startsWith("view_")))
               return false;
           }
 
