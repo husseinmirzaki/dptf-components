@@ -101,13 +101,14 @@ export default class VueInstanceService {
     public static showErrorMessage(
         text,
         title: string | null = null,
-        position = "bottom-left"
+        position = "bottom-left",
+        duration = 1000
     ) {
         this.vue.config.globalProperties["$notify"]({
             title: title,
             message: text,
             type: "warning",
-            duration: 1000,
+            duration: duration,
             position: position,
         });
     }

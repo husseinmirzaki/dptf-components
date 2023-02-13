@@ -19,7 +19,8 @@ export default {
               VueInstanceService.showErrorMessage(
                 data.errors[Object.keys(data.errors)[i]],
                 "فیلد اشتباه",
-                5000
+                  "bottom-left",
+                  5000
               );
             }, 100 * i);
           }
