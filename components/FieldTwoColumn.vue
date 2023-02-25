@@ -15,11 +15,11 @@
         </div>
         <div class="move-buttons d-flex flex-column align-items-center justify-content-center px-2">
           <Button class="btn btn-success mt-1 mx-1 btn-sm btn-icon" @click="moveToLeft" :disabled="!enableMoveLeft">
-            <inline-svg src="media/icons/light/angles-left.svg" width="20px" height="20px"/>
+            <inlineSvg src="media/icons/light/angles-left.svg" width="20px" height="20px"/>
           </Button>
           <Button class="btn btn-danger mt-1 mx-1 btn-sm btn-icon mt-2" @click="moveToRight"
                   :disabled="!enableMoveRight">
-            <inline-svg src="media/icons/light/trash-xmark.svg" width="20px" height="20px"/>
+            <InlineSvg src="media/icons/light/trash-xmark.svg" width="20px" height="20px"/>
           </Button>
         </div>
         <div class="w-100">
@@ -57,6 +57,7 @@ import {computed, onMounted, onUnmounted, PropType, Ref, ref, watch} from "vue";
 import InfiniteScrollContainer from "@/custom/components/InfiniteScrollContainer.vue";
 import {InfiniteScrollContainerConf} from "@/custom/components/InfiniteScrollContainerConf";
 import {VueInstanceService} from "@/Defaults";
+import InlineSvg from "vue-inline-svg";
 
 export class BaseToText extends InfiniteScrollContainerConf {
 
@@ -102,7 +103,7 @@ export function fieldTwoColumnSelected(selectedItemsList: Ref<Array<any>>, filte
 
 
 export default {
-  components: {InfiniteScrollContainer, FieldComponent, Card},
+  components: {InlineSvg, InfiniteScrollContainer, FieldComponent, Card},
   emits: ['builtInputScroll', 'builtSelectedScroll','update:modelValue'],
   props: {
     buildInputScroll: {

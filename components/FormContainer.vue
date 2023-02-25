@@ -8,8 +8,10 @@
     ref="formInstance"
     :id="formId"
     :validation-schema="validationSchema"
-    v-slot="{ submitForm, submitCount, validate, values, errors }"
   >
+  <template
+      v-slot="{ submitForm, submitCount, validate, values, errors }"
+      >
     <SetToRef :the-ref="this" the-key="submitForm" :the-value="submitForm" />
     <SetToRef :the-ref="this" the-key="errors" :the-value="errors" />
     <ShowToastingErrors
@@ -23,6 +25,7 @@
       :data="submitCount"
     />
     <slot />
+  </template>
   </Form>
 </template>
 <style>
